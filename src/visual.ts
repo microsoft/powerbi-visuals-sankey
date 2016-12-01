@@ -24,6 +24,8 @@
  *  THE SOFTWARE.
  */
 
+const Globalize = window["Globalize"];
+
 module powerbi.extensibility.visual {
     // d3
     import Selection = d3.Selection;
@@ -1076,7 +1078,8 @@ module powerbi.extensibility.visual {
                 selection,
                 (tooltipEvent: TooltipEventArgs<TooltipEnabledDataPoint>) => {
                     return tooltipEvent.data.tooltipInfo;
-                });
+                },
+                () => null);
         }
 
         private updateSelectionState(
