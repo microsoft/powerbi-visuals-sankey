@@ -24,3 +24,39 @@
  *  THE SOFTWARE.
  */
 
+.sankeyDiagram {
+    @sankeyDiagramFontSize: 11px;
+
+    font-family: helvetica, arial, sans-serif;
+    font-size: @sankeyDiagramFontSize;
+
+    .nodes {
+        .node {
+            .nodeRect {
+                stroke-width: 1px;
+                fill-opacity: 0.9;
+                shape-rendering: crispEdges;
+            }
+
+            .nodeLabel {
+                font-size: @sankeyDiagramFontSize;
+            }
+        }
+
+        .node.selected {
+            opacity: 0.3
+        }
+    }
+
+    .links {
+        .link {
+            fill: none;
+            stroke-opacity: 0.2;
+        }
+
+        .link:hover,
+        .link.selected {
+            stroke-opacity: 0.7;
+        }
+    }
+}
