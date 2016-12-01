@@ -25,6 +25,12 @@
  */
 
 module powerbi.extensibility.visual {
+    // powerbi.extensibility.utils.interactivity
+    import SelectableDataPoint = powerbi.extensibility.utils.interactivity.SelectableDataPoint;
+
+    // powerbi.extensibility.utils.tooltip
+    import TooltipEnabledDataPoint = powerbi.extensibility.utils.tooltip.TooltipEnabledDataPoint;
+
     export interface SankeyDiagramLabel {
         name: string;
         formattedName: string;

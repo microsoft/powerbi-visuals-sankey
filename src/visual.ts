@@ -29,51 +29,61 @@ module powerbi.extensibility.visual {
     import Selection = d3.Selection;
     import UpdateSelection = d3.selection.Update;
 
-    // jsCommon
-    import ClassAndSelector = jsCommon.CssConstants.ClassAndSelector;
-    import createClassAndSelector = jsCommon.CssConstants.createClassAndSelector;
-    import pixelConverterFromPoint = jsCommon.PixelConverter.fromPoint;
-
     // powerbi
-    import TextMeasurementService = powerbi.TextMeasurementService;
-    import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifier;
-    import IVisual = powerbi.IVisual;
-    import VisualCapabilities = powerbi.VisualCapabilities;
-    import VisualDataRoleKind = powerbi.VisualDataRoleKind;
-    import IDataColorPalette = powerbi.IDataColorPalette;
-    import IViewport = powerbi.IViewport;
-    import TextProperties = powerbi.TextProperties;
-    import VisualInitOptions = powerbi.VisualInitOptions;
-    import IVisualStyle = powerbi.IVisualStyle;
-    import VisualUpdateOptions = powerbi.VisualUpdateOptions;
     import DataView = powerbi.DataView;
-    import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
-    import DataViewValueColumn = powerbi.DataViewValueColumn;
+    import IViewport = powerbi.IViewport;
     import DataViewObjects = powerbi.DataViewObjects;
-    import DataViewScopeIdentity = powerbi.DataViewScopeIdentity;
-    import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
+    import DataViewValueColumn = powerbi.DataViewValueColumn;
     import VisualObjectInstance = powerbi.VisualObjectInstance;
+    import DataViewScopeIdentity = powerbi.DataViewScopeIdentity;
+    import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
     import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration;
+    import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifier;
+    import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
 
     // powerbi.visuals
-    import ValueFormatter = powerbi.visuals.valueFormatter;
-    import IMargin = powerbi.visuals.IMargin;
-    import TooltipDataItem = powerbi.visuals.TooltipDataItem;
-    import SelectionId = powerbi.visuals.SelectionId;
-    import DataColorPalette = powerbi.visuals.DataColorPalette;
-    import SVGUtil = powerbi.visuals.SVGUtil;
-    import IValueFormatter = powerbi.visuals.IValueFormatter;
-    import ColorHelper = powerbi.visuals.ColorHelper;
-    import TooltipManager = powerbi.visuals.TooltipManager;
-    import TooltipEvent = powerbi.visuals.TooltipEvent;
-    import ObjectEnumerationBuilder = powerbi.visuals.ObjectEnumerationBuilder;
-    import IInteractiveBehavior = powerbi.visuals.IInteractiveBehavior;
-    import IInteractivityService = powerbi.visuals.IInteractivityService;
-    import appendClearCatcher = powerbi.visuals.appendClearCatcher;
-    import ISelectionHandler = powerbi.visuals.ISelectionHandler;
-    import TooltipEnabledDataPoint = powerbi.visuals.TooltipEnabledDataPoint;
-    import SelectableDataPoint = powerbi.visuals.SelectableDataPoint;
-    import createInteractivityService = powerbi.visuals.createInteractivityService;
+    import SelectionId = powerbi.visuals.ISelectionId;
+
+    // powerbi.extensibility
+    import IColorPalette = powerbi.extensibility.IColorPalette;
+    import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
+
+    // powerbi.extensibility.visual
+    import IVisual = powerbi.extensibility.visual.IVisual;
+    import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
+    import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
+
+    // powerbi.extensibility.utils.svg
+    import IMargin = powerbi.extensibility.utils.svg.IMargin;
+    import translate = powerbi.extensibility.utils.svg.translate;
+    import ClassAndSelector = powerbi.extensibility.utils.svg.CssConstants.ClassAndSelector;
+    import createClassAndSelector = powerbi.extensibility.utils.svg.CssConstants.createClassAndSelector;
+
+    // powerbi.extensibility.utils.type
+    import pixelConverterFromPoint = powerbi.extensibility.utils.type.PixelConverter.fromPoint;
+
+    // powerbi.extensibility.utils.formatting
+    import ValueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+    import TextProperties = powerbi.extensibility.utils.formatting.TextProperties;
+    import IValueFormatter = powerbi.extensibility.utils.formatting.IValueFormatter;
+    import textMeasurementService = powerbi.extensibility.utils.formatting.textMeasurementService;
+
+    // powerbi.extensibility.utils.interactivity
+    import ISelectionHandler = powerbi.extensibility.utils.interactivity.ISelectionHandler;
+    import appendClearCatcher = powerbi.extensibility.utils.interactivity.appendClearCatcher;
+    import SelectableDataPoint = powerbi.extensibility.utils.interactivity.SelectableDataPoint;
+    import IInteractiveBehavior = powerbi.extensibility.utils.interactivity.IInteractiveBehavior;
+    import IInteractivityService = powerbi.extensibility.utils.interactivity.IInteractivityService;
+    import createInteractivityService = powerbi.extensibility.utils.interactivity.createInteractivityService;
+
+    // powerbi.extensibility.utils.tooltip
+    import TooltipEventArgs = powerbi.extensibility.utils.tooltip.TooltipEventArgs;
+    import ITooltipServiceWrapper = powerbi.extensibility.utils.tooltip.ITooltipServiceWrapper;
+    import TooltipEnabledDataPoint = powerbi.extensibility.utils.tooltip.TooltipEnabledDataPoint;
+    import TooltipEnablecreateTooltipServiceWrapperdDataPoint = powerbi.extensibility.utils.tooltip.createTooltipServiceWrapper;
+
+    // powerbi.extensibility.utils.color
+    import ColorHelper = powerbi.extensibility.utils.color.ColorHelper;
 
     interface SankeyDiagramDataPoint {
         source: any;
@@ -125,7 +135,7 @@ module powerbi.extensibility.visual {
 
         // private static Properties: SankeyDiagramProperties = SankeyDiagram.getProperties(SankeyDiagram.capabilities);
 
-        public static getProperties(capabilities: VisualCapabilities): any {
+        public static getProperties(capabilities): any {
             var result = {};
 
             for (var objectKey in capabilities.objects) {
@@ -159,12 +169,14 @@ module powerbi.extensibility.visual {
         private nodes: Selection<SankeyDiagramNode>;
         private links: Selection<SankeyDiagramLink>;
 
-        private colours: IDataColorPalette;
+        private colours: IColorPalette;
         private viewport: IViewport;
         private dataView: SankeyDiagramDataView;
 
         private interactivityService: IInteractivityService;
         private behavior: IInteractiveBehavior;
+
+        private tooltipServiceWrapper: ITooltipServiceWrapper; // TODO: create an instance.
 
         private get textProperties(): TextProperties {
             return {
@@ -183,8 +195,8 @@ module powerbi.extensibility.visual {
             }
         }
 
-        public init(visualsInitOptions: VisualInitOptions): void {
-            var style: IVisualStyle = visualsInitOptions.style;
+        public init(visualsInitOptions): void {
+            // var style: IVisualStyle = visualsInitOptions.style;
 
             if (this.svg) {
                 this.root = this.svg;
@@ -198,9 +210,9 @@ module powerbi.extensibility.visual {
 
             this.clearCatcher = appendClearCatcher(this.root);
 
-            this.colours = style && style.colorPalette
-                ? style.colorPalette.dataColors
-                : new DataColorPalette();
+            // this.colours = style && style.colorPalette
+            //     ? style.colorPalette.dataColors
+            //     : new DataColorPalette();
 
             this.root.classed(SankeyDiagram.ClassName, true);
 
@@ -273,7 +285,7 @@ module powerbi.extensibility.visual {
                 "width": width
             });
 
-            this.main.attr("transform", SVGUtil.translate(this.margin.left, this.margin.top));
+            this.main.attr("transform", translate(this.margin.left, this.margin.top));
         }
 
         public converter(dataView: DataView): SankeyDiagramDataView {
@@ -327,14 +339,13 @@ module powerbi.extensibility.visual {
             objects = this.getObjectsFromDataView(dataView);
 
             labelColour = this.getColour(
-                SankeyDiagram.Properties["labels"]["fill"],
+                // SankeyDiagram.Properties["labels"]["fill"],
+                null,
                 SankeyDiagram.DefaultSettings.colourOfLabels,
                 objects);
 
             if (valuesColumn && valuesColumn.source) {
-                formatOfWeigth = ValueFormatter.getFormatString(
-                    valuesColumn.source,
-                    SankeyDiagram.Properties["general"]["formatString"]);
+                formatOfWeigth = ValueFormatter.getFormatStringByColumn(valuesColumn.source);
             }
 
             dataPoints = categories.map((item: any, index: number) => {
@@ -351,7 +362,7 @@ module powerbi.extensibility.visual {
                 /*format: ValueFormatter.getFormatString(
                     dataView.categorical.categories[0].source,
                     SankeyDiagram.Properties["general"]["formatString"]),*/
-                format: ValueFormatter.getFormatString(dataView.categorical.categories[0].source),
+                format: ValueFormatter.getFormatStringByColumn(dataView.categorical.categories[0].source),
                 value: allCategories[0],
                 value2: allCategories[allCategories.length - 1]
             });
@@ -385,8 +396,8 @@ module powerbi.extensibility.visual {
                     label = {
                         name: item,
                         formattedName: valueFormatterForCategories.format(item),
-                        width: TextMeasurementService.measureSvgTextWidth(textProperties),
-                        height: TextMeasurementService.estimateSvgTextHeight(textProperties),
+                        width: textMeasurementService.measureSvgTextWidth(textProperties),
+                        height: textMeasurementService.estimateSvgTextHeight(textProperties),
                         colour: labelColour
                     };
 
@@ -406,10 +417,11 @@ module powerbi.extensibility.visual {
                 }
             });
 
-            shiftOfColour = this.colours.getAllColors().length / nodes.length;
+            // shiftOfColour = this.colours.getAllColors().length / nodes.length;
+            shiftOfColour = 1; // TODO: check it. Make sure how it works in the previous version.
 
             nodes.forEach((node: SankeyDiagramNode, index: number) => {
-                node.colour = this.colours.getColorByIndex(Math.floor(index * shiftOfColour)).value;
+                node.colour = this.colours.getColor(Math.floor(index * shiftOfColour).toString()).value;
             });
 
             dataPoints.forEach((dataPoint: SankeyDiagramDataPoint, index: number) => {
@@ -434,7 +446,8 @@ module powerbi.extensibility.visual {
                 });
 
                 linkColour = this.getColour(
-                    SankeyDiagram.Properties["links"]["fill"],
+                    // SankeyDiagram.Properties["links"]["fill"],
+                    null,
                     SankeyDiagram.DefaultColourOfLink,
                     linksObjects[index]);
 
@@ -520,7 +533,7 @@ module powerbi.extensibility.visual {
             valueFormatter: IValueFormatter,
             sourceNodeName: string,
             destinationNodeName: string,
-            linkWeight: number): TooltipDataItem[] {
+            linkWeight: number): VisualTooltipDataItem[] {
 
             var formattedLinkWeight: string;
 
@@ -557,7 +570,7 @@ module powerbi.extensibility.visual {
         private getTooltipForNode(
             valueFormatter: IValueFormatter,
             nodeName: string,
-            nodeWeight: number): TooltipDataItem[] {
+            nodeWeight: number): VisualTooltipDataItem[] {
 
             var formattedNodeWeigth: string;
 
@@ -626,17 +639,24 @@ module powerbi.extensibility.visual {
                 sankeyDiagramDataView.settings.scale.y);
 
             sankeyDiagramDataView.nodes.forEach((node: SankeyDiagramNode, i) => {
-                var textHeight: number = TextMeasurementService.estimateSvgTextHeight({
+                var textHeight: number = textMeasurementService.estimateSvgTextHeight({
                     text: node.label.formattedName,
                     fontFamily: this.textProperties.fontFamily,
                     fontSize: this.textProperties.fontSize
                 });
 
                 node.left = node.x + this.getLabelPositionByAxisX(node);
-                node.right = node.left + (sankeyDiagramDataView.settings.scale.x - node.width) - SankeyDiagram.NodeMargin;
+
+                node.right = node.left
+                    + (sankeyDiagramDataView.settings.scale.x - node.width)
+                    - SankeyDiagram.NodeMargin;
+
                 node.top = node.y + node.height / 2;
                 node.bottom = node.top + textHeight;
-                node.label.maxWidth = sankeyDiagramDataView.settings.scale.x - node.width - SankeyDiagram.NodeMargin * 2;
+
+                node.label.maxWidth = sankeyDiagramDataView.settings.scale.x
+                    - node.width
+                    - SankeyDiagram.NodeMargin * 2;
             });
 
             sankeyDiagramDataView.nodes.forEach((node1: SankeyDiagramNode) => {
@@ -646,8 +666,10 @@ module powerbi.extensibility.visual {
                     }
 
                     if (SankeyDiagram.isIntersect(node1, node2)) {
-                        node1.label.maxWidth = (sankeyDiagramDataView.settings.scale.x - node1.width) / 2 - SankeyDiagram.NodeMargin;
-                        node2.label.maxWidth = (sankeyDiagramDataView.settings.scale.x - node2.width) / 2 - SankeyDiagram.NodeMargin;
+                        node1.label.maxWidth = (sankeyDiagramDataView.settings.scale.x - node1.width) / 2
+                            - SankeyDiagram.NodeMargin;
+                        node2.label.maxWidth = (sankeyDiagramDataView.settings.scale.x - node2.width) / 2
+                            - SankeyDiagram.NodeMargin;
                     }
                 });
             });
@@ -764,7 +786,8 @@ module powerbi.extensibility.visual {
         }
 
         private getScaleByAxisY(sumValueOfNodes: number): number {
-            return this.getPositiveNumber((this.viewport.height - this.getAvailableSumNodeMarginByY()) / sumValueOfNodes);
+            return this.getPositiveNumber(
+                (this.viewport.height - this.getAvailableSumNodeMarginByY()) / sumValueOfNodes);
         }
 
         private getAvailableSumNodeMarginByY(): number {
@@ -901,7 +924,7 @@ module powerbi.extensibility.visual {
 
             nodesSelection
                 .attr("transform", (node: SankeyDiagramNode) => {
-                    return SVGUtil.translate(node.x, node.y);
+                    return translate(node.x, node.y);
                 })
                 .classed(SankeyDiagram.Node.class, true);
 
@@ -960,7 +983,7 @@ module powerbi.extensibility.visual {
                 })
                 .text((node: SankeyDiagramNode) => {
                     if (node.label.width > node.label.maxWidth) {
-                        return TextMeasurementService.getTailoredTextOrDefault({
+                        return textMeasurementService.getTailoredTextOrDefault({
                             text: node.label.formattedName,
                             fontFamily: this.textProperties.fontFamily,
                             fontSize: this.textProperties.fontSize
@@ -1059,9 +1082,11 @@ module powerbi.extensibility.visual {
         }
 
         private renderTooltip(selection: Selection<SankeyDiagramNode | SankeyDiagramLink>): void {
-            TooltipManager.addTooltip(selection, (tooltipEvent: TooltipEvent) => {
-                return tooltipEvent.data.tooltipInfo;
-            });
+            this.tooltipServiceWrapper.addTooltip(
+                selection,
+                (tooltipEvent: TooltipEventArgs<TooltipEnabledDataPoint>) => {
+                    return tooltipEvent.data.tooltipInfo;
+                });
         }
 
         private updateSelectionState(
@@ -1105,7 +1130,7 @@ module powerbi.extensibility.visual {
         }
 
         public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
-            var enumeration = new ObjectEnumerationBuilder();
+            var instances: VisualObjectInstance[] = [];
 
             if (!this.dataView) {
                 return [];
@@ -1113,19 +1138,19 @@ module powerbi.extensibility.visual {
 
             switch (options.objectName) {
                 case "labels": {
-                    this.enumerateLabels(enumeration);
+                    this.enumerateLabels(instances);
                     break;
                 }
                 case "links": {
-                    this.enumerateLinks(enumeration);
+                    this.enumerateLinks(instances);
                     break;
                 }
             }
 
-            return enumeration.complete();
+            return instances;
         }
 
-        private enumerateLabels(enumeration: ObjectEnumerationBuilder): void {
+        private enumerateLabels(instances: VisualObjectInstance[]): void {
             var settings: SankeyDiagramSettings = this.dataView.settings,
                 labels: VisualObjectInstance;
 
@@ -1144,10 +1169,10 @@ module powerbi.extensibility.visual {
                 }
             };
 
-            enumeration.pushInstance(labels);
+            instances.push(labels);
         }
 
-        private enumerateLinks(enumeration: ObjectEnumerationBuilder): void {
+        private enumerateLinks(instances: VisualObjectInstance[]): void {
             var links: SankeyDiagramLink[] = this.dataView.links;
 
             if (!links || !(links.length > 0)) {
@@ -1155,10 +1180,11 @@ module powerbi.extensibility.visual {
             }
 
             links.forEach((link: SankeyDiagramLink) => {
-                enumeration.pushInstance({
+                instances.push({
                     objectName: "links",
                     displayName: `${link.source.label.formattedName} - ${link.destination.label.formattedName}`,
                     // selector: ColorHelper.normalizeSelector(link.identity.getSelector(), false), // TODO: check it.
+                    selector: null,
                     properties: {
                         fill: { solid: { color: link.colour } }
                     }

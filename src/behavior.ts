@@ -28,6 +28,12 @@ module powerbi.extensibility.visual {
     // d3
     import Selection = d3.Selection;
 
+    // powerbi.extensibility.utils.interactivity
+    import IInteractivityService = powerbi.extensibility.utils.interactivity.IInteractivityService;
+    import IInteractiveBehavior = powerbi.extensibility.utils.interactivity.IInteractiveBehavior;
+    import ISelectionHandler = powerbi.extensibility.utils.interactivity.ISelectionHandler;
+    import SelectableDataPoint = powerbi.extensibility.utils.interactivity.SelectableDataPoint;
+
     export interface SankeyDiagramBehaviorOptions {
         nodes: Selection<SankeyDiagramNode>;
         links: Selection<SankeyDiagramLink>;

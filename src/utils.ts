@@ -25,7 +25,15 @@
  */
 
 module powerbi.extensibility.visual {
+    // d3
     import Selection = d3.Selection;
+
+    // powerbi.visuals
+    import ISelectionId = powerbi.visuals.ISelectionId;
+
+    // powerbi.extensibility.utils.interactivity
+    import SelectableDataPoint = powerbi.extensibility.utils.interactivity.SelectableDataPoint;
+    import IInteractivityService = powerbi.extensibility.utils.interactivity.IInteractivityService;
 
     export module sankeyDiagramUtils {
         export function getFillOpacity(
@@ -108,7 +116,7 @@ module powerbi.extensibility.visual {
                         && dataPoint
                         && selectedDataPoint.identity
                         && dataPoint.identity
-                        && selectedDataPoint.identity.equals(dataPoint.identity);
+                        && (selectedDataPoint.identity as ISelectionId).equals(dataPoint.identity as ISelectionId);
                 });
             });
         }

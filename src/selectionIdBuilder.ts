@@ -25,6 +25,9 @@
  */
 
 module powerbi.extensibility.visual {
+    // powerbi.visuals
+    import ISelectionId = powerbi.visuals.ISelectionId;
+
     export interface SankeyDiagramIdentity {
         identity: DataViewScopeIdentity | DataViewScopeIdentity[];
         queryName: string;
@@ -74,7 +77,7 @@ module powerbi.extensibility.visual {
             return { identity, queryName };
         }
 
-        public createSelectionId(id: number): SelectionId {
+        public createSelectionId(id: number): ISelectionId {
             var identity: SankeyDiagramIdentity = this.getIdentityById(id),
                 measureId: string;
 
@@ -82,10 +85,12 @@ module powerbi.extensibility.visual {
                 ? (<DataViewScopeIdentity>identity.identity).key
                 : undefined;
 
-            return SelectionId.createWithIdAndMeasureAndCategory(
+            /*return SelectionId.createWithIdAndMeasureAndCategory(
                 <DataViewScopeIdentity>identity.identity,
                 measureId,
-                identity.queryName);
+                identity.queryName);*/ // TODO: Convert it to API 1.3.
+
+            return null;
         }
     }
 }
