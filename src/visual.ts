@@ -80,7 +80,7 @@ module powerbi.extensibility.visual {
     import TooltipEventArgs = powerbi.extensibility.utils.tooltip.TooltipEventArgs;
     import ITooltipServiceWrapper = powerbi.extensibility.utils.tooltip.ITooltipServiceWrapper;
     import TooltipEnabledDataPoint = powerbi.extensibility.utils.tooltip.TooltipEnabledDataPoint;
-    import TooltipEnablecreateTooltipServiceWrapperdDataPoint = powerbi.extensibility.utils.tooltip.createTooltipServiceWrapper;
+    import createTooltipServiceWrapper = powerbi.extensibility.utils.tooltip.createTooltipServiceWrapper;
 
     // powerbi.extensibility.utils.color
     import ColorHelper = powerbi.extensibility.utils.color.ColorHelper;
@@ -102,13 +102,13 @@ module powerbi.extensibility.visual {
     export class SankeyDiagram implements IVisual {
         private static ClassName: string = "sankeyDiagram";
 
-        private static Node: ClassAndSelector = createClassAndSelector("node");
-        private static Nodes: ClassAndSelector = createClassAndSelector("nodes");
-        private static NodeRect: ClassAndSelector = createClassAndSelector("nodeRect");
-        private static NodeLabel: ClassAndSelector = createClassAndSelector("nodeLabel");
+        private static NodeSelector: ClassAndSelector = createClassAndSelector("node");
+        private static NodesSelector: ClassAndSelector = createClassAndSelector("nodes");
+        private static NodeRectSelector: ClassAndSelector = createClassAndSelector("nodeRect");
+        private static NodeLabelSelector: ClassAndSelector = createClassAndSelector("nodeLabel");
 
-        private static Links: ClassAndSelector = createClassAndSelector("links");
-        private static Link: ClassAndSelector = createClassAndSelector("link");
+        private static LinksSelector: ClassAndSelector = createClassAndSelector("links");
+        private static LinkSelector: ClassAndSelector = createClassAndSelector("link");
 
         private static DefaultColourOfNode: string = "rgb(62, 187, 162)";
         private static DefaultColourOfLink: string = "black";
@@ -162,21 +162,20 @@ module powerbi.extensibility.visual {
         private nodeWidth: number = 21.5;
         private curvatureOfLinks: number = 0.5;
 
-        private svg: Selection<any>;
         private root: Selection<any>;
         private clearCatcher: Selection<any>;
         private main: Selection<any>;
         private nodes: Selection<SankeyDiagramNode>;
         private links: Selection<SankeyDiagramLink>;
 
-        private colours: IColorPalette;
+        private colorPalette: IColorPalette;
         private viewport: IViewport;
         private dataView: SankeyDiagramDataView;
 
         private interactivityService: IInteractivityService;
         private behavior: IInteractiveBehavior;
 
-        private tooltipServiceWrapper: ITooltipServiceWrapper; // TODO: create an instance.
+        private tooltipServiceWrapper: ITooltipServiceWrapper;
 
         private get textProperties(): TextProperties {
             return {
@@ -187,32 +186,22 @@ module powerbi.extensibility.visual {
             };
         }
 
-        constructor(constructorOptions?) {
-            if (constructorOptions) {
-                this.svg = constructorOptions.svg;
-                this.margin = constructorOptions.margin || this.margin;
-                this.curvatureOfLinks = constructorOptions.curvatureOfLinks || this.curvatureOfLinks;
-            }
+        constructor(options: VisualConstructorOptions) {
+            this.init(options);
         }
 
-        public init(visualsInitOptions): void {
-            // var style: IVisualStyle = visualsInitOptions.style;
+        private init(options: VisualConstructorOptions): void {
+            this.root = d3.select(options.element).append("svg");
 
-            if (this.svg) {
-                this.root = this.svg;
-            } else {
-                this.root = d3.select(visualsInitOptions.element.get(0))
-                    .append("svg");
-            }
-
-            this.interactivityService = createInteractivityService(visualsInitOptions.host);
+            this.interactivityService = createInteractivityService(options.host);
             this.behavior = SankeyDiagramBehavior.create();
-
             this.clearCatcher = appendClearCatcher(this.root);
 
-            // this.colours = style && style.colorPalette
-            //     ? style.colorPalette.dataColors
-            //     : new DataColorPalette();
+            this.colorPalette = options.host.colorPalette;
+
+            this.tooltipServiceWrapper = createTooltipServiceWrapper(
+                options.host.tooltipService,
+                options.element);
 
             this.root.classed(SankeyDiagram.ClassName, true);
 
@@ -220,11 +209,11 @@ module powerbi.extensibility.visual {
 
             this.links = this.main
                 .append("g")
-                .classed(SankeyDiagram.Links.class, true);
+                .classed(SankeyDiagram.LinksSelector.class, true);
 
             this.nodes = this.main
                 .append("g")
-                .classed(SankeyDiagram.Nodes.class, true);
+                .classed(SankeyDiagram.NodesSelector.class, true);
         }
 
         public onClearSelection(): void {
@@ -289,13 +278,13 @@ module powerbi.extensibility.visual {
         }
 
         public converter(dataView: DataView): SankeyDiagramDataView {
-            if (!dataView ||
-                !dataView.categorical ||
-                !dataView.categorical.categories ||
-                !dataView.categorical.categories[0] ||
-                !dataView.categorical.categories[1] ||
-                !dataView.categorical.categories[0].values ||
-                !dataView.categorical.categories[1].values) {
+            if (!dataView
+                || !dataView.categorical
+                || !dataView.categorical.categories
+                || !dataView.categorical.categories[0]
+                || !dataView.categorical.categories[1]
+                || !dataView.categorical.categories[0].values
+                || !dataView.categorical.categories[1].values) {
 
                 return {
                     nodes: [],
@@ -421,7 +410,7 @@ module powerbi.extensibility.visual {
             shiftOfColour = 1; // TODO: check it. Make sure how it works in the previous version.
 
             nodes.forEach((node: SankeyDiagramNode, index: number) => {
-                node.colour = this.colours.getColor(Math.floor(index * shiftOfColour).toString()).value;
+                node.colour = this.colorPalette.getColor(Math.floor(index * shiftOfColour).toString()).value;
             });
 
             dataPoints.forEach((dataPoint: SankeyDiagramDataPoint, index: number) => {
@@ -524,7 +513,7 @@ module powerbi.extensibility.visual {
         private getColour(properties: DataViewObjectPropertyIdentifier, defaultColor: string, objects: DataViewObjects): string {
             var colorHelper: ColorHelper;
 
-            colorHelper = new ColorHelper(this.colours, properties, defaultColor);
+            colorHelper = new ColorHelper(this.colorPalette, properties, defaultColor);
 
             return colorHelper.getColorForMeasure(objects, "");
         }
@@ -880,6 +869,7 @@ module powerbi.extensibility.visual {
             this.interactivityService.applySelectionStateToData(this.getSelectableDataPoints());
         }
 
+        // TODO: improve it.
         private getSelectableDataPoints(): SelectableDataPoint[] {
             var dataPoints: SelectableDataPoint[] = this.dataView.links;
 
@@ -913,8 +903,8 @@ module powerbi.extensibility.visual {
                 nodeElements: Selection<SankeyDiagramNode>;
 
             nodeElements = this.main
-                .select(SankeyDiagram.Nodes.selector)
-                .selectAll(SankeyDiagram.Node.selector);
+                .select(SankeyDiagram.NodesSelector.selector)
+                .selectAll(SankeyDiagram.NodeSelector.selector);
 
             nodesSelection = nodeElements.data(sankeyDiagramDataView.nodes.filter(x => x.height > 0));
 
@@ -926,18 +916,18 @@ module powerbi.extensibility.visual {
                 .attr("transform", (node: SankeyDiagramNode) => {
                     return translate(node.x, node.y);
                 })
-                .classed(SankeyDiagram.Node.class, true);
+                .classed(SankeyDiagram.NodeSelector.class, true);
 
             nodesEnterSelection
                 .append("rect")
-                .classed(SankeyDiagram.NodeRect.class, true);
+                .classed(SankeyDiagram.NodeRectSelector.class, true);
 
             nodesEnterSelection
                 .append("text")
-                .classed(SankeyDiagram.NodeLabel.class, true);
+                .classed(SankeyDiagram.NodeLabelSelector.class, true);
 
             nodesSelection
-                .select(SankeyDiagram.NodeRect.selector)
+                .select(SankeyDiagram.NodeRectSelector.selector)
                 .style({
                     "fill": (node: SankeyDiagramNode) => node.colour,
                     "stroke": (node: SankeyDiagramNode) => d3.rgb(node.colour).darker(1.5).toString() // TODO: check it. It returns d3_rgb.
@@ -950,7 +940,7 @@ module powerbi.extensibility.visual {
                 });
 
             nodesSelection
-                .select(SankeyDiagram.NodeLabel.selector)
+                .select(SankeyDiagram.NodeLabelSelector.selector)
                 .attr({
                     x: (node: SankeyDiagramNode) => node.left - node.x,
                     y: (node: SankeyDiagramNode) => node.top - node.y,
@@ -1029,15 +1019,15 @@ module powerbi.extensibility.visual {
                 linksElements: Selection<SankeyDiagramLink>;
 
             linksElements = this.main
-                .select(SankeyDiagram.Links.selector)
-                .selectAll(SankeyDiagram.Link.selector);
+                .select(SankeyDiagram.LinksSelector.selector)
+                .selectAll(SankeyDiagram.LinkSelector.selector);
 
             linksSelection = linksElements.data(sankeyDiagramDataView.links.filter(x => x.height > 0));
 
             linksSelection
                 .enter()
                 .append("path")
-                .classed(SankeyDiagram.Link.class, true);
+                .classed(SankeyDiagram.LinkSelector.class, true);
 
             linksSelection
                 .attr("d", (link: SankeyDiagramLink) => {
