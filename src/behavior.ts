@@ -25,10 +25,13 @@
  */
 
 module powerbi.extensibility.visual {
+    // d3
+    import Selection = d3.Selection;
+
     export interface SankeyDiagramBehaviorOptions {
-        nodes: D3.Selection;
-        links: D3.Selection;
-        clearCatcher: D3.Selection;
+        nodes: Selection<SankeyDiagramNode>;
+        links: Selection<SankeyDiagramLink>;
+        clearCatcher: Selection<any>;
         interactivityService: IInteractivityService;
     }
 
@@ -78,7 +81,7 @@ module powerbi.extensibility.visual {
 
         private bindClickEventToLinks(): void {
             this.behaviorOptions.links.on("click", (link: SankeyDiagramLink) => {
-                this.selectionHandler.handleSelection(link, d3.event.ctrlKey);
+                this.selectionHandler.handleSelection(link, (d3.event as MouseEvent).ctrlKey);
                 this.createAnEmptySelectedDataPoints();
             });
         }

@@ -25,6 +25,8 @@
  */
 
 module powerbi.extensibility.visual {
+    import Selection = d3.Selection;
+
     export module sankeyDiagramUtils {
         export function getFillOpacity(
             selected: boolean,
@@ -64,7 +66,7 @@ module powerbi.extensibility.visual {
         }
 
         export function updateFillOpacity(
-            selection: D3.Selection,
+            selection: Selection<SankeyDiagramNode | SankeyDiagramLink>,
             interactivityService?: IInteractivityService,
             hasSelection: boolean = false): void {
             var hasHighlights: boolean = false;
