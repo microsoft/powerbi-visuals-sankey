@@ -40,18 +40,6 @@ module powerbi.extensibility.visual {
         colour: string;
     }
 
-    export interface SankeyDiagramScale {
-        x: number;
-        y: number;
-    }
-
-    export interface SankeyDiagramSettings {
-        scale?: SankeyDiagramScale;
-        fontSize: number;
-        isVisibleLabels?: boolean;
-        colourOfLabels: string;
-    }
-
     export interface SankeyDiagramRect {
         left?: number;
         right?: number;
@@ -85,7 +73,7 @@ module powerbi.extensibility.visual {
         height?: number;
         dySource?: number;
         dyDestination?: number;
-        colour: string;
+        color: string;
     }
 
     export interface SankeyDiagramColumn {
