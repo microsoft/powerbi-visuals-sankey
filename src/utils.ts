@@ -50,7 +50,7 @@ module powerbi.extensibility.visual {
         }
 
         export function isTheDataPointNode(dataPoint: SankeyDiagramLink | SankeyDiagramNode): boolean {
-            var node: SankeyDiagramNode = <SankeyDiagramNode>dataPoint;
+            let node: SankeyDiagramNode = <SankeyDiagramNode>dataPoint;
 
             return node.selectableDataPoints && node.selectableDataPoints.length
                 ? true
@@ -58,7 +58,7 @@ module powerbi.extensibility.visual {
         }
 
         export function isDataPointSelected(dataPoint: SankeyDiagramLink | SankeyDiagramNode): boolean {
-            var node: SankeyDiagramNode = <SankeyDiagramNode>dataPoint,
+            let node: SankeyDiagramNode = <SankeyDiagramNode>dataPoint,
                 link: SankeyDiagramLink = <SankeyDiagramLink>dataPoint,
                 selected: boolean = false;
 
@@ -77,14 +77,15 @@ module powerbi.extensibility.visual {
             selection: Selection<SankeyDiagramNode | SankeyDiagramLink>,
             interactivityService?: IInteractivityService,
             hasSelection: boolean = false): void {
-            var hasHighlights: boolean = false;
+
+            let hasHighlights: boolean = false;
 
             if (interactivityService) {
                 hasHighlights = interactivityService.hasSelection();
             }
 
             selection.classed("selected", (dataPoint: SankeyDiagramLink | SankeyDiagramNode): boolean => {
-                var isDataPointSelected: boolean = sankeyDiagramUtils.isDataPointSelected(dataPoint),
+                let isDataPointSelected: boolean = sankeyDiagramUtils.isDataPointSelected(dataPoint),
                     isTheDataPointNode: boolean = sankeyDiagramUtils.isTheDataPointNode(dataPoint),
                     selected: boolean;
 
@@ -103,6 +104,7 @@ module powerbi.extensibility.visual {
         export function areDataPointsSelected(
             selectedDataPoints: SelectableDataPoint[],
             dataPoints: SelectableDataPoint[]): boolean {
+
             if (!dataPoints
                 || !selectedDataPoints
                 || dataPoints.length !== selectedDataPoints.length) {

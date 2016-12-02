@@ -69,7 +69,7 @@ module powerbi.extensibility.visual {
 
         private bindClickEventToNodes(): void {
             this.behaviorOptions.nodes.on("click", (node: SankeyDiagramNode) => {
-                var selectableDataPoints: SelectableDataPoint[] = node.selectableDataPoints;
+                const selectableDataPoints: SelectableDataPoint[] = node.selectableDataPoints;
 
                 this.clearSelection();
 
@@ -107,7 +107,7 @@ module powerbi.extensibility.visual {
             this.selectedDataPoints = [];
         }
 
-        public renderSelection(hasSelection: boolean) {
+        public renderSelection(hasSelection: boolean): void {
             sankeyDiagramUtils.updateFillOpacity(
                 this.behaviorOptions.links,
                 this.behaviorOptions.interactivityService,

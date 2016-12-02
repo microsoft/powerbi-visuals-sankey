@@ -37,7 +37,7 @@ module powerbi.extensibility.visual {
         width: number;
         maxWidth?: number;
         height: number;
-        colour: string;
+        color: string;
     }
 
     export interface SankeyDiagramRect {

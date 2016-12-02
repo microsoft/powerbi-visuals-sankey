@@ -37,6 +37,7 @@
     "powerbi-visuals-utils-interactivityutils": "^0.2.1",
     "powerbi-visuals-utils-svgutils": "^0.2.1",
     "powerbi-visuals-utils-tooltiputils": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-tooltiputils.git",
+    "powerbi-visuals-utils-typeutils": "^0.2.0",
     "tslint": "4.0.2",
     "typings": "2.0.0"
   }

@@ -37,6 +37,8 @@ module powerbi.extensibility.visual {
     }
 
     export class SankeyDiagramSelectionIdBuilder {
+        private static DefaultCategoryIndex: number = 0;
+
         private visualHost: IVisualHost;
         private categories: DataViewCategoryColumn[];
 
@@ -49,11 +51,11 @@ module powerbi.extensibility.visual {
         }
 
         private getIdentityById(index: number): CategoryIdentityIndex {
-            let categoryIndex: number = 0,
+            let categoryIndex: number = SankeyDiagramSelectionIdBuilder.DefaultCategoryIndex,
                 identityIndex: number = index;
 
             for (let length: number = this.categories.length; categoryIndex < length; categoryIndex++) {
-                var amountOfIdentities: number = this.categories[categoryIndex].identity.length;
+                const amountOfIdentities: number = this.categories[categoryIndex].identity.length;
 
                 if (identityIndex > amountOfIdentities - 1) {
                     identityIndex -= amountOfIdentities;
