@@ -28,69 +28,54 @@ module powerbi.extensibility.visual {
     // powerbi.visuals
     import ISelectionId = powerbi.visuals.ISelectionId;
 
-    export interface SankeyDiagramIdentity {
-        identity: DataViewScopeIdentity | DataViewScopeIdentity[];
-        queryName: string;
+    // powerbi.extensibility.visual
+    import IVisualHost = powerbi.extensibility.visual.IVisualHost;
+
+    interface CategoryIdentityIndex {
+        categoryIndex: number;
+        identityIndex: number;
     }
 
     export class SankeyDiagramSelectionIdBuilder {
-        private identities: SankeyDiagramIdentity[] = [];
+        private visualHost: IVisualHost;
+        private categories: DataViewCategoryColumn[];
 
-        public static create(): SankeyDiagramSelectionIdBuilder {
-            return new SankeyDiagramSelectionIdBuilder();
+        constructor(
+            IVisualHost: IVisualHost,
+            categories: DataViewCategoryColumn[]) {
+
+            this.visualHost = IVisualHost;
+            this.categories = categories || [];
         }
 
-        public addCategories(categories: DataViewCategoryColumn[]): void {
-            categories.forEach((category: DataViewCategoryColumn) => {
-                this.addCategory(category);
-            });
-        }
+        private getIdentityById(index: number): CategoryIdentityIndex {
+            let categoryIndex: number = 0,
+                identityIndex: number = index;
 
-        public addCategory(category: DataViewCategoryColumn): void {
-            var queryName: string = category && category.source
-                ? category.source.queryName
-                : undefined;
+            for (let length: number = this.categories.length; categoryIndex < length; categoryIndex++) {
+                var amountOfIdentities: number = this.categories[categoryIndex].identity.length;
 
-            this.identities.push({
-                identity: category.identity || [],
-                queryName: queryName
-            });
-        }
-
-        private getIdentityById(id: number): SankeyDiagramIdentity {
-            var identity: DataViewScopeIdentity,
-                queryName: string;
-
-            for (var i = 0; i < this.identities.length; i++) {
-                var amountOfIdentities: number = (<DataViewScopeIdentity[]>this.identities[i].identity).length;
-
-                if (id > amountOfIdentities - 1) {
-                    id -= amountOfIdentities;
+                if (identityIndex > amountOfIdentities - 1) {
+                    identityIndex -= amountOfIdentities;
                 } else {
-                    identity = this.identities[i].identity[id];
-                    queryName = this.identities[i].queryName;
-
                     break;
                 }
             }
 
-            return { identity, queryName };
+            return {
+                categoryIndex,
+                identityIndex
+            };
         }
 
-        public createSelectionId(id: number): ISelectionId {
-            var identity: SankeyDiagramIdentity = this.getIdentityById(id),
-                measureId: string;
+        public createSelectionId(index: number): ISelectionId {
+            const categoryIdentityIndex: CategoryIdentityIndex = this.getIdentityById(index);
 
-            measureId = identity.identity
-                ? (<DataViewScopeIdentity>identity.identity).key
-                : undefined;
-
-            /*return SelectionId.createWithIdAndMeasureAndCategory(
-                <DataViewScopeIdentity>identity.identity,
-                measureId,
-                identity.queryName);*/ // TODO: Convert it to API 1.3.
-
-            return null;
+            return this.visualHost.createSelectionIdBuilder()
+                .withCategory(
+                    this.categories[categoryIdentityIndex.categoryIndex],
+                    categoryIdentityIndex.identityIndex)
+                .createSelectionId();
         }
     }
 }

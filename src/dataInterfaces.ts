@@ -93,4 +93,10 @@ module powerbi.extensibility.visual {
         columns: string;
         values: string;
     }
+
+    export interface SankeyDiagramDataPoint {
+        source: any;
+        destination: any;
+        weigth: number;
+    }
 }

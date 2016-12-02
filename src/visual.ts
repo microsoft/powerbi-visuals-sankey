@@ -85,20 +85,6 @@ module powerbi.extensibility.visual {
     // powerbi.extensibility.utils.color
     import ColorHelper = powerbi.extensibility.utils.color.ColorHelper;
 
-    interface SankeyDiagramDataPoint {
-        source: any;
-        destination: any;
-        weigth: number;
-    }
-
-    interface SankeyDiagramProperty {
-        [propertyName: string]: DataViewObjectPropertyIdentifier;
-    }
-
-    interface SankeyDiagramProperties {
-        [objectName: string]: SankeyDiagramProperty;
-    }
-
     export class SankeyDiagram implements IVisual {
         private static ClassName: string = "sankeyDiagram";
 
@@ -151,6 +137,8 @@ module powerbi.extensibility.visual {
         private viewport: IViewport;
         private dataView: SankeyDiagramDataView;
 
+        private visualHost: IVisualHost;
+
         private interactivityService: IInteractivityService;
         private behavior: IInteractiveBehavior;
 
@@ -170,16 +158,18 @@ module powerbi.extensibility.visual {
         }
 
         private init(options: VisualConstructorOptions): void {
+            this.visualHost = options.host;
+
             this.root = d3.select(options.element).append("svg");
 
-            this.interactivityService = createInteractivityService(options.host);
+            this.interactivityService = createInteractivityService(this.visualHost);
             this.behavior = SankeyDiagramBehavior.create();
             this.clearCatcher = appendClearCatcher(this.root);
 
-            this.colorPalette = options.host.colorPalette;
+            this.colorPalette = this.visualHost.colorPalette;
 
             this.tooltipServiceWrapper = createTooltipServiceWrapper(
-                options.host.tooltipService,
+                this.visualHost.tooltipService,
                 options.element);
 
             this.root.classed(SankeyDiagram.ClassName, true);
@@ -195,20 +185,12 @@ module powerbi.extensibility.visual {
                 .classed(SankeyDiagram.NodesSelector.class, true);
         }
 
-        public onClearSelection(): void {
-            if (this.interactivityService) {
-                this.interactivityService.clearSelection();
-            }
-        }
-
         public update(visualUpdateOptions: VisualUpdateOptions): void {
-            if (!visualUpdateOptions || // TODO: remove this condition.
-                !visualUpdateOptions.dataViews) {
-                return;
-            }
-
-            var dataView: DataView = visualUpdateOptions.dataViews[0],
-                sankeyDiagramDataView: SankeyDiagramDataView;
+            let sankeyDiagramDataView: SankeyDiagramDataView,
+                viewport: IViewport = visualUpdateOptions.viewport || this.viewport,
+                dataView: DataView = visualUpdateOptions
+                    && visualUpdateOptions.dataViews
+                    && visualUpdateOptions.dataViews[0];
 
             this.updateViewport(visualUpdateOptions.viewport);
 
@@ -238,9 +220,6 @@ module powerbi.extensibility.visual {
             this.updateElements(height, width);
         }
 
-        /**
-         * Public for testability.
-         */
         public getPositiveNumber(value: number): number {
             return value < 0 || isNaN(value) || value === null || value === Infinity || value === -Infinity
                 ? 0
@@ -289,16 +268,15 @@ module powerbi.extensibility.visual {
                 valuesFormatterForWeigth: IValueFormatter,
                 objects: DataViewObjects,
                 linksObjects: DataViewObjects[] = sourceCategory.objects || [],
-                shiftOfColour: number,
-                selectionIdBuilder: SankeyDiagramSelectionIdBuilder = SankeyDiagramSelectionIdBuilder.create();
+                selectionIdBuilder: SankeyDiagramSelectionIdBuilder = new SankeyDiagramSelectionIdBuilder(
+                    this.visualHost,
+                    dataView.categorical.categories);
 
             if (valuesColumn && valuesColumn.values && valuesColumn.values.map) {
                 weightValues = valuesColumn.values.map((x: any) => {
                     return x ? x : 0;
                 });
             }
-
-            selectionIdBuilder.addCategories(dataView.categorical.categories);
 
             if (valuesColumn && valuesColumn.source) {
                 formatOfWeigth = ValueFormatter.getFormatStringByColumn(valuesColumn.source);
@@ -370,11 +348,8 @@ module powerbi.extensibility.visual {
                 }
             });
 
-            // shiftOfColour = this.colours.getAllColors().length / nodes.length;
-            shiftOfColour = 1; // TODO: check it. Make sure how it works in the previous version.
-
             nodes.forEach((node: SankeyDiagramNode, index: number) => {
-                node.colour = this.colorPalette.getColor(Math.floor(index * shiftOfColour).toString()).value;
+                node.colour = this.colorPalette.getColor(Math.floor(index).toString()).value;
             });
 
             dataPoints.forEach((dataPoint: SankeyDiagramDataPoint, index: number) => {
@@ -1046,6 +1021,12 @@ module powerbi.extensibility.visual {
                 });
         }
 
+        public onClearSelection(): void {
+            if (this.interactivityService) {
+                this.interactivityService.clearSelection();
+            }
+        }
+
         public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
             const settings: SankeyDiagramSettings = this.dataView && this.dataView.settings
                 || SankeyDiagramSettings.getDefault() as SankeyDiagramSettings;
@@ -1074,7 +1055,7 @@ module powerbi.extensibility.visual {
                 this.addAnInstanceToEnumeration(instanceEnumeration, {
                     displayName,
                     objectName: SankeyDiagram.LinksPropertyIdentifier.objectName,
-                    selector: /*ColorHelper.normalizeSelector(identity.getSelector(), false)*/null, // TODO: we have to create an instance of selectionId.
+                    selector: ColorHelper.normalizeSelector(identity.getSelector(), false),
                     properties: {
                         fill: { solid: { color: link.color } }
                     }
