@@ -36,6 +36,8 @@ module powerbi.extensibility.visual {
     import IInteractivityService = powerbi.extensibility.utils.interactivity.IInteractivityService;
 
     export module sankeyDiagramUtils {
+        const SelectedClassName: string = "selected";
+
         export function getFillOpacity(
             selected: boolean,
             highlight: boolean,
@@ -84,7 +86,7 @@ module powerbi.extensibility.visual {
                 hasHighlights = interactivityService.hasSelection();
             }
 
-            selection.classed("selected", (dataPoint: SankeyDiagramLink | SankeyDiagramNode): boolean => {
+            selection.classed(SelectedClassName, (dataPoint: SankeyDiagramLink | SankeyDiagramNode): boolean => {
                 let isDataPointSelected: boolean = sankeyDiagramUtils.isDataPointSelected(dataPoint),
                     isTheDataPointNode: boolean = sankeyDiagramUtils.isTheDataPointNode(dataPoint),
                     selected: boolean;
@@ -112,14 +114,28 @@ module powerbi.extensibility.visual {
                 return false;
             }
 
+            return doDataPointsIncludeIdentities(selectedDataPoints, dataPoints);
+        }
+
+        export function doDataPointsIncludeIdentities(
+            selectedDataPoints: SelectableDataPoint[],
+            dataPoints: SelectableDataPoint[]): boolean {
+
             return selectedDataPoints.every((selectedDataPoint: SelectableDataPoint) => {
-                return dataPoints.some((dataPoint: SelectableDataPoint) => {
-                    return selectedDataPoint
-                        && dataPoint
-                        && selectedDataPoint.identity
-                        && dataPoint.identity
-                        && (selectedDataPoint.identity as ISelectionId).equals(dataPoint.identity as ISelectionId);
-                });
+                return doDataPointsIncludeIdentity(dataPoints, selectedDataPoint);
+            });
+        }
+
+        export function doDataPointsIncludeIdentity(
+            dataPoints: SelectableDataPoint[],
+            selectedDataPoint: SelectableDataPoint): boolean {
+
+            return dataPoints.some((dataPoint: SelectableDataPoint) => {
+                return selectedDataPoint
+                    && dataPoint
+                    && selectedDataPoint.identity
+                    && dataPoint.identity
+                    && (selectedDataPoint.identity as ISelectionId).equals(dataPoint.identity as ISelectionId);
             });
         }
     }

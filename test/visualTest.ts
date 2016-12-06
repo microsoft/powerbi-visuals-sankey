@@ -70,31 +70,31 @@ module powerbi.extensibility.visual.test {
             it("positive value should be positive value", () => {
                 let positiveValue: number = 42;
 
-                expect(visualInstance.getPositiveNumber(positiveValue)).toBe(positiveValue);
+                expect(VisualClass.getPositiveNumber(positiveValue)).toBe(positiveValue);
             });
 
             it("negative value should be 0", () => {
-                expect(visualInstance.getPositiveNumber(-42)).toBe(0);
+                expect(VisualClass.getPositiveNumber(-42)).toBe(0);
             });
 
             it("Infinity value should be 0", () => {
-                expect(visualInstance.getPositiveNumber(Infinity)).toBe(0);
+                expect(VisualClass.getPositiveNumber(Infinity)).toBe(0);
             });
 
             it("-Infinity should be 0", () => {
-                expect(visualInstance.getPositiveNumber(-Infinity)).toBe(0);
+                expect(VisualClass.getPositiveNumber(-Infinity)).toBe(0);
             });
 
             it("NaN should be 0", () => {
-                expect(visualInstance.getPositiveNumber(NaN)).toBe(0);
+                expect(VisualClass.getPositiveNumber(NaN)).toBe(0);
             });
 
             it("undefined should be 0", () => {
-                expect(visualInstance.getPositiveNumber(undefined)).toBe(0);
+                expect(VisualClass.getPositiveNumber(undefined)).toBe(0);
             });
 
             it("null should be 0", () => {
-                expect(visualInstance.getPositiveNumber(null)).toBe(0);
+                expect(VisualClass.getPositiveNumber(null)).toBe(0);
             });
         });
 
@@ -111,7 +111,7 @@ module powerbi.extensibility.visual.test {
                     return x - y;
                 });
 
-                visualInstance.sortNodesByX(nodes).forEach((node: SankeyDiagramNode, index: number) => {
+                VisualClass.sortNodesByX(nodes).forEach((node: SankeyDiagramNode, index: number) => {
                     expect(node.x).toBe(xValues[index]);
                 });
             });
@@ -189,7 +189,7 @@ module powerbi.extensibility.visual.test {
             it("getMaxColumn should return { sumValueOfNodes: 0, countOfNodes: 0 }", () => {
                 let maxColumn: SankeyDiagramColumn;
 
-                maxColumn = visualInstance.getMaxColumn([]);
+                maxColumn = VisualClass.getMaxColumn([]);
 
                 expect(maxColumn.countOfNodes).toBe(0);
                 expect(maxColumn.sumValueOfNodes).toBe(0);
@@ -198,7 +198,7 @@ module powerbi.extensibility.visual.test {
             it("getMaxColumn should return { sumValueOfNodes: 0, countOfNodes: 0 } when columns are null", () => {
                 let maxColumn: SankeyDiagramColumn;
 
-                maxColumn = visualInstance.getMaxColumn([
+                maxColumn = VisualClass.getMaxColumn([
                     undefined,
                     null
                 ]);
@@ -219,7 +219,7 @@ module powerbi.extensibility.visual.test {
                     maxColumn
                 ];
 
-                expect(visualInstance.getMaxColumn(columns)).toBe(maxColumn);
+                expect(VisualClass.getMaxColumn(columns)).toBe(maxColumn);
             });
         });
 
