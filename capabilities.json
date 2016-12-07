@@ -1,0 +1,123 @@
+{
+    "dataRoles": [
+        {
+            "name": "Source",
+            "kind": "Grouping",
+            "displayName": "Source"
+        },
+        {
+            "name": "Destination",
+            "kind": "Grouping",
+            "displayName": "Destination"
+        },
+        {
+            "name": "Weight",
+            "kind": "Measure",
+            "displayName": "Weight"
+        }
+    ],
+    "dataViewMappings": [
+        {
+            "conditions": [
+                {
+                    "Source": {
+                        "min": 0,
+                        "max": 1
+                    },
+                    "Destination": {
+                        "min": 0,
+                        "max": 1
+                    },
+                    "Weight": {
+                        "min": 0,
+                        "max": 0
+                    }
+                },
+                {
+                    "Source": {
+                        "min": 0,
+                        "max": 1
+                    },
+                    "Destination": {
+                        "min": 0,
+                        "max": 1
+                    },
+                    "Weight": {
+                        "min": 1,
+                        "max": 1
+                    }
+                }
+            ],
+            "categorical": {
+                "categories": {
+                    "select": [
+                        {
+                            "bind": {
+                                "to": "Source"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "Destination"
+                            }
+                        }
+                    ],
+                    "dataReductionAlgorithm": {
+                        "top": {}
+                    }
+                },
+                "values": {
+                    "for": {
+                        "in": "Weight"
+                    }
+                }
+            }
+        }
+    ],
+    "objects": {
+        "labels": {
+            "displayName": "Data labels",
+            "properties": {
+                "show": {
+                    "displayName": "Show",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fill": {
+                    "displayName": "Fill",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Text Size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                }
+            }
+        },
+        "links": {
+            "displayName": "Links",
+            "properties": {
+                "fill": {
+                    "displayName": "Fill",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
