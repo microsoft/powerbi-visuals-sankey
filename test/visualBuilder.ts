@@ -32,11 +32,10 @@ module powerbi.extensibility.visual.test {
 
     // SankeyDiagram1446463184954
     import VisualClass = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagram;
-    import VisualPlugin = powerbi.visuals.plugins.SankeyDiagram1446463184954;
 
     export class SankeyDiagramBuilder extends VisualBuilderBase<VisualClass> {
         constructor(width: number, height: number) {
-            super(width, height, VisualPlugin.name);
+            super(width, height, "SankeyDiagram1446463184954");
         }
 
         protected build(options: VisualConstructorOptions) {
