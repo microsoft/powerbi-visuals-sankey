@@ -119,5 +119,15 @@
                 }
             }
         }
+    },
+    "sorting": {
+        "implicit": {
+            "clauses": [
+                {
+                    "role": "Weight",
+                    "direction": 1
+                }
+            ]
+        }
     }
 }
