@@ -1084,7 +1084,7 @@ module powerbi.extensibility.visual {
                     return this.getSvgPath(link);
                 })
                 .style({
-                    "stroke-width": (link: SankeyDiagramLink) => link.height,
+                    "stroke-width": (link: SankeyDiagramLink) => link.height < 1 ? 1 : link.height,
                     "stroke": (link: SankeyDiagramLink) => link.color
                 });
 
