@@ -32,6 +32,7 @@ module powerbi.extensibility.visual {
     import TooltipEnabledDataPoint = powerbi.extensibility.utils.tooltip.TooltipEnabledDataPoint;
 
     export interface SankeyDiagramLabel {
+        internalName: string;
         name: string;
         formattedName: string;
         width: number;

@@ -102,6 +102,11 @@ module powerbi.extensibility.visual {
             propertyName: "fill"
         };
 
+        private static NodesPropertyIdentifier: DataViewObjectPropertyIdentifier = {
+            objectName: "nodes",
+            propertyName: "fill"
+        };
+
         private static MinWidthOfLabel: number = 21;
 
         private static NodeBottomMargin: number = 5; // 5%
@@ -300,18 +305,21 @@ module powerbi.extensibility.visual {
                 sourceCategory: DataViewCategoryColumn = dataView.categorical.categories[0],
                 sourceCategories: any[] = sourceCategory.values,
                 destinationCategories: any[] = dataView.categorical.categories[1].values,
-                categories: any[] = sourceCategories.concat(destinationCategories),
+                sourceCategoryLabels: DataViewCategoryColumn = dataView.categorical.categories[2] || <DataViewCategoryColumn>{},
+                destinationCategoriesLabels: any[] = (dataView.categorical.categories[3] || {values: []}).values,
                 selectionIdBuilder: SankeyDiagramSelectionIdBuilder = new SankeyDiagramSelectionIdBuilder(
                     this.visualHost,
                     dataView.categorical.categories);
 
             nodes = this.createNodes(
-                categories,
+                sourceCategories,
+                destinationCategories,
                 settings,
                 selectionIdBuilder,
-                sourceCategory.source);
-
-            this.applyColorToNodes(nodes);
+                sourceCategory.source,
+                sourceCategory.objects || [],
+                <any>sourceCategoryLabels,
+                destinationCategoriesLabels);
 
             links = this.createLinks(
                 nodes,
@@ -330,23 +338,52 @@ module powerbi.extensibility.visual {
         }
 
         private createNodes(
-            categories: any[],
+            sourceCategories: any[],
+            destinationCategories: any[],
             settings: SankeyDiagramSettings,
             selectionIdBuilder: SankeyDiagramSelectionIdBuilder,
-            source: DataViewMetadataColumn): SankeyDiagramNode[] {
+            source: DataViewMetadataColumn,
+            linksObjects: DataViewObjects[],
+            sourceCategoriesLabels?: any[],
+            destinationCategoriesLabels?: any[]): SankeyDiagramNode[] {
 
             let nodes: SankeyDiagramNode[] = [],
                 valueFormatterForCategories: IValueFormatter;
 
             valueFormatterForCategories = ValueFormatter.create({
                 format: ValueFormatter.getFormatStringByColumn(source),
-                value: categories[0],
-                value2: categories[categories.length - 1]
+                value: sourceCategories[0],
+                value2: destinationCategories[destinationCategories.length - 1]
             });
 
+            let datapointIndexes: number[] = _.range(0, destinationCategories.length);
+
+            // check self connected links
+            datapointIndexes.forEach((item: any, index: number) => {
+                if (sourceCategoriesLabels[item] === undefined) {
+                    sourceCategoriesLabels[item] = sourceCategories[item];
+                }
+                if (destinationCategoriesLabels[item] === undefined) {
+                    destinationCategoriesLabels[item] = destinationCategories[item];
+                }
+                if (sourceCategories[item] === destinationCategories[item]) {
+                    destinationCategories[item] += "_SK_SELFLINK";
+                }
+            });
+
+            let labelsDictionary: Object = { };
+            sourceCategories.forEach((item: any, index: number) => {
+                labelsDictionary[item] = sourceCategoriesLabels[index];
+            });
+            destinationCategories.forEach((item: any, index: number) => {
+                labelsDictionary[item] = destinationCategoriesLabels[index];
+            });
+
+            let categories: any[] = sourceCategories.concat(destinationCategories);
+
             categories.forEach((item: any, index: number) => {
-                if (!nodes.some((node: SankeyDiagramNode) => {
-                    if (item === node.label.name) {
+                if (true || !nodes.some((node: SankeyDiagramNode) => {
+                    if (item === node.label.internalName) {
                         const selectionId: ISelectionId = selectionIdBuilder.createSelectionId(index);
 
                         node.selectableDataPoints.push(SankeyDiagram.createSelectableDataPoint(selectionId));
@@ -366,8 +403,9 @@ module powerbi.extensibility.visual {
                         };
 
                     label = {
+                        internalName: item,
                         name: item,
-                        formattedName: valueFormatterForCategories.format(item),
+                        formattedName: valueFormatterForCategories.format((<string>labelsDictionary[item]).replace("_SK_SELFLINK", "")),
                         width: textMeasurementService.measureSvgTextWidth(textProperties),
                         height: textMeasurementService.estimateSvgTextHeight(textProperties),
                         color: settings.labels.fill
@@ -383,7 +421,7 @@ module powerbi.extensibility.visual {
                         outputWeight: 0,
                         width: this.nodeWidth,
                         height: 0,
-                        colour: SankeyDiagram.DefaultColourOfNode,
+                        colour: this.colorPalette.getColor(Math.floor(100 + index).toString()).value,
                         tooltipInfo: [],
                         selectableDataPoints: [selectableDataPoint]
                     });
@@ -406,7 +444,6 @@ module powerbi.extensibility.visual {
             destinationCategories: any[],
             valueColumns: DataViewValueColumns,
             linksObjects: DataViewObjects[]): SankeyDiagramLink[] {
-
             let valuesColumn: DataViewValueColumn = valueColumns && valueColumns[0],
                 links: SankeyDiagramLink[] = [],
                 weightValues: number[] = [],
@@ -457,11 +494,11 @@ module powerbi.extensibility.visual {
                 }
 
                 nodes.forEach((node: SankeyDiagramNode) => {
-                    if (node.label.name === dataPoint.source) {
+                    if (node.label.internalName === dataPoint.source) {
                         sourceNode = node;
                     }
 
-                    if (node.label.name === dataPoint.destination) {
+                    if (node.label.internalName === dataPoint.destination) {
                         destinationNode = node;
                     }
                 });
