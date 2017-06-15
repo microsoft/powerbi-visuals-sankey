@@ -145,6 +145,11 @@ module powerbi.extensibility.visual {
 
         private static StrokeColorFactor: number = 1.5;
 
+        private static MinDomainOfScale = 0;
+        private static MaxDomainOfScale = 9;
+        private static MinRangeOfScale = 3;
+        private static MaxRangeOfScale = 70;
+
         public static RoleNames: SankeyDiagramRoleNames = {
             rows: "Source",
             columns: "Destination",
@@ -305,7 +310,7 @@ module powerbi.extensibility.visual {
                 sourceCategory: DataViewCategoryColumn = dataView.categorical.categories[0],
                 sourceCategories: any[] = sourceCategory.values,
                 destinationCategories: any[] = dataView.categorical.categories[1].values,
-                sourceCategoryLabels: DataViewCategoryColumn = dataView.categorical.categories[2] || <DataViewCategoryColumn>{},
+                sourceCategoryLabels: any[] = (dataView.categorical.categories[2] ||  {values: []}).values,
                 destinationCategoriesLabels: any[] = (dataView.categorical.categories[3] || {values: []}).values,
                 selectionIdBuilder: SankeyDiagramSelectionIdBuilder = new SankeyDiagramSelectionIdBuilder(
                     this.visualHost,
@@ -393,7 +398,7 @@ module powerbi.extensibility.visual {
 
                     return false;
                 })) {
-                    let formattedValue: string = valueFormatterForCategories.format(item),
+                    let formattedValue: string = valueFormatterForCategories.format((<string>labelsDictionary[item]).replace("_SK_SELFLINK", "")),
                         label: SankeyDiagramLabel,
                         selectableDataPoint: SelectableDataPoint,
                         textProperties: TextProperties = {
@@ -653,6 +658,20 @@ module powerbi.extensibility.visual {
 
             SankeyDiagram.sortNodesByX(sankeyDiagramDataView.nodes);
 
+            let weightScale: d3.scale.Linear<number, number> =
+            d3.scale.log()
+                .base(Math.E)
+                .domain([Math.exp(SankeyDiagram.MinDomainOfScale), Math.exp(SankeyDiagram.MaxDomainOfScale)])
+                .range([SankeyDiagram.MinRangeOfScale, SankeyDiagram.MaxRangeOfScale]);
+
+            sankeyDiagramDataView.links.forEach((l) => {
+                l.weigth = weightScale(l.weigth);
+            });
+
+            sankeyDiagramDataView.nodes.forEach((n) => {
+                SankeyDiagram.updateValueOfNode(n);
+            });
+
             columns = this.getColumns(sankeyDiagramDataView.nodes);
             maxColumn = SankeyDiagram.getMaxColumn(columns);
 
@@ -891,7 +910,6 @@ module powerbi.extensibility.visual {
 
                 node.links.forEach((link: SankeyDiagramLink) => {
                     let shiftByAxisY: number = SankeyDiagram.DefaultOffset;
-
                     link.height = link.weigth * scale;
 
                     if (link.source.x < node.x || link.destination.x < node.x) {
@@ -1001,9 +1019,9 @@ module powerbi.extensibility.visual {
                         labelPositionByAxisX: number = this.getCurrentPositionOfLabelByAxisX(node);
 
                     isNotVisibleLabel =
-                        labelPositionByAxisX >= this.viewport.width ||
+                        (labelPositionByAxisX >= this.viewport.width ||
                         labelPositionByAxisX <= SankeyDiagram.MinSize ||
-                        (node.height + SankeyDiagram.NodeMargin) < node.label.height;
+                        (node.height + SankeyDiagram.NodeMargin) < node.label.height) && !sankeyDiagramDataView.settings.labels.forceDisplay;
 
                     if (isNotVisibleLabel || !sankeyDiagramDataView.settings.labels.show
                         || node.label.maxWidth < SankeyDiagram.MinWidthOfLabel) {

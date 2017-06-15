@@ -129,6 +129,13 @@
                             "fontSize": true
                         }
                     }
+                },
+                "forceDisplay": {
+                    "displayName": "Force display",
+                    "description": "Display all labels anyway",
+                    "type": {
+                        "bool": true
+                    }
                 }
             }
         },

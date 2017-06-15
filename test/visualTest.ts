@@ -38,6 +38,7 @@ module powerbi.extensibility.visual.test {
     import VisualClass = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagram;
     import SankeyDiagramNode = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramNode;
     import SankeyDiagramColumn = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramColumn;
+    import SankeyDiagramDataView = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramDataView;
 
     // powerbi.extensibility.utils.test
     import clickElement = powerbi.extensibility.utils.test.helpers.clickElement;
@@ -338,8 +339,8 @@ module powerbi.extensibility.visual.test {
                         thirdNode: string = textElement.eq(4).text();
 
                     expect(firstNode).toBe("Brazil");
-                    expect(secondNode).toBe("Morocco");
-                    expect(thirdNode).toBe("Portugal");
+                    expect(secondNode).toBe("Canada");
+                    expect(thirdNode).toBe("Senegal");
 
                     done();
                 });
@@ -418,6 +419,18 @@ module powerbi.extensibility.visual.test {
 
                     visualBuilder.updateRenderTimeout([defaultDataViewBuilder.getDataView()], () => {
                         expect(visualBuilder.linkElements.length).toBe(positiveValues.length);
+
+                        done();
+                    });
+                });
+            });
+
+            describe("self links", () => {
+                it("must be exists", done => {
+                    visualBuilder.updateRenderTimeout([defaultDataViewBuilder.getDataView()], () => {
+                        let transformedData: SankeyDiagramDataView = visualBuilder.instance.converter(dataView);
+                        let links = transformedData.links.filter((link) => link.source.label.formattedName === link.destination.label.formattedName);
+                        expect(links.length).toBeGreaterThan(0);
 
                         done();
                     });
