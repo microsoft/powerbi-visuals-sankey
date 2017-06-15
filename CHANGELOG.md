@@ -1,4 +1,4 @@
-## 0.2.2 
+## 1.1.0
 
 * Improve nodes and links sizes scaling when data values of weight differ significantly.
 * Display self-connected nodes correctly.
