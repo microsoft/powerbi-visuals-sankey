@@ -150,6 +150,10 @@ module powerbi.extensibility.visual {
         private static MinRangeOfScale = 3;
         private static MaxRangeOfScale = 70;
 
+        private static DublicatedNamePostfix: string = "_SK_SELFLINK";
+
+        private static MinWidthOfLink: number = 1;
+
         public static RoleNames: SankeyDiagramRoleNames = {
             rows: "Source",
             columns: "Destination",
@@ -370,7 +374,7 @@ module powerbi.extensibility.visual {
                     destinationCategoriesLabels[index] = destinationCategories[index];
                 }
                 if (sourceCategories[index] === destinationCategories[index]) {
-                    destinationCategories[index] += "_SK_SELFLINK";
+                    destinationCategories[index] += SankeyDiagram.DublicatedNamePostfix;
                 }
             }
 
@@ -385,7 +389,7 @@ module powerbi.extensibility.visual {
             let categories: any[] = sourceCategories.concat(destinationCategories);
 
             categories.forEach((item: any, index: number) => {
-                let formattedValue: string = valueFormatterForCategories.format((<string>labelsDictionary[item]).replace("_SK_SELFLINK", "")),
+                let formattedValue: string = valueFormatterForCategories.format((<string>labelsDictionary[item]).replace(SankeyDiagram.DublicatedNamePostfix, "")),
                     label: SankeyDiagramLabel,
                     selectableDataPoint: SelectableDataPoint,
                     textProperties: TextProperties = {
@@ -397,7 +401,7 @@ module powerbi.extensibility.visual {
                 label = {
                     internalName: item,
                     name: item,
-                    formattedName: valueFormatterForCategories.format((<string>labelsDictionary[item]).replace("_SK_SELFLINK", "")),
+                    formattedName: valueFormatterForCategories.format((<string>labelsDictionary[item]).replace(SankeyDiagram.DublicatedNamePostfix, "")),
                     width: textMeasurementService.measureSvgTextWidth(textProperties),
                     height: textMeasurementService.estimateSvgTextHeight(textProperties),
                     color: settings.labels.fill
@@ -644,8 +648,7 @@ module powerbi.extensibility.visual {
 
             SankeyDiagram.sortNodesByX(sankeyDiagramDataView.nodes);
 
-            let weightScale: d3.scale.Log<number, number> =
-            d3.scale.log()
+            let weightScale: d3.scale.Log<number, number> = d3.scale.log()
                 .base(Math.E)
                 .domain([Math.exp(SankeyDiagram.MinDomainOfScale), Math.exp(SankeyDiagram.MaxDomainOfScale)])
                 .range([SankeyDiagram.MinRangeOfScale, SankeyDiagram.MaxRangeOfScale]);
@@ -1088,7 +1091,7 @@ module powerbi.extensibility.visual {
                     return this.getSvgPath(link);
                 })
                 .style({
-                    "stroke-width": (link: SankeyDiagramLink) => link.height < 1 ? 1 : link.height,
+                    "stroke-width": (link: SankeyDiagramLink) => link.height < SankeyDiagram.MinWidthOfLink ? SankeyDiagram.MinWidthOfLink : link.height,
                     "stroke": (link: SankeyDiagramLink) => link.color
                 });
 

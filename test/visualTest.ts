@@ -39,6 +39,7 @@ module powerbi.extensibility.visual.test {
     import SankeyDiagramNode = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramNode;
     import SankeyDiagramColumn = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramColumn;
     import SankeyDiagramDataView = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramDataView;
+    import SankeyDiagramLink = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramLink;
 
     // powerbi.extensibility.utils.test
     import clickElement = powerbi.extensibility.utils.test.helpers.clickElement;
@@ -426,10 +427,10 @@ module powerbi.extensibility.visual.test {
             });
 
             describe("self links", () => {
-                it("must be exists", done => {
+                it("must exist", done => {
                     visualBuilder.updateRenderTimeout([defaultDataViewBuilder.getDataView()], () => {
                         let transformedData: SankeyDiagramDataView = visualBuilder.instance.converter(dataView);
-                        let links = transformedData.links.filter((link) => link.source.label.formattedName === link.destination.label.formattedName);
+                        let links: SankeyDiagramLink[] = transformedData.links.filter((link) => link.source.label.formattedName === link.destination.label.formattedName);
                         expect(links.length).toBeGreaterThan(0);
 
                         done();
