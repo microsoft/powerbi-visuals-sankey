@@ -323,7 +323,7 @@ module powerbi.extensibility.visual {
                 selectionIdBuilder,
                 sourceCategory.source,
                 sourceCategory.objects || [],
-                <any>sourceCategoryLabels,
+                sourceCategoryLabels,
                 destinationCategoriesLabels);
 
             links = this.createLinks(
@@ -361,20 +361,18 @@ module powerbi.extensibility.visual {
                 value2: destinationCategories[destinationCategories.length - 1]
             });
 
-            let datapointIndexes: number[] = _.range(0, destinationCategories.length);
-
             // check self connected links
-            datapointIndexes.forEach((item: any, index: number) => {
-                if (sourceCategoriesLabels[item] === undefined) {
-                    sourceCategoriesLabels[item] = sourceCategories[item];
+            for (let index: number = 0; index < destinationCategories.length; index++) {
+                if (sourceCategoriesLabels[index] === undefined) {
+                    sourceCategoriesLabels[index] = sourceCategories[index];
                 }
-                if (destinationCategoriesLabels[item] === undefined) {
-                    destinationCategoriesLabels[item] = destinationCategories[item];
+                if (destinationCategoriesLabels[index] === undefined) {
+                    destinationCategoriesLabels[index] = destinationCategories[index];
                 }
-                if (sourceCategories[item] === destinationCategories[item]) {
-                    destinationCategories[item] += "_SK_SELFLINK";
+                if (sourceCategories[index] === destinationCategories[index]) {
+                    destinationCategories[index] += "_SK_SELFLINK";
                 }
-            });
+            }
 
             let labelsDictionary: Object = { };
             sourceCategories.forEach((item: any, index: number) => {
@@ -387,50 +385,38 @@ module powerbi.extensibility.visual {
             let categories: any[] = sourceCategories.concat(destinationCategories);
 
             categories.forEach((item: any, index: number) => {
-                if (true || !nodes.some((node: SankeyDiagramNode) => {
-                    if (item === node.label.internalName) {
-                        const selectionId: ISelectionId = selectionIdBuilder.createSelectionId(index);
-
-                        node.selectableDataPoints.push(SankeyDiagram.createSelectableDataPoint(selectionId));
-
-                        return true;
-                    }
-
-                    return false;
-                })) {
-                    let formattedValue: string = valueFormatterForCategories.format((<string>labelsDictionary[item]).replace("_SK_SELFLINK", "")),
-                        label: SankeyDiagramLabel,
-                        selectableDataPoint: SelectableDataPoint,
-                        textProperties: TextProperties = {
-                            text: formattedValue,
-                            fontFamily: this.textProperties.fontFamily,
-                            fontSize: this.textProperties.fontSize
-                        };
-
-                    label = {
-                        internalName: item,
-                        name: item,
-                        formattedName: valueFormatterForCategories.format((<string>labelsDictionary[item]).replace("_SK_SELFLINK", "")),
-                        width: textMeasurementService.measureSvgTextWidth(textProperties),
-                        height: textMeasurementService.estimateSvgTextHeight(textProperties),
-                        color: settings.labels.fill
+                let formattedValue: string = valueFormatterForCategories.format((<string>labelsDictionary[item]).replace("_SK_SELFLINK", "")),
+                    label: SankeyDiagramLabel,
+                    selectableDataPoint: SelectableDataPoint,
+                    textProperties: TextProperties = {
+                        text: formattedValue,
+                        fontFamily: this.textProperties.fontFamily,
+                        fontSize: this.textProperties.fontSize
                     };
 
-                    selectableDataPoint =
-                        SankeyDiagram.createSelectableDataPoint(selectionIdBuilder.createSelectionId(index));
+                label = {
+                    internalName: item,
+                    name: item,
+                    formattedName: valueFormatterForCategories.format((<string>labelsDictionary[item]).replace("_SK_SELFLINK", "")),
+                    width: textMeasurementService.measureSvgTextWidth(textProperties),
+                    height: textMeasurementService.estimateSvgTextHeight(textProperties),
+                    color: settings.labels.fill
+                };
 
-                    nodes.push({
-                        label: label,
-                        links: [],
-                        inputWeight: 0,
-                        outputWeight: 0,
-                        width: this.nodeWidth,
-                        height: 0,
-                        colour: this.colorPalette.getColor(Math.floor(100 + index).toString()).value,
-                        tooltipInfo: [],
-                        selectableDataPoints: [selectableDataPoint]
-                    });
-                }
+                selectableDataPoint =
+                    SankeyDiagram.createSelectableDataPoint(selectionIdBuilder.createSelectionId(index));
+
+                nodes.push({
+                    label: label,
+                    links: [],
+                    inputWeight: 0,
+                    outputWeight: 0,
+                    width: this.nodeWidth,
+                    height: 0,
+                    colour: this.colorPalette.getColor(Math.floor(100 + index).toString()).value,
+                    tooltipInfo: [],
+                    selectableDataPoints: [selectableDataPoint]
+                });
             });
 
             return nodes;
@@ -658,7 +644,7 @@ module powerbi.extensibility.visual {
 
             SankeyDiagram.sortNodesByX(sankeyDiagramDataView.nodes);
 
-            let weightScale: d3.scale.Linear<number, number> =
+            let weightScale: d3.scale.Log<number, number> =
             d3.scale.log()
                 .base(Math.E)
                 .domain([Math.exp(SankeyDiagram.MinDomainOfScale), Math.exp(SankeyDiagram.MaxDomainOfScale)])
