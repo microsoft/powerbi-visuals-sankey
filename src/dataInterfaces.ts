@@ -82,6 +82,21 @@ module powerbi.extensibility.visual {
         sumValueOfNodes: number;
     }
 
+    export enum SankeyDiagramNodeStatus {
+        NotVisited = 0,
+        Visited = 1,
+        Processing = 2
+    }
+
+    export interface SankeyDiagramVisitedNode {
+        node: SankeyDiagramNode;
+        status: SankeyDiagramNodeStatus;
+    }
+
+    export interface SankeyDiagramCycleDictionary {
+        [propName: string]: SankeyDiagramNode[];
+    }
+
     export interface SankeyDiagramDataView {
         nodes: SankeyDiagramNode[];
         links: SankeyDiagramLink[];

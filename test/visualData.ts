@@ -55,6 +55,7 @@ module powerbi.extensibility.visual.test {
             ["USA", "France"],
             ["USA", "Spain"],
             ["USA", "England"],
+            ["England", "USA"],
             ["Portugal", "Angola"],
             ["Portugal", "Senegal"],
             ["Portugal", "Morocco"],

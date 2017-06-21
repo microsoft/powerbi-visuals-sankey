@@ -148,11 +148,16 @@ module powerbi.extensibility.visual {
         private static MinDomainOfScale = 0;
         private static MaxDomainOfScale = 9;
         private static MinRangeOfScale = 3;
-        private static MaxRangeOfScale = 70;
+        private static MaxRangeOfScale = 100;
 
-        private static DublicatedNamePostfix: string = "_SK_SELFLINK";
+        public static DublicatedNamePostfix: string = "_SK_SELFLINK";
 
         private static MinWidthOfLink: number = 1;
+
+        private static MinHeightOfNode: number = 5;
+
+        private static ScaleStep: number = 0.1;
+        private static ScaleStepLimit: number = 10;
 
         public static RoleNames: SankeyDiagramRoleNames = {
             rows: "Source",
@@ -338,12 +343,126 @@ module powerbi.extensibility.visual {
                 dataView.categorical.values,
                 sourceCategory.objects || []);
 
+            let cycles: SankeyDiagramCycleDictionary = this.checkCycles(nodes);
+
+            links = this.processCycles(cycles, nodes, links);
+
             return {
                 nodes,
                 links,
                 settings,
                 columns: []
             };
+        }
+
+        // in this method we breaking simple cycles for typical displaying with twice rendering onr node in cycle
+        private processCycles(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[]): SankeyDiagramLink[] {
+            let createdNodes: SankeyDiagramNode[] = [];
+            for (let nodeName in cycles) {
+                let firstCyclesNode: SankeyDiagramNode = cycles[nodeName].filter((node: SankeyDiagramNode): boolean => {
+                    if (node.label.name === nodeName) {
+                        return true;
+                    }
+                    return false;
+                })[0];
+
+                let nodeCopy: SankeyDiagramNode = _.cloneDeep(firstCyclesNode);
+                nodeCopy.label.name += SankeyDiagram.DublicatedNamePostfix;
+
+                // copy only! output links to new node;
+                nodeCopy.links = firstCyclesNode.links.filter((link: SankeyDiagramLink) => {
+                    if (link.source === firstCyclesNode || link.source === link.destination) {
+                        return true;
+                    }
+                    return false;
+                });
+                nodeCopy.links.forEach((link: SankeyDiagramLink) => {
+                    link.source = nodeCopy;
+                });
+
+                // remove output links from original node
+                firstCyclesNode.links = firstCyclesNode.links.filter((link: SankeyDiagramLink) => {
+                    if (link.destination === firstCyclesNode || link.destination === link.source) {
+                        return true;
+                    }
+
+                    return false;
+                });
+
+                SankeyDiagram.updateValueOfNode(firstCyclesNode);
+                SankeyDiagram.updateValueOfNode(nodeCopy);
+                SankeyDiagram.fixLinksCount(firstCyclesNode);
+                SankeyDiagram.fixLinksCount(nodeCopy);
+                nodes.push(nodeCopy);
+                createdNodes.push(nodeCopy);
+            }
+
+            return links;
+        }
+
+        // remove dublicated links
+        private static fixLinksCount(node: SankeyDiagramNode) {
+            node.links = _.uniq(node.links);
+        }
+
+        // Depth-First Search 
+        private checkCycles(nodes: SankeyDiagramNode[]): SankeyDiagramCycleDictionary {
+            let nodesStatuses: any = [];
+
+            // init nodes statuses array
+            // all nodes are not visited state
+            nodes.forEach((node: SankeyDiagramNode) => {
+                if (node.links.length > 0) {
+                    nodesStatuses[node.label.name] = {
+                        node: node,
+                        status: SankeyDiagramNodeStatus.NotVisited
+                    };
+                }
+            });
+
+            let simpleCycles: SankeyDiagramCycleDictionary = {};
+
+            let dfs = (node: SankeyDiagramNode) : void => {
+                nodesStatuses[node.label.name].status = SankeyDiagramNodeStatus.Processing;
+
+                node.links.forEach((link: SankeyDiagramLink) => {
+                    // consider only output links
+                    if (link.source !== node) {
+                        return;
+                    }
+
+                    // get node by output link
+                    let nextNode: SankeyDiagramNode = link.destination;
+                    // move to next not visited node
+                    if (nodesStatuses[nextNode.label.name].status === SankeyDiagramNodeStatus.NotVisited) {
+                        dfs(nextNode);
+                    }
+                    // if cycle was found
+                    if (nodesStatuses[nextNode.label.name].status === SankeyDiagramNodeStatus.Processing) {
+                        // add item to dictionary
+                        simpleCycles[nextNode.label.name] = <SankeyDiagramNode[]>[];
+
+                        // collect all nodes which were processed in current step
+                        nodes.forEach((node: SankeyDiagramNode) => {
+                            if (nodesStatuses[node.label.name].status === SankeyDiagramNodeStatus.Processing &&
+                                node.links.length > 0) {
+                                simpleCycles[nextNode.label.name].push(node);
+                            }
+                        });
+                    }
+                });
+
+                nodesStatuses[node.label.name].status = SankeyDiagramNodeStatus.Visited;
+            };
+
+            nodes.forEach((node: SankeyDiagramNode) => {
+                if (nodesStatuses[node.label.name].status === SankeyDiagramNodeStatus.NotVisited &&
+                    node.links.length > 0) {
+                    dfs(node);
+                }
+            });
+
+            return simpleCycles;
         }
 
         private createNodes(
@@ -372,9 +491,6 @@ module powerbi.extensibility.visual {
                 }
                 if (destinationCategoriesLabels[index] === undefined) {
                     destinationCategoriesLabels[index] = destinationCategories[index];
-                }
-                if (sourceCategories[index] === destinationCategories[index]) {
-                    destinationCategories[index] += SankeyDiagram.DublicatedNamePostfix;
                 }
             }
 
@@ -483,10 +599,6 @@ module powerbi.extensibility.visual {
                     link: SankeyDiagramLink,
                     linkColour: string,
                     selectionId: ISelectionId;
-
-                if (dataPoint.source === dataPoint.destination) {
-                    return;
-                }
 
                 nodes.forEach((node: SankeyDiagramNode) => {
                     if (node.label.internalName === dataPoint.source) {
@@ -648,24 +760,38 @@ module powerbi.extensibility.visual {
 
             SankeyDiagram.sortNodesByX(sankeyDiagramDataView.nodes);
 
-            let weightScale: d3.scale.Log<number, number> = d3.scale.log()
-                .base(Math.E)
-                .domain([Math.exp(SankeyDiagram.MinDomainOfScale), Math.exp(SankeyDiagram.MaxDomainOfScale)])
-                .range([SankeyDiagram.MinRangeOfScale, SankeyDiagram.MaxRangeOfScale]);
+            let scaleShift: number = 0;
+            let minWeight: number = 1;
+            let minHeight: number = 1;
+            let scaleStepCount: number = 0;
 
-            sankeyDiagramDataView.links.forEach((l) => {
-                l.weigth = weightScale(l.weigth);
-            });
+            while (minHeight < SankeyDiagram.MinHeightOfNode && scaleStepCount < SankeyDiagram.ScaleStepLimit) {
+                let weightScale: d3.scale.Log<number, number> = d3.scale.log()
+                    .base(Math.E)
+                    .domain([Math.exp(SankeyDiagram.MinDomainOfScale + scaleShift), Math.exp(SankeyDiagram.MaxDomainOfScale + scaleShift)])
+                    .range([SankeyDiagram.MinRangeOfScale, SankeyDiagram.MaxRangeOfScale]);
 
-            sankeyDiagramDataView.nodes.forEach((n) => {
-                SankeyDiagram.updateValueOfNode(n);
-            });
+                sankeyDiagramDataView.links.forEach((l) => {
+                    l.weigth = weightScale(l.weigth);
+                });
 
-            columns = this.getColumns(sankeyDiagramDataView.nodes);
-            maxColumn = SankeyDiagram.getMaxColumn(columns);
+                sankeyDiagramDataView.nodes.forEach((n) => {
+                    SankeyDiagram.updateValueOfNode(n);
+                });
 
+                columns = this.getColumns(sankeyDiagramDataView.nodes);
+                maxColumn = SankeyDiagram.getMaxColumn(columns);
+
+                minWeight = d3.min(sankeyDiagramDataView.nodes.filter((n) => Math.max(n.inputWeight, n.outputWeight) > 0).map((n) => Math.max(n.inputWeight, n.outputWeight)));
+                minWeight = minWeight || 1;
+                sankeyDiagramDataView.settings._scale.y = this.getScaleByAxisY(maxColumn.sumValueOfNodes);
+
+                minHeight = minWeight * sankeyDiagramDataView.settings._scale.y;
+
+                scaleShift += SankeyDiagram.ScaleStep;
+                scaleStepCount++;
+            }
             sankeyDiagramDataView.settings._scale.x = this.getScaleByAxisX(maxXPosition);
-            sankeyDiagramDataView.settings._scale.y = this.getScaleByAxisY(maxColumn.sumValueOfNodes);
 
             SankeyDiagram.scalePositionsByAxes(
                 sankeyDiagramDataView.nodes,
