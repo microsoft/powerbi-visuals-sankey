@@ -11,6 +11,16 @@
             "displayName": "Destination"
         },
         {
+            "name": "DestinationLabels",
+            "kind": "Grouping",
+            "displayName": "Destination labels"
+        },
+        {
+            "name": "SourceLabels",
+            "kind": "Grouping",
+            "displayName": "Source labels"
+        },
+        {
             "name": "Weight",
             "kind": "Measure",
             "displayName": "Weight"
@@ -25,6 +35,14 @@
                         "max": 1
                     },
                     "Destination": {
+                        "min": 0,
+                        "max": 1
+                    },
+                    "SourceLabels": {
+                        "min": 0,
+                        "max": 1
+                    },
+                    "DestinationLabels": {
                         "min": 0,
                         "max": 1
                     },
@@ -59,6 +77,16 @@
                         {
                             "bind": {
                                 "to": "Destination"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "SourceLabels"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "DestinationLabels"
                             }
                         }
                     ],
@@ -101,11 +129,33 @@
                             "fontSize": true
                         }
                     }
+                },
+                "forceDisplay": {
+                    "displayName": "Force display",
+                    "description": "Display all labels anyway",
+                    "type": {
+                        "bool": true
+                    }
                 }
             }
         },
         "links": {
             "displayName": "Links",
+            "properties": {
+                "fill": {
+                    "displayName": "Fill",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "nodes": {
+            "displayName": "Nodes",
             "properties": {
                 "fill": {
                     "displayName": "Fill",

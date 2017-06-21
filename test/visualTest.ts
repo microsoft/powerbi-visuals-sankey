@@ -38,6 +38,8 @@ module powerbi.extensibility.visual.test {
     import VisualClass = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagram;
     import SankeyDiagramNode = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramNode;
     import SankeyDiagramColumn = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramColumn;
+    import SankeyDiagramDataView = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramDataView;
+    import SankeyDiagramLink = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramLink;
 
     // powerbi.extensibility.utils.test
     import clickElement = powerbi.extensibility.utils.test.helpers.clickElement;
@@ -236,15 +238,19 @@ module powerbi.extensibility.visual.test {
                     expect(visualBuilder.linksElement).toBeInDOM();
                     expect(visualBuilder.linkElements.length).toBe(sourceCategories.length);
 
-                    let uniqueCountries: string[] = sourceCategories
-                        .concat(destinationCategories)
-                        .sort()
-                        .filter((value: PrimitiveValue, index: number, array: PrimitiveValue[]) => {
-                            return !index || value !== array[index - 1];
-                        }) as string[];
+                    let nodes: SankeyDiagramNode[] = visualBuilder.instance
+                        .converter(dataView)
+                        .nodes
+                        .filter( (node: SankeyDiagramNode) => {
+                            if (node.links.length > 0) {
+                                return true;
+                            }
+
+                            return false;
+                        });
 
                     expect(visualBuilder.nodesElement).toBeInDOM();
-                    expect(visualBuilder.nodeElements.length).toEqual(uniqueCountries.length);
+                    expect(visualBuilder.nodeElements.length).toEqual(nodes.length);
 
                     done();
                 });
@@ -339,7 +345,7 @@ module powerbi.extensibility.visual.test {
 
                     expect(firstNode).toBe("Brazil");
                     expect(secondNode).toBe("Morocco");
-                    expect(thirdNode).toBe("Portugal");
+                    expect(thirdNode).toBe("USA");
 
                     done();
                 });
@@ -418,6 +424,42 @@ module powerbi.extensibility.visual.test {
 
                     visualBuilder.updateRenderTimeout([defaultDataViewBuilder.getDataView()], () => {
                         expect(visualBuilder.linkElements.length).toBe(positiveValues.length);
+
+                        done();
+                    });
+                });
+            });
+
+            describe("self links", () => {
+                it("must exist", done => {
+                    visualBuilder.updateRenderTimeout([defaultDataViewBuilder.getDataView()], () => {
+                        let transformedData: SankeyDiagramDataView = visualBuilder.instance.converter(dataView);
+
+                        let links: SankeyDiagramLink[] = transformedData.links.filter( (link: SankeyDiagramLink, index: number) => {
+                            console.log(link.source.label.name + " " + link.destination.label.name);
+                            if (link.source.label.name === "England_SK_SELFLINK" &&
+                                link.destination.label.name === "USA" ||
+                                link.source.label.name === "USA_SK_SELFLINK" &&
+                                link.destination.label.name === "England") {
+
+                                return true;
+                            }
+                            return false;
+                        });
+
+                        expect(links.length).toBe(2);
+
+                        done();
+                    });
+                });
+            });
+
+            describe("cycles in graph", () => {
+                it("must have two nodes with same label", done => {
+                    visualBuilder.updateRenderTimeout([defaultDataViewBuilder.getDataView()], () => {
+                        let transformedData: SankeyDiagramDataView = visualBuilder.instance.converter(dataView);
+                        let links: SankeyDiagramLink[] = transformedData.links.filter((link) => link.source.label.formattedName === link.destination.label.formattedName);
+                        expect(links.length).toBeGreaterThan(0);
 
                         done();
                     });

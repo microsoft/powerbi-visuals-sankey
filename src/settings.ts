@@ -33,6 +33,8 @@ module powerbi.extensibility.visual {
         public show: boolean = true;
         public fill: string = "black";
         public fontSize: number = SankeyDiagramLabelsSettings.DefaultFontSize;
+        public forceDisplay: boolean = false;
+        public minHeightOfNode: number = 10;
     }
 
     export class SankeyDiagramScaleSettings {

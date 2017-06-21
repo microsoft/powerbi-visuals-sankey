@@ -102,6 +102,11 @@ module powerbi.extensibility.visual {
             propertyName: "fill"
         };
 
+        private static NodesPropertyIdentifier: DataViewObjectPropertyIdentifier = {
+            objectName: "nodes",
+            propertyName: "fill"
+        };
+
         private static MinWidthOfLabel: number = 21;
 
         private static NodeBottomMargin: number = 5; // 5%
@@ -139,6 +144,21 @@ module powerbi.extensibility.visual {
         private static DefaultNumberOfColumns: number = 1;
 
         private static StrokeColorFactor: number = 1.5;
+
+        private static MinDomainOfScale = 0;
+        private static MaxDomainOfScale = 9;
+        private static MinRangeOfScale = 3;
+        private static MaxRangeOfScale = 100;
+
+        public static DublicatedNamePostfix: string = "_SK_SELFLINK";
+
+        private static MinWidthOfLink: number = 1;
+        private static DefaultWeightOfLink: number = 1;
+
+        private static MinHeightOfNode: number = 5;
+
+        private static ScaleStep: number = 0.1;
+        private static ScaleStepLimit: number = 10;
 
         public static RoleNames: SankeyDiagramRoleNames = {
             rows: "Source",
@@ -300,18 +320,21 @@ module powerbi.extensibility.visual {
                 sourceCategory: DataViewCategoryColumn = dataView.categorical.categories[0],
                 sourceCategories: any[] = sourceCategory.values,
                 destinationCategories: any[] = dataView.categorical.categories[1].values,
-                categories: any[] = sourceCategories.concat(destinationCategories),
+                sourceCategoryLabels: any[] = (dataView.categorical.categories[2] ||  {values: []}).values,
+                destinationCategoriesLabels: any[] = (dataView.categorical.categories[3] || {values: []}).values,
                 selectionIdBuilder: SankeyDiagramSelectionIdBuilder = new SankeyDiagramSelectionIdBuilder(
                     this.visualHost,
                     dataView.categorical.categories);
 
             nodes = this.createNodes(
-                categories,
+                sourceCategories,
+                destinationCategories,
                 settings,
                 selectionIdBuilder,
-                sourceCategory.source);
-
-            this.applyColorToNodes(nodes);
+                sourceCategory.source,
+                sourceCategory.objects || [],
+                sourceCategoryLabels,
+                destinationCategoriesLabels);
 
             links = this.createLinks(
                 nodes,
@@ -321,6 +344,10 @@ module powerbi.extensibility.visual {
                 dataView.categorical.values,
                 sourceCategory.objects || []);
 
+            let cycles: SankeyDiagramCycleDictionary = this.checkCycles(nodes);
+
+            links = this.processCycles(cycles, nodes, links);
+
             return {
                 nodes,
                 links,
@@ -329,65 +356,192 @@ module powerbi.extensibility.visual {
             };
         }
 
+        // in this method we breaking simple cycles for typical displaying with twice rendering onr node in cycle
+        private processCycles(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[]): SankeyDiagramLink[] {
+            let createdNodes: SankeyDiagramNode[] = [];
+            for (let nodeName in cycles) {
+                let firstCyclesNode: SankeyDiagramNode = (cycles[nodeName].filter((node: SankeyDiagramNode): boolean => {
+                    if (node.label.name === nodeName) {
+                        return true;
+                    }
+                    return false;
+                }) || [])[0];
+
+                if (firstCyclesNode === undefined) {
+                    return [];
+                }
+
+                let nodeCopy: SankeyDiagramNode = _.cloneDeep(firstCyclesNode);
+                nodeCopy.label.name += SankeyDiagram.DublicatedNamePostfix;
+
+                // copy only! output links to new node;
+                nodeCopy.links = firstCyclesNode.links.filter((link: SankeyDiagramLink) => {
+                    if (link.source === firstCyclesNode || link.source === link.destination) {
+                        return true;
+                    }
+                    return false;
+                });
+                nodeCopy.links.forEach((link: SankeyDiagramLink) => {
+                    link.source = nodeCopy;
+                });
+
+                // remove output links from original node
+                firstCyclesNode.links = firstCyclesNode.links.filter((link: SankeyDiagramLink) => {
+                    if (link.destination === firstCyclesNode || link.destination === link.source) {
+                        return true;
+                    }
+
+                    return false;
+                });
+
+                SankeyDiagram.updateValueOfNode(firstCyclesNode);
+                SankeyDiagram.updateValueOfNode(nodeCopy);
+                SankeyDiagram.fixLinksCount(firstCyclesNode);
+                SankeyDiagram.fixLinksCount(nodeCopy);
+                nodes.push(nodeCopy);
+                createdNodes.push(nodeCopy);
+            }
+
+            return links;
+        }
+
+        // remove dublicated links
+        private static fixLinksCount(node: SankeyDiagramNode) {
+            node.links = _.uniq(node.links);
+        }
+
+        public static dfs(nodes: SankeyDiagramNode[], currNode: SankeyDiagramNode, nodesStatuses: SankeyDiagramNodeStatus[], simpleCycles: SankeyDiagramCycleDictionary): void {
+            nodesStatuses[currNode.label.name].status = SankeyDiagramNodeStatus.Processing;
+
+            currNode.links.forEach((link: SankeyDiagramLink) => {
+                // consider only output links
+                if (link.source !== currNode) {
+                    return;
+                }
+
+                // get node by output link
+                let nextNode: SankeyDiagramNode = link.destination;
+                // move to next not visited node
+                if (nodesStatuses[nextNode.label.name].status === SankeyDiagramNodeStatus.NotVisited) {
+                    SankeyDiagram.dfs(nodes, nextNode, nodesStatuses, simpleCycles);
+                }
+                // if cycle was found
+                if (nodesStatuses[nextNode.label.name].status === SankeyDiagramNodeStatus.Processing) {
+                    // add item to dictionary
+                    simpleCycles[nextNode.label.name] = <SankeyDiagramNode[]>[];
+
+                    // collect all nodes which were processed in current step
+                    nodes.forEach((node: SankeyDiagramNode) => {
+                        if (nodesStatuses[node.label.name].status === SankeyDiagramNodeStatus.Processing &&
+                            node.links.length > 0) {
+                            simpleCycles[nextNode.label.name].push(node);
+                        }
+                    });
+                }
+            });
+
+            nodesStatuses[currNode.label.name].status = SankeyDiagramNodeStatus.Visited;
+        }
+
+        // Depth-First Search 
+        private checkCycles(nodes: SankeyDiagramNode[]): SankeyDiagramCycleDictionary {
+            let nodesStatuses: SankeyDiagramNodeStatus[] = [];
+
+            // init nodes statuses array
+            // all nodes are not visited state
+            nodes.forEach((node: SankeyDiagramNode) => {
+                if (node.links.length > 0) {
+                    nodesStatuses[node.label.name] = {
+                        node: node,
+                        status: SankeyDiagramNodeStatus.NotVisited
+                    };
+                }
+            });
+
+            let simpleCycles: SankeyDiagramCycleDictionary = {};
+
+            nodes.forEach((node: SankeyDiagramNode) => {
+                if (nodesStatuses[node.label.name].status === SankeyDiagramNodeStatus.NotVisited &&
+                    node.links.length > 0) {
+                    SankeyDiagram.dfs(nodes, node, nodesStatuses, simpleCycles);
+                }
+            });
+
+            return simpleCycles;
+        }
+
         private createNodes(
-            categories: any[],
+            sourceCategories: any[],
+            destinationCategories: any[],
             settings: SankeyDiagramSettings,
             selectionIdBuilder: SankeyDiagramSelectionIdBuilder,
-            source: DataViewMetadataColumn): SankeyDiagramNode[] {
+            source: DataViewMetadataColumn,
+            linksObjects: DataViewObjects[],
+            sourceCategoriesLabels?: any[],
+            destinationCategoriesLabels?: any[]): SankeyDiagramNode[] {
 
             let nodes: SankeyDiagramNode[] = [],
                 valueFormatterForCategories: IValueFormatter;
 
             valueFormatterForCategories = ValueFormatter.create({
                 format: ValueFormatter.getFormatStringByColumn(source),
-                value: categories[0],
-                value2: categories[categories.length - 1]
+                value: sourceCategories[0],
+                value2: destinationCategories[destinationCategories.length - 1]
             });
 
+            // check self connected links
+            for (let index: number = 0; index < destinationCategories.length; index++) {
+                if (sourceCategoriesLabels[index] === undefined) {
+                    sourceCategoriesLabels[index] = sourceCategories[index];
+                }
+                if (destinationCategoriesLabels[index] === undefined) {
+                    destinationCategoriesLabels[index] = destinationCategories[index];
+                }
+            }
+
+            let labelsDictionary: Object = { };
+            sourceCategories.forEach((item: any, index: number) => {
+                labelsDictionary[item] = sourceCategoriesLabels[index];
+            });
+            destinationCategories.forEach((item: any, index: number) => {
+                labelsDictionary[item] = destinationCategoriesLabels[index];
+            });
+
+            let categories: any[] = sourceCategories.concat(destinationCategories);
+
             categories.forEach((item: any, index: number) => {
-                if (!nodes.some((node: SankeyDiagramNode) => {
-                    if (item === node.label.name) {
-                        const selectionId: ISelectionId = selectionIdBuilder.createSelectionId(index);
-
-                        node.selectableDataPoints.push(SankeyDiagram.createSelectableDataPoint(selectionId));
-
-                        return true;
-                    }
-
-                    return false;
-                })) {
-                    let formattedValue: string = valueFormatterForCategories.format(item),
-                        label: SankeyDiagramLabel,
-                        selectableDataPoint: SelectableDataPoint,
-                        textProperties: TextProperties = {
-                            text: formattedValue,
-                            fontFamily: this.textProperties.fontFamily,
-                            fontSize: this.textProperties.fontSize
-                        };
-
-                    label = {
-                        name: item,
-                        formattedName: valueFormatterForCategories.format(item),
-                        width: textMeasurementService.measureSvgTextWidth(textProperties),
-                        height: textMeasurementService.estimateSvgTextHeight(textProperties),
-                        color: settings.labels.fill
+                let formattedValue: string = valueFormatterForCategories.format((<string>labelsDictionary[item]).replace(SankeyDiagram.DublicatedNamePostfix, "")),
+                    label: SankeyDiagramLabel,
+                    selectableDataPoint: SelectableDataPoint,
+                    textProperties: TextProperties = {
+                        text: formattedValue,
+                        fontFamily: this.textProperties.fontFamily,
+                        fontSize: this.textProperties.fontSize
                     };
 
-                    selectableDataPoint =
-                        SankeyDiagram.createSelectableDataPoint(selectionIdBuilder.createSelectionId(index));
+                label = {
+                    internalName: item,
+                    name: item,
+                    formattedName: valueFormatterForCategories.format((<string>labelsDictionary[item]).replace(SankeyDiagram.DublicatedNamePostfix, "")),
+                    width: textMeasurementService.measureSvgTextWidth(textProperties),
+                    height: textMeasurementService.estimateSvgTextHeight(textProperties),
+                    color: settings.labels.fill
+                };
 
-                    nodes.push({
-                        label: label,
-                        links: [],
-                        inputWeight: 0,
-                        outputWeight: 0,
-                        width: this.nodeWidth,
-                        height: 0,
-                        colour: SankeyDiagram.DefaultColourOfNode,
-                        tooltipInfo: [],
-                        selectableDataPoints: [selectableDataPoint]
-                    });
-                }
+                selectableDataPoint =
+                    SankeyDiagram.createSelectableDataPoint(selectionIdBuilder.createSelectionId(index));
+
+                nodes.push({
+                    label: label,
+                    links: [],
+                    inputWeight: 0,
+                    outputWeight: 0,
+                    width: this.nodeWidth,
+                    height: 0,
+                    colour: this.colorPalette.getColor(index.toString()).value,
+                    tooltipInfo: [],
+                    selectableDataPoints: [selectableDataPoint]
+                });
             });
 
             return nodes;
@@ -395,7 +549,7 @@ module powerbi.extensibility.visual {
 
         private applyColorToNodes(nodes: SankeyDiagramNode[]): void {
             nodes.forEach((node: SankeyDiagramNode, index: number) => {
-                node.colour = this.colorPalette.getColor(Math.floor(index).toString()).value;
+                node.colour = this.colorPalette.getColor(index.toString()).value;
             });
         }
 
@@ -406,7 +560,6 @@ module powerbi.extensibility.visual {
             destinationCategories: any[],
             valueColumns: DataViewValueColumns,
             linksObjects: DataViewObjects[]): SankeyDiagramLink[] {
-
             let valuesColumn: DataViewValueColumn = valueColumns && valueColumns[0],
                 links: SankeyDiagramLink[] = [],
                 weightValues: number[] = [],
@@ -452,16 +605,12 @@ module powerbi.extensibility.visual {
                     linkColour: string,
                     selectionId: ISelectionId;
 
-                if (dataPoint.source === dataPoint.destination) {
-                    return;
-                }
-
                 nodes.forEach((node: SankeyDiagramNode) => {
-                    if (node.label.name === dataPoint.source) {
+                    if (node.label.internalName === dataPoint.source) {
                         sourceNode = node;
                     }
 
-                    if (node.label.name === dataPoint.destination) {
+                    if (node.label.internalName === dataPoint.destination) {
                         destinationNode = node;
                     }
                 });
@@ -616,11 +765,38 @@ module powerbi.extensibility.visual {
 
             SankeyDiagram.sortNodesByX(sankeyDiagramDataView.nodes);
 
-            columns = this.getColumns(sankeyDiagramDataView.nodes);
-            maxColumn = SankeyDiagram.getMaxColumn(columns);
+            let scaleShift: number = 0;
+            let minWeight: number = 1;
+            let minHeight: number = 1;
+            let scaleStepCount: number = 0;
 
+            while (minHeight < SankeyDiagram.MinHeightOfNode && scaleStepCount < SankeyDiagram.ScaleStepLimit) {
+                let weightScale: d3.scale.Log<number, number> = d3.scale.log()
+                    .base(Math.E)
+                    .domain([Math.exp(SankeyDiagram.MinDomainOfScale + scaleShift), Math.exp(SankeyDiagram.MaxDomainOfScale + scaleShift)])
+                    .range([SankeyDiagram.MinRangeOfScale, SankeyDiagram.MaxRangeOfScale]);
+
+                sankeyDiagramDataView.links.forEach((l) => {
+                    l.weigth = weightScale(l.weigth);
+                });
+
+                sankeyDiagramDataView.nodes.forEach((n) => {
+                    SankeyDiagram.updateValueOfNode(n);
+                });
+
+                columns = this.getColumns(sankeyDiagramDataView.nodes);
+                maxColumn = SankeyDiagram.getMaxColumn(columns);
+
+                minWeight = d3.min(sankeyDiagramDataView.nodes.filter((n) => Math.max(n.inputWeight, n.outputWeight) > 0).map((n) => Math.max(n.inputWeight, n.outputWeight)));
+                minWeight = minWeight || SankeyDiagram.DefaultWeightOfLink;
+                sankeyDiagramDataView.settings._scale.y = this.getScaleByAxisY(maxColumn.sumValueOfNodes);
+
+                minHeight = minWeight * sankeyDiagramDataView.settings._scale.y;
+
+                scaleShift += SankeyDiagram.ScaleStep;
+                scaleStepCount++;
+            }
             sankeyDiagramDataView.settings._scale.x = this.getScaleByAxisX(maxXPosition);
-            sankeyDiagramDataView.settings._scale.y = this.getScaleByAxisY(maxColumn.sumValueOfNodes);
 
             SankeyDiagram.scalePositionsByAxes(
                 sankeyDiagramDataView.nodes,
@@ -854,7 +1030,6 @@ module powerbi.extensibility.visual {
 
                 node.links.forEach((link: SankeyDiagramLink) => {
                     let shiftByAxisY: number = SankeyDiagram.DefaultOffset;
-
                     link.height = link.weigth * scale;
 
                     if (link.source.x < node.x || link.destination.x < node.x) {
@@ -964,9 +1139,9 @@ module powerbi.extensibility.visual {
                         labelPositionByAxisX: number = this.getCurrentPositionOfLabelByAxisX(node);
 
                     isNotVisibleLabel =
-                        labelPositionByAxisX >= this.viewport.width ||
+                        (labelPositionByAxisX >= this.viewport.width ||
                         labelPositionByAxisX <= SankeyDiagram.MinSize ||
-                        (node.height + SankeyDiagram.NodeMargin) < node.label.height;
+                        (node.height + SankeyDiagram.NodeMargin) < node.label.height) && !sankeyDiagramDataView.settings.labels.forceDisplay;
 
                     if (isNotVisibleLabel || !sankeyDiagramDataView.settings.labels.show
                         || node.label.maxWidth < SankeyDiagram.MinWidthOfLabel) {
@@ -1047,7 +1222,7 @@ module powerbi.extensibility.visual {
                     return this.getSvgPath(link);
                 })
                 .style({
-                    "stroke-width": (link: SankeyDiagramLink) => link.height,
+                    "stroke-width": (link: SankeyDiagramLink) => link.height < SankeyDiagram.MinWidthOfLink ? SankeyDiagram.MinWidthOfLink : link.height,
                     "stroke": (link: SankeyDiagramLink) => link.color
                 });
 

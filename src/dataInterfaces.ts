@@ -32,6 +32,7 @@ module powerbi.extensibility.visual {
     import TooltipEnabledDataPoint = powerbi.extensibility.utils.tooltip.TooltipEnabledDataPoint;
 
     export interface SankeyDiagramLabel {
+        internalName: string;
         name: string;
         formattedName: string;
         width: number;
@@ -79,6 +80,21 @@ module powerbi.extensibility.visual {
     export interface SankeyDiagramColumn {
         countOfNodes: number;
         sumValueOfNodes: number;
+    }
+
+    export enum SankeyDiagramNodeStatus {
+        NotVisited = 0,
+        Visited = 1,
+        Processing = 2
+    }
+
+    export interface SankeyDiagramVisitedNode {
+        node: SankeyDiagramNode;
+        status: SankeyDiagramNodeStatus;
+    }
+
+    export interface SankeyDiagramCycleDictionary {
+        [propName: string]: SankeyDiagramNode[];
     }
 
     export interface SankeyDiagramDataView {

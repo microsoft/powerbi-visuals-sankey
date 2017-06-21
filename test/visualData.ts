@@ -55,9 +55,13 @@ module powerbi.extensibility.visual.test {
             ["USA", "France"],
             ["USA", "Spain"],
             ["USA", "England"],
+            ["England", "USA"],
             ["Portugal", "Angola"],
             ["Portugal", "Senegal"],
-            ["Portugal", "Morocco"]
+            ["Portugal", "Morocco"],
+            ["USA", "USA"],
+            ["England", "Mexico"],
+            ["Mexico", "Canada"]
         ];
 
         public valuesValue: number[] = getRandomNumbers(this.valuesSourceDestination.length, 10, 500);
