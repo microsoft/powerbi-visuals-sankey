@@ -153,6 +153,7 @@ module powerbi.extensibility.visual {
         public static DublicatedNamePostfix: string = "_SK_SELFLINK";
 
         private static MinWidthOfLink: number = 1;
+        private static DefaultWeightOfLink: number = 1;
 
         private static MinHeightOfNode: number = 5;
 
@@ -359,12 +360,16 @@ module powerbi.extensibility.visual {
         private processCycles(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[]): SankeyDiagramLink[] {
             let createdNodes: SankeyDiagramNode[] = [];
             for (let nodeName in cycles) {
-                let firstCyclesNode: SankeyDiagramNode = cycles[nodeName].filter((node: SankeyDiagramNode): boolean => {
+                let firstCyclesNode: SankeyDiagramNode = (cycles[nodeName].filter((node: SankeyDiagramNode): boolean => {
                     if (node.label.name === nodeName) {
                         return true;
                     }
                     return false;
-                })[0];
+                }) || [])[0];
+
+                if (firstCyclesNode === undefined) {
+                    return [];
+                }
 
                 let nodeCopy: SankeyDiagramNode = _.cloneDeep(firstCyclesNode);
                 nodeCopy.label.name += SankeyDiagram.DublicatedNamePostfix;
@@ -405,9 +410,42 @@ module powerbi.extensibility.visual {
             node.links = _.uniq(node.links);
         }
 
+        public static dfs(nodes: SankeyDiagramNode[], currNode: SankeyDiagramNode, nodesStatuses: SankeyDiagramNodeStatus[], simpleCycles: SankeyDiagramCycleDictionary): void {
+            nodesStatuses[currNode.label.name].status = SankeyDiagramNodeStatus.Processing;
+
+            currNode.links.forEach((link: SankeyDiagramLink) => {
+                // consider only output links
+                if (link.source !== currNode) {
+                    return;
+                }
+
+                // get node by output link
+                let nextNode: SankeyDiagramNode = link.destination;
+                // move to next not visited node
+                if (nodesStatuses[nextNode.label.name].status === SankeyDiagramNodeStatus.NotVisited) {
+                    SankeyDiagram.dfs(nodes, nextNode, nodesStatuses, simpleCycles);
+                }
+                // if cycle was found
+                if (nodesStatuses[nextNode.label.name].status === SankeyDiagramNodeStatus.Processing) {
+                    // add item to dictionary
+                    simpleCycles[nextNode.label.name] = <SankeyDiagramNode[]>[];
+
+                    // collect all nodes which were processed in current step
+                    nodes.forEach((node: SankeyDiagramNode) => {
+                        if (nodesStatuses[node.label.name].status === SankeyDiagramNodeStatus.Processing &&
+                            node.links.length > 0) {
+                            simpleCycles[nextNode.label.name].push(node);
+                        }
+                    });
+                }
+            });
+
+            nodesStatuses[currNode.label.name].status = SankeyDiagramNodeStatus.Visited;
+        }
+
         // Depth-First Search 
         private checkCycles(nodes: SankeyDiagramNode[]): SankeyDiagramCycleDictionary {
-            let nodesStatuses: any = [];
+            let nodesStatuses: SankeyDiagramNodeStatus[] = [];
 
             // init nodes statuses array
             // all nodes are not visited state
@@ -422,43 +460,10 @@ module powerbi.extensibility.visual {
 
             let simpleCycles: SankeyDiagramCycleDictionary = {};
 
-            let dfs = (node: SankeyDiagramNode) : void => {
-                nodesStatuses[node.label.name].status = SankeyDiagramNodeStatus.Processing;
-
-                node.links.forEach((link: SankeyDiagramLink) => {
-                    // consider only output links
-                    if (link.source !== node) {
-                        return;
-                    }
-
-                    // get node by output link
-                    let nextNode: SankeyDiagramNode = link.destination;
-                    // move to next not visited node
-                    if (nodesStatuses[nextNode.label.name].status === SankeyDiagramNodeStatus.NotVisited) {
-                        dfs(nextNode);
-                    }
-                    // if cycle was found
-                    if (nodesStatuses[nextNode.label.name].status === SankeyDiagramNodeStatus.Processing) {
-                        // add item to dictionary
-                        simpleCycles[nextNode.label.name] = <SankeyDiagramNode[]>[];
-
-                        // collect all nodes which were processed in current step
-                        nodes.forEach((node: SankeyDiagramNode) => {
-                            if (nodesStatuses[node.label.name].status === SankeyDiagramNodeStatus.Processing &&
-                                node.links.length > 0) {
-                                simpleCycles[nextNode.label.name].push(node);
-                            }
-                        });
-                    }
-                });
-
-                nodesStatuses[node.label.name].status = SankeyDiagramNodeStatus.Visited;
-            };
-
             nodes.forEach((node: SankeyDiagramNode) => {
                 if (nodesStatuses[node.label.name].status === SankeyDiagramNodeStatus.NotVisited &&
                     node.links.length > 0) {
-                    dfs(node);
+                    SankeyDiagram.dfs(nodes, node, nodesStatuses, simpleCycles);
                 }
             });
 
@@ -533,7 +538,7 @@ module powerbi.extensibility.visual {
                     outputWeight: 0,
                     width: this.nodeWidth,
                     height: 0,
-                    colour: this.colorPalette.getColor(Math.floor(100 + index).toString()).value,
+                    colour: this.colorPalette.getColor(index.toString()).value,
                     tooltipInfo: [],
                     selectableDataPoints: [selectableDataPoint]
                 });
@@ -544,7 +549,7 @@ module powerbi.extensibility.visual {
 
         private applyColorToNodes(nodes: SankeyDiagramNode[]): void {
             nodes.forEach((node: SankeyDiagramNode, index: number) => {
-                node.colour = this.colorPalette.getColor(Math.floor(index).toString()).value;
+                node.colour = this.colorPalette.getColor(index.toString()).value;
             });
         }
 
@@ -783,7 +788,7 @@ module powerbi.extensibility.visual {
                 maxColumn = SankeyDiagram.getMaxColumn(columns);
 
                 minWeight = d3.min(sankeyDiagramDataView.nodes.filter((n) => Math.max(n.inputWeight, n.outputWeight) > 0).map((n) => Math.max(n.inputWeight, n.outputWeight)));
-                minWeight = minWeight || 1;
+                minWeight = minWeight || SankeyDiagram.DefaultWeightOfLink;
                 sankeyDiagramDataView.settings._scale.y = this.getScaleByAxisY(maxColumn.sumValueOfNodes);
 
                 minHeight = minWeight * sankeyDiagramDataView.settings._scale.y;
