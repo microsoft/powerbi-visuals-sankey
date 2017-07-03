@@ -3,27 +3,32 @@
         {
             "name": "Source",
             "kind": "Grouping",
-            "displayName": "Source"
+            "displayName": "Source",
+            "displayNameKey": "Visual_Source"
         },
         {
             "name": "Destination",
             "kind": "Grouping",
-            "displayName": "Destination"
+            "displayName": "Destination",
+            "displayNameKey": "Visual_Destination"
         },
         {
             "name": "DestinationLabels",
             "kind": "Grouping",
-            "displayName": "Destination labels"
+            "displayName": "Destination labels",
+            "displayNameKey": "Visual_DestinationLabels"
         },
         {
             "name": "SourceLabels",
             "kind": "Grouping",
-            "displayName": "Source labels"
+            "displayName": "Source labels",
+            "displayNameKey": "Visual_SourceLabels"
         },
         {
             "name": "Weight",
             "kind": "Measure",
-            "displayName": "Weight"
+            "displayName": "Weight",
+            "displayNameKey": "Visual_Weight"
         }
     ],
     "dataViewMappings": [
@@ -105,15 +110,18 @@
     "objects": {
         "labels": {
             "displayName": "Data labels",
+            "displayNameKey": "Visual_DataPointsLabels",
             "properties": {
                 "show": {
                     "displayName": "Show",
+                    "displayNameKey": "Visual_Show",
                     "type": {
                         "bool": true
                     }
                 },
                 "fill": {
-                    "displayName": "Fill",
+                    "displayName": "Color",
+                    "displayNameKey": "Visual_LabelsFill",
                     "type": {
                         "fill": {
                             "solid": {
@@ -124,6 +132,7 @@
                 },
                 "fontSize": {
                     "displayName": "Text Size",
+                    "displayNameKey": "Visual_TextSize",
                     "type": {
                         "formatting": {
                             "fontSize": true
@@ -132,6 +141,7 @@
                 },
                 "forceDisplay": {
                     "displayName": "Force display",
+                    "displayNameKey": "Visual_Force_Display",
                     "description": "Display all labels anyway",
                     "type": {
                         "bool": true
@@ -141,9 +151,11 @@
         },
         "links": {
             "displayName": "Links",
+            "displayNameKey": "Visual_Links",
             "properties": {
                 "fill": {
-                    "displayName": "Fill",
+                    "displayName": "Color",
+                    "displayNameKey": "Visual_LabelsFill",
                     "type": {
                         "fill": {
                             "solid": {
@@ -156,9 +168,11 @@
         },
         "nodes": {
             "displayName": "Nodes",
+            "displayNameKey": "Visual_Nodes",
             "properties": {
                 "fill": {
-                    "displayName": "Fill",
+                    "displayName": "Color",
+                    "displayNameKey": "Visual_LabelsFill",
                     "type": {
                         "fill": {
                             "solid": {
