@@ -1,3 +1,7 @@
+## 1.2.0
+
+* Version has been increased for Office Store publication
+
 ## 1.0.1
 
 * Improve nodes and links sizes scaling when data values of weight differ significantly.
