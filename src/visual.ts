@@ -780,8 +780,24 @@ module powerbi.extensibility.visual {
                     l.weigth = weightScale(l.weigth);
                 });
 
-                sankeyDiagramDataView.nodes.forEach((n) => {
-                    SankeyDiagram.updateValueOfNode(n);
+                if (sankeyDiagramDataView.links.some( (link: SankeyDiagramLink) => link.weigth < 0)) {
+                    let minWeightIndex = 0;
+                    let minWeight = sankeyDiagramDataView.links[minWeightIndex].weigth;
+                    sankeyDiagramDataView.links.forEach((link: SankeyDiagramLink, index: number) => {
+                        if (link.weigth < minWeight) {
+                            minWeight = link.weigth;
+                            minWeightIndex = index;
+                        }
+                    });
+
+                    // shift weight values to eliminate negative values
+                    sankeyDiagramDataView.links.forEach((link: SankeyDiagramLink, index: number) => {
+                        link.weigth += Math.abs(minWeight) + SankeyDiagram.MinRangeOfScale;
+                    });
+                }
+
+                sankeyDiagramDataView.nodes.forEach((node: SankeyDiagramNode) => {
+                    SankeyDiagram.updateValueOfNode(node);
                 });
 
                 columns = this.getColumns(sankeyDiagramDataView.nodes);
