@@ -465,6 +465,19 @@ module powerbi.extensibility.visual.test {
                     });
                 });
             });
+
+            describe("0-1 values in graph", () => {
+                it("must give positive weigth of links", done => {
+                    const firstElement = 0;
+                    const expectedLinksCount = 3;
+                    let dataView: DataView = defaultDataViewBuilder.getDataViewWithLowValue();
+                    visualBuilder.updateRenderTimeout([dataView], () => {
+                        let linksCount = visualBuilder.linksElement[firstElement].childElementCount;
+                        expect(linksCount).toBe(expectedLinksCount);
+                        done();
+                    });
+                });
+            });
         });
     });
 }
