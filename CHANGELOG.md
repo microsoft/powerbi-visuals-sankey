@@ -1,3 +1,8 @@
+## 1.2.2
+
+* Localization support was added
+* Issue with displaying weight value from 0 to 1 was fixed
+
 ## 1.2.0
 
 * Version has been increased for Office Store publication
