@@ -160,6 +160,8 @@ module powerbi.extensibility.visual {
         private static ScaleStep: number = 0.1;
         private static ScaleStepLimit: number = 10;
 
+        private static NegativeValueRange: number = 0;
+
         public static RoleNames: SankeyDiagramRoleNames = {
             rows: "Source",
             columns: "Destination",
@@ -780,8 +782,23 @@ module powerbi.extensibility.visual {
                     l.weigth = weightScale(l.weigth);
                 });
 
-                sankeyDiagramDataView.nodes.forEach((n) => {
-                    SankeyDiagram.updateValueOfNode(n);
+                if (sankeyDiagramDataView.links.some( (link: SankeyDiagramLink) => link.weigth < SankeyDiagram.NegativeValueRange)) {
+                    let minWeight: number = sankeyDiagramDataView.links[0].weigth;
+                    sankeyDiagramDataView.links.forEach((link: SankeyDiagramLink) => {
+                        if (link.weigth <= minWeight) {
+                            minWeight = link.weigth;
+                        }
+                    });
+
+                    minWeight = Math.abs(minWeight) + SankeyDiagram.MinRangeOfScale;
+                    // shift weight values to eliminate negative values
+                    sankeyDiagramDataView.links.forEach((link: SankeyDiagramLink) => {
+                        link.weigth += minWeight;
+                    });
+                }
+
+                sankeyDiagramDataView.nodes.forEach((node: SankeyDiagramNode) => {
+                    SankeyDiagram.updateValueOfNode(node);
                 });
 
                 columns = this.getColumns(sankeyDiagramDataView.nodes);

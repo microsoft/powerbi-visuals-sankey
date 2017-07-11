@@ -64,7 +64,46 @@ module powerbi.extensibility.visual.test {
             ["Mexico", "Canada"]
         ];
 
+        public valuesSourceDestinationWithWeigth: string[][] = [
+            ["Brazil", "Portugal"],
+            ["Brazil", "France"],
+            ["Brazil", "Spain"]
+        ];
+
         public valuesValue: number[] = getRandomNumbers(this.valuesSourceDestination.length, 10, 500);
+
+        public valuesWithLowValue: number[] = getRandomNumbers(this.valuesSourceDestinationWithWeigth.length, 10, 50).map( (v) => v / 100);
+
+        public getDataViewWithLowValue(columnNames?: string[]): DataView {
+            return this.createCategoricalDataViewBuilder([
+                {
+                    source: {
+                        displayName: SankeyDiagramData.ColumnSource,
+                        roles: { [SankeyDiagramData.ColumnSource]: true },
+                        type: ValueType.fromDescriptor({ text: true })
+                    },
+                    values: this.valuesSourceDestinationWithWeigth.map(x => x[0])
+                },
+                {
+                    source: {
+                        displayName: SankeyDiagramData.ColumnDestination,
+                        roles: { [SankeyDiagramData.ColumnDestination]: true },
+                        type: ValueType.fromDescriptor({ text: true }),
+                    },
+                    values: this.valuesSourceDestinationWithWeigth.map(x => x[1])
+                }
+            ], [
+                    {
+                        source: {
+                            displayName: SankeyDiagramData.ColumnValue,
+                            roles: { [SankeyDiagramData.ColumnValue]: true },
+                            isMeasure: true,
+                            type: ValueType.fromDescriptor({ numeric: true }),
+                        },
+                        values: this.valuesWithLowValue
+                    }
+                ], columnNames).build();
+        }
 
         public getDataView(columnNames?: string[]): DataView {
             return this.createCategoricalDataViewBuilder([
