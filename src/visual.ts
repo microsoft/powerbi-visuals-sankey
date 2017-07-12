@@ -530,9 +530,6 @@ module powerbi.extensibility.visual {
                     color: settings.labels.fill
                 };
 
-                selectableDataPoint =
-                    SankeyDiagram.createSelectableDataPoint(selectionIdBuilder.createSelectionId(index));
-
                 nodes.push({
                     label: label,
                     links: [],
@@ -542,7 +539,7 @@ module powerbi.extensibility.visual {
                     height: 0,
                     colour: this.colorPalette.getColor(index.toString()).value,
                     tooltipInfo: [],
-                    selectableDataPoints: [selectableDataPoint]
+                    selectableDataPoints: []
                 });
             });
 
@@ -638,6 +635,10 @@ module powerbi.extensibility.visual {
                     identity: selectionId,
                     selected: false
                 };
+
+                let selectableDataPoint: SelectableDataPoint = SankeyDiagram.createSelectableDataPoint(selectionId);
+                sourceNode.selectableDataPoints.push(selectableDataPoint);
+                destinationNode.selectableDataPoints.push(selectableDataPoint);
 
                 links.push(link);
 
@@ -780,6 +781,10 @@ module powerbi.extensibility.visual {
 
                 sankeyDiagramDataView.links.forEach((l) => {
                     l.weigth = weightScale(l.weigth);
+
+                    if (Number.NEGATIVE_INFINITY === l.weigth || Number.POSITIVE_INFINITY  === l.weigth || isNaN(l.weigth)) {
+                         l.weigth = 0;
+                    };
                 });
 
                 if (sankeyDiagramDataView.links.some( (link: SankeyDiagramLink) => link.weigth < SankeyDiagram.NegativeValueRange)) {

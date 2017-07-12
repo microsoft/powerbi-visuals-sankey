@@ -1,3 +1,7 @@
+## 1.2.3
+
+* Fix node selection issue
+
 ## 1.2.2
 
 * Localization support was added
