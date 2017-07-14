@@ -1,3 +1,7 @@
+## 1.2.4
+
+* Displaying links with negative value issue
+
 ## 1.2.3
 
 * Fix node selection issue
