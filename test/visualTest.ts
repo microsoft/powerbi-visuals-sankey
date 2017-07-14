@@ -423,7 +423,7 @@ module powerbi.extensibility.visual.test {
                     defaultDataViewBuilder.valuesValue = negativeValues.concat(zeroValues).concat(positiveValues);
 
                     visualBuilder.updateRenderTimeout([defaultDataViewBuilder.getDataView()], () => {
-                        expect(visualBuilder.linkElements.length).toBe(positiveValues.length);
+                        expect(visualBuilder.linkElements.length).toBe(defaultDataViewBuilder.valuesValue.length);
 
                         done();
                     });

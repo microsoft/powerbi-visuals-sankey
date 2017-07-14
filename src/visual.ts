@@ -583,9 +583,7 @@ module powerbi.extensibility.visual {
                     source: item,
                     destination: destinationCategories[index],
                     weigth: valuesColumn
-                        ? Math.max(
-                            weightValues[index] || SankeyDiagram.DefaultWeightValue,
-                            SankeyDiagram.DefaultWeightValue)
+                        ? weightValues[index] || SankeyDiagram.DefaultWeightValue
                         : SankeyDiagram.MinWeightValue
                 };
             });
@@ -773,6 +771,16 @@ module powerbi.extensibility.visual {
             let minHeight: number = 1;
             let scaleStepCount: number = 0;
 
+            let minWeigthShift: number = 0;
+            let minWeigthLink = _.minBy(sankeyDiagramDataView.links, "weigth");
+            if (minWeigthLink) {
+                minWeigthShift = minWeigthLink.weigth;
+            }
+            if (minWeigthShift > 0) {
+                minWeigthShift = 0;
+            }
+            minWeigthShift = Math.abs(minWeigthShift) + minWeight;
+
             while (minHeight < SankeyDiagram.MinHeightOfNode && scaleStepCount < SankeyDiagram.ScaleStepLimit) {
                 let weightScale: d3.scale.Log<number, number> = d3.scale.log()
                     .base(Math.E)
@@ -780,7 +788,7 @@ module powerbi.extensibility.visual {
                     .range([SankeyDiagram.MinRangeOfScale, SankeyDiagram.MaxRangeOfScale]);
 
                 sankeyDiagramDataView.links.forEach((l) => {
-                    l.weigth = weightScale(l.weigth);
+                    l.weigth = weightScale(l.weigth + minWeigthShift);
 
                     if (Number.NEGATIVE_INFINITY === l.weigth || Number.POSITIVE_INFINITY  === l.weigth || isNaN(l.weigth)) {
                          l.weigth = 0;
