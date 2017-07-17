@@ -42,8 +42,13 @@ module powerbi.extensibility.visual {
         public y: number = 1;
     }
 
+    export class SankeyLnScaleSettings {
+        public show: boolean= false;
+    }
+
     export class SankeyDiagramSettings extends DataViewObjectsParser {
         public labels: SankeyDiagramLabelsSettings = new SankeyDiagramLabelsSettings();
         public _scale: SankeyDiagramScaleSettings = new SankeyDiagramScaleSettings();
+        public scaleSettings: SankeyLnScaleSettings = new SankeyLnScaleSettings();
     }
 }

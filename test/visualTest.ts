@@ -357,6 +357,8 @@ module powerbi.extensibility.visual.test {
                 it("nodes", (done) => {
                     visualBuilder.updateRenderTimeout(dataView, () => {
                         const node: JQuery = visualBuilder.nodeElements.first();
+                        const firstNodeLinksCount: number = 4;
+                        const link: JQuery = visualBuilder.linkElements;
 
                         expect(visualBuilder.nodeElements.filter(selectionSelector)).not.toBeInDOM();
                         clickElement(node);
@@ -364,6 +366,8 @@ module powerbi.extensibility.visual.test {
                         renderTimeout(() => {
                             expect(node.filter(selectionSelector)).not.toBeInDOM();
                             expect(visualBuilder.nodeElements.filter(selectionSelector)).toBeInDOM();
+                            // when node selected, links of node also must be selected
+                            expect(visualBuilder.linkElements.filter(selectionSelector).length).toBe(firstNodeLinksCount);
 
                             clickElement(node);
                             renderTimeout(() => {

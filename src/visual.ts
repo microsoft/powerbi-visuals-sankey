@@ -373,8 +373,11 @@ module powerbi.extensibility.visual {
                     return [];
                 }
 
+                // create a clone of the node and save a link to each other. In selection behavior, selection of clone lead to select original and visa versa
                 let nodeCopy: SankeyDiagramNode = _.cloneDeep(firstCyclesNode);
                 nodeCopy.label.name += SankeyDiagram.DublicatedNamePostfix;
+                firstCyclesNode.cloneLink = nodeCopy;
+                nodeCopy.cloneLink = firstCyclesNode;
 
                 // copy only! output links to new node;
                 nodeCopy.links = firstCyclesNode.links.filter((link: SankeyDiagramLink) => {
@@ -779,13 +782,28 @@ module powerbi.extensibility.visual {
             if (minWeigthShift > 0) {
                 minWeigthShift = 0;
             }
+
+            let minWeightInData: number = minWeigthShift;
             minWeigthShift = Math.abs(minWeigthShift) + minWeight;
+            let maxWeightInData: number = 0;
+            let maxWeigthLink = _.maxBy(sankeyDiagramDataView.links, "weigth");
+            if (maxWeigthLink) {
+                maxWeightInData = maxWeigthLink.weigth;
+            }
 
             while (minHeight < SankeyDiagram.MinHeightOfNode && scaleStepCount < SankeyDiagram.ScaleStepLimit) {
-                let weightScale: d3.scale.Log<number, number> = d3.scale.log()
+                let weightScale: any;
+
+                if (sankeyDiagramDataView.settings.scaleSettings.show) {
+                    weightScale = d3.scale.log()
                     .base(Math.E)
                     .domain([Math.exp(SankeyDiagram.MinDomainOfScale + scaleShift), Math.exp(SankeyDiagram.MaxDomainOfScale + scaleShift)])
                     .range([SankeyDiagram.MinRangeOfScale, SankeyDiagram.MaxRangeOfScale]);
+                } else {
+                    weightScale = d3.scale.linear()
+                    .domain([minWeightInData + scaleShift, maxWeightInData + scaleShift])
+                    .range([SankeyDiagram.MinRangeOfScale, SankeyDiagram.MaxRangeOfScale]);
+                }
 
                 sankeyDiagramDataView.links.forEach((l) => {
                     l.weigth = weightScale(l.weigth + minWeigthShift);
@@ -795,7 +813,7 @@ module powerbi.extensibility.visual {
                     };
                 });
 
-                if (sankeyDiagramDataView.links.some( (link: SankeyDiagramLink) => link.weigth < SankeyDiagram.NegativeValueRange)) {
+                if (sankeyDiagramDataView.links.some( (link: SankeyDiagramLink) => link.weigth <= SankeyDiagram.NegativeValueRange)) {
                     let minWeight: number = sankeyDiagramDataView.links[0].weigth;
                     sankeyDiagramDataView.links.forEach((link: SankeyDiagramLink) => {
                         if (link.weigth <= minWeight) {
