@@ -1,3 +1,8 @@
+## 1.2.5
+
+* Fix selection issue for cloned nodes in dataset with cycles
+* Add new property to configure scale behavior for links
+
 ## 1.2.4
 
 * Displaying links with negative value issue
