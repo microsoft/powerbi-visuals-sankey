@@ -69,7 +69,10 @@ module powerbi.extensibility.visual {
 
         private bindClickEventToNodes(): void {
             this.behaviorOptions.nodes.on("click", (node: SankeyDiagramNode) => {
-                const selectableDataPoints: SelectableDataPoint[] = node.selectableDataPoints;
+                let selectableDataPoints: SelectableDataPoint[] = node.selectableDataPoints;
+                if (node.cloneLink) {
+                    selectableDataPoints = selectableDataPoints.concat(node.cloneLink.selectableDataPoints);
+                }
 
                 this.clearSelection();
 

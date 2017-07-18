@@ -62,6 +62,7 @@ module powerbi.extensibility.visual {
         height?: number;
         colour: string;
         selectableDataPoints?: SelectableDataPoint[];
+        cloneLink?: SankeyDiagramNode;
     }
 
     export interface SankeyDiagramLink extends

@@ -182,6 +182,19 @@
                     }
                 }
             }
+        },
+        "scaleSettings": {
+            "displayName": "Scale settings",
+            "displayNameKey": "Visual_ScaleSettings",
+            "properties": {
+                "show": {
+                    "displayName": "Enable",
+                    "displayNameKey": "Visual_Enable",
+                    "type": {
+                        "bool": true
+                    }
+                }
+            }
         }
     },
     "sorting": {
