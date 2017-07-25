@@ -515,7 +515,7 @@ module powerbi.extensibility.visual {
             let categories: any[] = sourceCategories.concat(destinationCategories);
 
             categories.forEach((item: any, index: number) => {
-                let formattedValue: string = valueFormatterForCategories.format((<string>labelsDictionary[item]).replace(SankeyDiagram.DublicatedNamePostfix, "")),
+                let formattedValue: string = valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DublicatedNamePostfix, "")),
                     label: SankeyDiagramLabel,
                     selectableDataPoint: SelectableDataPoint,
                     textProperties: TextProperties = {
@@ -527,7 +527,7 @@ module powerbi.extensibility.visual {
                 label = {
                     internalName: item,
                     name: item,
-                    formattedName: valueFormatterForCategories.format((<string>labelsDictionary[item]).replace(SankeyDiagram.DublicatedNamePostfix, "")),
+                    formattedName: valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DublicatedNamePostfix, "")),
                     width: textMeasurementService.measureSvgTextWidth(textProperties),
                     height: textMeasurementService.estimateSvgTextHeight(textProperties),
                     color: settings.labels.fill

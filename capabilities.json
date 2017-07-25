@@ -184,7 +184,7 @@
             }
         },
         "scaleSettings": {
-            "displayName": "Scale settings",
+            "displayName": "Enable logarithmic scale",
             "displayNameKey": "Visual_ScaleSettings",
             "properties": {
                 "show": {
