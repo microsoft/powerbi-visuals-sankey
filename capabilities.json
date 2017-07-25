@@ -53,20 +53,6 @@
                     },
                     "Weight": {
                         "min": 0,
-                        "max": 0
-                    }
-                },
-                {
-                    "Source": {
-                        "min": 0,
-                        "max": 1
-                    },
-                    "Destination": {
-                        "min": 0,
-                        "max": 1
-                    },
-                    "Weight": {
-                        "min": 1,
                         "max": 1
                     }
                 }

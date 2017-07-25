@@ -363,7 +363,7 @@ module powerbi.extensibility.visual {
             let createdNodes: SankeyDiagramNode[] = [];
             for (let nodeName in cycles) {
                 let firstCyclesNode: SankeyDiagramNode = (cycles[nodeName].filter((node: SankeyDiagramNode): boolean => {
-                    if (node.label.name === nodeName) {
+                    if ((node.label.name || "").toString() === (nodeName || "").toString()) {
                         return true;
                     }
                     return false;
@@ -506,10 +506,10 @@ module powerbi.extensibility.visual {
 
             let labelsDictionary: Object = { };
             sourceCategories.forEach((item: any, index: number) => {
-                labelsDictionary[item] = sourceCategoriesLabels[index];
+                labelsDictionary[item] = sourceCategoriesLabels[index] || "";
             });
             destinationCategories.forEach((item: any, index: number) => {
-                labelsDictionary[item] = destinationCategoriesLabels[index];
+                labelsDictionary[item] = destinationCategoriesLabels[index] || "";
             });
 
             let categories: any[] = sourceCategories.concat(destinationCategories);
