@@ -1,3 +1,9 @@
+## 1.2.7
+
+* Fix scale settings text.
+* Fix displaying the visual with numeric at Source and Destination fields
+* Downgrade API version to 1.6.0
+
 ## 1.2.5
 
 * Fix selection issue for cloned nodes in dataset with cycles

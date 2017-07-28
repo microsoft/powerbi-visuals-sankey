@@ -363,7 +363,7 @@ module powerbi.extensibility.visual {
             let createdNodes: SankeyDiagramNode[] = [];
             for (let nodeName in cycles) {
                 let firstCyclesNode: SankeyDiagramNode = (cycles[nodeName].filter((node: SankeyDiagramNode): boolean => {
-                    if (node.label.name === nodeName) {
+                    if ((node.label.name || "").toString() === (nodeName || "").toString()) {
                         return true;
                     }
                     return false;
@@ -506,16 +506,16 @@ module powerbi.extensibility.visual {
 
             let labelsDictionary: Object = { };
             sourceCategories.forEach((item: any, index: number) => {
-                labelsDictionary[item] = sourceCategoriesLabels[index];
+                labelsDictionary[item] = sourceCategoriesLabels[index] || "";
             });
             destinationCategories.forEach((item: any, index: number) => {
-                labelsDictionary[item] = destinationCategoriesLabels[index];
+                labelsDictionary[item] = destinationCategoriesLabels[index] || "";
             });
 
             let categories: any[] = sourceCategories.concat(destinationCategories);
 
             categories.forEach((item: any, index: number) => {
-                let formattedValue: string = valueFormatterForCategories.format((<string>labelsDictionary[item]).replace(SankeyDiagram.DublicatedNamePostfix, "")),
+                let formattedValue: string = valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DublicatedNamePostfix, "")),
                     label: SankeyDiagramLabel,
                     selectableDataPoint: SelectableDataPoint,
                     textProperties: TextProperties = {
@@ -527,7 +527,7 @@ module powerbi.extensibility.visual {
                 label = {
                     internalName: item,
                     name: item,
-                    formattedName: valueFormatterForCategories.format((<string>labelsDictionary[item]).replace(SankeyDiagram.DublicatedNamePostfix, "")),
+                    formattedName: valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DublicatedNamePostfix, "")),
                     width: textMeasurementService.measureSvgTextWidth(textProperties),
                     height: textMeasurementService.estimateSvgTextHeight(textProperties),
                     color: settings.labels.fill
