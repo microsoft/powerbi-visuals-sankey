@@ -1278,6 +1278,82 @@ module powerbi.extensibility.visual {
                 .exit()
                 .remove();
 
+            // create labels on link as A - B : Value
+            let linkTextData: SankeyDiagramLink[] = sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
+                return link.height > SankeyDiagram.MinSize && this.dataView.settings.linkLabels.show;
+            });
+            // add defs element to svg
+            let svgDefs = this.root
+                .selectAll("defs");
+
+            let svgDefsSelection = svgDefs.data([1]);
+            svgDefsSelection
+                .enter()
+                .append("defs");
+
+            svgDefsSelection
+                .exit()
+                .remove();
+
+            let singleDefsElement = d3.select(svgDefsSelection.node());
+
+            // add text path for lables
+            let linkLabelPaths = singleDefsElement.selectAll(".linkLabelPaths");
+
+            let linkLabelPathsSelection = linkLabelPaths.data(linkTextData);
+
+            linkLabelPathsSelection
+                .enter()
+                .append("path")
+                .classed("linkLabelPaths", true);
+
+            linkLabelPathsSelection
+                .attr({
+                    d: (link: SankeyDiagramLink) => {
+                        return this.getSvgPath(link);
+                    },
+                    id: (link: SankeyDiagramLink) => `${link.source.label.internalName || ""}-${link.destination.label.internalName || ""}`
+                });
+
+            linkLabelPathsSelection
+                .exit()
+                .remove();
+
+            // add text by using paths from defs
+            let linkLabelTexts = this.main
+                .select(SankeyDiagram.LinksSelector.selector)
+                .selectAll(".linkLabelTexts");
+
+            let linkLabelTextSelection = linkLabelTexts.data(linkTextData);
+
+            linkLabelTextSelection
+                .enter()
+                .append("text")
+                .attr({
+                    "text-anchor": "middle"
+                })
+                .classed("linkLabelTexts", true);
+
+            linkLabelTextSelection.selectAll("textPath").remove();
+
+            linkLabelTextSelection
+                .append("textPath")
+                .attr({
+                    startOffset: "50%",
+                    href: (link: SankeyDiagramLink) => `#${link.source.label.internalName || ""}-${link.destination.label.internalName || ""}`
+                })
+                .style({
+                    "font-size": this.dataView.settings.linkLabels.fontSize,
+                    "fill": this.dataView.settings.linkLabels.fill
+                })
+                .text((link: SankeyDiagramLink) =>
+                    `${link.source.label.name || ""}-${link.destination.label.name || ""}:${(link.tooltipInfo[2] || {value: ""}).value}`
+                );
+
+            linkLabelTextSelection
+                .exit()
+                .remove();
+
             return linksSelection;
         }
 
