@@ -482,6 +482,22 @@ module powerbi.extensibility.visual.test {
                     });
                 });
             });
+
+            describe("datalabels", () => {
+                it("must be rendered", done => {
+                    let dataView: DataView = defaultDataViewBuilder.getDataViewWithLowValue();
+
+                    dataView.metadata.objects = {
+                        linkLabels: {
+                            show: true
+                        }
+                    };
+
+                    visualBuilder.updateRenderTimeout([dataView], () => {
+                        expect($(visualBuilder.mainElement.find(".linkLabelTexts"))).toBeInDOM();
+                        done();
+                    });
+            });
         });
     });
 }
