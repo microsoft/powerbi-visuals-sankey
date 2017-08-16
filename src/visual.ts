@@ -1312,7 +1312,7 @@ module powerbi.extensibility.visual {
                     d: (link: SankeyDiagramLink) => {
                         return this.getSvgPath(link);
                     },
-                    id: (link: SankeyDiagramLink) => `${link.source.label.internalName || ""}-${link.destination.label.internalName || ""}`
+                    id: (link: SankeyDiagramLink) => `${(link.source.label.internalName || "").replace(/\W*/g,"")}-${(link.destination.label.internalName || "").replace(/\W*/g,"")}`
                 });
 
             linkLabelPathsSelection
@@ -1340,7 +1340,7 @@ module powerbi.extensibility.visual {
                 .append("textPath")
                 .attr({
                     startOffset: "50%",
-                    href: (link: SankeyDiagramLink) => `#${link.source.label.internalName || ""}-${link.destination.label.internalName || ""}`
+                    href: (link: SankeyDiagramLink) => `#${(link.source.label.internalName || "").replace(/\W*/g,"")}-${(link.destination.label.internalName || "").replace(/\W*/g,"")}`
                 })
                 .style({
                     "font-size": this.dataView.settings.linkLabels.fontSize,
