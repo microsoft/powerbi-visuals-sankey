@@ -181,6 +181,19 @@
                     }
                 }
             }
+        },
+        "nodeComplexSettings": {
+            "displayName": "Sankey settigns",
+            "displayNameKey": "Visual_SankeySettings",
+            "properties": {
+                "nodePositions": {
+                    "displayName": "Node positions",
+                    "displayNameKey": "Visual_NodePositions",
+                    "type": {
+                        "text": true
+                    }
+                }
+            }
         }
     },
     "sorting": {

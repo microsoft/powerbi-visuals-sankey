@@ -76,6 +76,7 @@ module powerbi.extensibility.visual {
         dySource?: number;
         dyDestination?: number;
         color: string;
+        settings?: SankeyDiagramLinkNodesPositionSetting;
     }
 
     export interface SankeyDiagramColumn {
@@ -115,5 +116,17 @@ module powerbi.extensibility.visual {
         source: any;
         destination: any;
         weigth: number;
+    }
+
+    export interface SankeyDiagramLinkNodesPositionSetting {
+        linkName?: string;
+        source: SankeyDiagramNodePositionSetting;
+        destination: SankeyDiagramNodePositionSetting;
+    }
+
+    export interface SankeyDiagramNodePositionSetting {
+        name: string;
+        y?: string;
+        x?: string;
     }
 }
