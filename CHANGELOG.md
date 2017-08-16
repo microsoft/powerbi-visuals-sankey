@@ -1,4 +1,4 @@
-## 1.2.8
+## 1.3.0
 
 * Add link data labels displaying
 

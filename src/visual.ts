@@ -93,6 +93,8 @@ module powerbi.extensibility.visual {
 
         private static LinksSelector: ClassAndSelector = createClassAndSelector("links");
         private static LinkSelector: ClassAndSelector = createClassAndSelector("link");
+        private static LinkLabelPathsSelector: ClassAndSelector = createClassAndSelector("linkLabelPaths");
+        private static LinkLabelTextsSelector: ClassAndSelector = createClassAndSelector("linkLabelTexts");
 
         private static DefaultColourOfNode: string = "rgb(62, 187, 162)";
         private static DefaultColourOfLink: string = "black";
@@ -1115,6 +1117,7 @@ module powerbi.extensibility.visual {
                 linksSelection: Selection<SankeyDiagramLink>;
 
             linksSelection = this.renderLinks(sankeyDiagramDataView);
+            this.renderLinkLabels(sankeyDiagramDataView);
 
             this.renderTooltip(linksSelection);
 
@@ -1278,15 +1281,20 @@ module powerbi.extensibility.visual {
                 .exit()
                 .remove();
 
-            // create labels on link as A - B : Value
-            let linkTextData: SankeyDiagramLink[] = sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
+            return linksSelection;
+        }
+
+        private renderLinkLabels(sankeyDiagramDataView: SankeyDiagramDataView): void {
+             // create labels on link as A - B : Value
+             let linkTextData: SankeyDiagramLink[] = sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
                 return link.height > SankeyDiagram.MinSize && this.dataView.settings.linkLabels.show;
             });
-            // add defs element to svg
-            let svgDefs = this.root
-                .selectAll("defs");
 
-            let svgDefsSelection = svgDefs.data([1]);
+            // add defs element to svg
+            let svgDefs: Selection<any> = this.root
+            .selectAll("defs");
+
+            let svgDefsSelection: UpdateSelection<Number> = svgDefs.data([1]);
             svgDefsSelection
                 .enter()
                 .append("defs");
@@ -1295,17 +1303,17 @@ module powerbi.extensibility.visual {
                 .exit()
                 .remove();
 
-            let singleDefsElement = d3.select(svgDefsSelection.node());
+            let singleDefsElement: Selection<any> = d3.select(svgDefsSelection.node());
 
             // add text path for lables
-            let linkLabelPaths = singleDefsElement.selectAll(".linkLabelPaths");
+            let linkLabelPaths: Selection<any> = singleDefsElement.selectAll(SankeyDiagram.LinkLabelPathsSelector.selector);
 
-            let linkLabelPathsSelection = linkLabelPaths.data(linkTextData);
+            let linkLabelPathsSelection: UpdateSelection<SankeyDiagramLink> = linkLabelPaths.data(linkTextData);
 
             linkLabelPathsSelection
                 .enter()
                 .append("path")
-                .classed("linkLabelPaths", true);
+                .classed(SankeyDiagram.LinkLabelPathsSelector.class, true);
 
             linkLabelPathsSelection
                 .attr({
@@ -1320,11 +1328,11 @@ module powerbi.extensibility.visual {
                 .remove();
 
             // add text by using paths from defs
-            let linkLabelTexts = this.main
+            let linkLabelTexts: Selection<any> = this.main
                 .select(SankeyDiagram.LinksSelector.selector)
-                .selectAll(".linkLabelTexts");
+                .selectAll(SankeyDiagram.LinkLabelTextsSelector.selector);
 
-            let linkLabelTextSelection = linkLabelTexts.data(linkTextData);
+            let linkLabelTextSelection: UpdateSelection<SankeyDiagramLink> = linkLabelTexts.data(linkTextData);
 
             linkLabelTextSelection
                 .enter()
@@ -1332,11 +1340,12 @@ module powerbi.extensibility.visual {
                 .attr({
                     "text-anchor": "middle"
                 })
-                .classed("linkLabelTexts", true);
+                .classed(SankeyDiagram.LinkLabelTextsSelector.class, true);
 
-            linkLabelTextSelection.selectAll("textPath").remove();
+            let textPathSelection: UpdateSelection<SankeyDiagramLink> = linkLabelTextSelection.selectAll("textPath").data( data => [data]);
 
-            linkLabelTextSelection
+            textPathSelection
+                .enter()
                 .append("textPath")
                 .attr({
                     startOffset: "50%",
@@ -1350,11 +1359,13 @@ module powerbi.extensibility.visual {
                     `${link.source.label.name || ""}-${link.destination.label.name || ""}:${(link.tooltipInfo[2] || {value: ""}).value}`
                 );
 
-            linkLabelTextSelection
+            textPathSelection
                 .exit()
                 .remove();
 
-            return linksSelection;
+            linkLabelTextSelection
+                .exit()
+                .remove();
         }
 
         private getSvgPath(link: SankeyDiagramLink): string {
