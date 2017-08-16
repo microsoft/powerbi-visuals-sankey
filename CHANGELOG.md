@@ -1,3 +1,7 @@
+## 1.3.0
+
+* Add link data labels displaying
+
 ## 1.2.7
 
 * Fix scale settings text.

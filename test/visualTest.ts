@@ -126,7 +126,8 @@ module powerbi.extensibility.visual.test {
                             formattedName: "",
                             width: 0,
                             height: 0,
-                            color: ""
+                            color: "",
+                            internalName: ""
                         },
                         inputWeight: 0,
                         outputWeight: 0,
@@ -164,13 +165,14 @@ module powerbi.extensibility.visual.test {
 
             function createNodes(testNodes: SankeyDiagramTestsNode[]): SankeyDiagramNode[] {
                 return testNodes.map((testNode: SankeyDiagramTestsNode) => {
-                    return {
+                    return <SankeyDiagramNode>{
                         label: {
                             name: "",
                             formattedName: "",
                             width: 0,
                             height: 0,
-                            color: ""
+                            color: "",
+                            internalName: ""
                         },
                         inputWeight: testNode.inputWeight,
                         outputWeight: testNode.outputWeight,
@@ -478,6 +480,23 @@ module powerbi.extensibility.visual.test {
                     visualBuilder.updateRenderTimeout([dataView], () => {
                         let linksCount = visualBuilder.linksElement[firstElement].childElementCount;
                         expect(linksCount).toBe(expectedLinksCount);
+                        done();
+                    });
+                });
+            });
+
+            describe("datalabels", () => {
+                it("must be rendered", done => {
+                    let dataView: DataView = defaultDataViewBuilder.getDataViewWithLowValue();
+
+                    dataView.metadata.objects = {
+                        linkLabels: {
+                            show: true
+                        }
+                    };
+
+                    visualBuilder.updateRenderTimeout([dataView], () => {
+                        expect($(visualBuilder.mainElement.find(".linkLabelTexts"))).toBeInDOM();
                         done();
                     });
                 });
