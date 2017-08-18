@@ -1346,7 +1346,9 @@ module powerbi.extensibility.visual {
 
             textPathSelection
                 .enter()
-                .append("textPath")
+                .append("textPath");
+
+            textPathSelection
                 .attr({
                     startOffset: "50%",
                     href: (link: SankeyDiagramLink) => `#${(link.source.label.internalName || "").replace(/\W*/g,"")}-${(link.destination.label.internalName || "").replace(/\W*/g,"")}`
