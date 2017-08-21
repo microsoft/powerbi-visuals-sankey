@@ -46,10 +46,15 @@ module powerbi.extensibility.visual {
         public show: boolean = false;
     }
 
+    export class SankeyComplexSettings {
+        public nodePositions: string = "[]";
+    }
+
     export class SankeyDiagramSettings extends DataViewObjectsParser {
         public labels: SankeyDiagramLabelsSettings = new SankeyDiagramLabelsSettings();
         public _scale: SankeyDiagramScaleSettings = new SankeyDiagramScaleSettings();
         public scaleSettings: SankeyLnScaleSettings = new SankeyLnScaleSettings();
-        public _nodePositions: SankeyDiagramLinkNodesPositionSetting[] = [];
+        public nodeComplexSettings: SankeyComplexSettings = new SankeyComplexSettings();
+        public _nodePositions: SankeyDiagramNodePositionSetting[] = [];
     }
 }

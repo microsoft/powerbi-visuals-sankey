@@ -351,7 +351,8 @@ module powerbi.extensibility.visual {
                 sourceCategories,
                 destinationCategories,
                 dataView.categorical.values,
-                sourceCategory.objects || []);
+                sourceCategory.objects || [],
+                settings);
 
             let cycles: SankeyDiagramCycleDictionary = this.checkCycles(nodes);
 
@@ -540,6 +541,8 @@ module powerbi.extensibility.visual {
                     color: settings.labels.fill
                 };
 
+                let nodeSettings = this.getNodeSettings(item, settings);
+
                 nodes.push({
                     label: label,
                     links: [],
@@ -549,7 +552,8 @@ module powerbi.extensibility.visual {
                     height: 0,
                     colour: this.colorPalette.getColor(index.toString()).value,
                     tooltipInfo: [],
-                    selectableDataPoints: []
+                    selectableDataPoints: [],
+                    settings: nodeSettings
                 });
             });
 
@@ -568,7 +572,8 @@ module powerbi.extensibility.visual {
             sourceCategories: any[],
             destinationCategories: any[],
             valueColumns: DataViewValueColumns,
-            linksObjects: DataViewObjects[]): SankeyDiagramLink[] {
+            linksObjects: DataViewObjects[],
+            settings: SankeyDiagramSettings): SankeyDiagramLink[] {
             let valuesColumn: DataViewValueColumn = valueColumns && valueColumns[0],
                 links: SankeyDiagramLink[] = [],
                 weightValues: number[] = [],
@@ -628,9 +633,10 @@ module powerbi.extensibility.visual {
                     SankeyDiagram.DefaultColourOfLink,
                     linksObjects[index]);
 
-                linkSettings = this.getLinkSettings(
-                    SankeyDiagram.NodeComplexSettingsPropertyIdentifier,
-                    linksObjects[index]);
+                // linkSettings = this.getLinkSettings(
+                //     sourceNode,
+                // destinationNode,
+                // settings);
 
                 selectionId = selectionIdBuilder.createSelectionId(index);
 
@@ -647,7 +653,7 @@ module powerbi.extensibility.visual {
                         dataPoint.weigth),
                     identity: selectionId,
                     selected: false,
-                    settings: linkSettings
+                    // settings: linkSettings
                 };
 
                 let selectableDataPoint: SelectableDataPoint = SankeyDiagram.createSelectableDataPoint(selectionId);
@@ -690,19 +696,19 @@ module powerbi.extensibility.visual {
             };
         }
 
-        private getLinkSettings(
-            properties: DataViewObjectPropertyIdentifier,
-            objects: DataViewObjects): SankeyDiagramLinkNodesPositionSetting {
+        private getNodeSettings(
+            internalName: string,
+            settings: SankeyDiagramSettings): SankeyDiagramNodePositionSetting {
 
-            let property: SankeyDiagramLinkNodesPositionSetting = null;
-            try {
-                property = JSON.parse(objects[properties.objectName][properties.propertyName] as string) as SankeyDiagramLinkNodesPositionSetting;
-            }
-            catch (expression) {
-                console.log("Parse settings error");
-                console.log(expression);
-            }
-            return property;
+            let setting: SankeyDiagramNodePositionSetting = null;
+            settings._nodePositions.some( (nodePositions: SankeyDiagramNodePositionSetting) => {
+                if (nodePositions.name === internalName) {
+                    setting = nodePositions;
+                    return true;
+                }
+            });
+
+            return setting;
         }
 
         private getColor(
@@ -785,7 +791,15 @@ module powerbi.extensibility.visual {
         }
 
         private parseSettings(dataView: DataView): SankeyDiagramSettings {
-            return SankeyDiagramSettings.parse<SankeyDiagramSettings>(dataView);
+            let settings: SankeyDiagramSettings = SankeyDiagramSettings.parse<SankeyDiagramSettings>(dataView);
+            try {
+                settings._nodePositions = <SankeyDiagramNodePositionSetting[]>JSON.parse(settings.nodeComplexSettings.nodePositions);
+            }
+            catch (exception) {
+                settings._nodePositions = [];
+                settings.nodeComplexSettings.nodePositions = "[]";
+            }
+            return settings;
         }
 
         private computePositions(sankeyDiagramDataView: SankeyDiagramDataView): void {
@@ -882,8 +896,7 @@ module powerbi.extensibility.visual {
 
             this.computeYPosition(
                 sankeyDiagramDataView.nodes,
-                sankeyDiagramDataView.settings._scale.y,
-                sankeyDiagramDataView.settings._nodePositions
+                sankeyDiagramDataView.settings._scale.y
             );
 
             this.applySavedPositions(sankeyDiagramDataView);
@@ -893,14 +906,12 @@ module powerbi.extensibility.visual {
         }
 
         private applySavedPositions(sankeyDiagramDataView: SankeyDiagramDataView) {
-            sankeyDiagramDataView.links.forEach( (link: SankeyDiagramLink) => {
-                if (link.settings !== null) {
-                    link.source.x = +link.settings.source.x;
-                    link.source.y = +link.settings.source.y;
-                    link.destination.x = +link.settings.destination.x;
-                    link.destination.y = +link.settings.destination.y;
+            sankeyDiagramDataView.nodes.forEach( (node: SankeyDiagramNode) => {
+                if (node.settings !== null) {
+                    node.x = +node.settings.x;
+                    node.y = +node.settings.y;
                 }
-            })
+            });
         }
 
         private computeBordersOfTheNode(sankeyDiagramDataView: SankeyDiagramDataView): void {
@@ -1098,15 +1109,7 @@ module powerbi.extensibility.visual {
         // TODO: Update this method to improve a distribution by height.
         private computeYPosition(
             nodes: SankeyDiagramNode[],
-            scale: number,
-            nodePositions: SankeyDiagramLinkNodesPositionSetting[]): void {
-
-            let applyPositions = true;
-
-            debugger;
-            if (nodePositions.length === 0) {
-                applyPositions = false; // nothing to apply
-            }
+            scale: number): void {
 
             nodes.forEach((node: SankeyDiagramNode) => {
                 node.links = node.links.sort((firstLink: SankeyDiagramLink, secondLink: SankeyDiagramLink) => {
@@ -1273,14 +1276,17 @@ module powerbi.extensibility.visual {
                     return { x: node.x, y: node.y};
                 })
                 .on("dragstart", dragstarted)
-                .on("drag", dragged);
+                .on("drag", dragged)
+                .on("dragend", dragend);
 
             function dragstarted(node: SankeyDiagramNode) {
                 (d3.event as any).sourceEvent.stopPropagation();
             }
 
             let sankeyVisual = this;
+            let allowSave: boolean = true;
             function dragged(node: SankeyDiagramNode) {
+                allowSave = false;
                 node.x = (d3.event as any).x;
                 node.y = (d3.event as any).y;
 
@@ -1300,30 +1306,12 @@ module powerbi.extensibility.visual {
                     node.y = sankeyVisual.viewport.height - node.height;
                 }
 
-                node.links.forEach((link: SankeyDiagramLink) => {
-                    if (link.settings === null) {
-                        link.settings = {
-                            // linkName: `${link.source.label.internalName}-${link.destination.label.internalName}`,
-                            source: {
-                                name: link.source.label.internalName
-                            },
-                            destination: {
-                                name: link.destination.label.internalName
-                            }
-                        };
-                    }
+                node.settings = {
+                    x: node.x.toFixed(2),
+                    y: node.y.toFixed(2),
+                    name: node.label.internalName
+                };
 
-                    if (link.source === node) {
-                        link.settings.source.x = node.x.toFixed(0);
-                        link.settings.source.y = node.y.toFixed(0);
-                    }
-                    if (link.destination === node) {
-                        link.settings.destination.x = node.x.toFixed(0);
-                        link.settings.destination.y = node.y.toFixed(0);
-                    }
-                });
-
-                debugger;
                 // Update each link related with this node
                 node.links.forEach( (link: SankeyDiagramLink) => {
                     // select link svg element by ID generated in link creation as Source-Destination
@@ -1332,12 +1320,16 @@ module powerbi.extensibility.visual {
                         d: sankeyVisual.getSvgPath(link)
                     });
                 });
-                
 
                 // Translate the object on the actual moved point
                 d3.select(this).attr({
                     transform: translate(node.x, node.y)
                 });
+                allowSave = true;
+            }
+
+            function dragend(node: SankeyDiagramNode) {
+                sankeyVisual.saveNodePositions(sankeyVisual.dataView.nodes, sankeyVisual.visualHost);
             }
 
             nodesEnterSelection.call(drag);
@@ -1347,6 +1339,35 @@ module powerbi.extensibility.visual {
                 .remove();
 
             return nodesSelection;
+        }
+
+        private saveNodePositions(nodes: SankeyDiagramNode[], host: IVisualHost) {
+            let nodePositions: SankeyDiagramNodePositionSetting[]  = [];
+            nodes.forEach((node: SankeyDiagramNode) => {
+                if (node.height === 0) {
+                    return;
+                }
+                let settings: SankeyDiagramNodePositionSetting = <SankeyDiagramNodePositionSetting>{
+                    name: node.label.internalName,
+                    x: node.x.toFixed(0),
+                    y: node.y.toFixed(0)
+                };
+                nodePositions.push(settings);
+            });
+
+            const instance: VisualObjectInstance = {
+                objectName: "nodeComplexSettings",
+                selector: undefined,
+                properties: {
+                    nodePositions: JSON.stringify(nodePositions)
+                }
+            };
+
+            host.persistProperties({
+                replace: [
+                    instance
+                ]
+            });
         }
 
         private getLabelPositionByAxisX(node: SankeyDiagramNode): number {
@@ -1500,10 +1521,6 @@ module powerbi.extensibility.visual {
                 this.enumerateLinks(instanceEnumeration);
             }
 
-            if (options.objectName === SankeyDiagram.NodeComplexSettingsPropertyIdentifier.objectName) {
-                this.enumerateComplexSettings(instanceEnumeration);
-            }
-
             return instanceEnumeration || [];
         }
 
@@ -1514,7 +1531,6 @@ module powerbi.extensibility.visual {
                 return;
             }
 
-            debugger;
             links.forEach((link: SankeyDiagramLink) => {
                 const identity: ISelectionId = link.identity as ISelectionId,
                     displayName: string = `${link.source.label.formattedName} - ${link.destination.label.formattedName}`,
@@ -1536,7 +1552,7 @@ module powerbi.extensibility.visual {
                             x: link.destination.x.toFixed(0),
                             y: link.destination.y.toFixed(0)
                         }
-                    }
+                    };
                 }
                 this.addAnInstanceToEnumeration(instanceEnumeration, {
                     displayName,
