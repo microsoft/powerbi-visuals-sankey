@@ -48,6 +48,12 @@ module powerbi.extensibility.visual {
 
     export class SankeyComplexSettings {
         public nodePositions: string = "[]";
+        public viewportSize: string = "{}";
+    }
+
+    export interface ViewportSize {
+        height?: string;
+        width?: string;
     }
 
     export class SankeyDiagramSettings extends DataViewObjectsParser {
@@ -56,5 +62,6 @@ module powerbi.extensibility.visual {
         public scaleSettings: SankeyLnScaleSettings = new SankeyLnScaleSettings();
         public nodeComplexSettings: SankeyComplexSettings = new SankeyComplexSettings();
         public _nodePositions: SankeyDiagramNodePositionSetting[] = [];
+        public _viewportSize: ViewportSize = {};
     }
 }

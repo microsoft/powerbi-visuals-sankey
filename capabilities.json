@@ -192,6 +192,13 @@
                     "type": {
                         "text": true
                     }
+                },
+                "viewportSize": {
+                    "displayName": "Viewport sizes",
+                    "displayNameKey": "Visual_ViewportSize",
+                    "type": {
+                        "text": true
+                    }
                 }
             }
         }
