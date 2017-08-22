@@ -1,3 +1,7 @@
+## 1.4.0
+
+* Feature to move nodes to any place in the viewport
+
 ## 1.3.1
 
 * Fix applying settings of link labels

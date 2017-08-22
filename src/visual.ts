@@ -644,11 +644,6 @@ module powerbi.extensibility.visual {
                     SankeyDiagram.DefaultColourOfLink,
                     linksObjects[index]);
 
-                // linkSettings = this.getLinkSettings(
-                //     sourceNode,
-                // destinationNode,
-                // settings);
-
                 selectionId = selectionIdBuilder.createSelectionId(index);
 
                 link = {
