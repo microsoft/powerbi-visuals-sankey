@@ -485,39 +485,5 @@ module powerbi.extensibility.visual.test {
                 });
             });
         });
-
-        describe("node positions", () => {
-            describe("settings parsing", () => {
-                it("correct settings", (done) => {
-                    let positions = <SankeyDiagramNodePositionSettingsCollection>{
-                        "1" : [{
-                            nodeName: "A",
-                            orderPosition: 1
-                        },
-                        {
-                            nodeName: "B",
-                            orderPosition: 2
-                        },
-                        {
-                            nodeName: "C",
-                            orderPosition: 3
-                        }],
-                        length: 1
-                    };
-
-                    debugger;
-                    let positionsString = JSON.stringify(positions);
-
-                    let parsedPositions = visualBuilder.instance.parseNodePositions(positionsString);
-
-                    let parsingFailed: boolean = positions["1"].some((position, index) => {
-                        return parsedPositions["1"][index].nodeName !== position.nodeName || parsedPositions["1"][index].orderPosition !== position.orderPosition;
-                    });
-
-                    expect(parsingFailed).toBeFalsy();
-                    done();
-                });
-            });
-        });
     });
 }

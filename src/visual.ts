@@ -208,7 +208,9 @@ module powerbi.extensibility.visual {
 
         private fontFamily: string;
 
-        private nodePositions: SankeyDiagramLinkNodesPositionSetting[] = [];
+        public static SourceCategoryIndex: number = 0;
+        public static DestinationCategoryIndex: number = 1;
+        public static FirstValueIndex: number = 0;
 
         private get textProperties(): TextProperties {
             return {
@@ -353,9 +355,9 @@ module powerbi.extensibility.visual {
                 dataView.categorical.values,
                 sourceCategory.objects || [],
                 settings,
-                dataView.categorical.categories[0].source.displayName,
-                dataView.categorical.categories[1].source.displayName,
-                dataView.categorical.values[0].source.displayName
+                dataView.categorical.categories[SankeyDiagram.SourceCategoryIndex].source.displayName,
+                dataView.categorical.categories[SankeyDiagram.DestinationCategoryIndex].source.displayName,
+                dataView.categorical.values[SankeyDiagram.FirstValueIndex].source.displayName
             );
 
             let cycles: SankeyDiagramCycleDictionary = this.checkCycles(nodes);
@@ -545,7 +547,7 @@ module powerbi.extensibility.visual {
                     color: settings.labels.fill
                 };
 
-                let nodeSettings = this.getNodeSettings(item, settings);
+                let nodeSettings: SankeyDiagramNodePositionSetting = this.getNodeSettings(item, settings);
 
                 nodes.push({
                     label: label,
@@ -623,7 +625,6 @@ module powerbi.extensibility.visual {
                     destinationNode: SankeyDiagramNode,
                     link: SankeyDiagramLink,
                     linkColour: string,
-                    linkSettings: SankeyDiagramLinkNodesPositionSetting,
                     selectionId: ISelectionId;
 
                 nodes.forEach((node: SankeyDiagramNode) => {
@@ -664,8 +665,7 @@ module powerbi.extensibility.visual {
                         valueFieldName
                     ),
                     identity: selectionId,
-                    selected: false,
-                    // settings: linkSettings
+                    selected: false
                 };
 
                 let selectableDataPoint: SelectableDataPoint = SankeyDiagram.createSelectableDataPoint(selectionId);
@@ -935,8 +935,7 @@ module powerbi.extensibility.visual {
         }
 
         private applySavedPositions(sankeyDiagramDataView: SankeyDiagramDataView) {
-            // todo compare viewport size
-            // if size were changed shift positions of 
+            // if size were changed shift positions of nodes
             let viewPort: ViewportSize = sankeyDiagramDataView.settings._viewportSize;
             let scaleHeight: number = 1;
             if (+viewPort.height !== this.viewport.height && viewPort.height && +viewPort.height !== 0) {
@@ -1583,47 +1582,6 @@ module powerbi.extensibility.visual {
             }
 
             return instanceEnumeration || [];
-        }
-
-        private enumerateComplexSettings(instanceEnumeration: VisualObjectInstanceEnumeration): void {
-            const links: SankeyDiagramLink[] = this.dataView && this.dataView.links;
-
-            if (!links || !(links.length > 0)) {
-                return;
-            }
-
-            links.forEach((link: SankeyDiagramLink) => {
-                const identity: ISelectionId = link.identity as ISelectionId,
-                    displayName: string = `${link.source.label.formattedName} - ${link.destination.label.formattedName}`,
-                    linkName: string = `${link.source.label.internalName}-${link.destination.label.internalName}`;
-
-                let settings: SankeyDiagramLinkNodesPositionSetting = null;
-                if (link.settings) {
-                    settings = link.settings;
-                }
-                else {
-                    settings = <SankeyDiagramLinkNodesPositionSetting>{
-                        source: <SankeyDiagramNodePositionSetting>{
-                            name: link.source.label.internalName,
-                            x: link.source.x.toFixed(0),
-                            y: link.source.y.toFixed(0)
-                        },
-                        destination: <SankeyDiagramNodePositionSetting>{
-                            name: link.destination.label.internalName,
-                            x: link.destination.x.toFixed(0),
-                            y: link.destination.y.toFixed(0)
-                        }
-                    };
-                }
-                this.addAnInstanceToEnumeration(instanceEnumeration, {
-                    displayName,
-                    objectName: linkName,
-                    selector: ColorHelper.normalizeSelector(identity.getSelector(), false),
-                    properties: {
-                        nodePositions: JSON.stringify(settings)
-                    }
-                });
-            });
         }
 
         private enumerateLinks(instanceEnumeration: VisualObjectInstanceEnumeration): void {
