@@ -568,12 +568,6 @@ module powerbi.extensibility.visual {
             return nodes;
         }
 
-        private applyColorToNodes(nodes: SankeyDiagramNode[]): void {
-            nodes.forEach((node: SankeyDiagramNode, index: number) => {
-                node.colour = this.colorPalette.getColor(index.toString()).value;
-            });
-        }
-
         private createLinks(
             nodes: SankeyDiagramNode[],
             selectionIdBuilder: SankeyDiagramSelectionIdBuilder,

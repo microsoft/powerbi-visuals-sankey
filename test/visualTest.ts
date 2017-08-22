@@ -55,6 +55,12 @@ module powerbi.extensibility.visual.test {
         outputWeight: number;
     }
 
+    let fireMouseEvent = function (type, elem, centerX, centerY) {
+        let evt = document.createEvent('MouseEvents');
+        evt.initMouseEvent(type, true, true, window, 1, 1, 1, centerX, centerY, false, false, false, false, 0, elem);
+        elem.dispatchEvent(evt);
+    };
+
     describe("SankeyDiagram", () => {
         let visualBuilder: SankeyDiagramBuilder,
             visualInstance: VisualClass,
@@ -499,6 +505,80 @@ module powerbi.extensibility.visual.test {
 
                     visualBuilder.updateRenderTimeout([dataView], () => {
                         expect($(visualBuilder.mainElement.find(".linkLabelTexts"))).toBeInDOM();
+                        done();
+                    });
+                });
+            });
+
+            describe("nodes", () => {
+                it("must be dragged", done => {
+                    let dataView: DataView = defaultDataViewBuilder.getDataView();
+
+                    visualBuilder.updateRenderTimeout([dataView], () => {
+                        let nodeToDrag = visualBuilder.nodeElements[0];
+
+                        let pos = nodeToDrag.getBoundingClientRect();
+                        let center1X = Math.floor((pos.left + pos.right) / 2);
+                        let center1Y = Math.floor((pos.top + pos.bottom) / 2);
+
+                        // user second node as target
+                        let anotherNode = visualBuilder.nodeElements[1];
+                        pos = anotherNode.getBoundingClientRect();
+                        let center2X = Math.floor((pos.left + pos.right) / 2);
+                        let center2Y = Math.floor((pos.top + pos.bottom) / 2);
+
+                        // mouse over dragged element and mousedown
+                        fireMouseEvent('mousemove', nodeToDrag, center1X, center1Y);
+                        fireMouseEvent('mouseenter', nodeToDrag, center1X, center1Y);
+                        fireMouseEvent('mouseover', nodeToDrag, center1X, center1Y);
+                        fireMouseEvent('mousedown', nodeToDrag, center1X, center1Y);
+
+                        // start dragging process over to drop target
+                        fireMouseEvent('dragstart', nodeToDrag, center1X, center1Y);
+                        fireMouseEvent('drag', nodeToDrag, center1X, center1Y);
+                        fireMouseEvent('mousemove', nodeToDrag, center1X, center1Y);
+                        fireMouseEvent('drag', nodeToDrag, center2X, center2Y);
+                        fireMouseEvent('mousemove', nodeToDrag, center2X, center2Y);
+                        fireMouseEvent('dragend', nodeToDrag, center2X, center2Y);
+
+                        pos = nodeToDrag.getBoundingClientRect();
+                        center1X = Math.floor((pos.left + pos.right) / 2);
+                        center1Y = Math.floor((pos.top + pos.bottom) / 2);
+
+                        // positions must match after drag and drop
+                        expect(center1X).toBe(center2X);
+                        expect(center1Y).toBe(center2Y);
+
+                        // drag to outside of viewport
+                        // mouse over dragged element and mousedown
+                        fireMouseEvent('dragstart', nodeToDrag, center1X, center1Y);
+                        fireMouseEvent('drag', nodeToDrag, center1X, center1Y);
+                        fireMouseEvent('mousemove', nodeToDrag, center1X, center1Y);
+                        fireMouseEvent('drag', nodeToDrag, -10, -10);
+                        fireMouseEvent('mousemove', nodeToDrag, -10, -10);
+                        fireMouseEvent('dragend', nodeToDrag, -10, -10);
+
+                        // positions must match after drag and drop
+                        expect((nodeToDrag as any).getBoundingClientRect().left).toBeLessThan(20);
+                        expect((nodeToDrag as any).getBoundingClientRect().top).toBeLessThan(20);
+
+                        // drag to outside of viewport
+                        // mouse over dragged element and mousedown
+                        fireMouseEvent('dragstart', nodeToDrag, center1X, center1Y);
+                        fireMouseEvent('drag', nodeToDrag, center1X, center1Y);
+                        fireMouseEvent('mousemove', nodeToDrag, center1X, center1Y);
+                        fireMouseEvent('drag', nodeToDrag, visualBuilder.viewport.width + 10, visualBuilder.viewport.height + 10);
+                        fireMouseEvent('mousemove', nodeToDrag, visualBuilder.viewport.width + 10, visualBuilder.viewport.height + 10);
+                        fireMouseEvent('dragend', nodeToDrag, visualBuilder.viewport.width + 10, visualBuilder.viewport.height + 10);
+
+                        // positions must match after drag and drop
+                        expect((nodeToDrag as any).getBoundingClientRect().right).toBeGreaterThan(visualBuilder.viewport.width - 20);
+                        expect((nodeToDrag as any).getBoundingClientRect().bottom).toBeGreaterThan(visualBuilder.viewport.height - 20);
+
+                        // call private methods
+                        (visualBuilder.instance as any).saveNodePositions((visualBuilder.instance as any).dataView.nodes);
+                        (visualBuilder.instance as any).saveViewportSize();
+
                         done();
                     });
                 });
