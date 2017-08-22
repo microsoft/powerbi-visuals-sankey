@@ -104,6 +104,11 @@ module powerbi.extensibility.visual {
             propertyName: "fill"
         };
 
+        private static NodeComplexSettingsPropertyIdentifier: DataViewObjectPropertyIdentifier = {
+            objectName: "nodeComplexSettings",
+            propertyName: "nodePositions"
+        };
+
         private static NodesPropertyIdentifier: DataViewObjectPropertyIdentifier = {
             objectName: "nodes",
             propertyName: "fill"
@@ -204,6 +209,10 @@ module powerbi.extensibility.visual {
         private tooltipServiceWrapper: ITooltipServiceWrapper;
 
         private fontFamily: string;
+
+        public static SourceCategoryIndex: number = 0;
+        public static DestinationCategoryIndex: number = 1;
+        public static FirstValueIndex: number = 0;
 
         private get textProperties(): TextProperties {
             return {
@@ -346,7 +355,12 @@ module powerbi.extensibility.visual {
                 sourceCategories,
                 destinationCategories,
                 dataView.categorical.values,
-                sourceCategory.objects || []);
+                sourceCategory.objects || [],
+                settings,
+                dataView.categorical.categories[SankeyDiagram.SourceCategoryIndex].source.displayName,
+                dataView.categorical.categories[SankeyDiagram.DestinationCategoryIndex].source.displayName,
+                dataView.categorical.values[SankeyDiagram.FirstValueIndex].source.displayName
+            );
 
             let cycles: SankeyDiagramCycleDictionary = this.checkCycles(nodes);
 
@@ -535,6 +549,8 @@ module powerbi.extensibility.visual {
                     color: settings.labels.fill
                 };
 
+                let nodeSettings: SankeyDiagramNodePositionSetting = this.getNodeSettings(item, settings);
+
                 nodes.push({
                     label: label,
                     links: [],
@@ -544,17 +560,12 @@ module powerbi.extensibility.visual {
                     height: 0,
                     colour: this.colorPalette.getColor(index.toString()).value,
                     tooltipInfo: [],
-                    selectableDataPoints: []
+                    selectableDataPoints: [],
+                    settings: nodeSettings
                 });
             });
 
             return nodes;
-        }
-
-        private applyColorToNodes(nodes: SankeyDiagramNode[]): void {
-            nodes.forEach((node: SankeyDiagramNode, index: number) => {
-                node.colour = this.colorPalette.getColor(index.toString()).value;
-            });
         }
 
         private createLinks(
@@ -563,7 +574,12 @@ module powerbi.extensibility.visual {
             sourceCategories: any[],
             destinationCategories: any[],
             valueColumns: DataViewValueColumns,
-            linksObjects: DataViewObjects[]): SankeyDiagramLink[] {
+            linksObjects: DataViewObjects[],
+            settings: SankeyDiagramSettings,
+            sourceFieldName: string,
+            destinationFieldName: string,
+            valueFieldName: string
+        ): SankeyDiagramLink[] {
             let valuesColumn: DataViewValueColumn = valueColumns && valueColumns[0],
                 links: SankeyDiagramLink[] = [],
                 weightValues: number[] = [],
@@ -634,7 +650,11 @@ module powerbi.extensibility.visual {
                         valuesFormatterForWeigth,
                         sourceNode.label.formattedName,
                         destinationNode.label.formattedName,
-                        dataPoint.weigth),
+                        dataPoint.weigth,
+                        sourceFieldName,
+                        destinationFieldName,
+                        valueFieldName
+                    ),
                     identity: selectionId,
                     selected: false
                 };
@@ -650,20 +670,20 @@ module powerbi.extensibility.visual {
 
                 SankeyDiagram.updateValueOfNode(sourceNode);
                 SankeyDiagram.updateValueOfNode(destinationNode);
+            });
 
-                sourceNode.tooltipInfo = SankeyDiagram.getTooltipForNode(
+            nodes.forEach((nodes: SankeyDiagramNode) => {
+                nodes.tooltipInfo = SankeyDiagram.getTooltipForNode(
                     valuesFormatterForWeigth,
-                    sourceNode.label.formattedName,
-                    sourceNode.inputWeight
-                        ? sourceNode.inputWeight
-                        : sourceNode.outputWeight);
+                    nodes.label.formattedName,
+                    nodes.inputWeight
+                        ? nodes.inputWeight
+                        : nodes.outputWeight,
+                        nodes.inputWeight >  0 && nodes.outputWeight > 0 ? `${sourceFieldName}-${destinationFieldName}` : nodes.outputWeight > 0
+                        ? sourceFieldName
+                        : destinationFieldName,
+                        valueFieldName);
 
-                destinationNode.tooltipInfo = SankeyDiagram.getTooltipForNode(
-                    valuesFormatterForWeigth,
-                    destinationNode.label.formattedName,
-                    destinationNode.inputWeight
-                        ? destinationNode.inputWeight
-                        : destinationNode.outputWeight);
             });
 
             return links;
@@ -677,6 +697,21 @@ module powerbi.extensibility.visual {
                 identity: selectionId,
                 selected: isSelected
             };
+        }
+
+        private getNodeSettings(
+            internalName: string,
+            settings: SankeyDiagramSettings): SankeyDiagramNodePositionSetting {
+
+            let setting: SankeyDiagramNodePositionSetting = null;
+            settings._nodePositions.some( (nodePositions: SankeyDiagramNodePositionSetting) => {
+                if (nodePositions.name === internalName) {
+                    setting = nodePositions;
+                    return true;
+                }
+            });
+
+            return setting;
         }
 
         private getColor(
@@ -696,7 +731,11 @@ module powerbi.extensibility.visual {
             valueFormatter: IValueFormatter,
             sourceNodeName: string,
             destinationNodeName: string,
-            linkWeight: number): VisualTooltipDataItem[] {
+            linkWeight: number,
+            sourceNodeDisplayName?: string,
+            destinationNodeDisplayName?: string,
+            valueDisplayName?: string,
+            ): VisualTooltipDataItem[] {
 
             let formattedLinkWeight: string;
 
@@ -708,13 +747,13 @@ module powerbi.extensibility.visual {
 
             return [
                 {
-                    displayName: SankeyDiagram.RoleNames.rows,
+                    displayName: sourceNodeDisplayName || SankeyDiagram.RoleNames.rows,
                     value: sourceNodeName
                 }, {
-                    displayName: SankeyDiagram.RoleNames.columns,
+                    displayName: destinationNodeDisplayName || SankeyDiagram.RoleNames.columns,
                     value: destinationNodeName
                 }, {
-                    displayName: SankeyDiagram.RoleNames.values,
+                    displayName: valueDisplayName || SankeyDiagram.RoleNames.values,
                     value: formattedLinkWeight
                 }
             ];
@@ -737,7 +776,10 @@ module powerbi.extensibility.visual {
         private static getTooltipForNode(
             valueFormatter: IValueFormatter,
             nodeName: string,
-            nodeWeight: number): VisualTooltipDataItem[] {
+            nodeWeight: number,
+            nodeDisplayName?: string,
+            valueDisplayName?: string,
+            ): VisualTooltipDataItem[] {
 
             let formattedNodeWeigth: string;
 
@@ -749,17 +791,35 @@ module powerbi.extensibility.visual {
 
             return [
                 {
-                    displayName: SankeyDiagram.TooltipDisplayName,
+                    displayName: nodeDisplayName || SankeyDiagram.TooltipDisplayName,
                     value: nodeName
                 }, {
-                    displayName: SankeyDiagram.RoleNames.values,
+                    displayName: valueDisplayName || SankeyDiagram.RoleNames.values,
                     value: formattedNodeWeigth
                 }
             ];
         }
 
         private parseSettings(dataView: DataView): SankeyDiagramSettings {
-            return SankeyDiagramSettings.parse<SankeyDiagramSettings>(dataView);
+            let settings: SankeyDiagramSettings = SankeyDiagramSettings.parse<SankeyDiagramSettings>(dataView);
+            // node positions
+            try {
+                settings._nodePositions = <SankeyDiagramNodePositionSetting[]>JSON.parse(settings.nodeComplexSettings.nodePositions);
+            }
+            catch (exception) {
+                settings._nodePositions = [];
+                settings.nodeComplexSettings.nodePositions = "[]";
+            }
+
+            // viewport size
+            try {
+                settings._viewportSize = <ViewportSize>JSON.parse(settings.nodeComplexSettings.viewportSize);
+            }
+            catch (exception) {
+                settings._nodePositions = settings._nodePositions || [];
+                settings.nodeComplexSettings.viewportSize = "{}";
+            }
+            return settings;
         }
 
         private computePositions(sankeyDiagramDataView: SankeyDiagramDataView): void {
@@ -856,10 +916,33 @@ module powerbi.extensibility.visual {
 
             this.computeYPosition(
                 sankeyDiagramDataView.nodes,
-                sankeyDiagramDataView.settings._scale.y);
+                sankeyDiagramDataView.settings._scale.y
+            );
+
+            this.applySavedPositions(sankeyDiagramDataView);
 
             this.computeBordersOfTheNode(sankeyDiagramDataView);
             SankeyDiagram.computeIntersections(sankeyDiagramDataView);
+        }
+
+        private applySavedPositions(sankeyDiagramDataView: SankeyDiagramDataView) {
+            // if size were changed shift positions of nodes
+            let viewPort: ViewportSize = sankeyDiagramDataView.settings._viewportSize;
+            let scaleHeight: number = 1;
+            if (+viewPort.height !== this.viewport.height && viewPort.height && +viewPort.height !== 0) {
+                scaleHeight = this.viewport.height / +viewPort.height;
+            }
+            let scaleWidth: number = 1;
+            if (+viewPort.width !== this.viewport.width && viewPort.width && +viewPort.width !== 0) {
+                scaleWidth = this.viewport.width / +viewPort.width;
+            }
+
+            sankeyDiagramDataView.nodes.forEach( (node: SankeyDiagramNode) => {
+                if (node.settings !== null) {
+                    node.x = (+node.settings.x) * scaleWidth;
+                    node.y = (+node.settings.y) * scaleHeight;
+                }
+            });
         }
 
         private computeBordersOfTheNode(sankeyDiagramDataView: SankeyDiagramDataView): void {
@@ -1153,7 +1236,7 @@ module powerbi.extensibility.visual {
                 })
                 .classed(SankeyDiagram.NodeSelector.class, true);
 
-            nodesEnterSelection
+            let rectNodes: Selection<SankeyDiagramNode> = nodesEnterSelection
                 .append("rect")
                 .classed(SankeyDiagram.NodeRectSelector.class, true);
 
@@ -1220,11 +1303,123 @@ module powerbi.extensibility.visual {
                     return node.label.formattedName;
                 });
 
+            let drag = d3.behavior.drag()
+                .origin(function(node: SankeyDiagramNode, index: number) {
+                    return { x: node.x, y: node.y};
+                })
+                .on("dragstart", dragstarted)
+                .on("drag", dragged)
+                .on("dragend", dragend);
+
+            function dragstarted(node: SankeyDiagramNode) {
+                (d3.event as any).sourceEvent.stopPropagation();
+            }
+
+            let sankeyVisual = this;
+            let allowSave: boolean = true;
+            function dragged(node: SankeyDiagramNode) {
+                allowSave = false;
+                node.x = (d3.event as any).x;
+                node.y = (d3.event as any).y;
+
+                if (node.x < 0 ) {
+                    node.x = 0;
+                }
+
+                if (node.y < 0 ) {
+                    node.y = 0;
+                }
+
+                if (node.x + node.width > sankeyVisual.viewport.width ) {
+                    node.x = sankeyVisual.viewport.width - node.width;
+                }
+
+                if (node.y + node.height > sankeyVisual.viewport.height ) {
+                    node.y = sankeyVisual.viewport.height - node.height;
+                }
+
+                node.settings = {
+                    x: node.x.toFixed(2),
+                    y: node.y.toFixed(2),
+                    name: node.label.internalName
+                };
+
+                // Update each link related with this node
+                node.links.forEach( (link: SankeyDiagramLink) => {
+                    // select link svg element by ID generated in link creation as Source-Destination
+                    d3.select(`#${(link.source.label.internalName || "").replace(/\W*/g,"")}-${(link.destination.label.internalName || "").replace(/\W*/g,"")}`).attr({
+                        // get updated path params based on actual positions of node
+                        d: sankeyVisual.getSvgPath(link)
+                    });
+                });
+
+                // Translate the object on the actual moved point
+                d3.select(this).attr({
+                    transform: translate(node.x, node.y)
+                });
+                allowSave = true;
+            }
+
+            function dragend(node: SankeyDiagramNode) {
+                sankeyVisual.saveNodePositions(sankeyVisual.dataView.nodes);
+                sankeyVisual.saveViewportSize();
+            }
+
+            nodesEnterSelection.call(drag);
+
             nodesSelection
                 .exit()
                 .remove();
 
             return nodesSelection;
+        }
+
+        private saveViewportSize(): void {
+            const instance: VisualObjectInstance = {
+                objectName: "nodeComplexSettings",
+                selector: undefined,
+                properties: {
+                    viewportSize: JSON.stringify(<ViewportSize>{
+                        height: this.viewport.height.toString(),
+                        width: this.viewport.width.toString()
+                    })
+                }
+            };
+
+            this.visualHost.persistProperties({
+                merge: [
+                    instance
+                ]
+            });
+        }
+
+        private saveNodePositions(nodes: SankeyDiagramNode[]): void {
+            let nodePositions: SankeyDiagramNodePositionSetting[]  = [];
+            nodes.forEach((node: SankeyDiagramNode) => {
+                if (node.height === 0) {
+                    return;
+                }
+                let settings: SankeyDiagramNodePositionSetting = <SankeyDiagramNodePositionSetting>{
+                    name: node.label.internalName,
+                    x: node.x.toFixed(0),
+                    y: node.y.toFixed(0)
+                };
+                nodePositions.push(settings);
+            });
+
+            const instance: VisualObjectInstance = {
+                objectName: "nodeComplexSettings",
+                selector: undefined,
+                properties: {
+                    nodePositions: JSON.stringify(nodePositions)
+                }
+            };
+
+            this.visualHost.persistProperties({
+                merge: [
+                    instance
+                ]
+            });
         }
 
         private getLabelPositionByAxisX(node: SankeyDiagramNode): number {
@@ -1269,8 +1464,11 @@ module powerbi.extensibility.visual {
                 .classed(SankeyDiagram.LinkSelector.class, true);
 
             linksSelection
-                .attr("d", (link: SankeyDiagramLink) => {
-                    return this.getSvgPath(link);
+                .attr({
+                    d: (link: SankeyDiagramLink) => {
+                        return this.getSvgPath(link);
+                    },
+                    id: (link: SankeyDiagramLink) => `${(link.source.label.internalName || "").replace(/\W*/g,"")}-${(link.destination.label.internalName || "").replace(/\W*/g,"")}`
                 })
                 .style({
                     "stroke-width": (link: SankeyDiagramLink) => link.height < SankeyDiagram.MinWidthOfLink ? SankeyDiagram.MinWidthOfLink : link.height,

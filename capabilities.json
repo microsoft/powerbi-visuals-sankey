@@ -214,6 +214,26 @@
                     }
                 }
             }
+        },
+        "nodeComplexSettings": {
+            "displayName": "Sankey settigns",
+            "displayNameKey": "Visual_SankeySettings",
+            "properties": {
+                "nodePositions": {
+                    "displayName": "Node positions",
+                    "displayNameKey": "Visual_NodePositions",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "viewportSize": {
+                    "displayName": "Viewport sizes",
+                    "displayNameKey": "Visual_ViewportSize",
+                    "type": {
+                        "text": true
+                    }
+                }
+            }
         }
     },
     "sorting": {

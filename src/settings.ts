@@ -51,7 +51,17 @@ module powerbi.extensibility.visual {
     }
 
     export class SankeyLnScaleSettings {
-        public show: boolean= false;
+        public show: boolean = false;
+    }
+
+    export class SankeyComplexSettings {
+        public nodePositions: string = "[]";
+        public viewportSize: string = "{}";
+    }
+
+    export interface ViewportSize {
+        height?: string;
+        width?: string;
     }
 
     export class SankeyDiagramSettings extends DataViewObjectsParser {
@@ -59,5 +69,8 @@ module powerbi.extensibility.visual {
         public labels: SankeyDiagramLabelsSettings = new SankeyDiagramLabelsSettings();
         public _scale: SankeyDiagramScaleSettings = new SankeyDiagramScaleSettings();
         public scaleSettings: SankeyLnScaleSettings = new SankeyLnScaleSettings();
+        public nodeComplexSettings: SankeyComplexSettings = new SankeyComplexSettings();
+        public _nodePositions: SankeyDiagramNodePositionSetting[] = [];
+        public _viewportSize: ViewportSize = {};
     }
 }
