@@ -93,6 +93,8 @@ module powerbi.extensibility.visual {
 
         private static LinksSelector: ClassAndSelector = createClassAndSelector("links");
         private static LinkSelector: ClassAndSelector = createClassAndSelector("link");
+        private static LinkLabelPathsSelector: ClassAndSelector = createClassAndSelector("linkLabelPaths");
+        private static LinkLabelTextsSelector: ClassAndSelector = createClassAndSelector("linkLabelTexts");
 
         private static DefaultColourOfNode: string = "rgb(62, 187, 162)";
         private static DefaultColourOfLink: string = "black";
@@ -1209,6 +1211,7 @@ module powerbi.extensibility.visual {
                 linksSelection: Selection<SankeyDiagramLink>;
 
             linksSelection = this.renderLinks(sankeyDiagramDataView);
+            this.renderLinkLabels(sankeyDiagramDataView);
 
             this.renderTooltip(linksSelection);
 
@@ -1488,6 +1491,92 @@ module powerbi.extensibility.visual {
                 .remove();
 
             return linksSelection;
+        }
+
+        private renderLinkLabels(sankeyDiagramDataView: SankeyDiagramDataView): void {
+             // create labels on link as A - B : Value
+             let linkTextData: SankeyDiagramLink[] = sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
+                return link.height > SankeyDiagram.MinSize && this.dataView.settings.linkLabels.show;
+            });
+
+            // add defs element to svg
+            let svgDefs: Selection<any> = this.root
+            .selectAll("defs");
+
+            let svgDefsSelection: UpdateSelection<Number> = svgDefs.data([1]);
+            svgDefsSelection
+                .enter()
+                .append("defs");
+
+            svgDefsSelection
+                .exit()
+                .remove();
+
+            let singleDefsElement: Selection<any> = d3.select(svgDefsSelection.node());
+
+            // add text path for lables
+            let linkLabelPaths: Selection<any> = singleDefsElement.selectAll(SankeyDiagram.LinkLabelPathsSelector.selector);
+
+            let linkLabelPathsSelection: UpdateSelection<SankeyDiagramLink> = linkLabelPaths.data(linkTextData);
+
+            linkLabelPathsSelection
+                .enter()
+                .append("path")
+                .classed(SankeyDiagram.LinkLabelPathsSelector.class, true);
+
+            linkLabelPathsSelection
+                .attr({
+                    d: (link: SankeyDiagramLink) => {
+                        return this.getSvgPath(link);
+                    },
+                    id: (link: SankeyDiagramLink) => `${(link.source.label.internalName || "").replace(/\W*/g,"")}-${(link.destination.label.internalName || "").replace(/\W*/g,"")}`
+                });
+
+            linkLabelPathsSelection
+                .exit()
+                .remove();
+
+            // add text by using paths from defs
+            let linkLabelTexts: Selection<any> = this.main
+                .select(SankeyDiagram.LinksSelector.selector)
+                .selectAll(SankeyDiagram.LinkLabelTextsSelector.selector);
+
+            let linkLabelTextSelection: UpdateSelection<SankeyDiagramLink> = linkLabelTexts.data(linkTextData);
+
+            linkLabelTextSelection
+                .enter()
+                .append("text")
+                .attr({
+                    "text-anchor": "middle"
+                })
+                .classed(SankeyDiagram.LinkLabelTextsSelector.class, true);
+
+            let textPathSelection: UpdateSelection<SankeyDiagramLink> = linkLabelTextSelection.selectAll("textPath").data( data => [data]);
+
+            textPathSelection
+                .enter()
+                .append("textPath");
+
+            textPathSelection
+                .attr({
+                    startOffset: "50%",
+                    href: (link: SankeyDiagramLink) => `#${(link.source.label.internalName || "").replace(/\W*/g,"")}-${(link.destination.label.internalName || "").replace(/\W*/g,"")}`
+                })
+                .style({
+                    "font-size": this.dataView.settings.linkLabels.fontSize,
+                    "fill": this.dataView.settings.linkLabels.fill
+                })
+                .text((link: SankeyDiagramLink) =>
+                    `${link.source.label.name || ""}-${link.destination.label.name || ""}:${(link.tooltipInfo[2] || {value: ""}).value}`
+                );
+
+            textPathSelection
+                .exit()
+                .remove();
+
+            linkLabelTextSelection
+                .exit()
+                .remove();
         }
 
         private getSvgPath(link: SankeyDiagramLink): string {

@@ -135,6 +135,39 @@
                 }
             }
         },
+        "linkLabels": {
+            "displayName": "Data link labels",
+            "displayNameKey": "Visual_DataPointsLinkLabels",
+            "properties": {
+                "show": {
+                    "displayName": "Show",
+                    "displayNameKey": "Visual_Show",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fill": {
+                    "displayName": "Color",
+                    "displayNameKey": "Visual_LabelsFill",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Text Size",
+                    "displayNameKey": "Visual_TextSize",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                }
+            }
+        },
         "links": {
             "displayName": "Links",
             "displayNameKey": "Visual_Links",

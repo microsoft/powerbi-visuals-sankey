@@ -37,6 +37,14 @@ module powerbi.extensibility.visual {
         public minHeightOfNode: number = 10;
     }
 
+    export class SankeyDiagramLinkLabelsSettings {
+        public static DefaultFontSize: number = 12;
+        public show: boolean = false;
+        public fill: string = "black";
+        public fontSize: number = SankeyDiagramLabelsSettings.DefaultFontSize;
+        public minHeightOfNode: number = 10;
+    }
+
     export class SankeyDiagramScaleSettings {
         public x: number = 1;
         public y: number = 1;
@@ -57,6 +65,7 @@ module powerbi.extensibility.visual {
     }
 
     export class SankeyDiagramSettings extends DataViewObjectsParser {
+        public linkLabels: SankeyDiagramLinkLabelsSettings = new SankeyDiagramLinkLabelsSettings();
         public labels: SankeyDiagramLabelsSettings = new SankeyDiagramLabelsSettings();
         public _scale: SankeyDiagramScaleSettings = new SankeyDiagramScaleSettings();
         public scaleSettings: SankeyLnScaleSettings = new SankeyLnScaleSettings();
