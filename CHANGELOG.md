@@ -1,3 +1,9 @@
+## 1.4.1
+
+* Fix restoring settings when data set was filtered
+* Fix links labels for graph with cycles 
+* Fix saving settings for graph with cycles
+
 ## 1.4.0
 
 * Feature to move nodes to any place in the viewport

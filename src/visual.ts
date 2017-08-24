@@ -364,7 +364,10 @@ module powerbi.extensibility.visual {
 
             let cycles: SankeyDiagramCycleDictionary = this.checkCycles(nodes);
 
-            links = this.processCycles(cycles, nodes, links);
+            links = this.processCycles(cycles, nodes, links, settings);
+
+            this.checkNodePositionSettings(nodes, settings);
+            this.restoreNodePositions(nodes, settings);
 
             return {
                 nodes,
@@ -375,7 +378,7 @@ module powerbi.extensibility.visual {
         }
 
         // in this method we breaking simple cycles for typical displaying with twice rendering onr node in cycle
-        private processCycles(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[]): SankeyDiagramLink[] {
+        private processCycles(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[], settings: SankeyDiagramSettings): SankeyDiagramLink[] {
             let createdNodes: SankeyDiagramNode[] = [];
             for (let nodeName in cycles) {
                 let firstCyclesNode: SankeyDiagramNode = (cycles[nodeName].filter((node: SankeyDiagramNode): boolean => {
@@ -424,6 +427,33 @@ module powerbi.extensibility.visual {
             }
 
             return links;
+        }
+
+        private checkNodePositionSettings(nodes: SankeyDiagramNode[], settings: SankeyDiagramSettings) {
+            let nodePositions: SankeyDiagramNodePositionSetting[] = settings._nodePositions;
+
+            nodePositions.forEach((position: SankeyDiagramNodePositionSetting) => {
+                let check: boolean = nodes.some((node: SankeyDiagramNode) => {
+                    if (node.label.name === position.name) {
+                        return true;
+                    }
+
+                    return false;
+                });
+
+                // if check failed then reset positions
+                if (!check) {
+                    settings.nodeComplexSettings.nodePositions = "{}";
+                    settings._nodePositions = [];
+                }
+            });
+        }
+
+        private restoreNodePositions(nodes: SankeyDiagramNode[], settings: SankeyDiagramSettings) {
+            nodes.forEach( (node: SankeyDiagramNode) => {
+                let nodeSettings: SankeyDiagramNodePositionSetting = this.getNodeSettings(node.label.name, settings);
+                node.settings = nodeSettings;
+            });
         }
 
         // remove dublicated links
@@ -549,8 +579,6 @@ module powerbi.extensibility.visual {
                     color: settings.labels.fill
                 };
 
-                let nodeSettings: SankeyDiagramNodePositionSetting = this.getNodeSettings(item, settings);
-
                 nodes.push({
                     label: label,
                     links: [],
@@ -561,7 +589,7 @@ module powerbi.extensibility.visual {
                     colour: this.colorPalette.getColor(index.toString()).value,
                     tooltipInfo: [],
                     selectableDataPoints: [],
-                    settings: nodeSettings
+                    settings: null
                 });
             });
 
@@ -700,12 +728,12 @@ module powerbi.extensibility.visual {
         }
 
         private getNodeSettings(
-            internalName: string,
+            name: string,
             settings: SankeyDiagramSettings): SankeyDiagramNodePositionSetting {
 
             let setting: SankeyDiagramNodePositionSetting = null;
             settings._nodePositions.some( (nodePositions: SankeyDiagramNodePositionSetting) => {
-                if (nodePositions.name === internalName) {
+                if (nodePositions.name === name) {
                     setting = nodePositions;
                     return true;
                 }
@@ -1341,13 +1369,13 @@ module powerbi.extensibility.visual {
                 node.settings = {
                     x: node.x.toFixed(2),
                     y: node.y.toFixed(2),
-                    name: node.label.internalName
+                    name: node.label.name
                 };
 
                 // Update each link related with this node
                 node.links.forEach( (link: SankeyDiagramLink) => {
                     // select link svg element by ID generated in link creation as Source-Destination
-                    d3.select(`#${(link.source.label.internalName || "").replace(/\W*/g,"")}-${(link.destination.label.internalName || "").replace(/\W*/g,"")}`).attr({
+                    d3.select(`#${(link.source.label.name || "").replace(/\W*/g,"")}-${(link.destination.label.name || "").replace(/\W*/g,"")}`).attr({
                         // get updated path params based on actual positions of node
                         d: sankeyVisual.getSvgPath(link)
                     });
@@ -1400,7 +1428,7 @@ module powerbi.extensibility.visual {
                     return;
                 }
                 let settings: SankeyDiagramNodePositionSetting = <SankeyDiagramNodePositionSetting>{
-                    name: node.label.internalName,
+                    name: node.label.name,
                     x: node.x.toFixed(0),
                     y: node.y.toFixed(0)
                 };
@@ -1468,7 +1496,7 @@ module powerbi.extensibility.visual {
                     d: (link: SankeyDiagramLink) => {
                         return this.getSvgPath(link);
                     },
-                    id: (link: SankeyDiagramLink) => `${(link.source.label.internalName || "").replace(/\W*/g,"")}-${(link.destination.label.internalName || "").replace(/\W*/g,"")}`
+                    id: (link: SankeyDiagramLink) => `${(link.source.label.name || "").replace(/\W*/g,"")}-${(link.destination.label.name || "").replace(/\W*/g,"")}`
                 })
                 .style({
                     "stroke-width": (link: SankeyDiagramLink) => link.height < SankeyDiagram.MinWidthOfLink ? SankeyDiagram.MinWidthOfLink : link.height,
@@ -1518,7 +1546,7 @@ module powerbi.extensibility.visual {
                     d: (link: SankeyDiagramLink) => {
                         return this.getSvgPath(link);
                     },
-                    id: (link: SankeyDiagramLink) => `${(link.source.label.internalName || "").replace(/\W*/g,"")}-${(link.destination.label.internalName || "").replace(/\W*/g,"")}`
+                    id: (link: SankeyDiagramLink) => `${(link.source.label.name || "").replace(/\W*/g,"")}-${(link.destination.label.name || "").replace(/\W*/g,"")}`
                 });
 
             linkLabelPathsSelection
@@ -1549,7 +1577,7 @@ module powerbi.extensibility.visual {
             textPathSelection
                 .attr({
                     startOffset: "50%",
-                    href: (link: SankeyDiagramLink) => `#${(link.source.label.internalName || "").replace(/\W*/g,"")}-${(link.destination.label.internalName || "").replace(/\W*/g,"")}`
+                    href: (link: SankeyDiagramLink) => `#${(link.source.label.name || "").replace(/\W*/g,"")}-${(link.destination.label.name || "").replace(/\W*/g,"")}`
                 })
                 .style({
                     "font-size": this.dataView.settings.linkLabels.fontSize,
