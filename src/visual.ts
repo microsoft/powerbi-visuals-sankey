@@ -165,7 +165,7 @@ module powerbi.extensibility.visual {
         private static MinHeightOfNode: number = 5;
 
         private static ScaleStep: number = 0.1;
-        private static ScaleStepLimit: number = 10;
+        private static ScaleStepLimit: number = 1;
 
         private static NegativeValueRange: number = 0;
 
@@ -881,7 +881,7 @@ module powerbi.extensibility.visual {
                 maxWeightInData = maxWeigthLink.weigth;
             }
 
-            while (minHeight < SankeyDiagram.MinHeightOfNode && scaleStepCount < SankeyDiagram.ScaleStepLimit) {
+            while (minHeight <= SankeyDiagram.MinHeightOfNode && scaleStepCount < SankeyDiagram.ScaleStepLimit) {
                 let weightScale: any;
 
                 if (sankeyDiagramDataView.settings.scaleSettings.show) {
