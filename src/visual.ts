@@ -1503,7 +1503,6 @@ module powerbi.extensibility.visual {
                     id: (link: SankeyDiagramLink) => `${(link.source.label.name || "").replace(/\W*/g,"")}-${(link.destination.label.name || "").replace(/\W*/g,"")}`
                 })
                 .style({
-                    "stroke-width": (link: SankeyDiagramLink) => 1,
                     "stroke": (link: SankeyDiagramLink) => link.color,
                     "fill": (link: SankeyDiagramLink) => link.color
                 });
