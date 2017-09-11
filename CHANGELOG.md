@@ -1,3 +1,7 @@
+## 1.4.2
+
+* Fix lines scaling issue when visual size is small
+
 ## 1.4.1
 
 * Fix restoring settings when data set was filtered

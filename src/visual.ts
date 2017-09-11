@@ -165,7 +165,7 @@ module powerbi.extensibility.visual {
         private static MinHeightOfNode: number = 5;
 
         private static ScaleStep: number = 0.1;
-        private static ScaleStepLimit: number = 10;
+        private static ScaleStepLimit: number = 1;
 
         private static NegativeValueRange: number = 0;
 
@@ -881,7 +881,7 @@ module powerbi.extensibility.visual {
                 maxWeightInData = maxWeigthLink.weigth;
             }
 
-            while (minHeight < SankeyDiagram.MinHeightOfNode && scaleStepCount < SankeyDiagram.ScaleStepLimit) {
+            while (minHeight <= SankeyDiagram.MinHeightOfNode && scaleStepCount < SankeyDiagram.ScaleStepLimit) {
                 let weightScale: any;
 
                 if (sankeyDiagramDataView.settings.scaleSettings.show) {
@@ -1375,6 +1375,10 @@ module powerbi.extensibility.visual {
                 // Update each link related with this node
                 node.links.forEach( (link: SankeyDiagramLink) => {
                     // select link svg element by ID generated in link creation as Source-Destination
+                    d3.select(`#linkLabelPaths${(link.source.label.name || "").replace(/\W*/g,"")}-${(link.destination.label.name || "").replace(/\W*/g,"")}`).attr({
+                        // get updated path params based on actual positions of node
+                        d: sankeyVisual.getLinkLabelSvgPath(link)
+                    });
                     d3.select(`#${(link.source.label.name || "").replace(/\W*/g,"")}-${(link.destination.label.name || "").replace(/\W*/g,"")}`).attr({
                         // get updated path params based on actual positions of node
                         d: sankeyVisual.getSvgPath(link)
@@ -1499,8 +1503,8 @@ module powerbi.extensibility.visual {
                     id: (link: SankeyDiagramLink) => `${(link.source.label.name || "").replace(/\W*/g,"")}-${(link.destination.label.name || "").replace(/\W*/g,"")}`
                 })
                 .style({
-                    "stroke-width": (link: SankeyDiagramLink) => link.height < SankeyDiagram.MinWidthOfLink ? SankeyDiagram.MinWidthOfLink : link.height,
-                    "stroke": (link: SankeyDiagramLink) => link.color
+                    "stroke": (link: SankeyDiagramLink) => link.color,
+                    "fill": (link: SankeyDiagramLink) => link.color
                 });
 
             linksSelection
@@ -1544,9 +1548,9 @@ module powerbi.extensibility.visual {
             linkLabelPathsSelection
                 .attr({
                     d: (link: SankeyDiagramLink) => {
-                        return this.getSvgPath(link);
+                        return this.getLinkLabelSvgPath(link);
                     },
-                    id: (link: SankeyDiagramLink) => `${(link.source.label.name || "").replace(/\W*/g,"")}-${(link.destination.label.name || "").replace(/\W*/g,"")}`
+                    id: (link: SankeyDiagramLink) => `linkLabelPaths${(link.source.label.name || "").replace(/\W*/g,"")}-${(link.destination.label.name || "").replace(/\W*/g,"")}`
                 });
 
             linkLabelPathsSelection
@@ -1577,7 +1581,7 @@ module powerbi.extensibility.visual {
             textPathSelection
                 .attr({
                     startOffset: "50%",
-                    href: (link: SankeyDiagramLink) => `#${(link.source.label.name || "").replace(/\W*/g,"")}-${(link.destination.label.name || "").replace(/\W*/g,"")}`
+                    href: (link: SankeyDiagramLink) => `#linkLabelPaths${(link.source.label.name || "").replace(/\W*/g,"")}-${(link.destination.label.name || "").replace(/\W*/g,"")}`
                 })
                 .style({
                     "font-size": this.dataView.settings.linkLabels.fontSize,
@@ -1596,14 +1600,14 @@ module powerbi.extensibility.visual {
                 .remove();
         }
 
-        private getSvgPath(link: SankeyDiagramLink): string {
+        private getLinkLabelSvgPath(link: SankeyDiagramLink): string {
             let x0: number,
-                x1: number,
-                xi: (t: number) => number,
-                x2: number,
-                x3: number,
-                y0: number,
-                y1: number;
+            x1: number,
+            xi: (t: number) => number,
+            x2: number,
+            x3: number,
+            y0: number,
+            y1: number;
 
             if (link.destination.x < link.source.x) {
                 x0 = link.source.x;
@@ -1620,6 +1624,60 @@ module powerbi.extensibility.visual {
             y1 = link.destination.y + link.dyDestination + link.height / SankeyDiagram.MiddleFactor;
 
             return `M ${x0} ${y0} C ${x2} ${y0}, ${x3} ${y1}, ${x1} ${y1}`;
+        }
+
+        private getSvgPath(link: SankeyDiagramLink): string {
+            let pathParams: string = "";
+
+            let x0: number,
+                x1: number,
+                xi: (t: number) => number,
+                x2: number,
+                x3: number,
+                y0: number,
+                y1: number;
+
+            if (link.destination.x < link.source.x) {
+                x0 = link.source.x;
+                x1 = link.destination.x + link.destination.width;
+            } else {
+                x0 = link.source.x + link.source.width;
+                x1 = link.destination.x;
+            }
+
+            // drawing area as combination of 4 lines in one path element of svg to fill this area with required color
+            // upper border of link
+            xi = d3.interpolateNumber(x0, x1);
+            x2 = xi(this.curvatureOfLinks);
+            x3 = xi(1 - this.curvatureOfLinks);
+            y0 = link.source.y + link.dySource + link.height / SankeyDiagram.MiddleFactor - link.height / 2;
+            y1 = link.destination.y + link.dyDestination + link.height / SankeyDiagram.MiddleFactor - link.height / 2;
+
+            pathParams += ` M ${x0} ${y0} C ${x2} ${y0}, ${x3} ${y1}, ${x1} ${y1}`;
+
+            // right border of link
+            y0 = link.destination.y + link.dyDestination + link.height / SankeyDiagram.MiddleFactor + link.height / 2;
+            y1 = link.destination.y + link.dyDestination + link.height / SankeyDiagram.MiddleFactor - link.height / 2;
+
+            pathParams += ` L ${x1} ${y0}`;
+
+            // bottom border of link
+            xi = d3.interpolateNumber(x0, x1);
+            x2 = xi(this.curvatureOfLinks);
+            x3 = xi(1 - this.curvatureOfLinks);
+            y0 = link.source.y + link.dySource + link.height / SankeyDiagram.MiddleFactor + link.height / 2;
+            y1 = link.destination.y + link.dyDestination + link.height / SankeyDiagram.MiddleFactor + link.height / 2;
+
+            pathParams += ` L ${x1} ${y1} C ${x2} ${y1}, ${x3} ${y0}, ${x0} ${y0}`;
+
+            // left border of link
+            y0 = link.source.y + link.dySource + link.height / SankeyDiagram.MiddleFactor + link.height / 2;
+            y1 = link.source.y + link.dySource + link.height / SankeyDiagram.MiddleFactor - link.height / 2;
+
+            // close path to get closed area
+            pathParams += ` Z`;
+
+            return pathParams;
         }
 
         private renderTooltip(selection: Selection<SankeyDiagramNode | SankeyDiagramLink>): void {
