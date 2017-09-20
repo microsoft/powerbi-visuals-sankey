@@ -132,7 +132,16 @@
                     "type": {
                         "bool": true
                     }
-                }
+                },
+                "unit": {
+                    "displayName": "Display units",
+                    "displayNameKey": "Visual_Display_Units",
+                    "type": {
+                        "formatting": {
+                             "labelDisplayUnits": true
+                         }
+                    }
+                 }
             }
         },
         "linkLabels": {

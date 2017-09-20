@@ -35,6 +35,7 @@ module powerbi.extensibility.visual {
         public fontSize: number = SankeyDiagramLabelsSettings.DefaultFontSize;
         public forceDisplay: boolean = false;
         public minHeightOfNode: number = 10;
+        public unit?: number = 0;
     }
 
     export class SankeyDiagramLinkLabelsSettings {

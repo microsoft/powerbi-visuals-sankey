@@ -1,3 +1,7 @@
+## 1.5.0
+
+* Added 'Display unit' property to configure value formatting for data labels
+
 ## 1.4.2
 
 * Fix lines scaling issue when visual size is small
