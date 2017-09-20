@@ -134,7 +134,7 @@
                     }
                 },
                 "unit": {
-                    "displayName": "Display unit",
+                    "displayName": "Display units",
                     "displayNameKey": "Visual_Display_Units",
                     "type": {
                         "formatting": {
