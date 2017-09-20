@@ -640,7 +640,7 @@ module powerbi.extensibility.visual {
             valuesFormatterForWeigth = ValueFormatter.create({
                 format: formatOfWeigth,
                 value: Math.max(
-                    d3.max(weightValues) || SankeyDiagram.MinWeightValue,
+                    settings.labels.unit !== 0 ? settings.labels.unit : d3.max(weightValues) || SankeyDiagram.MinWeightValue,
                     SankeyDiagram.MinWeightValue),
             });
 
