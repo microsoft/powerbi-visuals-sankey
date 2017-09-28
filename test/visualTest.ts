@@ -266,6 +266,33 @@ module powerbi.extensibility.visual.test {
                 });
             });
 
+            it("update without weight values", (done) => {
+                dataView.categorical.values = undefined;
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    const sourceCategories: PrimitiveValue[] = dataView.categorical.categories[0].values,
+                        destinationCategories: PrimitiveValue[] = dataView.categorical.categories[1].values;
+
+                    expect(visualBuilder.linksElement).toBeInDOM();
+                    expect(visualBuilder.linkElements.length).toBe(sourceCategories.length);
+
+                    let nodes: SankeyDiagramNode[] = visualBuilder.instance
+                        .converter(dataView)
+                        .nodes
+                        .filter( (node: SankeyDiagramNode) => {
+                            if (node.links.length > 0) {
+                                return true;
+                            }
+
+                            return false;
+                        });
+
+                    expect(visualBuilder.nodesElement).toBeInDOM();
+                    expect(visualBuilder.nodeElements.length).toEqual(nodes.length);
+
+                    done();
+                });
+            });
+
             it("nodes labels on", (done) => {
                 dataView.metadata.objects = {
                     labels: {

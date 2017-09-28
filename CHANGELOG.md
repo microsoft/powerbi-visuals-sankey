@@ -1,3 +1,7 @@
+## 1.5.1
+
+* Fix error when the visual doesn't display chart without values dataset
+
 ## 1.5.0
 
 * Added 'Display unit' property to configure value formatting for data labels
