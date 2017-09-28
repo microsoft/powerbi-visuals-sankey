@@ -359,7 +359,7 @@ module powerbi.extensibility.visual {
                 settings,
                 dataView.categorical.categories[SankeyDiagram.SourceCategoryIndex].source.displayName,
                 dataView.categorical.categories[SankeyDiagram.DestinationCategoryIndex].source.displayName,
-                dataView.categorical.values[SankeyDiagram.FirstValueIndex].source.displayName
+                dataView.categorical.values ? dataView.categorical.values[SankeyDiagram.FirstValueIndex].source.displayName : null
             );
 
             let cycles: SankeyDiagramCycleDictionary = this.checkCycles(nodes);
@@ -773,18 +773,24 @@ module powerbi.extensibility.visual {
                 formattedLinkWeight = linkWeight.toString();
             }
 
-            return [
+            let tooltips: VisualTooltipDataItem[] = [
                 {
                     displayName: sourceNodeDisplayName || SankeyDiagram.RoleNames.rows,
                     value: sourceNodeName
                 }, {
                     displayName: destinationNodeDisplayName || SankeyDiagram.RoleNames.columns,
                     value: destinationNodeName
-                }, {
+                },
+            ];
+
+            if (valueDisplayName) {
+                tooltips.push({
                     displayName: valueDisplayName || SankeyDiagram.RoleNames.values,
                     value: formattedLinkWeight
-                }
-            ];
+                });
+            }
+
+            return tooltips;
         }
 
         private static updateValueOfNode(node: SankeyDiagramNode): void {
