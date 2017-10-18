@@ -40,6 +40,7 @@ module powerbi.extensibility.visual.test {
     import SankeyDiagramColumn = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramColumn;
     import SankeyDiagramDataView = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramDataView;
     import SankeyDiagramLink = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramLink;
+    import SankeyDiagramLabel = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramLabel;
     import SankeyDiagramNodePositionSetting = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramNodePositionSetting;
     import SankeyDiagramNodePositionSettingsCollection = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramNodePositionSettingsCollection;
 
@@ -611,5 +612,26 @@ module powerbi.extensibility.visual.test {
                 });
             });
         });
+
+        describe("Selector tests", () => {
+            it("creation", () => {
+                let source: SankeyDiagramNode = {} as SankeyDiagramNode;
+                let destination: SankeyDiagramNode = {} as SankeyDiagramNode;
+                let label: SankeyDiagramLabel = {} as SankeyDiagramLabel;
+                let labelDest: SankeyDiagramLabel = {} as SankeyDiagramLabel;
+                label.name = "Source";
+                labelDest.name = "Destination";
+                source.label = label;
+                destination.label = labelDest;
+
+                let link: SankeyDiagramLink = {} as SankeyDiagramLink;
+                link.source = source;
+                link.destination = destination;
+                expect(VisualClass.createLink(link)).toBe("_Source-_Destination");
+
+                expect(VisualClass.createLink(link, true)).toBe("#linkLabelPaths_Source-_Destination");
+            });
+        });
+
     });
 }
