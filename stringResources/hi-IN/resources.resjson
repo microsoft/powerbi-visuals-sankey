@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "डेटा लेबल",
+	"Visual_Show": "दिखाएँ",
+	"Visual_LabelsFill": "रंग",
+	"Visual_Fill": "भरण",
+	"Visual_TextSize": "पाठ आकार",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Nodes",
+	"Visual_Source": "स्रोत",
+	"Visual_Destination": "गंतव्य",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "भार"
+}

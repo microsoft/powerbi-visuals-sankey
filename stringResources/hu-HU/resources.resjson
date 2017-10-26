@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "Adatfeliratok",
+	"Visual_Show": "Megjelenítés",
+	"Visual_LabelsFill": "Szín",
+	"Visual_Fill": "Kitöltés",
+	"Visual_TextSize": "Szöveg mérete",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Csomópontok",
+	"Visual_Source": "Forrás",
+	"Visual_Destination": "Cél",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "Súlyozás"
+}

@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "Oznake podataka",
+	"Visual_Show": "Prikaži",
+	"Visual_LabelsFill": "Boja",
+	"Visual_Fill": "Popuni",
+	"Visual_TextSize": "Veličina teksta",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Nodes",
+	"Visual_Source": "Izvor",
+	"Visual_Destination": "Odredište",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "Težina"
+}

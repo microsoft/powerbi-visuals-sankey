@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "Метки данных",
+	"Visual_Show": "Показать",
+	"Visual_LabelsFill": "Цвет",
+	"Visual_Fill": "Заливка",
+	"Visual_TextSize": "Размер текста",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Узлы",
+	"Visual_Source": "Источник",
+	"Visual_Destination": "Место назначения",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "Вес"
+}

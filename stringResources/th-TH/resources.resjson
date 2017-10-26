@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "ป้ายชื่อข้อมูล",
+	"Visual_Show": "แสดง",
+	"Visual_LabelsFill": "สี",
+	"Visual_Fill": "เติม",
+	"Visual_TextSize": "ขนาดแบบอักษร",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Nodes",
+	"Visual_Source": "แหล่งข้อมูล",
+	"Visual_Destination": "ปลายทาง",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "น้ำหนัก"
+}

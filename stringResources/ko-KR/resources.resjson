@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "데이터 레이블",
+	"Visual_Show": "표시",
+	"Visual_LabelsFill": "색",
+	"Visual_Fill": "채우기",
+	"Visual_TextSize": "텍스트 크기",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "노드",
+	"Visual_Source": "소스",
+	"Visual_Destination": "대상 주소",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "무게"
+}

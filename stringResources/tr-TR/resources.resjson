@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "Veri etiketleri",
+	"Visual_Show": "Göster",
+	"Visual_LabelsFill": "Renk",
+	"Visual_Fill": "Doldur",
+	"Visual_TextSize": "Metin Boyutu",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Düğümler",
+	"Visual_Source": "Kaynak",
+	"Visual_Destination": "Varış Adresi",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "Ağırlık"
+}

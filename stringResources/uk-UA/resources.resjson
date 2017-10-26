@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "Мітки даних",
+	"Visual_Show": "Відображення",
+	"Visual_LabelsFill": "Колір",
+	"Visual_Fill": "Заповнити",
+	"Visual_TextSize": "Розмір тексту",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Nodes",
+	"Visual_Source": "Джерело",
+	"Visual_Destination": "Призначення",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "Значимість"
+}

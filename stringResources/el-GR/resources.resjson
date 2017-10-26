@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "Ετικέτες δεδομένων",
+	"Visual_Show": "Εμφάνιση",
+	"Visual_LabelsFill": "Χρώμα",
+	"Visual_Fill": "Συμπλήρωση",
+	"Visual_TextSize": "Μέγεθος κειμένου",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Nodes",
+	"Visual_Source": "Προέλευση",
+	"Visual_Destination": "Προορισμός",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "Βάρος"
+}

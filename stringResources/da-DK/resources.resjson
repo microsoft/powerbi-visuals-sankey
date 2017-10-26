@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "Datanavne",
+	"Visual_Show": "Vis",
+	"Visual_LabelsFill": "Farve",
+	"Visual_Fill": "Udfyldning",
+	"Visual_TextSize": "Tekststørrelse",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Nodes",
+	"Visual_Source": "Kilde",
+	"Visual_Destination": "Destination",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "Vægt"
+}

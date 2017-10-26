@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "Етикети на данни",
+	"Visual_Show": "Показване",
+	"Visual_LabelsFill": "Цвят",
+	"Visual_Fill": "Запълни",
+	"Visual_TextSize": "Размер на текста",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Nodes",
+	"Visual_Source": "Източник",
+	"Visual_Destination": "Местоназначение",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "Тегло"
+}

@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "Etiquetes de dades",
+	"Visual_Show": "Mostra",
+	"Visual_LabelsFill": "Color",
+	"Visual_Fill": "Emplena",
+	"Visual_TextSize": "Mida del text",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Nodes",
+	"Visual_Source": "Origen",
+	"Visual_Destination": "Destinació",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "Pes"
+}

@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "Dataetiketter",
+	"Visual_Show": "Visa",
+	"Visual_LabelsFill": "Färg",
+	"Visual_Fill": "Fyll",
+	"Visual_TextSize": "Textstorlek",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Noder",
+	"Visual_Source": "Källa",
+	"Visual_Destination": "Destination",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "Vikt"
+}

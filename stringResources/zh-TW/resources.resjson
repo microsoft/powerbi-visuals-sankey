@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "資料標籤",
+	"Visual_Show": "顯示",
+	"Visual_LabelsFill": "色彩",
+	"Visual_Fill": "填滿",
+	"Visual_TextSize": "文字大小",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "節點",
+	"Visual_Source": "來源",
+	"Visual_Destination": "目的地",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "權數"
+}

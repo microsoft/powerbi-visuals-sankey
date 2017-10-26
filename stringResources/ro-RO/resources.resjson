@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "Etichete de date",
+	"Visual_Show": "Afişare",
+	"Visual_LabelsFill": "Culoare",
+	"Visual_Fill": "Completare",
+	"Visual_TextSize": "Dimensiune text",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Nodes",
+	"Visual_Source": "Sursă   ",
+	"Visual_Destination": "Destinație",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "Pondere   "
+}

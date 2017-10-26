@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "Etiquetas de datos",
+	"Visual_Show": "Mostrar",
+	"Visual_LabelsFill": "Color",
+	"Visual_Fill": "Rellenar",
+	"Visual_TextSize": "Tamaño del texto",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Nodos",
+	"Visual_Source": "Origen",
+	"Visual_Destination": "Destino",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "Peso"
+}

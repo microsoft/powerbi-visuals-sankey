@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "数据标签",
+	"Visual_Show": "显示",
+	"Visual_LabelsFill": "颜色",
+	"Visual_Fill": "填充",
+	"Visual_TextSize": "文本大小",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "节点",
+	"Visual_Source": "源",
+	"Visual_Destination": "目标",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "称重"
+}

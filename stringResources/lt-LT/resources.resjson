@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "Duomenų žymos",
+	"Visual_Show": "Rodyti",
+	"Visual_LabelsFill": "Spalva",
+	"Visual_Fill": "Užpildyti",
+	"Visual_TextSize": "Teksto dydis",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Nodes",
+	"Visual_Source": "Šaltinis",
+	"Visual_Destination": "Paskirtis",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "Svoris"
+}

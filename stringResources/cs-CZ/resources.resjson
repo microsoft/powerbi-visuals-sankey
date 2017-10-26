@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "Popisky dat",
+	"Visual_Show": "Zobrazení",
+	"Visual_LabelsFill": "Barva",
+	"Visual_Fill": "Vyplnit",
+	"Visual_TextSize": "Velikost textu",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Uzly",
+	"Visual_Source": "Zdroj",
+	"Visual_Destination": "Cíl",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "Váha"
+}

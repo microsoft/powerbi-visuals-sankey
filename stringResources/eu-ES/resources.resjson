@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "Datuen etiketak",
+	"Visual_Show": "Erakutsi",
+	"Visual_LabelsFill": "Kolorea",
+	"Visual_Fill": "Bete",
+	"Visual_TextSize": "Testu-tamaina",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Nodes",
+	"Visual_Source": "Iturburua",
+	"Visual_Destination": "Helmuga",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "Pisua"
+}

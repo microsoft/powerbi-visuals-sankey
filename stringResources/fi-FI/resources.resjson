@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "Arvopisteiden otsikot",
+	"Visual_Show": "Näytä",
+	"Visual_LabelsFill": "Väri",
+	"Visual_Fill": "Täyttö",
+	"Visual_TextSize": "Tekstin koko",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Nodes",
+	"Visual_Source": "Lähde",
+	"Visual_Destination": "Kohde",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "Paino"
+}

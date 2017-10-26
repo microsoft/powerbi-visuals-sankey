@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "Các nhãn dữ liệu",
+	"Visual_Show": "Hiện",
+	"Visual_LabelsFill": "Màu",
+	"Visual_Fill": "Điền",
+	"Visual_TextSize": "Kích thước Văn bản",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "Nodes",
+	"Visual_Source": "Nguồn",
+	"Visual_Destination": "Cổng đích",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "Trọng số"
+}

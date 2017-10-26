@@ -1,0 +1,14 @@
+{
+	"Visual_DataPointsLabels": "データ ラベル",
+	"Visual_Show": "表示",
+	"Visual_LabelsFill": "色",
+	"Visual_Fill": "フィル",
+	"Visual_TextSize": "テキスト サイズ",
+	"Visual_Force_Display": "Force Display",
+	"Visual_Nodes": "ノード",
+	"Visual_Source": "ソース",
+	"Visual_Destination": "宛先",
+	"Visual_DestinationLabels": "Destination labels",
+	"Visual_SourceLabels": "Source labels",
+	"Visual_Weight": "重量"
+}
