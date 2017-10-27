@@ -1381,11 +1381,11 @@ module powerbi.extensibility.visual {
                 // Update each link related with this node
                 node.links.forEach( (link: SankeyDiagramLink) => {
                     // select link svg element by ID generated in link creation as Source-Destination
-                    d3.select(`#linkLabelPaths${(link.source.label.name || "").replace(/\W*/g,"")}-${(link.destination.label.name || "").replace(/\W*/g,"")}`).attr({
+                    d3.select(`#${SankeyDiagram.createLink(link, true)}`).attr({
                         // get updated path params based on actual positions of node
                         d: sankeyVisual.getLinkLabelSvgPath(link)
                     });
-                    d3.select(`#${(link.source.label.name || "").replace(/\W*/g,"")}-${(link.destination.label.name || "").replace(/\W*/g,"")}`).attr({
+                    d3.select(`#${SankeyDiagram.createLink(link)}`).attr({
                         // get updated path params based on actual positions of node
                         d: sankeyVisual.getSvgPath(link)
                     });
@@ -1506,7 +1506,9 @@ module powerbi.extensibility.visual {
                     d: (link: SankeyDiagramLink) => {
                         return this.getSvgPath(link);
                     },
-                    id: (link: SankeyDiagramLink) => `${(link.source.label.name || "").replace(/\W*/g,"")}-${(link.destination.label.name || "").replace(/\W*/g,"")}`
+                    id: (link: SankeyDiagramLink) => {
+                        return SankeyDiagram.createLink(link);
+                    }
                 })
                 .style({
                     "stroke": (link: SankeyDiagramLink) => link.color,
@@ -1518,6 +1520,9 @@ module powerbi.extensibility.visual {
                 .remove();
 
             return linksSelection;
+        }
+        public static createLink(link: SankeyDiagramLink, addLinkLabelPath: boolean = false): string {
+            return (addLinkLabelPath ? `linkLabelPaths` : ``) +  `${('_' + link.source.label.name || "").replace(/\W*/g, "")}-${('_' + link.destination.label.name || "").replace(/\W*/g, "")}`;
         }
 
         private renderLinkLabels(sankeyDiagramDataView: SankeyDiagramDataView): void {
@@ -1556,7 +1561,9 @@ module powerbi.extensibility.visual {
                     d: (link: SankeyDiagramLink) => {
                         return this.getLinkLabelSvgPath(link);
                     },
-                    id: (link: SankeyDiagramLink) => `linkLabelPaths${(link.source.label.name || "").replace(/\W*/g,"")}-${(link.destination.label.name || "").replace(/\W*/g,"")}`
+                    id: (link: SankeyDiagramLink) => {
+                        return SankeyDiagram.createLink(link, true);
+                    }
                 });
 
             linkLabelPathsSelection
@@ -1587,7 +1594,9 @@ module powerbi.extensibility.visual {
             textPathSelection
                 .attr({
                     startOffset: "50%",
-                    href: (link: SankeyDiagramLink) => `#linkLabelPaths${(link.source.label.name || "").replace(/\W*/g,"")}-${(link.destination.label.name || "").replace(/\W*/g,"")}`
+                    href: (link: SankeyDiagramLink) => {
+                        return `#${SankeyDiagram.createLink(link, true)}`;
+                    }
                 })
                 .style({
                     "font-size": this.dataView.settings.linkLabels.fontSize,
