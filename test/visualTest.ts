@@ -627,9 +627,9 @@ module powerbi.extensibility.visual.test {
                 let link: SankeyDiagramLink = {} as SankeyDiagramLink;
                 link.source = source;
                 link.destination = destination;
-                expect(VisualClass.createLink(link)).toBe("_Source-_Destination");
 
-                expect(VisualClass.createLink(link, true)).toBe("#linkLabelPaths_Source-_Destination");
+                expect(VisualClass.createLink(link)).toBe("_Source-_Destination");
+                expect(VisualClass.createLink(link, true)).toBe("linkLabelPaths_Source-_Destination");
             });
         });
 
