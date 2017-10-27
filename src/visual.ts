@@ -1381,7 +1381,7 @@ module powerbi.extensibility.visual {
                 // Update each link related with this node
                 node.links.forEach( (link: SankeyDiagramLink) => {
                     // select link svg element by ID generated in link creation as Source-Destination
-                    d3.select(SankeyDiagram.createLink(link, true) ).attr({
+                    d3.select(`#` + SankeyDiagram.createLink(link, true) ).attr({
                         // get updated path params based on actual positions of node
                         d: sankeyVisual.getLinkLabelSvgPath(link)
                     });
@@ -1522,7 +1522,7 @@ module powerbi.extensibility.visual {
             return linksSelection;
         }
         public static createLink(link: SankeyDiagramLink, addLinkLabelPath: boolean = false): string {
-                return (addLinkLabelPath ? `#linkLabelPaths` : ``) +  `${('_' + link.source.label.name || "").replace(/\W*/g, "")}-${('_' + link.destination.label.name || "").replace(/\W*/g, "")}`;
+                return (addLinkLabelPath ? `linkLabelPaths` : ``) +  `${('_' + link.source.label.name || "").replace(/\W*/g, "")}-${('_' + link.destination.label.name || "").replace(/\W*/g, "")}`;
         }
 
         private renderLinkLabels(sankeyDiagramDataView: SankeyDiagramDataView): void {
@@ -1562,7 +1562,7 @@ module powerbi.extensibility.visual {
                         return this.getLinkLabelSvgPath(link);
                     },
                     id: (link: SankeyDiagramLink) => {
-                        return SankeyDiagram.createLink(link);
+                        return SankeyDiagram.createLink(link, true);
                     }
                 });
 
@@ -1595,7 +1595,7 @@ module powerbi.extensibility.visual {
                 .attr({
                     startOffset: "50%",
                     href: (link: SankeyDiagramLink) => {
-                        return SankeyDiagram.createLink(link, true);
+                        return "#" + SankeyDiagram.createLink(link, true);
                     }
                 })
                 .style({
