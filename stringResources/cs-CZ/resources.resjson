@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Barva",
 	"Visual_Fill": "Vyplnit",
 	"Visual_TextSize": "Velikost textu",
-	"Visual_Force_Display": "Force Display",
+	"Visual_Force_Display": "Vynutit zobrazení",
 	"Visual_Nodes": "Uzly",
 	"Visual_Source": "Zdroj",
 	"Visual_Destination": "Cíl",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Váha"
+	"Visual_DestinationLabels": "Popisky cílů",
+	"Visual_SourceLabels": "Popisky zdroje",
+	"Visual_Weight": "Váha",
+	"Visual_DataPointsLinkLabels": "Popisky datových odkazů",
+	"Visual_Links": "Odkazy",
+	"Visual_ScaleSettings": "Povolit logaritmické měřítko",
+	"Visual_Enable": "Povolit",
+	"Visual_SankeySettings": "Nastavení Sankey",
+	"Visual_NodePositions": "Pozice uzlů",
+	"Visual_ViewportSize": "Velikosti oblastí zobrazení"
 }

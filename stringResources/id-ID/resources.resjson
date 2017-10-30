@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Warna",
 	"Visual_Fill": "Isi",
 	"Visual_TextSize": "Ukuran Teks",
-	"Visual_Force_Display": "Force Display",
-	"Visual_Nodes": "Nodes",
+	"Visual_Force_Display": "Tampilan penjualan",
+	"Visual_Nodes": "Node",
 	"Visual_Source": "Sumber",
 	"Visual_Destination": "Tujuan",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Berat"
+	"Visual_DestinationLabels": "Label tujuan",
+	"Visual_SourceLabels": "Label sumber",
+	"Visual_Weight": "Berat",
+	"Visual_DataPointsLinkLabels": "Label tautan data",
+	"Visual_Links": "Tautan",
+	"Visual_ScaleSettings": "Aktifkan skala logaritma",
+	"Visual_Enable": "Aktifkan",
+	"Visual_SankeySettings": "Pengaturan Sankey",
+	"Visual_NodePositions": "Posisi node",
+	"Visual_ViewportSize": "Ukuran viewport"
 }

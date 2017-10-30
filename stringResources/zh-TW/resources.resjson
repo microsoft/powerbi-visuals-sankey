@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "色彩",
 	"Visual_Fill": "填滿",
 	"Visual_TextSize": "文字大小",
-	"Visual_Force_Display": "Force Display",
+	"Visual_Force_Display": "強制顯示",
 	"Visual_Nodes": "節點",
 	"Visual_Source": "來源",
 	"Visual_Destination": "目的地",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "權數"
+	"Visual_DestinationLabels": "目的地標籤",
+	"Visual_SourceLabels": "來源標籤",
+	"Visual_Weight": "權數",
+	"Visual_DataPointsLinkLabels": "資料連結標籤",
+	"Visual_Links": "連結",
+	"Visual_ScaleSettings": "啟用對數刻度",
+	"Visual_Enable": "啟用",
+	"Visual_SankeySettings": "Sankey 設定",
+	"Visual_NodePositions": "節點位置",
+	"Visual_ViewportSize": "檢視區大小"
 }

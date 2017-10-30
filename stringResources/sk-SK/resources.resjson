@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Farba",
 	"Visual_Fill": "Vyplniť",
 	"Visual_TextSize": "Veľkosť textu",
-	"Visual_Force_Display": "Force Display",
-	"Visual_Nodes": "Nodes",
+	"Visual_Force_Display": "Vynútiť zobrazenie",
+	"Visual_Nodes": "Uzly",
 	"Visual_Source": "Zdroj",
 	"Visual_Destination": "Cieľ",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Hmotnosť"
+	"Visual_DestinationLabels": "Označenia cieľa",
+	"Visual_SourceLabels": "Označenia zdroja",
+	"Visual_Weight": "Hmotnosť",
+	"Visual_DataPointsLinkLabels": "Označenia prepojení na údaje",
+	"Visual_Links": "Prepojenia",
+	"Visual_ScaleSettings": "Povoliť logaritmickú mierku",
+	"Visual_Enable": "Zapnúť",
+	"Visual_SankeySettings": "Nastavenia diagramu Sankey",
+	"Visual_NodePositions": "Pozície uzlov",
+	"Visual_ViewportSize": "Veľkosti zobrazenia"
 }

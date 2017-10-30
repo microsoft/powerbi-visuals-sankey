@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "颜色",
 	"Visual_Fill": "填充",
 	"Visual_TextSize": "文本大小",
-	"Visual_Force_Display": "Force Display",
+	"Visual_Force_Display": "强制显示",
 	"Visual_Nodes": "节点",
 	"Visual_Source": "源",
 	"Visual_Destination": "目标",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "称重"
+	"Visual_DestinationLabels": "目标标签",
+	"Visual_SourceLabels": "源标签",
+	"Visual_Weight": "称重",
+	"Visual_DataPointsLinkLabels": "数据链接标签",
+	"Visual_Links": "链接",
+	"Visual_ScaleSettings": "启用对数刻度",
+	"Visual_Enable": "启用",
+	"Visual_SankeySettings": "Sankey 设置",
+	"Visual_NodePositions": "节点位置",
+	"Visual_ViewportSize": "视区大小"
 }

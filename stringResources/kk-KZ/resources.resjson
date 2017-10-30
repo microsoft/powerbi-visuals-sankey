@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Түс",
 	"Visual_Fill": "Толтыру",
 	"Visual_TextSize": "Мәтін өлшемі",
-	"Visual_Force_Display": "Force Display",
-	"Visual_Nodes": "Nodes",
+	"Visual_Force_Display": "Мәжбүрлі түрде көрсету",
+	"Visual_Nodes": "Түйіндер",
 	"Visual_Source": "Көз",
 	"Visual_Destination": "Тағайындау",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Салмақ"
+	"Visual_DestinationLabels": "Тағайындау белгілері",
+	"Visual_SourceLabels": "Деректер көзі белгілері",
+	"Visual_Weight": "Салмақ",
+	"Visual_DataPointsLinkLabels": "Деректерді беру арнасының белгілері",
+	"Visual_Links": "Сілтемелер",
+	"Visual_ScaleSettings": "Логарифмдік шкаланы қосу",
+	"Visual_Enable": "Қосу",
+	"Visual_SankeySettings": "Sankey параметрлері",
+	"Visual_NodePositions": "Түйін орындары",
+	"Visual_ViewportSize": "Қарау терезесінің өлшемдері"
 }

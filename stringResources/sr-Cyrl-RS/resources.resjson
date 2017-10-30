@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Боја",
 	"Visual_Fill": "Попуни",
 	"Visual_TextSize": "Величина текста",
-	"Visual_Force_Display": "Force Display",
-	"Visual_Nodes": "Nodes",
+	"Visual_Force_Display": "Наметање приказа",
+	"Visual_Nodes": "Чворови",
 	"Visual_Source": "Извор",
 	"Visual_Destination": "Одредиште",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Степен важности"
+	"Visual_DestinationLabels": "Ознаке одредишта",
+	"Visual_SourceLabels": "Ознаке извора",
+	"Visual_Weight": "Степен важности",
+	"Visual_DataPointsLinkLabels": "Ознаке веза ка подацима",
+	"Visual_Links": "Везе",
+	"Visual_ScaleSettings": "Омогући логаритамску скалу",
+	"Visual_Enable": "Омогући",
+	"Visual_SankeySettings": "Sankey поставке",
+	"Visual_NodePositions": "Положаји чворова",
+	"Visual_ViewportSize": "Величине приказа"
 }

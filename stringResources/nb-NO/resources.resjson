@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Farge",
 	"Visual_Fill": "Fyll",
 	"Visual_TextSize": "Tekststørrelse",
-	"Visual_Force_Display": "Force Display",
-	"Visual_Nodes": "Nodes",
+	"Visual_Force_Display": "Fremtving visning",
+	"Visual_Nodes": "Noder",
 	"Visual_Source": "Kilde",
 	"Visual_Destination": "Mål",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Vekt"
+	"Visual_DestinationLabels": "Måletiketter",
+	"Visual_SourceLabels": "Kildeetiketter",
+	"Visual_Weight": "Vekt",
+	"Visual_DataPointsLinkLabels": "Datakoblingsetiketter",
+	"Visual_Links": "Koblinger",
+	"Visual_ScaleSettings": "Aktiver logaritmisk skala",
+	"Visual_Enable": "Aktiver",
+	"Visual_SankeySettings": "Sankey-innstillinger",
+	"Visual_NodePositions": "Nodestillinger",
+	"Visual_ViewportSize": "Størrelser på visningsport"
 }

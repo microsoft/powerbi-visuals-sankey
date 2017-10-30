@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Χρώμα",
 	"Visual_Fill": "Συμπλήρωση",
 	"Visual_TextSize": "Μέγεθος κειμένου",
-	"Visual_Force_Display": "Force Display",
-	"Visual_Nodes": "Nodes",
+	"Visual_Force_Display": "Επιβολή εμφάνισης",
+	"Visual_Nodes": "Κόμβοι",
 	"Visual_Source": "Προέλευση",
 	"Visual_Destination": "Προορισμός",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Βάρος"
+	"Visual_DestinationLabels": "Ετικέτες προορισμού",
+	"Visual_SourceLabels": "Ετικέτες προέλευσης",
+	"Visual_Weight": "Βάρος",
+	"Visual_DataPointsLinkLabels": "Ετικέτες σύνδεσης δεδομένων",
+	"Visual_Links": "Συνδέσεις",
+	"Visual_ScaleSettings": "Ενεργοποίηση λογαριθμικής κλίμακας",
+	"Visual_Enable": "Ενεργοποίηση",
+	"Visual_SankeySettings": "Ρυθμίσεις Sankey",
+	"Visual_NodePositions": "Θέσεις κόμβων",
+	"Visual_ViewportSize": "Μεγέθη οπτικής γωνίας"
 }

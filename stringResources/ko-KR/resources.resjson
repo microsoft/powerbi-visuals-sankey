@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "색",
 	"Visual_Fill": "채우기",
 	"Visual_TextSize": "텍스트 크기",
-	"Visual_Force_Display": "Force Display",
+	"Visual_Force_Display": "강제 표시",
 	"Visual_Nodes": "노드",
 	"Visual_Source": "소스",
 	"Visual_Destination": "대상 주소",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "무게"
+	"Visual_DestinationLabels": "대상 레이블",
+	"Visual_SourceLabels": "레이블 소싱",
+	"Visual_Weight": "무게",
+	"Visual_DataPointsLinkLabels": "데이터 링크 레이블",
+	"Visual_Links": "링크",
+	"Visual_ScaleSettings": "로그 눈금 간격 사용",
+	"Visual_Enable": "사용",
+	"Visual_SankeySettings": "Sankey 설정",
+	"Visual_NodePositions": "노드 위치",
+	"Visual_ViewportSize": "뷰포트 크기"
 }

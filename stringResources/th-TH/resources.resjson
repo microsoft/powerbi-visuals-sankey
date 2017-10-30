@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "สี",
 	"Visual_Fill": "เติม",
 	"Visual_TextSize": "ขนาดแบบอักษร",
-	"Visual_Force_Display": "Force Display",
-	"Visual_Nodes": "Nodes",
+	"Visual_Force_Display": "บังคับให้แสดง",
+	"Visual_Nodes": "โหนด",
 	"Visual_Source": "แหล่งข้อมูล",
 	"Visual_Destination": "ปลายทาง",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "น้ำหนัก"
+	"Visual_DestinationLabels": "ป้ายชื่อปลายทาง",
+	"Visual_SourceLabels": "ป้ายชื่อแหล่งข้อมูล",
+	"Visual_Weight": "น้ำหนัก",
+	"Visual_DataPointsLinkLabels": "ป้ายชื่อลิงก์ข้อมูล",
+	"Visual_Links": "การเชื่อมโยง",
+	"Visual_ScaleSettings": "เปิดใช้งานมาตราส่วนลอการิทึม",
+	"Visual_Enable": "เปิดใช้งาน",
+	"Visual_SankeySettings": "การตั้งค่า Sankey",
+	"Visual_NodePositions": "ตำแหน่งโหนด",
+	"Visual_ViewportSize": "ขนาดกรอบการมองเห็น"
 }

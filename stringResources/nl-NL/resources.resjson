@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Kleur",
 	"Visual_Fill": "Opvullen",
 	"Visual_TextSize": "Tekengrootte",
-	"Visual_Force_Display": "Force Display",
+	"Visual_Force_Display": "Weergave afdwingen",
 	"Visual_Nodes": "Knooppunten",
 	"Visual_Source": "Bron",
 	"Visual_Destination": "Bestemming",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Gewicht"
+	"Visual_DestinationLabels": "Doellabels",
+	"Visual_SourceLabels": "Bronlabels",
+	"Visual_Weight": "Gewicht",
+	"Visual_DataPointsLinkLabels": "Labels voor gegevenskoppelingen",
+	"Visual_Links": "Koppelingen",
+	"Visual_ScaleSettings": "Logaritmische schaal inschakelen",
+	"Visual_Enable": "Inschakelen",
+	"Visual_SankeySettings": "Sankey-instellingen",
+	"Visual_NodePositions": "Knooppuntposities",
+	"Visual_ViewportSize": "Viewport-grootten"
 }

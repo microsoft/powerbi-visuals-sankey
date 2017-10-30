@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Boja",
 	"Visual_Fill": "Popuni",
 	"Visual_TextSize": "Veličina teksta",
-	"Visual_Force_Display": "Force Display",
-	"Visual_Nodes": "Nodes",
+	"Visual_Force_Display": "Nametanje prikaza",
+	"Visual_Nodes": "Čvorovi",
 	"Visual_Source": "Izvor",
 	"Visual_Destination": "Odredište",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Težina"
+	"Visual_DestinationLabels": "Oznake odredišta",
+	"Visual_SourceLabels": "Oznake izvora",
+	"Visual_Weight": "Težina",
+	"Visual_DataPointsLinkLabels": "Oznake veza ka podacima",
+	"Visual_Links": "Veze",
+	"Visual_ScaleSettings": "Omogući logaritamsku skalu",
+	"Visual_Enable": "Omogući",
+	"Visual_SankeySettings": "Sankey postavke",
+	"Visual_NodePositions": "Položaji čvorova",
+	"Visual_ViewportSize": "Veličine prikaza"
 }

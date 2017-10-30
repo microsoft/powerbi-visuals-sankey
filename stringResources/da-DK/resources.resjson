@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Farve",
 	"Visual_Fill": "Udfyldning",
 	"Visual_TextSize": "Tekststørrelse",
-	"Visual_Force_Display": "Force Display",
-	"Visual_Nodes": "Nodes",
+	"Visual_Force_Display": "Gennemtving visning",
+	"Visual_Nodes": "Noder",
 	"Visual_Source": "Kilde",
 	"Visual_Destination": "Destination",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Vægt"
+	"Visual_DestinationLabels": "Destinationsetiketter",
+	"Visual_SourceLabels": "Kildeetiketter",
+	"Visual_Weight": "Vægt",
+	"Visual_DataPointsLinkLabels": "Datalinketiketter",
+	"Visual_Links": "Links",
+	"Visual_ScaleSettings": "Aktivér logaritmisk skala",
+	"Visual_Enable": "Aktivér",
+	"Visual_SankeySettings": "Sankey-indstillinger",
+	"Visual_NodePositions": "Nodeplaceringer",
+	"Visual_ViewportSize": "Billedstørrelser"
 }

@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Cor",
 	"Visual_Fill": "Encher",
 	"Visual_TextSize": "Tamaño do texto",
-	"Visual_Force_Display": "Force Display",
-	"Visual_Nodes": "Nodes",
+	"Visual_Force_Display": "Forzar mostra",
+	"Visual_Nodes": "Nós",
 	"Visual_Source": "Orixe",
 	"Visual_Destination": "Destino",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Peso"
+	"Visual_DestinationLabels": "Etiquetas de destino",
+	"Visual_SourceLabels": "Etiquetas de orixe",
+	"Visual_Weight": "Peso",
+	"Visual_DataPointsLinkLabels": "Etiquetas de ligazóns de datos",
+	"Visual_Links": "Ligazóns",
+	"Visual_ScaleSettings": "Activar escala logarítmica",
+	"Visual_Enable": "Activar",
+	"Visual_SankeySettings": "Configuración de Sankey",
+	"Visual_NodePositions": "Posicións de nós",
+	"Visual_ViewportSize": "Tamaños do portelo"
 }

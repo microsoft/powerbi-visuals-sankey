@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Kolorea",
 	"Visual_Fill": "Bete",
 	"Visual_TextSize": "Testu-tamaina",
-	"Visual_Force_Display": "Force Display",
-	"Visual_Nodes": "Nodes",
+	"Visual_Force_Display": "Behartu bistaratzera",
+	"Visual_Nodes": "Nodoak",
 	"Visual_Source": "Iturburua",
 	"Visual_Destination": "Helmuga",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Pisua"
+	"Visual_DestinationLabels": "Helburuko etiketak",
+	"Visual_SourceLabels": "Iturburuko etiketak",
+	"Visual_Weight": "Pisua",
+	"Visual_DataPointsLinkLabels": "Datu-esteken etiketak",
+	"Visual_Links": "Estekak",
+	"Visual_ScaleSettings": "Gaitu eskala logaritmikoa",
+	"Visual_Enable": "Gaitu",
+	"Visual_SankeySettings": "Sankey ezarpenak",
+	"Visual_NodePositions": "Nodoen posizioak",
+	"Visual_ViewportSize": "Viewport tamainak"
 }

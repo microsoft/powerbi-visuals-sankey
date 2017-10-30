@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Renk",
 	"Visual_Fill": "Doldur",
 	"Visual_TextSize": "Metin Boyutu",
-	"Visual_Force_Display": "Force Display",
+	"Visual_Force_Display": "Görüntülemeye zorla",
 	"Visual_Nodes": "Düğümler",
 	"Visual_Source": "Kaynak",
 	"Visual_Destination": "Varış Adresi",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Ağırlık"
+	"Visual_DestinationLabels": "Hedef etiketler",
+	"Visual_SourceLabels": "Kaynak etiketler",
+	"Visual_Weight": "Ağırlık",
+	"Visual_DataPointsLinkLabels": "Veri bağlantısı etiketleri",
+	"Visual_Links": "Bağlantılar",
+	"Visual_ScaleSettings": "Logaritmik ölçeği etkinleştir",
+	"Visual_Enable": "Etkinleştir",
+	"Visual_SankeySettings": "Sankey ayarları",
+	"Visual_NodePositions": "Düğüm konumları",
+	"Visual_ViewportSize": "Görünüm penceresi boyutları"
 }

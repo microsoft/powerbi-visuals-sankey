@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Farbe",
 	"Visual_Fill": "Ausfüllen",
 	"Visual_TextSize": "Textgröße",
-	"Visual_Force_Display": "Force Display",
+	"Visual_Force_Display": "Anzeige erzwingen",
 	"Visual_Nodes": "Knoten",
 	"Visual_Source": "Quelle",
 	"Visual_Destination": "Zieladresse",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Gewichtung"
+	"Visual_DestinationLabels": "Zielbezeichnungen",
+	"Visual_SourceLabels": "Quellbezeichnungen",
+	"Visual_Weight": "Gewichtung",
+	"Visual_DataPointsLinkLabels": "Datenlinkbezeichnungen",
+	"Visual_Links": "Links",
+	"Visual_ScaleSettings": "Logarithmische Skalierung aktivieren",
+	"Visual_Enable": "Aktivieren",
+	"Visual_SankeySettings": "Sankey-Einstellungen",
+	"Visual_NodePositions": "Knotenpositionen",
+	"Visual_ViewportSize": "Viewportgrößen"
 }

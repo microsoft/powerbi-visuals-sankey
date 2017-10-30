@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Màu",
 	"Visual_Fill": "Điền",
 	"Visual_TextSize": "Kích thước Văn bản",
-	"Visual_Force_Display": "Force Display",
-	"Visual_Nodes": "Nodes",
+	"Visual_Force_Display": "Buộc hiển thị",
+	"Visual_Nodes": "Nút",
 	"Visual_Source": "Nguồn",
 	"Visual_Destination": "Cổng đích",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Trọng số"
+	"Visual_DestinationLabels": "Nhãn đích",
+	"Visual_SourceLabels": "Nhãn nguồn",
+	"Visual_Weight": "Trọng số",
+	"Visual_DataPointsLinkLabels": "Nhãn liên kết dữ liệu",
+	"Visual_Links": "Liên kết",
+	"Visual_ScaleSettings": "Bật chia tỷ lệ theo lô-ga-rít",
+	"Visual_Enable": "Kích hoạt",
+	"Visual_SankeySettings": "Cài đặt Sankey",
+	"Visual_NodePositions": "Vị trí nút",
+	"Visual_ViewportSize": "Kích cỡ cổng xem"
 }

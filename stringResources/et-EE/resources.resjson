@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Värv",
 	"Visual_Fill": "Täida",
 	"Visual_TextSize": "Teksti suurus",
-	"Visual_Force_Display": "Force Display",
-	"Visual_Nodes": "Nodes",
+	"Visual_Force_Display": "Sundkuvamine",
+	"Visual_Nodes": "Sõlmpunktid",
 	"Visual_Source": "Allikas",
 	"Visual_Destination": "Sihtkoht",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Kaal"
+	"Visual_DestinationLabels": "Sihtkoha sildid",
+	"Visual_SourceLabels": "Lähtesildid",
+	"Visual_Weight": "Kaal",
+	"Visual_DataPointsLinkLabels": "Andmelingi sildid",
+	"Visual_Links": "Lingid",
+	"Visual_ScaleSettings": "Luba logaritmiline skaala",
+	"Visual_Enable": "Luba",
+	"Visual_SankeySettings": "Sankey sätted",
+	"Visual_NodePositions": "Sõlme asukohad",
+	"Visual_ViewportSize": "Vaateavade suurused"
 }

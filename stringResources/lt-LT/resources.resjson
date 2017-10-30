@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Spalva",
 	"Visual_Fill": "Užpildyti",
 	"Visual_TextSize": "Teksto dydis",
-	"Visual_Force_Display": "Force Display",
-	"Visual_Nodes": "Nodes",
+	"Visual_Force_Display": "Priverstinis rodymas",
+	"Visual_Nodes": "Mazgai",
 	"Visual_Source": "Šaltinis",
 	"Visual_Destination": "Paskirtis",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Svoris"
+	"Visual_DestinationLabels": "Paskirties žymos",
+	"Visual_SourceLabels": "Šaltinio žymos",
+	"Visual_Weight": "Svoris",
+	"Visual_DataPointsLinkLabels": "Duomenų saito žymos",
+	"Visual_Links": "Saitai",
+	"Visual_ScaleSettings": "Įjungti logaritminį mastelį",
+	"Visual_Enable": "Įjungti",
+	"Visual_SankeySettings": "„Sankey“ parametrai",
+	"Visual_NodePositions": "Mazgų padėtys",
+	"Visual_ViewportSize": "Peržiūros sričių dydžiai"
 }

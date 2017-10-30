@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "色",
 	"Visual_Fill": "フィル",
 	"Visual_TextSize": "テキスト サイズ",
-	"Visual_Force_Display": "Force Display",
+	"Visual_Force_Display": "強制的に表示",
 	"Visual_Nodes": "ノード",
 	"Visual_Source": "ソース",
 	"Visual_Destination": "宛先",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "重量"
+	"Visual_DestinationLabels": "宛先のラベル",
+	"Visual_SourceLabels": "ソースのラベル",
+	"Visual_Weight": "重量",
+	"Visual_DataPointsLinkLabels": "データ リンクのラベル",
+	"Visual_Links": "リンク",
+	"Visual_ScaleSettings": "対数スケールを有効にする",
+	"Visual_Enable": "有効",
+	"Visual_SankeySettings": "Sankey の設定",
+	"Visual_NodePositions": "ノードの位置",
+	"Visual_ViewportSize": "ビューポート サイズ"
 }

@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "रंग",
 	"Visual_Fill": "भरण",
 	"Visual_TextSize": "पाठ आकार",
-	"Visual_Force_Display": "Force Display",
-	"Visual_Nodes": "Nodes",
+	"Visual_Force_Display": "बाध्य प्रदर्शन",
+	"Visual_Nodes": "नोड्स",
 	"Visual_Source": "स्रोत",
 	"Visual_Destination": "गंतव्य",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "भार"
+	"Visual_DestinationLabels": "गंतव्य लेबल",
+	"Visual_SourceLabels": "स्रोत लेबल",
+	"Visual_Weight": "भार",
+	"Visual_DataPointsLinkLabels": "डेटा लिंक लेबल",
+	"Visual_Links": "लिंक",
+	"Visual_ScaleSettings": "लघुगणक स्केल सक्षम करें",
+	"Visual_Enable": "सक्षम करें",
+	"Visual_SankeySettings": "Sankey सेटिंग्स",
+	"Visual_NodePositions": "नोड स्थितियाँ",
+	"Visual_ViewportSize": "व्यूपोर्ट आकार"
 }

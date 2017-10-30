@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Couleur",
 	"Visual_Fill": "Remplir",
 	"Visual_TextSize": "Taille du texte",
-	"Visual_Force_Display": "Force Display",
+	"Visual_Force_Display": "Forcer l'affichage",
 	"Visual_Nodes": "Nœuds",
 	"Visual_Source": "Source",
 	"Visual_Destination": "Destination",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Épaisseur"
+	"Visual_DestinationLabels": "Étiquettes de destination",
+	"Visual_SourceLabels": "Étiquettes sources",
+	"Visual_Weight": "Épaisseur",
+	"Visual_DataPointsLinkLabels": "Étiquettes de liaisons de données",
+	"Visual_Links": "Liens",
+	"Visual_ScaleSettings": "Activer l’échelle logarithmique",
+	"Visual_Enable": "Activer",
+	"Visual_SankeySettings": "Paramètres Sankey",
+	"Visual_NodePositions": "Positions de nœud",
+	"Visual_ViewportSize": "Tailles de fenêtre d'affichage"
 }

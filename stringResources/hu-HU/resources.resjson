@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Szín",
 	"Visual_Fill": "Kitöltés",
 	"Visual_TextSize": "Szöveg mérete",
-	"Visual_Force_Display": "Force Display",
+	"Visual_Force_Display": "Megjelenítés kényszerítése",
 	"Visual_Nodes": "Csomópontok",
 	"Visual_Source": "Forrás",
 	"Visual_Destination": "Cél",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Súlyozás"
+	"Visual_DestinationLabels": "Célcímkék",
+	"Visual_SourceLabels": "Forráscímkék",
+	"Visual_Weight": "Súlyozás",
+	"Visual_DataPointsLinkLabels": "Adathivatkozási címkék",
+	"Visual_Links": "Hivatkozások",
+	"Visual_ScaleSettings": "Logaritmikus skála engedélyezése",
+	"Visual_Enable": "Engedélyezés",
+	"Visual_SankeySettings": "Sankey-beállítások",
+	"Visual_NodePositions": "Csomópont-pozíciók",
+	"Visual_ViewportSize": "Nézőpontméretek"
 }

@@ -4,11 +4,18 @@
 	"Visual_LabelsFill": "Color",
 	"Visual_Fill": "Emplena",
 	"Visual_TextSize": "Mida del text",
-	"Visual_Force_Display": "Force Display",
+	"Visual_Force_Display": "Força la visualització",
 	"Visual_Nodes": "Nodes",
 	"Visual_Source": "Origen",
 	"Visual_Destination": "Destinació",
-	"Visual_DestinationLabels": "Destination labels",
-	"Visual_SourceLabels": "Source labels",
-	"Visual_Weight": "Pes"
+	"Visual_DestinationLabels": "Etiquetes de destinació",
+	"Visual_SourceLabels": "Etiquetes d'origen",
+	"Visual_Weight": "Pes",
+	"Visual_DataPointsLinkLabels": "Etiquetes d'enllaços de dades",
+	"Visual_Links": "Enllaços",
+	"Visual_ScaleSettings": "Permet l'escala logarítmica",
+	"Visual_Enable": "Habilita",
+	"Visual_SankeySettings": "Configuració Sankey",
+	"Visual_NodePositions": "Posicions de node",
+	"Visual_ViewportSize": "Mides de la finestreta"
 }
