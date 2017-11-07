@@ -1,3 +1,7 @@
+## 1.5.2
+
+* Drag&drop crashes browser - fix 
+
 ## 1.5.1
 
 * Fix error when the visual doesn't display chart without values dataset
