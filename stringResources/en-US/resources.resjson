@@ -14,6 +14,8 @@
 	"Visual_DataPointsLinkLabels": "Data link labels",
 	"Visual_Links": "Links",
 	"Visual_ScaleSettings": "Enable logarithmic scale",
+	"Visual_SankeyScaleSettings": "Scale settings",
+	"Visual_MinOptimalHeight": "Provide min optimal height of node",
 	"Visual_Enable": "Enable",
 	"Visual_SankeySettings": "Sankey settigns",
 	"Visual_NodePositions": "Node positions",

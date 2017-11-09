@@ -154,15 +154,16 @@ module powerbi.extensibility.visual {
 
         private static MinDomainOfScale = 0;
         private static MaxDomainOfScale = 9;
-        private static MinRangeOfScale = 3;
-        private static MaxRangeOfScale = 100;
+        private static DefaultMinRangeOfScale = 3;
+        private static MinRangeOfScale = 0;
+        private static DefaultMaxRangeOfScale = 100;
 
         public static DublicatedNamePostfix: string = "_SK_SELFLINK";
 
         private static MinWidthOfLink: number = 1;
         private static DefaultWeightOfLink: number = 1;
 
-        private static MinHeightOfNode: number = 5;
+        private static MinHeightOfNode: number = 1;
 
         private static ScaleStep: number = 0.1;
         private static ScaleStepLimit: number = 1;
@@ -887,18 +888,20 @@ module powerbi.extensibility.visual {
                 maxWeightInData = maxWeigthLink.weigth;
             }
 
+            let MinRangeOfScale: number = sankeyDiagramDataView.settings.scaleSettings.provideMinHeight ? SankeyDiagram.DefaultMinRangeOfScale : SankeyDiagram.MinRangeOfScale;
+
             while (minHeight <= SankeyDiagram.MinHeightOfNode && scaleStepCount < SankeyDiagram.ScaleStepLimit) {
                 let weightScale: any;
 
-                if (sankeyDiagramDataView.settings.scaleSettings.show) {
+                if (sankeyDiagramDataView.settings.scaleSettings.lnScale) {
                     weightScale = d3.scale.log()
                     .base(Math.E)
                     .domain([Math.exp(SankeyDiagram.MinDomainOfScale + scaleShift), Math.exp(SankeyDiagram.MaxDomainOfScale + scaleShift)])
-                    .range([SankeyDiagram.MinRangeOfScale, SankeyDiagram.MaxRangeOfScale]);
+                    .range([MinRangeOfScale, SankeyDiagram.DefaultMaxRangeOfScale]);
                 } else {
                     weightScale = d3.scale.linear()
                     .domain([minWeightInData + scaleShift, maxWeightInData + scaleShift])
-                    .range([SankeyDiagram.MinRangeOfScale, SankeyDiagram.MaxRangeOfScale]);
+                    .range([MinRangeOfScale, SankeyDiagram.DefaultMaxRangeOfScale]);
                 }
 
                 sankeyDiagramDataView.links.forEach((l) => {
@@ -917,7 +920,7 @@ module powerbi.extensibility.visual {
                         }
                     });
 
-                    minWeight = Math.abs(minWeight) + SankeyDiagram.MinRangeOfScale;
+                    minWeight = Math.abs(minWeight);
                     // shift weight values to eliminate negative values
                     sankeyDiagramDataView.links.forEach((link: SankeyDiagramLink) => {
                         link.weigth += minWeight;
@@ -1289,7 +1292,7 @@ module powerbi.extensibility.visual {
                 .attr({
                     x: SankeyDiagram.DefaultPosition,
                     y: SankeyDiagram.DefaultPosition,
-                    height: (node: SankeyDiagramNode) => node.height,
+                    height: (node: SankeyDiagramNode) => node.height < SankeyDiagram.MinHeightOfNode ? SankeyDiagram.MinHeightOfNode : node.height,
                     width: (node: SankeyDiagramNode) => node.width
                 });
 
@@ -1759,6 +1762,10 @@ module powerbi.extensibility.visual {
             if (options.objectName === SankeyDiagram.LinksPropertyIdentifier.objectName) {
                 this.enumerateLinks(instanceEnumeration);
             }
+
+            // hide scale settings
+            (<VisualObjectInstanceEnumerationObject>instanceEnumeration).instances = (<VisualObjectInstanceEnumerationObject>instanceEnumeration).instances
+                .filter(  (instance) => instance.objectName !== SankeyDiagram.NodeComplexSettingsPropertyIdentifier.objectName );
 
             return instanceEnumeration || [];
         }

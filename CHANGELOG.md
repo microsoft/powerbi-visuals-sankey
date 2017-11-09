@@ -1,3 +1,7 @@
+## 1.6.0
+
+* New option: provide min optimal height of node
+
 ## 1.5.2
 
 * Drag&drop crashes browser - fix 

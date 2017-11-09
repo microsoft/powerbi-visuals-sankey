@@ -633,6 +633,73 @@ module powerbi.extensibility.visual.test {
             });
         });
 
+        describe("Scale settings test:", () => {
+            it("the visual must provide min height of node", done => {
+                let dataView: DataView = defaultDataViewBuilder.getDataViewWithLowValue();
+                const firstElement: number = 0;
+
+                dataView.metadata.objects = {
+                    scaleSettings: {
+                        provideMinHeight: true
+                    }
+                };
+
+                // the dataset has significantly different range of values 
+                // the visual must provide min height of node
+                dataView.categorical.values[firstElement].values[0] = 1;
+                dataView.categorical.values[firstElement].values[1] = 1;
+                dataView.categorical.values[firstElement].values[2] = 1000000;
+
+                visualBuilder.updateRenderTimeout([dataView], () => {
+                    const minHeightOfNode: number = 5;
+                    let nodes = visualBuilder.nodeElements;
+
+                    let minHeight: number = +nodes[firstElement].children[firstElement].getAttribute("height");
+                    nodes.each((index: number, el: HTMLElement) => {
+                        let height = +el.children[firstElement].getAttribute("height");
+                        if (height < minHeight) {
+                            minHeight = height;
+                        }
+                    });
+                    expect(minHeight).toBeGreaterThan(minHeightOfNode);
+                    done();
+                });
+            });
+
+            it("the visual must not provide min height of node", done => {
+                let dataView: DataView = defaultDataViewBuilder.getDataViewWithLowValue();
+                const firstElement: number = 0;
+
+                dataView.metadata.objects = {
+                    scaleSettings: {
+                        provideMinHeight: false
+                    }
+                };
+
+                // the dataset has significantly different range of values
+                // the visual must not provide min height of node
+                // the height of node can be 1px;npm
+                dataView.categorical.values[firstElement].values[0] = 1;
+                dataView.categorical.values[firstElement].values[1] = 1;
+                dataView.categorical.values[firstElement].values[2] = 1000000;
+
+                visualBuilder.updateRenderTimeout([dataView], () => {
+                    const minHeightOfNode: number = 5;
+                    let nodes = visualBuilder.nodeElements;
+
+                    let minHeight: number = +nodes[firstElement].children[firstElement].getAttribute("height");
+                    nodes.each((index: number, el: HTMLElement) => {
+                        let height = +el.children[firstElement].getAttribute("height");
+                        if (height < minHeight) {
+                            minHeight = height;
+                        }
+                    });
+                    expect(minHeight).toBeLessThan(minHeightOfNode);
+                    done();
+                });
+            });
+        });
+
         describe("Capabilities tests", () => {
             it("all items having displayName should have displayNameKey property", () => {
                 jasmine.getJSONFixtures().fixturesPath = "base";
