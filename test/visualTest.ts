@@ -700,6 +700,17 @@ module powerbi.extensibility.visual.test {
             });
         });
 
+        describe("Settings tests:", () => {
+            it("nodeComplexSettings properties must be hidden", done => {
+                let objectInstanes: VisualObjectInstanceEnumerationObject = <VisualObjectInstanceEnumerationObject>visualBuilder.instance.enumerateObjectInstances({
+                    objectName: "nodeComplexSettings"
+                });
+
+                expect(objectInstanes.instances.length).toBe(0);
+                done();
+            });
+        });
+
         describe("Capabilities tests", () => {
             it("all items having displayName should have displayNameKey property", () => {
                 jasmine.getJSONFixtures().fixturesPath = "base";
