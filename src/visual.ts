@@ -888,7 +888,7 @@ module powerbi.extensibility.visual {
                 maxWeightInData = maxWeigthLink.weigth;
             }
 
-            let MinRangeOfScale: number = sankeyDiagramDataView.settings.scaleSettings.provideMinHeight ? SankeyDiagram.DefaultMinRangeOfScale : SankeyDiagram.MinRangeOfScale;
+            let minRangeOfScale: number = sankeyDiagramDataView.settings.scaleSettings.provideMinHeight ? SankeyDiagram.DefaultMinRangeOfScale : SankeyDiagram.MinRangeOfScale;
 
             while (minHeight <= SankeyDiagram.MinHeightOfNode && scaleStepCount < SankeyDiagram.ScaleStepLimit) {
                 let weightScale: any;
@@ -897,11 +897,11 @@ module powerbi.extensibility.visual {
                     weightScale = d3.scale.log()
                     .base(Math.E)
                     .domain([Math.exp(SankeyDiagram.MinDomainOfScale + scaleShift), Math.exp(SankeyDiagram.MaxDomainOfScale + scaleShift)])
-                    .range([MinRangeOfScale, SankeyDiagram.DefaultMaxRangeOfScale]);
+                    .range([minRangeOfScale, SankeyDiagram.DefaultMaxRangeOfScale]);
                 } else {
                     weightScale = d3.scale.linear()
                     .domain([minWeightInData + scaleShift, maxWeightInData + scaleShift])
-                    .range([MinRangeOfScale, SankeyDiagram.DefaultMaxRangeOfScale]);
+                    .range([minRangeOfScale, SankeyDiagram.DefaultMaxRangeOfScale]);
                 }
 
                 sankeyDiagramDataView.links.forEach((l) => {
