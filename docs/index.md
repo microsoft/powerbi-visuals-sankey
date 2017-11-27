@@ -1,11 +1,9 @@
 
 # Sankey visual documentation
 
-### Table of contents
+[Data fields](#data-fields)
 
-[Data filed buckets](#data-filed-buckets)
-
-[Sankey properties panel](#sankey-properties-panel)
+[Sankey format panel](#sankey-format-panel)
 
 [Scale settings](#scale-settings)
 
@@ -13,7 +11,7 @@
 
 [Drag & drop](#drag--drop)
 
-## Data filed buckets
+## Data fields
 
 The Sankey has several buckets. There are Source, Destination, Source labels, Destination labels, Weight. Source and Destination buckets are required to display the diagram.
 
@@ -33,9 +31,9 @@ In this sample, D node is rendered twice.
 
 ![Source and Destination fields with custom labels](imgs/SourceDestinationWeightLabels.png)
 
-## Sankey properties panel
+## Sankey format panel
 
-*Data labels* properties provides settings to configure node labels
+*Data labels* properties provide settings to configure node labels
 
 _Color_ - defines text color of label
 
@@ -90,7 +88,7 @@ On the this chart, the node T has self-link and was drawn twice too.
 
 ## Drag & drop
 
-Sankey visual allows moving nodes to any position of viewport by mouse. After moving nodes to different positions, the visual saves the state and draws node in same positions after resizing the visual or reloading the report.
+Sankey visual allows moving nodes to any position of viewport by mouse. After moving nodes to different positions, the visual saves the state and draws nodes at the same positions after resizing the visual or reloading the report.
 
 ![Default view if chart](imgs/Default.png)
 

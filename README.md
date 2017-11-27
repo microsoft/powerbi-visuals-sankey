@@ -14,6 +14,6 @@ See also [Sankey at Microsoft Office store](https://store.office.com/en-us/app.a
 
 # Documentation
 
-The visual properties and features descriptions you can learn in documentation
+Check out documentation to find out more about visual's properties and features
 
 [Sankey visual](https://microsoft.github.io/powerbi-visuals-sankey)
