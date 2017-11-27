@@ -23,19 +23,19 @@ In this case the custom visual displays links between source and destination wit
 
 Weight data bucket allows setting weights for each link.
 
-With data on weight data field, the custom visual draws the links with different sizes. And size of link depends on value of data
+If Weight data field is filled, the custom visual draws the links with different sizes. And size of link depends on value of data
 
 ![Source and Destination fields with weight values](imgs/SourceDestinationWeight.png)
 
-With source and destination labels, you can construct the Sankey with duplicated nodes. To do so you just need to give different names for nodes but with the same labels.
+If Source and Destination fields are filled, you can construct the Sankey with duplicated nodes. To do so you just need to give different names for nodes but with the same labels.
 
-In this sample, D node draws twice
+In this sample, D node is rendered twice.
 
 ![Source and Destination fields with custom labels](imgs/SourceDestinationWeightLabels.png)
 
 ## Sankey properties panel
 
-*Data labels* properties provides settings for configure node labels
+*Data labels* properties provides settings to configure node labels
 
 _Color_ - defines text color of label
 
@@ -59,7 +59,7 @@ _Display units properties_ - changes display units in link labels and tooltips
 
 ![Display units properties](imgs/DisplayUnitsProperties.png)
 
-*Links* properties define colors for each link
+*Links* properties define color for each link
 
 ![Links properties](imgs/LinksProperties.png)
 
@@ -78,7 +78,7 @@ in a dataset.
 
 ## Cycles
 
-If a dataset contains the nodes with a link to itself or graphs with cycles, the visual duplicates one of the node to "break" cycle and draws twice same node.
+If a dataset contains the nodes with a link to itself or graphs with cycles, the visual duplicates one of the node to "break" cycle and draws the same node twice.
 
 On the chart, you can see that node B was drawn twice.
 
