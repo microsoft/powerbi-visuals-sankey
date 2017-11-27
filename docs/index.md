@@ -78,11 +78,11 @@ in a dataset.
 
 If a dataset contains the nodes with a link to itself or graphs with cycles, the visual duplicates one of the node to "break" cycle and draws the same node twice.
 
-On the chart, you can see that node B was drawn twice.
+In the chart, you can see that node B was drawn twice.
 
 ![Cycles](imgs/Cycles.png)
 
-On the this chart, the node T has self-link and was drawn twice too.
+In this chart, the node T has self-link and was drawn twice too.
 
 ![Node self cycle](imgs/NodeSelfCycle.png)
 
