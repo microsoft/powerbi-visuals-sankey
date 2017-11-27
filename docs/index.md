@@ -1,6 +1,18 @@
 
 # Sankey visual documentation
 
+### Table of contents
+
+[Data filed buckets](#data-filed-buckets)
+
+[Sankey properties panel](#sankey-properties-panel)
+
+[Scale settings](#scale-settings)
+
+[Cycles](#cycles)
+
+[Drag & drop](#drag--drop)
+
 ## Data filed buckets
 
 The Sankey has several buckets. There are Source, Destination, Source labels, Destination labels, Weight. Source and Destination buckets are required to display the diagram.
