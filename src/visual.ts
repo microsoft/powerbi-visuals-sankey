@@ -1764,8 +1764,10 @@ module powerbi.extensibility.visual {
             }
 
             // hide scale settings
-            (<VisualObjectInstanceEnumerationObject>instanceEnumeration).instances = (<VisualObjectInstanceEnumerationObject>instanceEnumeration).instances
-                .filter(  (instance) => instance.objectName !== SankeyDiagram.NodeComplexSettingsPropertyIdentifier.objectName );
+            if (options.objectName === SankeyDiagram.NodeComplexSettingsPropertyIdentifier.objectName) {
+                (<VisualObjectInstanceEnumerationObject>instanceEnumeration).instances = (<VisualObjectInstanceEnumerationObject>instanceEnumeration).instances
+                    .filter(  (instance) => instance.objectName !== SankeyDiagram.NodeComplexSettingsPropertyIdentifier.objectName );
+            }
 
             return instanceEnumeration || [];
         }

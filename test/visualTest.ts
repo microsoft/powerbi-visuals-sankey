@@ -709,6 +709,66 @@ module powerbi.extensibility.visual.test {
                 expect(objectInstanes.instances.length).toBe(0);
                 done();
             });
+
+            it("other properties must exist", done => {
+                // defaults
+                const instance: number = 0;
+                const someColor: string = "black";
+                const fontSize: number = 12;
+                const unit: number = 0;
+                dataView.metadata.objects = {
+                    labels: {
+                        show: true,
+                        fill: { solid: { color: someColor } },
+                        fontSize: fontSize,
+                        forceDisplay: false,
+                        unit: unit
+                    },
+                    linkLabels: {
+                        show: false,
+                        fill: { solid: { color: someColor } },
+                        fontSize: fontSize,
+                    },
+                    scaleSettings: {
+                        provideMinHeight: true,
+                        lnScale: true,
+                    },
+                    nodeComplexSettings: {
+                        nodePositions: "",
+                        viewportSize: ""
+                    }
+                };
+
+                let labels: VisualObjectInstanceEnumerationObject = (<VisualObjectInstanceEnumerationObject>visualBuilder
+                    .instance.enumerateObjectInstances({
+                        objectName: "labels"
+                    }));
+
+                expect(labels.instances.length).toBe(1);
+                expect(labels.instances[instance].properties["show"]).toBeTruthy();
+                expect(labels.instances[instance].properties["fontSize"]).toBe(fontSize);
+                expect(labels.instances[instance].properties["forceDisplay"]).toBeFalsy();
+                expect(labels.instances[instance].properties["unit"]).toBe(unit);
+                expect(labels.instances[instance].properties["fill"]).toBe(someColor);
+
+                let linkLabels: VisualObjectInstanceEnumerationObject = (<VisualObjectInstanceEnumerationObject>visualBuilder
+                    .instance.enumerateObjectInstances({
+                        objectName: "linkLabels"
+                    }));
+                expect(linkLabels.instances.length).toBe(1);
+                expect(linkLabels.instances[instance].properties["show"]).toBeFalsy();
+                expect(linkLabels.instances[instance].properties["fontSize"]).toBe(fontSize);
+                expect(linkLabels.instances[instance].properties["fill"]).toBe(someColor);
+
+                let scaleSettings: VisualObjectInstanceEnumerationObject = (<VisualObjectInstanceEnumerationObject>visualBuilder
+                    .instance.enumerateObjectInstances({
+                        objectName: "scaleSettings"
+                    }));
+                expect(scaleSettings.instances.length).toBe(1);
+                expect(scaleSettings.instances[instance].properties["provideMinHeight"]).toBeTruthy();
+                expect(scaleSettings.instances[instance].properties["lnScale"]).toBeFalsy();
+                done();
+            });
         });
 
         describe("Capabilities tests", () => {

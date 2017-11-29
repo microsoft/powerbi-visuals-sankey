@@ -1,3 +1,7 @@
+## 1.6.1
+
+* Links properties were disappeared - fixed
+
 ## 1.6.0
 
 * New option: provide min optimal height of node
