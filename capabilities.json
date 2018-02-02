@@ -250,6 +250,37 @@
                     }
                 }
             }
+        },
+        "cyclesLinks":{
+            "displayName": "Cycles displaying",
+            "displayNameKey": "Visual_Cycles",
+            "properties": {
+                "drawCycles": {
+                    "displayName": "Dublicate nodes",
+                    "displayNameKey": "Visual_DublicateNodes",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayName": "Dublicate",
+                                "displayNameKey": "Visual_Dublicate",
+                                "value": "Dublicate"
+                            },
+                            {
+                                "displayName": "Draw backward link",
+                                "displayNameKey": "Visual_DrawBackwardLink",
+                                "value": "Backward"
+                            }
+                        ]
+                    }
+                },
+                "selfLinksWeight": {
+                    "displayName": "Ignore weight of self links",
+                    "displayNameKey": "Visual_SelflinkWeight",
+                    "type": {
+                        "bool": true
+                    }
+                }
+            }
         }
     },
     "sorting": {
