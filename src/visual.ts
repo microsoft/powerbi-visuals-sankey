@@ -170,6 +170,8 @@ module powerbi.extensibility.visual {
 
         private static NegativeValueRange: number = 0;
 
+        private static BackwardPsudoNodeMargin: number = 5;
+
         public static RoleNames: SankeyDiagramRoleNames = {
             rows: "Source",
             columns: "Destination",
@@ -367,7 +369,7 @@ module powerbi.extensibility.visual {
 
             let cycles: SankeyDiagramCycleDictionary = this.checkCycles(nodes);
 
-            if (settings.cyclesLinks.drawCycles === "Dublicate") {
+            if (settings.cyclesLinks.drawCycles === CyclesDrawType.Dublicate) {
                 links = this.processCyclesForwardLinks(cycles, nodes, links, settings);
             }
 
@@ -378,7 +380,7 @@ module powerbi.extensibility.visual {
                 columns: []
             };
 
-            if (settings.cyclesLinks.drawCycles === "Backward") {
+            if (settings.cyclesLinks.drawCycles === CyclesDrawType.Backward) {
                 SankeyDiagram.computeXPositions(sankeyDiagramDataView);
                 sankeyDiagramDataView.links = this.processCyclesForBackwardLinks(cycles, sankeyDiagramDataView.nodes, links, settings);
                 sankeyDiagramDataView.links.forEach( (link: SankeyDiagramLink) => {
@@ -394,6 +396,16 @@ module powerbi.extensibility.visual {
             return sankeyDiagramDataView;
         }
 
+
+        private static swapNodes(link: SankeyDiagramLink) {
+            link.direction = SankeyLinkDirrections.Backward;
+            let source = link.source;
+            link.source = link.destination;
+            link.destination = source;
+            SankeyDiagram.updateValueOfNode(link.destination);
+            SankeyDiagram.updateValueOfNode(link.source);
+        }
+
         // in this method we breaking simple cycles for typical displaying with twice rendering onr node in cycle
         private processCyclesForBackwardLinks(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[], settings: SankeyDiagramSettings): SankeyDiagramLink[] {
             let createdNodes: SankeyDiagramNode[] = [];
@@ -406,12 +418,7 @@ module powerbi.extensibility.visual {
                     });
 
                     if (link.source === firstCyclesNode && linkToNodeFromCycle) {
-                        link.direction = SankeyLinkDirrections.Backward;
-                        let source = link.source;
-                        link.source = link.destination;
-                        link.destination = source;
-                        SankeyDiagram.updateValueOfNode(link.destination);
-                        SankeyDiagram.updateValueOfNode(link.source);
+                        SankeyDiagram.swapNodes(link);
                     }
                     if (link.destination === link.source) {
                         link.direction = SankeyLinkDirrections.SelfLink;
@@ -421,12 +428,7 @@ module powerbi.extensibility.visual {
 
                     // if inverting of link doesn't increase cycles on graph revert link inversion
                     if (Object.keys(exsistCycles).length >= Object.keys(cycles).length) {
-                        link.direction = SankeyLinkDirrections.Backward;
-                        let source = link.source;
-                        link.source = link.destination;
-                        link.destination = source;
-                        SankeyDiagram.updateValueOfNode(link.destination);
-                        SankeyDiagram.updateValueOfNode(link.source);
+                        SankeyDiagram.swapNodes(link);
                         return false;
                     }
 
@@ -642,7 +644,7 @@ module powerbi.extensibility.visual {
                     color: settings.labels.fill
                 };
 
-                if (nodes.filter( (node: SankeyDiagramNode) => {
+                if (nodes.filter((node: SankeyDiagramNode) => {
                     return node.label.name === item;
                 }).length === 0)
 
@@ -866,25 +868,31 @@ module powerbi.extensibility.visual {
         }
 
         private static updateValueOfNode(node: SankeyDiagramNode): void {
-            node.inputWeight = node.links.reduce((previousValue: number, currentValue: SankeyDiagramLink) => {
-                return previousValue + (currentValue.destination === node && currentValue.destination !== currentValue.source
-                    ? currentValue.direction === SankeyLinkDirrections.Forward ? currentValue.weigth : currentValue.weigth
-                    : SankeyDiagram.DefaultWeightValue);
-            }, SankeyDiagram.DefaultWeightValue);
+            node.inputWeight = 0;
+            node.outputWeight = 0;
+            node.backwardWeight = 0;
+            node.selftLinkWeight = 0;
+            node.links.forEach( (currentValue: SankeyDiagramLink) => {
+                node.inputWeight +=
+                currentValue.destination === node &&
+                currentValue.destination !== currentValue.source
+                ?
+                currentValue.weigth
+                :
+                SankeyDiagram.DefaultWeightValue;
 
-            node.outputWeight = node.links.reduce((previousValue: number, currentValue: SankeyDiagramLink) => {
-                return previousValue + (currentValue.source === node && currentValue.destination !== currentValue.source
-                    ? currentValue.direction === SankeyLinkDirrections.Forward ? currentValue.weigth : currentValue.weigth
-                    : SankeyDiagram.DefaultWeightValue);
-            }, SankeyDiagram.DefaultWeightValue);
+                node.outputWeight +=
+                currentValue.source === node &&
+                currentValue.destination !== currentValue.source
+                ?
+                currentValue.weigth
+                :
+                SankeyDiagram.DefaultWeightValue;
 
-            node.backwardWeight = node.links.reduce((previousValue: number, currentValue: SankeyDiagramLink) => {
-                return previousValue + (currentValue.direction === SankeyLinkDirrections.Backward ? currentValue.weigth : 0);
-            }, SankeyDiagram.DefaultWeightValue);
+                node.backwardWeight += currentValue.direction === SankeyLinkDirrections.Backward ? currentValue.weigth : 0;
 
-            node.selftLinkWeight = node.links.reduce((previousValue: number, currentValue: SankeyDiagramLink) => {
-                return previousValue + (currentValue.direction === SankeyLinkDirrections.SelfLink ? currentValue.weigth : 0);
-            }, SankeyDiagram.DefaultWeightValue);
+                node.selftLinkWeight += currentValue.direction === SankeyLinkDirrections.SelfLink ? currentValue.weigth : 0;
+            });
         }
 
         private static getTooltipForNode(
@@ -1029,13 +1037,13 @@ module powerbi.extensibility.visual {
                 columns,
                 sankeyDiagramDataView.settings._scale,
                 this.viewport.height,
-                sankeyDiagramDataView.settings.cyclesLinks.selfLinksWeight && sankeyDiagramDataView.settings.cyclesLinks.drawCycles === "Backward"
+                sankeyDiagramDataView.settings.cyclesLinks.selfLinksWeight && sankeyDiagramDataView.settings.cyclesLinks.drawCycles === CyclesDrawType.Backward
             );
 
             this.computeYPosition(
                 sankeyDiagramDataView.nodes,
                 sankeyDiagramDataView.settings._scale.y,
-                sankeyDiagramDataView.settings.cyclesLinks.selfLinksWeight && sankeyDiagramDataView.settings.cyclesLinks.drawCycles === "Backward"
+                sankeyDiagramDataView.settings.cyclesLinks.selfLinksWeight && sankeyDiagramDataView.settings.cyclesLinks.drawCycles === CyclesDrawType.Backward
             );
 
             this.applySavedPositions(sankeyDiagramDataView);
@@ -1290,7 +1298,7 @@ module powerbi.extensibility.visual {
                 node.height = ( Math.max( node.inputWeight, node.outputWeight, node.inputWeight + selfLinkHeight, node.outputWeight + selfLinkHeight )
                 ) * scale.y;
 
-                let backwardPsudoNodeSpace = 5 + d3.max([node.backwardWeight, node.selftLinkWeight / 2]) * scale.y;
+                let backwardPsudoNodeSpace = SankeyDiagram.BackwardPsudoNodeMargin + d3.max([node.backwardWeight, node.selftLinkWeight / 2]) * scale.y;
 
                 node.y = shiftByAxisY + offsetByY * index + backwardPsudoNodeSpace;
                 shiftByAxisY += node.height;
@@ -1513,7 +1521,7 @@ module powerbi.extensibility.visual {
                 (d3.event as any).sourceEvent.stopPropagation();
             }
 
-            let minHeight = d3.min(sankeyDiagramDataView.links.map( l => l.height));
+            let minHeight: number = d3.min(sankeyDiagramDataView.links.map( l => l.height));
 
             let sankeyVisual = this;
             let allowSave: boolean = true;
@@ -1868,7 +1876,7 @@ module powerbi.extensibility.visual {
 
             let fixedLinkHeight = link.height - distanceBetweenLinks;
 
-            if (this.dataView.settings.cyclesLinks.selfLinksWeight && this.dataView.settings.cyclesLinks.drawCycles === "Backward") {
+            if (this.dataView.settings.cyclesLinks.selfLinksWeight && this.dataView.settings.cyclesLinks.drawCycles === CyclesDrawType.Backward) {
                 fixedLinkHeight = Math.min(link.destination.width, minHeight);
             }
 
@@ -2020,7 +2028,6 @@ module powerbi.extensibility.visual {
             pathParams += ` M ${x0} ${y0} C ${x2} ${y0}, ${x3} ${y1}, ${x1} ${y1}`;
 
             pathParams += `L ${link.destination.x + link.destination.width} ${y1}`;
-
 
             pathParams +=
             `C ${link.destination.x + link.destination.width} ${y1}, ` +
