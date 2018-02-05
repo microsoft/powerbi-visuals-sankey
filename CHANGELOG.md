@@ -1,3 +1,8 @@
+## 1.7.0
+
+* Options to configure to display cycles
+* Display cycles on graph as backward links
+
 ## 1.6.1
 
 * Links properties were disappeared - fixed

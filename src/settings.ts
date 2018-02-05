@@ -27,6 +27,11 @@
 module powerbi.extensibility.visual {
     import DataViewObjectsParser = powerbi.extensibility.utils.dataview.DataViewObjectsParser;
 
+    export enum CyclesDrawType {
+        Dublicate,
+        Backward
+    }
+
     export class SankeyDiagramLabelsSettings {
         public static DefaultFontSize: number = 12;
 
@@ -61,6 +66,11 @@ module powerbi.extensibility.visual {
         public viewportSize: string = "{}";
     }
 
+    export class SankeyNodeCycles {
+        public drawCycles: number = CyclesDrawType.Dublicate;
+        public selfLinksWeight: boolean = true;
+    }
+
     export interface ViewportSize {
         height?: string;
         width?: string;
@@ -73,6 +83,7 @@ module powerbi.extensibility.visual {
         public scaleSettings: SankeyScaleSettings = new SankeyScaleSettings();
         public nodeComplexSettings: SankeyComplexSettings = new SankeyComplexSettings();
         public _nodePositions: SankeyDiagramNodePositionSetting[] = [];
+        public cyclesLinks: SankeyNodeCycles = new SankeyNodeCycles();
         public _viewportSize: ViewportSize = {};
     }
 }

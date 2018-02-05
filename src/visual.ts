@@ -93,10 +93,11 @@ module powerbi.extensibility.visual {
 
         private static LinksSelector: ClassAndSelector = createClassAndSelector("links");
         private static LinkSelector: ClassAndSelector = createClassAndSelector("link");
+        private static BackwardLinkSelector: ClassAndSelector = createClassAndSelector("linkBackward");
+        private static SelftLinkSelector: ClassAndSelector = createClassAndSelector("linkSelf");
         private static LinkLabelPathsSelector: ClassAndSelector = createClassAndSelector("linkLabelPaths");
         private static LinkLabelTextsSelector: ClassAndSelector = createClassAndSelector("linkLabelTexts");
 
-        private static DefaultColourOfNode: string = "rgb(62, 187, 162)";
         private static DefaultColourOfLink: string = "black";
 
         private static LinksPropertyIdentifier: DataViewObjectPropertyIdentifier = {
@@ -160,7 +161,6 @@ module powerbi.extensibility.visual {
 
         public static DublicatedNamePostfix: string = "_SK_SELFLINK";
 
-        private static MinWidthOfLink: number = 1;
         private static DefaultWeightOfLink: number = 1;
 
         private static MinHeightOfNode: number = 1;
@@ -169,6 +169,8 @@ module powerbi.extensibility.visual {
         private static ScaleStepLimit: number = 1;
 
         private static NegativeValueRange: number = 0;
+
+        private static BackwardPsudoNodeMargin: number = 5;
 
         public static RoleNames: SankeyDiagramRoleNames = {
             rows: "Source",
@@ -190,6 +192,8 @@ module powerbi.extensibility.visual {
 
         private nodeWidth: number = 21.5;
         private curvatureOfLinks: number = 0.5;
+
+        private static NodeAndBackwardLinkDistance = 5;
 
         private root: Selection<any>;
         private clearCatcher: Selection<any>;
@@ -365,34 +369,84 @@ module powerbi.extensibility.visual {
 
             let cycles: SankeyDiagramCycleDictionary = this.checkCycles(nodes);
 
-            links = this.processCycles(cycles, nodes, links, settings);
+            if (settings.cyclesLinks.drawCycles === CyclesDrawType.Dublicate) {
+                links = this.processCyclesForwardLinks(cycles, nodes, links, settings);
+            }
 
-            this.checkNodePositionSettings(nodes, settings);
-            this.restoreNodePositions(nodes, settings);
-
-            return {
+            let sankeyDiagramDataView = {
                 nodes,
                 links,
                 settings,
                 columns: []
             };
+
+            if (settings.cyclesLinks.drawCycles === CyclesDrawType.Backward) {
+                SankeyDiagram.computeXPositions(sankeyDiagramDataView);
+                sankeyDiagramDataView.links = this.processCyclesForBackwardLinks(cycles, sankeyDiagramDataView.nodes, links, settings);
+                sankeyDiagramDataView.links.forEach( (link: SankeyDiagramLink) => {
+                    if (link.destination === link.source) {
+                        link.direction = SankeyLinkDirrections.SelfLink;
+                    }
+                });
+            }
+
+            this.checkNodePositionSettings(nodes, settings);
+            this.restoreNodePositions(nodes, settings);
+
+            return sankeyDiagramDataView;
+        }
+
+
+        private static swapNodes(link: SankeyDiagramLink) {
+            link.direction = SankeyLinkDirrections.Backward;
+            let source = link.source;
+            link.source = link.destination;
+            link.destination = source;
+            SankeyDiagram.updateValueOfNode(link.destination);
+            SankeyDiagram.updateValueOfNode(link.source);
         }
 
         // in this method we breaking simple cycles for typical displaying with twice rendering onr node in cycle
-        private processCycles(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[], settings: SankeyDiagramSettings): SankeyDiagramLink[] {
+        private processCyclesForBackwardLinks(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[], settings: SankeyDiagramSettings): SankeyDiagramLink[] {
             let createdNodes: SankeyDiagramNode[] = [];
             for (let nodeName in cycles) {
-                let firstCyclesNode: SankeyDiagramNode = (cycles[nodeName].filter((node: SankeyDiagramNode): boolean => {
-                    if ((node.label.name || "").toString() === (nodeName || "").toString()) {
-                        return true;
+                let firstCyclesNode: SankeyDiagramNode = cycles[nodeName][0];
+
+                firstCyclesNode.links.some( (link: SankeyDiagramLink, index: number) => {
+                    let linkToNodeFromCycle = cycles[nodeName].some((node: SankeyDiagramNode) => {
+                        return node === link.destination;
+                    });
+
+                    if (link.source === firstCyclesNode && linkToNodeFromCycle) {
+                        SankeyDiagram.swapNodes(link);
                     }
-                    return false;
-                }) || [])[0];
+                    if (link.destination === link.source) {
+                        link.direction = SankeyLinkDirrections.SelfLink;
+                    }
 
-                if (firstCyclesNode === undefined) {
-                    return [];
-                }
+                    let exsistCycles = this.checkCycles(nodes);
 
+                    // if inverting of link doesn't increase cycles on graph revert link inversion
+                    if (Object.keys(exsistCycles).length >= Object.keys(cycles).length) {
+                        SankeyDiagram.swapNodes(link);
+                        return false;
+                    }
+
+                    SankeyDiagram.updateValueOfNode(link.destination);
+                    SankeyDiagram.updateValueOfNode(link.source);
+                    return true;
+                });
+
+                SankeyDiagram.updateValueOfNode(firstCyclesNode);
+            }
+
+            return links;
+        }
+
+        private processCyclesForwardLinks(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[], settings: SankeyDiagramSettings): SankeyDiagramLink[] {
+            let createdNodes: SankeyDiagramNode[] = [];
+            for (let nodeName in cycles) {
+                let firstCyclesNode: SankeyDiagramNode = cycles[nodeName][cycles[nodeName].length - 1];
                 // create a clone of the node and save a link to each other. In selection behavior, selection of clone lead to select original and visa versa
                 let nodeCopy: SankeyDiagramNode = _.cloneDeep(firstCyclesNode);
                 nodeCopy.label.name += SankeyDiagram.DublicatedNamePostfix;
@@ -480,15 +534,25 @@ module powerbi.extensibility.visual {
                 // if cycle was found
                 if (nodesStatuses[nextNode.label.name].status === SankeyDiagramNodeStatus.Processing) {
                     // add item to dictionary
-                    simpleCycles[nextNode.label.name] = <SankeyDiagramNode[]>[];
+                    let cycleName: string = nextNode.label.name;
+                    let nameIndex: number = 0;
+                    // get new name if name already used
+                    if (simpleCycles[cycleName]) {
+                        while (simpleCycles[cycleName]) {
+                            cycleName = cycleName + nameIndex++;
+                        }
+                    }
+                    simpleCycles[cycleName] = <SankeyDiagramNode[]>[];
 
                     // collect all nodes which were processed in current step
                     nodes.forEach((node: SankeyDiagramNode) => {
                         if (nodesStatuses[node.label.name].status === SankeyDiagramNodeStatus.Processing &&
-                            node.links.length > 0) {
-                            simpleCycles[nextNode.label.name].push(node);
+                            node.links.length > 0 && currNode !== node) { // push current node always as the last
+                            simpleCycles[cycleName].push(node);
                         }
                     });
+                    // push current node always as the last
+                    simpleCycles[cycleName].push(currNode);
                 }
             });
 
@@ -580,11 +644,17 @@ module powerbi.extensibility.visual {
                     color: settings.labels.fill
                 };
 
+                if (nodes.filter((node: SankeyDiagramNode) => {
+                    return node.label.name === item;
+                }).length === 0)
+
                 nodes.push({
                     label: label,
                     links: [],
                     inputWeight: 0,
                     outputWeight: 0,
+                    backwardWeight: 0,
+                    selftLinkWeight: 0,
                     width: this.nodeWidth,
                     height: 0,
                     colour: this.colorPalette.getColor(index.toString()).value,
@@ -675,6 +745,8 @@ module powerbi.extensibility.visual {
                     weigth: dataPoint.weigth,
                     height: dataPoint.weigth,
                     color: linkColour,
+                    dySource: 0,
+                    dyDestination: 0,
                     tooltipInfo: SankeyDiagram.getTooltipDataForLink(
                         valuesFormatterForWeigth,
                         sourceNode.label.formattedName,
@@ -685,7 +757,8 @@ module powerbi.extensibility.visual {
                         valueFieldName
                     ),
                     identity: selectionId,
-                    selected: false
+                    selected: false,
+                    direction: SankeyLinkDirrections.Forward
                 };
 
                 let selectableDataPoint: SelectableDataPoint = SankeyDiagram.createSelectableDataPoint(selectionId);
@@ -795,17 +868,31 @@ module powerbi.extensibility.visual {
         }
 
         private static updateValueOfNode(node: SankeyDiagramNode): void {
-            node.inputWeight = node.links.reduce((previousValue: number, currentValue: SankeyDiagramLink) => {
-                return previousValue + (currentValue.destination === node
-                    ? currentValue.weigth
-                    : SankeyDiagram.DefaultWeightValue);
-            }, SankeyDiagram.DefaultWeightValue);
+            node.inputWeight = 0;
+            node.outputWeight = 0;
+            node.backwardWeight = 0;
+            node.selftLinkWeight = 0;
+            node.links.forEach( (currentValue: SankeyDiagramLink) => {
+                node.inputWeight +=
+                currentValue.destination === node &&
+                currentValue.destination !== currentValue.source
+                ?
+                currentValue.weigth
+                :
+                SankeyDiagram.DefaultWeightValue;
 
-            node.outputWeight = node.links.reduce((previousValue: number, currentValue: SankeyDiagramLink) => {
-                return previousValue + (currentValue.source === node
-                    ? currentValue.weigth
-                    : SankeyDiagram.DefaultWeightValue);
-            }, SankeyDiagram.DefaultWeightValue);
+                node.outputWeight +=
+                currentValue.source === node &&
+                currentValue.destination !== currentValue.source
+                ?
+                currentValue.weigth
+                :
+                SankeyDiagram.DefaultWeightValue;
+
+                node.backwardWeight += currentValue.direction === SankeyLinkDirrections.Backward ? currentValue.weigth : 0;
+
+                node.selftLinkWeight += currentValue.direction === SankeyLinkDirrections.SelfLink ? currentValue.weigth : 0;
+            });
         }
 
         private static getTooltipForNode(
@@ -949,11 +1036,14 @@ module powerbi.extensibility.visual {
                 sankeyDiagramDataView.nodes,
                 columns,
                 sankeyDiagramDataView.settings._scale,
-                this.viewport.height);
+                this.viewport.height,
+                sankeyDiagramDataView.settings.cyclesLinks.selfLinksWeight && sankeyDiagramDataView.settings.cyclesLinks.drawCycles === CyclesDrawType.Backward
+            );
 
             this.computeYPosition(
                 sankeyDiagramDataView.nodes,
-                sankeyDiagramDataView.settings._scale.y
+                sankeyDiagramDataView.settings._scale.y,
+                sankeyDiagramDataView.settings.cyclesLinks.selfLinksWeight && sankeyDiagramDataView.settings.cyclesLinks.drawCycles === CyclesDrawType.Backward
             );
 
             this.applySavedPositions(sankeyDiagramDataView);
@@ -1030,6 +1120,21 @@ module powerbi.extensibility.visual {
                 Math.max(node1.top, node2.top) < Math.min(node1.bottom, node2.bottom);
         }
 
+        private static getUniqueLinks(links: SankeyDiagramLink[]) {
+            let unique = {};
+
+            links.forEach( (link: SankeyDiagramLink) => {
+                unique[link.source.label.name + link.destination.label.name + link.direction] = link;
+            });
+
+            let newarray = [];
+            for (let key in unique) {
+                newarray.push(unique[key]);
+            }
+
+            return newarray;
+        }
+
         private static computeXPositions(sankeyDiagramDataView: SankeyDiagramDataView): number {
             let nodes: SankeyDiagramNode[] = sankeyDiagramDataView.nodes,
                 nextNodes: SankeyDiagramNode[] = [],
@@ -1043,6 +1148,7 @@ module powerbi.extensibility.visual {
                 nodes.forEach((node: SankeyDiagramNode) => {
                     node.x = x;
 
+                    // put all output nodes from current node to nextNodes
                     node.links.forEach((link: SankeyDiagramLink) => {
                         if (node === link.source && node !== link.destination) {
                             if (nextNodes.every((item: SankeyDiagramNode) => {
@@ -1096,17 +1202,28 @@ module powerbi.extensibility.visual {
                 currentX: number = -Number.MAX_VALUE;
 
             nodes.forEach((node: SankeyDiagramNode) => {
-                if (currentX !== node.x) {
-                    columns.push({
+                if (!columns[node.x]) {
+                    columns[node.x] = {
                         countOfNodes: SankeyDiagram.DefaultCountOfNodes,
                         sumValueOfNodes: SankeyDiagram.DefaultSumValueOfNodes
-                    });
-
-                    currentX = node.x;
+                    };
                 }
 
-                if (columns[node.x]) {
-                    columns[node.x].sumValueOfNodes += Math.max(node.inputWeight, node.outputWeight);
+                columns[node.x].sumValueOfNodes += Math.max(node.inputWeight, node.outputWeight);
+                columns[node.x].countOfNodes++;
+
+                // if node containg backward link it influence to node position (nodes shifts to down)
+                if (node.links.some( (link: SankeyDiagramLink) =>  {
+                    return link.direction === SankeyLinkDirrections.Backward ? true : false;
+                })) {
+                    columns[node.x].sumValueOfNodes += node.backwardWeight;
+                    columns[node.x].countOfNodes++;
+                }
+
+                if (node.links.some( (link: SankeyDiagramLink) =>  {
+                    return link.direction === SankeyLinkDirrections.SelfLink ? true : false;
+                })) {
+                    columns[node.x].sumValueOfNodes += node.selftLinkWeight;
                     columns[node.x].countOfNodes++;
                 }
             });
@@ -1140,11 +1257,14 @@ module powerbi.extensibility.visual {
                 : SankeyDiagram.MinSize;
         }
 
+        /*
+            This method scales positions and compute positions of node on each column
+        */
         private static scalePositionsByAxes(
             nodes: SankeyDiagramNode[],
             columns: SankeyDiagramColumn[],
             scale: SankeyDiagramScaleSettings,
-            viewportHeight: number): void {
+            viewportHeight: number, ignoreSelfLinkWeight: boolean): void {
 
             let shiftByAxisY: number = SankeyDiagram.DefaultOffset,
                 currentX: number = SankeyDiagram.DefaultPosition,
@@ -1167,8 +1287,20 @@ module powerbi.extensibility.visual {
                 }
 
                 node.x *= scale.x;
-                node.height = Math.max(node.inputWeight, node.outputWeight) * scale.y;
-                node.y = shiftByAxisY + offsetByY * index;
+
+                let selfLinkHeight: number =  d3.sum( node.links.filter( l => l.direction === SankeyLinkDirrections.SelfLink ).map( l => l.weigth / 2 ) ) ;
+
+                if (ignoreSelfLinkWeight && selfLinkHeight > 0) {
+                    selfLinkHeight = node.width;
+                }
+
+                // because  backward links doesn't take a place
+                node.height = ( Math.max( node.inputWeight, node.outputWeight, node.inputWeight + selfLinkHeight, node.outputWeight + selfLinkHeight )
+                ) * scale.y;
+
+                let backwardPsudoNodeSpace = SankeyDiagram.BackwardPsudoNodeMargin + d3.max([node.backwardWeight, node.selftLinkWeight / 2]) * scale.y;
+
+                node.y = shiftByAxisY + offsetByY * index + backwardPsudoNodeSpace;
                 shiftByAxisY += node.height;
                 index++;
             });
@@ -1177,9 +1309,12 @@ module powerbi.extensibility.visual {
         // TODO: Update this method to improve a distribution by height.
         private computeYPosition(
             nodes: SankeyDiagramNode[],
-            scale: number): void {
+            scale: number,
+            selfLinksWeight: boolean): void {
 
+            // let uniqueNodes = SankeyDiagram.getUniqueNodes(nodes);
             nodes.forEach((node: SankeyDiagramNode) => {
+                node.links = SankeyDiagram.getUniqueLinks(node.links);
                 node.links = node.links.sort((firstLink: SankeyDiagramLink, secondLink: SankeyDiagramLink) => {
                     let firstY: number,
                         secondY: number;
@@ -1198,22 +1333,56 @@ module powerbi.extensibility.visual {
                 let shiftByAxisYOfLeftLink: number = SankeyDiagram.DefaultOffset,
                     shiftByAxisYOfRightLink: number = SankeyDiagram.DefaultOffset;
 
+                node.links = node.links.sort((a: SankeyDiagramLink, b: SankeyDiagramLink) => {
+                    return a.direction < b.direction ? 1 : a.direction > b.direction ? -1 : 0;
+                });
+
                 node.links.forEach((link: SankeyDiagramLink) => {
                     let shiftByAxisY: number = SankeyDiagram.DefaultOffset;
                     link.height = link.weigth * scale;
 
+                    let fixedLinkHeight: number = link.height;
+                    if (selfLinksWeight && link.direction === SankeyLinkDirrections.SelfLink) {
+                        fixedLinkHeight = node.width;
+                    }
+
                     if (link.source.x < node.x || link.destination.x < node.x) {
-                        shiftByAxisY = shiftByAxisYOfLeftLink;
-                        shiftByAxisYOfLeftLink += link.height;
-                    } else if (link.source.x > node.x || link.destination.x > node.x) {
-                        shiftByAxisY = shiftByAxisYOfRightLink;
-                        shiftByAxisYOfRightLink += link.height;
+                        if (link.direction !== SankeyLinkDirrections.Backward)
+                            shiftByAxisY = shiftByAxisYOfLeftLink;
+
+                        if (link.direction !== SankeyLinkDirrections.Backward)
+                            shiftByAxisYOfLeftLink += fixedLinkHeight;
+                        else
+                            shiftByAxisYOfRightLink += fixedLinkHeight;
+                    }
+                    else {
+                        if (link.source.x > node.x || link.destination.x > node.x) {
+                            if (link.direction !== SankeyLinkDirrections.Backward)
+                                shiftByAxisY = shiftByAxisYOfRightLink;
+                            if (link.direction !== SankeyLinkDirrections.Backward) {
+                                shiftByAxisYOfRightLink += fixedLinkHeight;
+                            }
+                            else {
+                                shiftByAxisYOfLeftLink += fixedLinkHeight;
+                            }
+                        }
+                        if (link.source === link.destination) {
+                            shiftByAxisYOfRightLink += fixedLinkHeight;
+                            shiftByAxisYOfLeftLink += fixedLinkHeight;
+                        }
                     }
 
                     if (link.source === node) {
-                        link.dySource = shiftByAxisY;
-                    } else if (link.destination === node) {
-                        link.dyDestination = shiftByAxisY;
+                        if (link.direction === SankeyLinkDirrections.Forward)
+                            link.dySource = shiftByAxisY;
+                        else
+                            link.dyDestination = shiftByAxisY;
+                    }
+                    if (link.destination === node) {
+                        if (link.direction === SankeyLinkDirrections.Forward)
+                            link.dyDestination = shiftByAxisY;
+                        else
+                            link.dySource = shiftByAxisY;
                     }
                 });
             });
@@ -1352,6 +1521,8 @@ module powerbi.extensibility.visual {
                 (d3.event as any).sourceEvent.stopPropagation();
             }
 
+            let minHeight: number = d3.min(sankeyDiagramDataView.links.map( l => l.height));
+
             let sankeyVisual = this;
             let allowSave: boolean = true;
             function dragged(node: SankeyDiagramNode) {
@@ -1386,11 +1557,37 @@ module powerbi.extensibility.visual {
                     // select link svg element by ID generated in link creation as Source-Destination
                     d3.select(`#${SankeyDiagram.createLink(link, true)}`).attr({
                         // get updated path params based on actual positions of node
-                        d: sankeyVisual.getLinkLabelSvgPath(link)
+                        d: (link: SankeyDiagramLink) => {
+                            if (link.direction === SankeyLinkDirrections.Forward) {
+                                return sankeyVisual.getSvgPathForForwardLink(link);
+                            }
+                            if (link.direction === SankeyLinkDirrections.Backward) {
+                                if (link.source.x + link.source.width > link.destination.x) {
+                                    return sankeyVisual.getSvgPathForForwardLink(link);
+                                }
+                                return sankeyVisual.getSvgPathForBackwardLink(link);
+                            }
+                            if (link.direction === SankeyLinkDirrections.SelfLink) {
+                                return sankeyVisual.getSvgPathForSelfLink(link, minHeight);
+                            }
+                        }
                     });
                     d3.select(`#${SankeyDiagram.createLink(link)}`).attr({
                         // get updated path params based on actual positions of node
-                        d: sankeyVisual.getSvgPath(link)
+                        d: (link: SankeyDiagramLink) => {
+                            if (link.direction === SankeyLinkDirrections.Forward) {
+                                return sankeyVisual.getSvgPathForForwardLink(link);
+                            }
+                            if (link.direction === SankeyLinkDirrections.Backward) {
+                                if (link.source.x + link.source.width > link.destination.x) {
+                                    return sankeyVisual.getSvgPathForForwardLink(link);
+                                }
+                                return sankeyVisual.getSvgPathForBackwardLink(link);
+                            }
+                            if (link.direction === SankeyLinkDirrections.SelfLink) {
+                                return sankeyVisual.getSvgPathForSelfLink(link, minHeight);
+                            }
+                        }
                     });
                 });
 
@@ -1398,6 +1595,7 @@ module powerbi.extensibility.visual {
                 d3.select(this).attr({
                     transform: translate(node.x, node.y)
                 });
+
                 allowSave = true;
             }
 
@@ -1497,17 +1695,37 @@ module powerbi.extensibility.visual {
 
             linksSelection = linksElements.data(sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
                 return link.height > SankeyDiagram.MinSize;
-            }));
+            }).sort( (a: SankeyDiagramLink, b: SankeyDiagramLink) => {
+                // sort links to draw forward links in the first, backward links draw as second and selflinks as the last
+                // in this case self links will be on front side
+                return a.direction < b.direction ? -1 : a.direction > b.direction ? 1 : 0;
+            } ));
 
             linksSelection
                 .enter()
                 .append("path")
-                .classed(SankeyDiagram.LinkSelector.class, true);
+                .classed(SankeyDiagram.LinkSelector.class, true)
+                .classed(SankeyDiagram.BackwardLinkSelector.class, (link: SankeyDiagramLink) => link.direction === SankeyLinkDirrections.Backward)
+                .classed(SankeyDiagram.SelftLinkSelector.class, (link: SankeyDiagramLink) => link.direction === SankeyLinkDirrections.SelfLink);
+
+
+            let minHeight = d3.min(sankeyDiagramDataView.links.map( l => l.height));
 
             linksSelection
                 .attr({
                     d: (link: SankeyDiagramLink) => {
-                        return this.getSvgPath(link);
+                        if (link.direction === SankeyLinkDirrections.Forward) {
+                            return this.getSvgPathForForwardLink(link);
+                        }
+                        if (link.direction === SankeyLinkDirrections.Backward) {
+                            if (link.source.x + link.source.width > link.destination.x) {
+                                return this.getSvgPathForForwardLink(link);
+                            }
+                            return this.getSvgPathForBackwardLink(link);
+                        }
+                        if (link.direction === SankeyLinkDirrections.SelfLink) {
+                            return this.getSvgPathForSelfLink(link, minHeight);
+                        }
                     },
                     id: (link: SankeyDiagramLink) => {
                         return SankeyDiagram.createLink(link);
@@ -1525,13 +1743,17 @@ module powerbi.extensibility.visual {
             return linksSelection;
         }
         public static createLink(link: SankeyDiagramLink, addLinkLabelPath: boolean = false): string {
-            return (addLinkLabelPath ? `linkLabelPaths` : ``) +  `${('_' + link.source.label.name || "").replace(/\W*/g, "")}-${('_' + link.destination.label.name || "").replace(/\W*/g, "")}`;
+            return (addLinkLabelPath ? `linkLabelPaths` : ``) +  `${('_' + link.source.label.name || "").replace(/\W*/g, "")}-${link.direction}-${('_' + link.destination.label.name || "").replace(/\W*/g, "")}`;
         }
 
         private renderLinkLabels(sankeyDiagramDataView: SankeyDiagramDataView): void {
              // create labels on link as A - B : Value
-             let linkTextData: SankeyDiagramLink[] = sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
+            let linkTextData: SankeyDiagramLink[] = sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
                 return link.height > SankeyDiagram.MinSize && this.dataView.settings.linkLabels.show;
+            });
+
+            let linkArrowData: SankeyDiagramLink[] = sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
+                return link.height > SankeyDiagram.MinSize && link.direction !== SankeyLinkDirrections.SelfLink;
             });
 
             // add defs element to svg
@@ -1552,7 +1774,7 @@ module powerbi.extensibility.visual {
             // add text path for lables
             let linkLabelPaths: Selection<any> = singleDefsElement.selectAll(SankeyDiagram.LinkLabelPathsSelector.selector);
 
-            let linkLabelPathsSelection: UpdateSelection<SankeyDiagramLink> = linkLabelPaths.data(linkTextData);
+            let linkLabelPathsSelection: UpdateSelection<SankeyDiagramLink> = linkLabelPaths.data(linkArrowData);
 
             linkLabelPathsSelection
                 .enter()
@@ -1562,7 +1784,9 @@ module powerbi.extensibility.visual {
             linkLabelPathsSelection
                 .attr({
                     d: (link: SankeyDiagramLink) => {
-                        return this.getLinkLabelSvgPath(link);
+                        if (link.direction === SankeyLinkDirrections.Forward) {
+                            return this.getLinkLabelSvgPath(link);
+                        }
                     },
                     id: (link: SankeyDiagramLink) => {
                         return SankeyDiagram.createLink(link, true);
@@ -1609,13 +1833,13 @@ module powerbi.extensibility.visual {
                     `${link.source.label.name || ""}-${link.destination.label.name || ""}:${(link.tooltipInfo[2] || {value: ""}).value}`
                 );
 
-            textPathSelection
-                .exit()
-                .remove();
-
             linkLabelTextSelection
                 .exit()
                 .remove();
+
+            textPathSelection
+            .exit()
+            .remove();
         }
 
         private getLinkLabelSvgPath(link: SankeyDiagramLink): string {
@@ -1628,6 +1852,45 @@ module powerbi.extensibility.visual {
             y1: number;
 
             if (link.destination.x < link.source.x) {
+                x0 = link.source.x - 10;
+                x1 = link.destination.x + link.destination.width - 10;
+            } else {
+                x0 = link.source.x + link.source.width + 10;
+                x1 = link.destination.x - 10;
+            }
+
+            xi = d3.interpolateNumber(x0, x1);
+            x2 = xi(this.curvatureOfLinks);
+            x3 = xi(1 - this.curvatureOfLinks);
+
+            y0 = link.source.y - (link.direction === SankeyLinkDirrections.Backward ? link.height + SankeyDiagram.NodeAndBackwardLinkDistance : 0) + link.dySource + link.height / SankeyDiagram.MiddleFactor;
+            y1 = link.destination.y - (link.direction === SankeyLinkDirrections.Backward ? link.height + SankeyDiagram.NodeAndBackwardLinkDistance : 0) + (link.dyDestination || 0) + link.height / SankeyDiagram.MiddleFactor;
+
+            return `M ${x0} ${y0} C ${x2} ${y0}, ${x3} ${y1}, ${x1} ${y1}`;
+        }
+
+        private getSvgPathForSelfLink(link: SankeyDiagramLink, minHeight: number) {
+            let pathParams: string = "";
+            const distanceBetweenLinks: number = 3;
+            const distanceFromNodeToLinks: number = 5;
+
+            let fixedLinkHeight = link.height - distanceBetweenLinks;
+
+            if (this.dataView.settings.cyclesLinks.selfLinksWeight && this.dataView.settings.cyclesLinks.drawCycles === CyclesDrawType.Backward) {
+                fixedLinkHeight = Math.min(link.destination.width, minHeight);
+            }
+
+            let linkKneeSize: number =  Math.min(link.destination.width, minHeight);
+
+            let x0: number,
+                x1: number,
+                xi: (t: number) => number,
+                x2: number,
+                x3: number,
+                y0: number,
+                y1: number;
+
+            if (link.destination.x < link.source.x) {
                 x0 = link.source.x;
                 x1 = link.destination.x + link.destination.width;
             } else {
@@ -1635,17 +1898,202 @@ module powerbi.extensibility.visual {
                 x1 = link.destination.x;
             }
 
+            // drawing area as combination of 4 lines in one path element of svg to fill this area with required color
+
+            y0 = link.source.y
+                - (fixedLinkHeight + SankeyDiagram.NodeAndBackwardLinkDistance)
+                + link.dySource + (fixedLinkHeight) / SankeyDiagram.MiddleFactor
+                - (fixedLinkHeight) / 2;
+            y1 = link.destination.y
+                - (fixedLinkHeight + SankeyDiagram.NodeAndBackwardLinkDistance)
+                + ( link.dyDestination || 0)
+                + (fixedLinkHeight) / SankeyDiagram.MiddleFactor - (fixedLinkHeight) / 2;
+
+            pathParams += `M ${x0} ${y0}`;
+
+            pathParams += `L ${link.destination.x + link.destination.width} ${y1}`;
+
+            pathParams +=
+                `C ${link.destination.x + distanceFromNodeToLinks + link.destination.width} ${y1},` +
+                ` ${link.destination.x + distanceFromNodeToLinks + link.destination.width + linkKneeSize} ${y1},` +
+                ` ${link.destination.x + distanceFromNodeToLinks + link.destination.width + linkKneeSize} ${y1 + linkKneeSize}`;
+
+            // right border of link
+            y0 = link.destination.y - (fixedLinkHeight + SankeyDiagram.NodeAndBackwardLinkDistance)
+                + ( link.dyDestination || 0) + (fixedLinkHeight) / SankeyDiagram.MiddleFactor + (fixedLinkHeight - distanceBetweenLinks) / 2;
+            y1 = link.destination.y - (fixedLinkHeight + SankeyDiagram.NodeAndBackwardLinkDistance)
+                + ( link.dyDestination || 0) + (fixedLinkHeight) / SankeyDiagram.MiddleFactor - (fixedLinkHeight - distanceBetweenLinks) / 2;
+
+            let limit = y1 + link.destination.width + (fixedLinkHeight) * 2 - link.destination.width - distanceBetweenLinks;
+            if (limit > link.destination.y + fixedLinkHeight - linkKneeSize - distanceBetweenLinks) {
+                limit = link.destination.y + fixedLinkHeight - linkKneeSize - distanceBetweenLinks;
+            }
+
+            pathParams += `L ${link.destination.x + distanceFromNodeToLinks + link.destination.width + linkKneeSize} ${limit}`; // TODO change to C
+
+            pathParams +=
+            `C ${link.destination.x + distanceFromNodeToLinks + link.destination.width + linkKneeSize} ` +
+            `${link.destination.y + fixedLinkHeight - linkKneeSize}, ` +
+            `${link.destination.x + link.destination.width + linkKneeSize} ${link.destination.y + fixedLinkHeight} ,` +
+            `${link.destination.x + link.destination.width} ${link.destination.y + fixedLinkHeight}`;
+
+            pathParams += `L ${link.destination.x + link.destination.width} ${link.destination.y + distanceBetweenLinks}`;
+
+            pathParams += `C ${link.destination.x + link.destination.width} ${link.destination.y + distanceBetweenLinks},`;
+            pathParams += `${link.destination.x + distanceFromNodeToLinks + link.destination.width} ${link.destination.y + distanceBetweenLinks},`;
+            pathParams += `${link.destination.x + distanceFromNodeToLinks + link.destination.width} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance / 2}`;
+            pathParams += `L ${link.destination.x + distanceFromNodeToLinks + link.destination.width} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance / 2}`;
+
+            pathParams += `C ${link.destination.x + distanceFromNodeToLinks + link.destination.width} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance / 2},`;
+            pathParams += `${link.destination.x + distanceFromNodeToLinks + link.destination.width} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance},`;
+            pathParams += `${link.destination.x + link.destination.width} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance}`;
+
+            pathParams += `L ${link.destination.x + link.destination.width} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance}`;
+            pathParams += `L ${x1} ${link.source.y - SankeyDiagram.NodeAndBackwardLinkDistance}`;
+
+            pathParams += `C ${x1} ${link.source.y - SankeyDiagram.NodeAndBackwardLinkDistance},`;
+            pathParams += `${x1 - distanceFromNodeToLinks} ${link.source.y - SankeyDiagram.NodeAndBackwardLinkDistance},`;
+            pathParams += `${x1 - distanceFromNodeToLinks} ${link.source.y - SankeyDiagram.NodeAndBackwardLinkDistance / 2}`;
+
+            pathParams += `L ${x1 - distanceFromNodeToLinks} ${link.source.y - SankeyDiagram.NodeAndBackwardLinkDistance / 2}`;
+            pathParams += `C ${x1 - distanceFromNodeToLinks} ${link.source.y - SankeyDiagram.NodeAndBackwardLinkDistance / 2},`;
+            pathParams += ` ${x1 - distanceFromNodeToLinks} ${link.source.y + distanceBetweenLinks},`;
+            pathParams += ` ${link.source.x} ${link.source.y + distanceBetweenLinks}`;
+
+            limit = y0 + SankeyDiagram.NodeAndBackwardLinkDistance + fixedLinkHeight;
+            if (limit > link.source.y + link.source.height - distanceBetweenLinks) {
+                limit = link.source.y + link.source.height - distanceBetweenLinks;
+            }
+
+            pathParams += `L ${link.source.x} ${limit}`;
+
+            pathParams +=
+            `C ${link.source.x} ${limit},` +
+            `${link.source.x - linkKneeSize - distanceFromNodeToLinks} ${limit},` +
+            `${link.source.x - linkKneeSize - distanceFromNodeToLinks} ${limit - linkKneeSize}`;
+
+            // left border of link
+            y1 = link.source.y - (fixedLinkHeight + SankeyDiagram.NodeAndBackwardLinkDistance)
+                + ( link.dyDestination || 0) + (fixedLinkHeight) / SankeyDiagram.MiddleFactor - (fixedLinkHeight) / 2;
+
+            pathParams +=
+            `L ${link.source.x - distanceFromNodeToLinks - linkKneeSize} ${y1 + linkKneeSize},`;
+
+            pathParams +=
+            `C ${link.source.x - distanceFromNodeToLinks - linkKneeSize} ${y1 + linkKneeSize},` +
+            `${link.source.x - distanceFromNodeToLinks - linkKneeSize} ${y1},` +
+            `${link.source.x - distanceFromNodeToLinks} ${y1}`;
+
+            pathParams += `L ${link.source.x} ${y1}`;
+
+            // close path to get closed area
+            pathParams += ` Z`;
+
+            return pathParams;
+        }
+
+        private getSvgPathForBackwardLink(link: SankeyDiagramLink) {
+            let pathParams: string = "";
+            const distanceBetweenLinks: number = 3;
+            const distanceFromNodeToLinks: number = 5;
+
+            let fixedLinkHeight = link.height - distanceBetweenLinks;
+            let linkKneeSize: number = link.height;
+
+            let x0: number,
+                x1: number,
+                xi: (t: number) => number,
+                x2: number,
+                x3: number,
+                y0: number,
+                y1: number;
+
+            if (link.destination.x < link.source.x) {
+                x0 = link.source.x;
+                x1 = link.destination.x + link.destination.width;
+            } else {
+                x0 = link.source.x + link.source.width;
+                x1 = link.destination.x;
+            }
+
+            // drawing area as combination of 4 lines in one path element of svg to fill this area with required color
+
+            // upper border of link
             xi = d3.interpolateNumber(x0, x1);
             x2 = xi(this.curvatureOfLinks);
             x3 = xi(1 - this.curvatureOfLinks);
-            y0 = link.source.y + link.dySource + link.height / SankeyDiagram.MiddleFactor;
-            y1 = link.destination.y + link.dyDestination + link.height / SankeyDiagram.MiddleFactor;
+            y0 = link.source.y - (link.height + SankeyDiagram.NodeAndBackwardLinkDistance) + link.dySource + link.height / SankeyDiagram.MiddleFactor - link.height / 2;
+            y1 = link.destination.y - (link.height + SankeyDiagram.NodeAndBackwardLinkDistance) + link.dyDestination + link.height / SankeyDiagram.MiddleFactor - link.height / 2;
 
-            return `M ${x0} ${y0} C ${x2} ${y0}, ${x3} ${y1}, ${x1} ${y1}`;
+            pathParams += ` M ${x0} ${y0} C ${x2} ${y0}, ${x3} ${y1}, ${x1} ${y1}`;
+
+            pathParams += `L ${link.destination.x + link.destination.width} ${y1}`;
+
+            pathParams +=
+            `C ${link.destination.x + link.destination.width} ${y1}, ` +
+            `${link.destination.x + link.destination.width + linkKneeSize} ${y1}, ` +
+            `${link.destination.x + link.destination.width + linkKneeSize} ${y1 + linkKneeSize}`;
+
+            // right border of link
+            y0 = link.destination.y - (link.height + SankeyDiagram.NodeAndBackwardLinkDistance) + link.dyDestination + link.height / SankeyDiagram.MiddleFactor + link.height / 2;
+            y1 = link.destination.y - (link.height + SankeyDiagram.NodeAndBackwardLinkDistance) + link.dyDestination + link.height / SankeyDiagram.MiddleFactor - link.height / 2;
+
+            let limit = y1 + link.destination.width + (fixedLinkHeight) * 2 - link.destination.width;
+            if (limit > link.destination.y + fixedLinkHeight - link.destination.width) {
+                limit = link.destination.y + fixedLinkHeight - link.destination.width;
+            }
+
+            pathParams +=
+            `C ${link.destination.x + link.destination.width + linkKneeSize} ${link.destination.y + fixedLinkHeight - linkKneeSize},` +
+            ` ${link.destination.x + link.destination.width + linkKneeSize} ${link.destination.y + fixedLinkHeight} ,` +
+            ` ${link.destination.x + link.destination.width + distanceFromNodeToLinks} ${link.destination.y + fixedLinkHeight}`;
+
+            pathParams += `L ${link.destination.x + link.destination.width} ${link.destination.y + fixedLinkHeight}`;
+
+            pathParams += `L ${link.destination.x + link.destination.width} ${link.destination.y}`;
+
+            pathParams += `L ${link.destination.x + link.destination.width + distanceFromNodeToLinks} ${link.destination.y}`;
+
+            pathParams += `L ${link.destination.x + link.destination.width + distanceFromNodeToLinks} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance}`;
+
+            // bottom border of link
+            xi = d3.interpolateNumber(x0, x1);
+            x2 = xi(this.curvatureOfLinks);
+            x3 = xi(1 - this.curvatureOfLinks);
+            y0 = link.source.y - (link.height + SankeyDiagram.NodeAndBackwardLinkDistance) + link.dySource + link.height / SankeyDiagram.MiddleFactor + link.height / 2;
+            y1 = link.destination.y - (link.height + SankeyDiagram.NodeAndBackwardLinkDistance) + link.dyDestination + link.height / SankeyDiagram.MiddleFactor + link.height / 2;
+
+            pathParams += ` L ${x1 + distanceFromNodeToLinks} ${y1} C ${x2} ${y1}, ${x3} ${y0}, ${x0 - distanceFromNodeToLinks} ${y0}`;
+
+            pathParams += `L ${link.source.x - distanceFromNodeToLinks } ${y0}`;
+
+            pathParams += `L ${link.source.x - distanceFromNodeToLinks} ${y0 + SankeyDiagram.NodeAndBackwardLinkDistance}`;
+
+            pathParams += `L ${link.source.x} ${y0 + SankeyDiagram.NodeAndBackwardLinkDistance}`;
+
+            pathParams += `L ${link.source.x } ${y0 + SankeyDiagram.NodeAndBackwardLinkDistance + fixedLinkHeight}`;
+
+            pathParams += `L ${link.source.x - distanceFromNodeToLinks  } ${y0 + SankeyDiagram.NodeAndBackwardLinkDistance + fixedLinkHeight}`;
+
+            pathParams +=
+            `C ${link.source.x - distanceFromNodeToLinks} ${y0 + SankeyDiagram.NodeAndBackwardLinkDistance + fixedLinkHeight}, ` +
+            `${link.source.x - distanceFromNodeToLinks - linkKneeSize} ${y0 + SankeyDiagram.NodeAndBackwardLinkDistance + link.height}, ` +
+            `${link.source.x - distanceFromNodeToLinks - linkKneeSize} ${y0 + SankeyDiagram.NodeAndBackwardLinkDistance + link.height - linkKneeSize}`;
+
+            // left border of link
+            y1 = link.source.y - (link.height + SankeyDiagram.NodeAndBackwardLinkDistance) + link.dySource + link.height / SankeyDiagram.MiddleFactor - link.height / 2;
+
+            pathParams += `C ${link.source.x - distanceFromNodeToLinks - linkKneeSize} ${y1 + linkKneeSize}, ${link.source.x - distanceFromNodeToLinks - linkKneeSize} ${y1}, ${link.source.x} ${y1}`; // TODO change to C
+
+            // close path to get closed area
+            pathParams += ` Z`;
+
+            return pathParams;
         }
 
-        private getSvgPath(link: SankeyDiagramLink): string {
+        private getSvgPathForForwardLink(link: SankeyDiagramLink): string {
             let pathParams: string = "";
+            const distanceBetweenLinks: number = 3;
 
             let x0: number,
                 x1: number,
@@ -1668,14 +2116,14 @@ module powerbi.extensibility.visual {
             xi = d3.interpolateNumber(x0, x1);
             x2 = xi(this.curvatureOfLinks);
             x3 = xi(1 - this.curvatureOfLinks);
-            y0 = link.source.y + link.dySource + link.height / SankeyDiagram.MiddleFactor - link.height / 2;
-            y1 = link.destination.y + link.dyDestination + link.height / SankeyDiagram.MiddleFactor - link.height / 2;
+            y0 = link.source.y + link.dySource + link.height / SankeyDiagram.MiddleFactor - (link.height - distanceBetweenLinks) / 2;
+            y1 = link.destination.y + link.dyDestination + link.height / SankeyDiagram.MiddleFactor - (link.height - distanceBetweenLinks) / 2;
 
             pathParams += ` M ${x0} ${y0} C ${x2} ${y0}, ${x3} ${y1}, ${x1} ${y1}`;
 
             // right border of link
-            y0 = link.destination.y + link.dyDestination + link.height / SankeyDiagram.MiddleFactor + link.height / 2;
-            y1 = link.destination.y + link.dyDestination + link.height / SankeyDiagram.MiddleFactor - link.height / 2;
+            y0 = link.destination.y + link.dyDestination + (link.height - distanceBetweenLinks) / SankeyDiagram.MiddleFactor + (link.height - distanceBetweenLinks) / 2;
+            y1 = link.destination.y + link.dyDestination + (link.height - distanceBetweenLinks) / SankeyDiagram.MiddleFactor - (link.height - distanceBetweenLinks) / 2;
 
             pathParams += ` L ${x1} ${y0}`;
 
@@ -1683,14 +2131,14 @@ module powerbi.extensibility.visual {
             xi = d3.interpolateNumber(x0, x1);
             x2 = xi(this.curvatureOfLinks);
             x3 = xi(1 - this.curvatureOfLinks);
-            y0 = link.source.y + link.dySource + link.height / SankeyDiagram.MiddleFactor + link.height / 2;
-            y1 = link.destination.y + link.dyDestination + link.height / SankeyDiagram.MiddleFactor + link.height / 2;
+            y0 = link.source.y + link.dySource + (link.height - distanceBetweenLinks) / SankeyDiagram.MiddleFactor + (link.height - distanceBetweenLinks) / 2;
+            y1 = link.destination.y + link.dyDestination + (link.height - distanceBetweenLinks) / SankeyDiagram.MiddleFactor + (link.height - distanceBetweenLinks) / 2;
 
             pathParams += ` L ${x1} ${y1} C ${x2} ${y1}, ${x3} ${y0}, ${x0} ${y0}`;
 
             // left border of link
-            y0 = link.source.y + link.dySource + link.height / SankeyDiagram.MiddleFactor + link.height / 2;
-            y1 = link.source.y + link.dySource + link.height / SankeyDiagram.MiddleFactor - link.height / 2;
+            y0 = link.source.y + link.dySource + (link.height - distanceBetweenLinks) / SankeyDiagram.MiddleFactor + (link.height - distanceBetweenLinks) / 2;
+            y1 = link.source.y + link.dySource + (link.height - distanceBetweenLinks) / SankeyDiagram.MiddleFactor - (link.height - distanceBetweenLinks) / 2;
 
             // close path to get closed area
             pathParams += ` Z`;
