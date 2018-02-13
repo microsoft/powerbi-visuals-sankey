@@ -406,43 +406,6 @@ module powerbi.extensibility.visual {
             SankeyDiagram.updateValueOfNode(link.source);
         }
 
-        // in this method we breaking simple cycles for typical displaying with twice rendering onr node in cycle
-        private processCyclesForBackwardLinks(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[], settings: SankeyDiagramSettings): SankeyDiagramLink[] {
-            let createdNodes: SankeyDiagramNode[] = [];
-            for (let nodeName in cycles) {
-                let firstCyclesNode: SankeyDiagramNode = cycles[nodeName][0];
-
-                firstCyclesNode.links.some( (link: SankeyDiagramLink, index: number) => {
-                    let linkToNodeFromCycle = cycles[nodeName].some((node: SankeyDiagramNode) => {
-                        return node === link.destination;
-                    });
-
-                    if (link.source === firstCyclesNode && linkToNodeFromCycle) {
-                        SankeyDiagram.swapNodes(link);
-                    }
-                    if (link.destination === link.source) {
-                        link.direction = SankeyLinkDirrections.SelfLink;
-                    }
-
-                    let exsistCycles = this.checkCycles(nodes);
-
-                    // if inverting of link doesn't increase cycles on graph revert link inversion
-                    if (Object.keys(exsistCycles).length >= Object.keys(cycles).length) {
-                        SankeyDiagram.swapNodes(link);
-                        return false;
-                    }
-
-                    SankeyDiagram.updateValueOfNode(link.destination);
-                    SankeyDiagram.updateValueOfNode(link.source);
-                    return true;
-                });
-
-                SankeyDiagram.updateValueOfNode(firstCyclesNode);
-            }
-
-            return links;
-        }
-
         private processCyclesForwardLinks(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[], settings: SankeyDiagramSettings): SankeyDiagramLink[] {
             let createdNodes: SankeyDiagramNode[] = [];
             for (let nodeName in cycles) {
@@ -479,6 +442,32 @@ module powerbi.extensibility.visual {
                 SankeyDiagram.fixLinksCount(nodeCopy);
                 nodes.push(nodeCopy);
                 createdNodes.push(nodeCopy);
+            }
+
+            return links;
+        }
+
+        // in this method we breaking simple cycles
+        private processCyclesForBackwardLinks(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[], settings: SankeyDiagramSettings): SankeyDiagramLink[] {
+            let createdNodes: SankeyDiagramNode[] = [];
+            for (let nodeName in cycles) {
+                let firstCyclesNode: SankeyDiagramNode = cycles[nodeName][cycles[nodeName].length - 1];
+
+                // make output links as backward links for node
+                let outputLinks = firstCyclesNode.links.filter((link: SankeyDiagramLink) => {
+                    if (link.source === firstCyclesNode || link.source === link.destination) {
+                        return true;
+                    }
+                    return false;
+                });
+
+                outputLinks.forEach( (link: SankeyDiagramLink) => {
+                    link.direction === SankeyLinkDirrections.Backward;
+                    SankeyDiagram.swapNodes(link);
+                });
+
+                SankeyDiagram.updateValueOfNode(firstCyclesNode);
+                SankeyDiagram.fixLinksCount(firstCyclesNode);
             }
 
             return links;
@@ -875,7 +864,8 @@ module powerbi.extensibility.visual {
             node.links.forEach( (currentValue: SankeyDiagramLink) => {
                 node.inputWeight +=
                 currentValue.destination === node &&
-                currentValue.destination !== currentValue.source
+                currentValue.destination !== currentValue.source &&
+                currentValue.direction === SankeyLinkDirrections.Forward
                 ?
                 currentValue.weigth
                 :
@@ -1288,13 +1278,15 @@ module powerbi.extensibility.visual {
 
                 node.x *= scale.x;
 
-                let selfLinkHeight: number =  d3.sum( node.links.filter( l => l.direction === SankeyLinkDirrections.SelfLink ).map( l => l.weigth / 2 ) ) ;
+                let selfLinkHeight: number =  d3.max( node.links.filter( l => l.direction === SankeyLinkDirrections.SelfLink ).map( l => l.weigth ) ) ;
 
+                if (!selfLinkHeight) {
+                    selfLinkHeight = 0;
+                }
                 if (ignoreSelfLinkWeight && selfLinkHeight > 0) {
                     selfLinkHeight = node.width;
                 }
 
-                // because  backward links doesn't take a place
                 node.height = ( Math.max( node.inputWeight, node.outputWeight, node.inputWeight + selfLinkHeight, node.outputWeight + selfLinkHeight )
                 ) * scale.y;
 
