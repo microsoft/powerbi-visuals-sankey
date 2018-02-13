@@ -1,3 +1,7 @@
+## 1.7.1
+
+* Fix drawing backward links on difficult graph (with many backward links)
+
 ## 1.7.0
 
 * Options to configure to display cycles
