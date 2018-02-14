@@ -20,5 +20,10 @@
 	"Visual_SankeySettings": "Sankey settigns",
 	"Visual_NodePositions": "Node positions",
 	"Visual_ViewportSize": "Viewport sizes",
-	"Visual_Display_Units": "Display units"
+	"Visual_Display_Units": "Display units",
+	"Visual_Cycles": "Cycles displaying",
+	"Visual_DublicateNodes": "Dublicate nodes",
+	"Visual_Dublicate": "Dublicate",
+	"Visual_DrawBackwardLink": "Draw backward link",
+	"Visual_SelflinkWeight": "Ignore weight of self links"
 }
