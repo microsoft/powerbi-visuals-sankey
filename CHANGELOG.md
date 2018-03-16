@@ -1,3 +1,7 @@
+## 1.8.0
+
+* Added Power BI bookmarks support
+
 ## 1.7.1
 
 * Fix drawing backward links on difficult graph (with many backward links)
