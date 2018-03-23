@@ -17,5 +17,8 @@
 	"Visual_Enable": "Habilitar",
 	"Visual_SankeySettings": "Configuración de Sankey",
 	"Visual_NodePositions": "Posiciones de nodo",
-	"Visual_ViewportSize": "Tamaño de ventanilla"
+	"Visual_ViewportSize": "Tamaño de ventanilla",
+	"Visual_Display_Units": "Mostrar unidades",
+	"Visual_SankeyScaleSettings": "Configuración de escala",
+	"Visual_MinOptimalHeight": "Proporcione la altura mínima óptima del nodo."
 }

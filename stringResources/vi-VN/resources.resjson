@@ -17,5 +17,8 @@
 	"Visual_Enable": "Kích hoạt",
 	"Visual_SankeySettings": "Cài đặt Sankey",
 	"Visual_NodePositions": "Vị trí nút",
-	"Visual_ViewportSize": "Kích cỡ cổng xem"
+	"Visual_ViewportSize": "Kích cỡ cổng xem",
+	"Visual_Display_Units": "Hiển thị đơn vị",
+	"Visual_SankeyScaleSettings": "Cài đặt cấp độ",
+	"Visual_MinOptimalHeight": "Cung cấp chiều cao nút tối ưu tối thiểu"
 }

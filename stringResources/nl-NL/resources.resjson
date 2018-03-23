@@ -17,5 +17,8 @@
 	"Visual_Enable": "Inschakelen",
 	"Visual_SankeySettings": "Sankey-instellingen",
 	"Visual_NodePositions": "Knooppuntposities",
-	"Visual_ViewportSize": "Viewport-grootten"
+	"Visual_ViewportSize": "Viewport-grootten",
+	"Visual_Display_Units": "Weergave-eenheden",
+	"Visual_SankeyScaleSettings": "Schaalinstellingen",
+	"Visual_MinOptimalHeight": "Minimum voor optimale hoogte van knooppunt opgeven"
 }

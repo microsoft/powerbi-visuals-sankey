@@ -17,5 +17,8 @@
 	"Visual_Enable": "Omogoči",
 	"Visual_SankeySettings": "Nastavitve diagrama Sankey",
 	"Visual_NodePositions": "Vozlišče pozicije",
-	"Visual_ViewportSize": "Viewport velikosti"
+	"Visual_ViewportSize": "Viewport velikosti",
+	"Visual_Display_Units": "Enote prikaza",
+	"Visual_SankeyScaleSettings": "Nastavitve merila",
+	"Visual_MinOptimalHeight": "Zagotovi najmanjšo optimalno višino vozlišča"
 }

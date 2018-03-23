@@ -17,5 +17,8 @@
 	"Visual_Enable": "Включить",
 	"Visual_SankeySettings": "Параметры Sankey",
 	"Visual_NodePositions": "Положения узлов",
-	"Visual_ViewportSize": "Размеры окон просмотра"
+	"Visual_ViewportSize": "Размеры окон просмотра",
+	"Visual_Display_Units": "Показывать единицы",
+	"Visual_SankeyScaleSettings": "Настройки масштаба",
+	"Visual_MinOptimalHeight": "Укажите минимальную оптимальную высоту узла"
 }

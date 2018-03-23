@@ -17,5 +17,8 @@
 	"Visual_Enable": "Activare",
 	"Visual_SankeySettings": "Setări pentru Sankey",
 	"Visual_NodePositions": "Poziții nod",
-	"Visual_ViewportSize": "Dimensiuni poartă de vizualizare"
+	"Visual_ViewportSize": "Dimensiuni poartă de vizualizare",
+	"Visual_Display_Units": "Afișare unități",
+	"Visual_SankeyScaleSettings": "Setări de scară",
+	"Visual_MinOptimalHeight": "Oferiți înălțimea minimă optimă a nodului"
 }

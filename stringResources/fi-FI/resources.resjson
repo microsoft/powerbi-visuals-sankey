@@ -17,5 +17,8 @@
 	"Visual_Enable": "Ota käyttöön",
 	"Visual_SankeySettings": "Sankey-asetukset",
 	"Visual_NodePositions": "Solmujen sijainnit",
-	"Visual_ViewportSize": "Näyttöikkunoiden koot"
+	"Visual_ViewportSize": "Näyttöikkunoiden koot",
+	"Visual_Display_Units": "Yksiköt",
+	"Visual_SankeyScaleSettings": "Skaalausasetukset",
+	"Visual_MinOptimalHeight": "Anna solmun pienin paras mahdollinen korkeus"
 }

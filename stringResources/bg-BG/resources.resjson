@@ -17,5 +17,8 @@
 	"Visual_Enable": "Активиране",
 	"Visual_SankeySettings": "Настройки на Sankey",
 	"Visual_NodePositions": "Позиции на възел",
-	"Visual_ViewportSize": "Размери на прозоръчен изглед"
+	"Visual_ViewportSize": "Размери на прозоръчен изглед",
+	"Visual_Display_Units": "Показване на единици",
+	"Visual_SankeyScaleSettings": "Настройки на мащаба",
+	"Visual_MinOptimalHeight": "Предоставяне на минимална оптимална височина на възела"
 }

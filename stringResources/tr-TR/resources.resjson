@@ -17,5 +17,8 @@
 	"Visual_Enable": "Etkinleştir",
 	"Visual_SankeySettings": "Sankey ayarları",
 	"Visual_NodePositions": "Düğüm konumları",
-	"Visual_ViewportSize": "Görünüm penceresi boyutları"
+	"Visual_ViewportSize": "Görünüm penceresi boyutları",
+	"Visual_Display_Units": "Görüntüleme birimleri",
+	"Visual_SankeyScaleSettings": "Ölçek ayarları",
+	"Visual_MinOptimalHeight": "Düğüm için en düşük ideal yüksekliği sağlayın"
 }

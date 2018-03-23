@@ -17,5 +17,8 @@
 	"Visual_Enable": "Dayakan",
 	"Visual_SankeySettings": "Tetapan Sankey",
 	"Visual_NodePositions": "Kedudukan nod",
-	"Visual_ViewportSize": "Saiz port pandangan"
+	"Visual_ViewportSize": "Saiz port pandangan",
+	"Visual_Display_Units": "Paparkan unit",
+	"Visual_SankeyScaleSettings": "Seting skala",
+	"Visual_MinOptimalHeight": "Berikan tinggi optimum minimum bagi nod"
 }

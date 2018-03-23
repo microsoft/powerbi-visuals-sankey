@@ -17,5 +17,8 @@
 	"Visual_Enable": "Қосу",
 	"Visual_SankeySettings": "Sankey параметрлері",
 	"Visual_NodePositions": "Түйін орындары",
-	"Visual_ViewportSize": "Қарау терезесінің өлшемдері"
+	"Visual_ViewportSize": "Қарау терезесінің өлшемдері",
+	"Visual_Display_Units": "Бірліктерді көрсету",
+	"Visual_SankeyScaleSettings": "Масштаб параметрлері",
+	"Visual_MinOptimalHeight": "Түйіннің минимал оңтайлы биіктігін беру"
 }

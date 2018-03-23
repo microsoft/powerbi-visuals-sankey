@@ -17,5 +17,8 @@
 	"Visual_Enable": "เปิดใช้งาน",
 	"Visual_SankeySettings": "การตั้งค่า Sankey",
 	"Visual_NodePositions": "ตำแหน่งโหนด",
-	"Visual_ViewportSize": "ขนาดกรอบการมองเห็น"
+	"Visual_ViewportSize": "ขนาดกรอบการมองเห็น",
+	"Visual_Display_Units": "หน่วยแสดงผล",
+	"Visual_SankeyScaleSettings": "การตั้งค่ามาตราส่วน",
+	"Visual_MinOptimalHeight": "แสดงความสูงที่เหมาะสมต่ำสุดของโหนด"
 }

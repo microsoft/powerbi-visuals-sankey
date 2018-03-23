@@ -17,5 +17,8 @@
 	"Visual_Enable": "Įjungti",
 	"Visual_SankeySettings": "„Sankey“ parametrai",
 	"Visual_NodePositions": "Mazgų padėtys",
-	"Visual_ViewportSize": "Peržiūros sričių dydžiai"
+	"Visual_ViewportSize": "Peržiūros sričių dydžiai",
+	"Visual_Display_Units": "Rodomi vienetai",
+	"Visual_SankeyScaleSettings": "Mastelio keitimo parametrai",
+	"Visual_MinOptimalHeight": "Pateikti mažiausią optimalų mazgo aukštį"
 }

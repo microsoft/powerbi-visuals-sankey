@@ -17,5 +17,8 @@
 	"Visual_Enable": "Aktivera",
 	"Visual_SankeySettings": "Sankey-inställningar",
 	"Visual_NodePositions": "Nodpositioner",
-	"Visual_ViewportSize": "Visningsområdets storlekar"
+	"Visual_ViewportSize": "Visningsområdets storlekar",
+	"Visual_Display_Units": "Visningsenheter",
+	"Visual_SankeyScaleSettings": "Skalningsinställningar",
+	"Visual_MinOptimalHeight": "Ange nodens minsta optimala höjd"
 }

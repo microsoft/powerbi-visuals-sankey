@@ -17,5 +17,8 @@
 	"Visual_Enable": "Ενεργοποίηση",
 	"Visual_SankeySettings": "Ρυθμίσεις Sankey",
 	"Visual_NodePositions": "Θέσεις κόμβων",
-	"Visual_ViewportSize": "Μεγέθη οπτικής γωνίας"
+	"Visual_ViewportSize": "Μεγέθη οπτικής γωνίας",
+	"Visual_Display_Units": "Εμφάνιση μονάδων",
+	"Visual_SankeyScaleSettings": "Ρυθμίσεις κλίμακας",
+	"Visual_MinOptimalHeight": "Παράχετε το ελάχιστο βέλτιστο ύψος του κόμβου"
 }

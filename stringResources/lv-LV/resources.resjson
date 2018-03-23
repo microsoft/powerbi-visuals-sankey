@@ -17,5 +17,8 @@
 	"Visual_Enable": "Iespējot",
 	"Visual_SankeySettings": "Sankey diagrammas iestatījumi",
 	"Visual_NodePositions": "Mezglu pozīcijas",
-	"Visual_ViewportSize": "Skatvietas lielumi"
+	"Visual_ViewportSize": "Skatvietas lielumi",
+	"Visual_Display_Units": "Rādāmās vienības",
+	"Visual_SankeyScaleSettings": "Mēroga iestatījumi",
+	"Visual_MinOptimalHeight": "Nodrošināt min. optimālo mezgla augstumu"
 }

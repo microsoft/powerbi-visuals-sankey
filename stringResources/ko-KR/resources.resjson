@@ -17,5 +17,8 @@
 	"Visual_Enable": "사용",
 	"Visual_SankeySettings": "Sankey 설정",
 	"Visual_NodePositions": "노드 위치",
-	"Visual_ViewportSize": "뷰포트 크기"
+	"Visual_ViewportSize": "뷰포트 크기",
+	"Visual_Display_Units": "표시 단위",
+	"Visual_SankeyScaleSettings": "크기 조정 설정",
+	"Visual_MinOptimalHeight": "노드의 최소 최적 높이를 지정합니다."
 }

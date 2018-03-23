@@ -17,5 +17,8 @@
 	"Visual_Enable": "सक्षम करें",
 	"Visual_SankeySettings": "Sankey सेटिंग्स",
 	"Visual_NodePositions": "नोड स्थितियाँ",
-	"Visual_ViewportSize": "व्यूपोर्ट आकार"
+	"Visual_ViewportSize": "व्यूपोर्ट आकार",
+	"Visual_Display_Units": "प्रदर्शन इकाइयाँ",
+	"Visual_SankeyScaleSettings": "स्केल की सेटिंग",
+	"Visual_MinOptimalHeight": "नोड का न्यूनतम सर्वोत्कृष्ट ऊँचाई प्रदान करें"
 }

@@ -17,5 +17,8 @@
 	"Visual_Enable": "Увімкнути",
 	"Visual_SankeySettings": "Параметри Sankey",
 	"Visual_NodePositions": "Положення вузлів",
-	"Visual_ViewportSize": "Розміри вікна перегляду"
+	"Visual_ViewportSize": "Розміри вікна перегляду",
+	"Visual_Display_Units": "Одиниці вимірювання",
+	"Visual_SankeyScaleSettings": "Параметри масштабу",
+	"Visual_MinOptimalHeight": "Укажіть оптимальну мінімальну висоту вузла"
 }

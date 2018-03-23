@@ -17,5 +17,8 @@
 	"Visual_Enable": "Luba",
 	"Visual_SankeySettings": "Sankey sätted",
 	"Visual_NodePositions": "Sõlme asukohad",
-	"Visual_ViewportSize": "Vaateavade suurused"
+	"Visual_ViewportSize": "Vaateavade suurused",
+	"Visual_Display_Units": "Kuva ühikud",
+	"Visual_SankeyScaleSettings": "Mõõtkava sätted",
+	"Visual_MinOptimalHeight": "Esita sõlme minimaalne optimaalne kõrgus"
 }

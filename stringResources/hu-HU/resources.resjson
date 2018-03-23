@@ -17,5 +17,8 @@
 	"Visual_Enable": "Engedélyezés",
 	"Visual_SankeySettings": "Sankey-beállítások",
 	"Visual_NodePositions": "Csomópont-pozíciók",
-	"Visual_ViewportSize": "Nézőpontméretek"
+	"Visual_ViewportSize": "Nézőpontméretek",
+	"Visual_Display_Units": "Megjelenítési egységek",
+	"Visual_SankeyScaleSettings": "Méretbeállítások",
+	"Visual_MinOptimalHeight": "Adja meg a csomópont minimálisan optimális magasságát"
 }

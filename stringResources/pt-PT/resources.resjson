@@ -17,5 +17,8 @@
 	"Visual_Enable": "Ativar",
 	"Visual_SankeySettings": "Definições de Sankey",
 	"Visual_NodePositions": "Posições do nó",
-	"Visual_ViewportSize": "Tamanhos da janela viewport"
+	"Visual_ViewportSize": "Tamanhos da janela viewport",
+	"Visual_Display_Units": "Mostrar unidades",
+	"Visual_SankeyScaleSettings": "Definições de dimensionamento",
+	"Visual_MinOptimalHeight": "Fornecer a altura mínima ideal do nó"
 }

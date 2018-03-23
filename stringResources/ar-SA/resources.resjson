@@ -17,5 +17,8 @@
 	"Visual_Enable": "تمكين",
 	"Visual_SankeySettings": "إعدادات Sankey",
 	"Visual_NodePositions": "مواضع العقدة",
-	"Visual_ViewportSize": "حجم منفذ العرض"
+	"Visual_ViewportSize": "حجم منفذ العرض",
+	"Visual_Display_Units": "وحدات العرض",
+	"Visual_SankeyScaleSettings": "إعدادات المقياس",
+	"Visual_MinOptimalHeight": "توفير أدنى ارتفاع مثالي لعقدة"
 }

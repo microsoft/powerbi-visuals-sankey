@@ -17,5 +17,8 @@
 	"Visual_Enable": "Activar",
 	"Visual_SankeySettings": "Configuración de Sankey",
 	"Visual_NodePositions": "Posicións de nós",
-	"Visual_ViewportSize": "Tamaños do portelo"
+	"Visual_ViewportSize": "Tamaños do portelo",
+	"Visual_Display_Units": "Unidades de visualización",
+	"Visual_SankeyScaleSettings": "Configuración de redimensión",
+	"Visual_MinOptimalHeight": "Fornecer altura mínima óptima do nó"
 }

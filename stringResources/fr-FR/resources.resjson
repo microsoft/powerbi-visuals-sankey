@@ -17,5 +17,8 @@
 	"Visual_Enable": "Activer",
 	"Visual_SankeySettings": "Paramètres Sankey",
 	"Visual_NodePositions": "Positions de nœud",
-	"Visual_ViewportSize": "Tailles de fenêtre d'affichage"
+	"Visual_ViewportSize": "Tailles de fenêtre d'affichage",
+	"Visual_Display_Units": "Unités d'affichage",
+	"Visual_SankeyScaleSettings": "Paramètres de mise à l'échelle",
+	"Visual_MinOptimalHeight": "Fournir la hauteur optimale minimum du nœud"
 }

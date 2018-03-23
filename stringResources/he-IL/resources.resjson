@@ -17,5 +17,8 @@
 	"Visual_Enable": "הפוך לזמין",
 	"Visual_SankeySettings": "הגדרות תרשים Sankey",
 	"Visual_NodePositions": "מיקומי צמתים",
-	"Visual_ViewportSize": "גודלי אשנב"
+	"Visual_ViewportSize": "גודלי אשנב",
+	"Visual_Display_Units": "יחידות תצוגה",
+	"Visual_SankeyScaleSettings": "הגדרות קנה מידה",
+	"Visual_MinOptimalHeight": "ספק גובה אופטימלי מינימלי של הצומת"
 }

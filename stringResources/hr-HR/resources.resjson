@@ -17,5 +17,8 @@
 	"Visual_Enable": "Omogući",
 	"Visual_SankeySettings": "Postavke za Sankeyjev dijagram",
 	"Visual_NodePositions": "Položaji čvora",
-	"Visual_ViewportSize": "Veličina motrišta"
+	"Visual_ViewportSize": "Veličina motrišta",
+	"Visual_Display_Units": "Jedinice za prikaz",
+	"Visual_SankeyScaleSettings": "Postavke skaliranja",
+	"Visual_MinOptimalHeight": "Navedite minimalnu optimalnu visinu čvora"
 }

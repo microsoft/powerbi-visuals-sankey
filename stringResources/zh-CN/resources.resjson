@@ -17,5 +17,8 @@
 	"Visual_Enable": "启用",
 	"Visual_SankeySettings": "Sankey 设置",
 	"Visual_NodePositions": "节点位置",
-	"Visual_ViewportSize": "视区大小"
+	"Visual_ViewportSize": "视区大小",
+	"Visual_Display_Units": "显示单位",
+	"Visual_SankeyScaleSettings": "缩放设置",
+	"Visual_MinOptimalHeight": "提供节点的最佳高度下限"
 }

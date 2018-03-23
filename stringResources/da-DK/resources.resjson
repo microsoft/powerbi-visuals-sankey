@@ -17,5 +17,8 @@
 	"Visual_Enable": "Aktivér",
 	"Visual_SankeySettings": "Sankey-indstillinger",
 	"Visual_NodePositions": "Nodeplaceringer",
-	"Visual_ViewportSize": "Billedstørrelser"
+	"Visual_ViewportSize": "Billedstørrelser",
+	"Visual_Display_Units": "Vis enheder",
+	"Visual_SankeyScaleSettings": "Skalaindstillinger",
+	"Visual_MinOptimalHeight": "Angiv min optimale nodehøjde"
 }

@@ -17,5 +17,8 @@
 	"Visual_Enable": "Habilitar",
 	"Visual_SankeySettings": "Configurações de Sankey",
 	"Visual_NodePositions": "Posições de nós",
-	"Visual_ViewportSize": "Tamanhos do visor"
+	"Visual_ViewportSize": "Tamanhos do visor",
+	"Visual_Display_Units": "Exibir unidades",
+	"Visual_SankeyScaleSettings": "Configurações de dimensionamento",
+	"Visual_MinOptimalHeight": "Fornecer a altura mínima ideal do nó"
 }
