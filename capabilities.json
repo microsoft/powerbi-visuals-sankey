@@ -129,6 +129,7 @@
                     "displayName": "Force display",
                     "displayNameKey": "Visual_Force_Display",
                     "description": "Display all labels anyway",
+                    "descriptionKey": "Visual_Description_Force_Display",
                     "type": {
                         "bool": true
                     }
@@ -256,13 +257,13 @@
             "displayNameKey": "Visual_Cycles",
             "properties": {
                 "drawCycles": {
-                    "displayName": "Dublicate nodes",
-                    "displayNameKey": "Visual_DublicateNodes",
+                    "displayName": "Duplicate nodes",
+                    "displayNameKey": "Visual_DuplicateNodes",
                     "type": {
                         "enumeration": [
                             {
-                                "displayName": "Dublicate",
-                                "displayNameKey": "Visual_Dublicate",
+                                "displayName": "Duplicate",
+                                "displayNameKey": "Visual_Duplicate",
                                 "value": "0"
                             },
                             {

@@ -17,7 +17,8 @@
     "package": "pbiviz package",
     "lint": "node node_modules/tslint/bin/tslint \"+(src|test)/**/*.ts\"",
     "pretest": "pbiviz package --resources --no-minify --no-pbiviz --no-plugin",
-    "test": "karma start"
+    "test": "karma start",
+    "cert": "pbiviz --create-cert"
   },
   "author": {
     "name": "Microsoft",
@@ -56,7 +57,7 @@
     "powerbi-models": "1.0.3",
     "powerbi-visuals-utils-interactivityutils": "3.1.0",
     "powerbi-visuals-utils-svgutils": "^0.2.1",
-    "powerbi-visuals-utils-testutils": "^0.2.1",
+    "powerbi-visuals-utils-testutils": "1.2.1",
     "powerbi-visuals-utils-tooltiputils": "^0.3.0",
     "powerbi-visuals-utils-typeutils": "^0.2.0",
     "tslint": "4.0.2",
