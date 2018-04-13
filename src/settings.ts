@@ -28,7 +28,7 @@ module powerbi.extensibility.visual {
     import DataViewObjectsParser = powerbi.extensibility.utils.dataview.DataViewObjectsParser;
 
     export enum CyclesDrawType {
-        Dublicate,
+        Duplicate,
         Backward
     }
 
@@ -67,7 +67,7 @@ module powerbi.extensibility.visual {
     }
 
     export class SankeyNodeCycles {
-        public drawCycles: number = CyclesDrawType.Dublicate;
+        public drawCycles: number = CyclesDrawType.Duplicate;
         public selfLinksWeight: boolean = true;
     }
 

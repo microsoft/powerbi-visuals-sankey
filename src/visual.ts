@@ -159,7 +159,7 @@ module powerbi.extensibility.visual {
         private static MinRangeOfScale = 0;
         private static DefaultMaxRangeOfScale = 100;
 
-        public static DublicatedNamePostfix: string = "_SK_SELFLINK";
+        public static DuplicatedNamePostfix: string = "_SK_SELFLINK";
 
         private static DefaultWeightOfLink: number = 1;
 
@@ -203,6 +203,7 @@ module powerbi.extensibility.visual {
 
         private colorPalette: IColorPalette;
         private visualHost: IVisualHost;
+        private localizationManager: ILocalizationManager;
 
         private viewport: IViewport;
 
@@ -234,6 +235,7 @@ module powerbi.extensibility.visual {
 
         private init(options: VisualConstructorOptions): void {
             this.visualHost = options.host;
+            this.localizationManager = this.visualHost.createLocalizationManager();
 
             this.root = d3.select(options.element)
                 .append("svg")
@@ -369,7 +371,7 @@ module powerbi.extensibility.visual {
 
             let cycles: SankeyDiagramCycleDictionary = this.checkCycles(nodes);
 
-            if (settings.cyclesLinks.drawCycles === CyclesDrawType.Dublicate) {
+            if (settings.cyclesLinks.drawCycles === CyclesDrawType.Duplicate) {
                 links = this.processCyclesForwardLinks(cycles, nodes, links, settings);
             }
 
@@ -412,7 +414,7 @@ module powerbi.extensibility.visual {
                 let firstCyclesNode: SankeyDiagramNode = cycles[nodeName][cycles[nodeName].length - 1];
                 // create a clone of the node and save a link to each other. In selection behavior, selection of clone lead to select original and visa versa
                 let nodeCopy: SankeyDiagramNode = _.cloneDeep(firstCyclesNode);
-                nodeCopy.label.name += SankeyDiagram.DublicatedNamePostfix;
+                nodeCopy.label.name += SankeyDiagram.DuplicatedNamePostfix;
                 firstCyclesNode.cloneLink = nodeCopy;
                 nodeCopy.cloneLink = firstCyclesNode;
 
@@ -500,7 +502,7 @@ module powerbi.extensibility.visual {
             });
         }
 
-        // remove dublicated links
+        // remove Duplicated links
         private static fixLinksCount(node: SankeyDiagramNode) {
             node.links = _.uniq(node.links);
         }
@@ -615,7 +617,7 @@ module powerbi.extensibility.visual {
             let categories: any[] = sourceCategories.concat(destinationCategories);
 
             categories.forEach((item: any, index: number) => {
-                let formattedValue: string = valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DublicatedNamePostfix, "")),
+                let formattedValue: string = valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DuplicatedNamePostfix, "")),
                     label: SankeyDiagramLabel,
                     selectableDataPoint: SelectableDataPoint,
                     textProperties: TextProperties = {
@@ -627,7 +629,7 @@ module powerbi.extensibility.visual {
                 label = {
                     internalName: item,
                     name: item,
-                    formattedName: valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DublicatedNamePostfix, "")),
+                    formattedName: valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DuplicatedNamePostfix, "")),
                     width: textMeasurementService.measureSvgTextWidth(textProperties),
                     height: textMeasurementService.estimateSvgTextHeight(textProperties),
                     color: settings.labels.fill
@@ -770,10 +772,12 @@ module powerbi.extensibility.visual {
                     nodes.inputWeight
                         ? nodes.inputWeight
                         : nodes.outputWeight,
+                        this.localizationManager,
                         nodes.inputWeight >  0 && nodes.outputWeight > 0 ? `${sourceFieldName}-${destinationFieldName}` : nodes.outputWeight > 0
                         ? sourceFieldName
                         : destinationFieldName,
-                        valueFieldName);
+                        valueFieldName
+                    );
 
             });
 
@@ -889,8 +893,9 @@ module powerbi.extensibility.visual {
             valueFormatter: IValueFormatter,
             nodeName: string,
             nodeWeight: number,
+            localizationManager: ILocalizationManager,
             nodeDisplayName?: string,
-            valueDisplayName?: string,
+            valueDisplayName?: string
             ): VisualTooltipDataItem[] {
 
             let formattedNodeWeigth: string;
@@ -903,7 +908,7 @@ module powerbi.extensibility.visual {
 
             return [
                 {
-                    displayName: nodeDisplayName || SankeyDiagram.TooltipDisplayName,
+                    displayName: localizationManager.getDisplayName("Visual_TooltipDisplayName"),
                     value: nodeName
                 }, {
                     displayName: valueDisplayName || SankeyDiagram.RoleNames.values,
