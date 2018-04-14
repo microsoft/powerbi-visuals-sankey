@@ -25,5 +25,7 @@
 	"Visual_DublicateNodes": "Dublicate nodes",
 	"Visual_Dublicate": "Dublicate",
 	"Visual_DrawBackwardLink": "Draw backward link",
-	"Visual_SelflinkWeight": "Ignore weight of self links"
+	"Visual_SelflinkWeight": "Ignore weight of self links",
+	"Visual_DuplicateNodes": "Duplicate nodes",
+	"Visual_Duplicate": "Duplicate"
 }
