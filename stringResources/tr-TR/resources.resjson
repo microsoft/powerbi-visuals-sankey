@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Görünüm penceresi boyutları",
 	"Visual_Display_Units": "Görüntüleme birimleri",
 	"Visual_SankeyScaleSettings": "Ölçek ayarları",
-	"Visual_MinOptimalHeight": "Düğüm için en düşük ideal yüksekliği sağlayın"
+	"Visual_MinOptimalHeight": "Düğüm için en düşük ideal yüksekliği sağlayın",
+	"Visual_Cycles": "Görüntülenen döngüler",
+	"Visual_DuplicateNodes": "Yinelenen düğümler",
+	"Visual_Duplicate": "Çoğalt",
+	"Visual_DrawBackwardLink": "Geriye dönük bağlantı çiz",
+	"Visual_SelflinkWeight": "Kendine bağlantıların ağırlığını yoksay",
+	"Visual_TooltipDisplayName": "Ad",
+	"Visual_Description_Force_Display": "Tüm etiketleri yine de görüntüle"
 }

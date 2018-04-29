@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Dimensiuni poartă de vizualizare",
 	"Visual_Display_Units": "Afișare unități",
 	"Visual_SankeyScaleSettings": "Setări de scară",
-	"Visual_MinOptimalHeight": "Oferiți înălțimea minimă optimă a nodului"
+	"Visual_MinOptimalHeight": "Oferiți înălțimea minimă optimă a nodului",
+	"Visual_Cycles": "Ciclurile care se afișează",
+	"Visual_DuplicateNodes": "Noduri duplicate",
+	"Visual_Duplicate": "Dublură",
+	"Visual_DrawBackwardLink": "Desenați o legătură inversă",
+	"Visual_SelflinkWeight": "Ignorați ponderea legăturilor automate",
+	"Visual_TooltipDisplayName": "Nume",
+	"Visual_Description_Force_Display": "Afișați toate etichetele oricum"
 }

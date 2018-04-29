@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Tamaños do portelo",
 	"Visual_Display_Units": "Unidades de visualización",
 	"Visual_SankeyScaleSettings": "Configuración de redimensión",
-	"Visual_MinOptimalHeight": "Fornecer altura mínima óptima do nó"
+	"Visual_MinOptimalHeight": "Fornecer altura mínima óptima do nó",
+	"Visual_Cycles": "Ciclos que se mostran",
+	"Visual_DuplicateNodes": "Duplicar nós",
+	"Visual_Duplicate": "Duplicar",
+	"Visual_DrawBackwardLink": "Debuxar ligazón de terceiros",
+	"Visual_SelflinkWeight": "Ignorar tamaño das autoligazóns",
+	"Visual_TooltipDisplayName": "Nome",
+	"Visual_Description_Force_Display": "Mostrar etiquetas de todas formas"
 }

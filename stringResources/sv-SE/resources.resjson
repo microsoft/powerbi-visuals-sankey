@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Visningsområdets storlekar",
 	"Visual_Display_Units": "Visningsenheter",
 	"Visual_SankeyScaleSettings": "Skalningsinställningar",
-	"Visual_MinOptimalHeight": "Ange nodens minsta optimala höjd"
+	"Visual_MinOptimalHeight": "Ange nodens minsta optimala höjd",
+	"Visual_Cycles": "Cyklerna visar",
+	"Visual_DuplicateNodes": "Dubblettnoder",
+	"Visual_Duplicate": "Duplicera",
+	"Visual_DrawBackwardLink": "Rita bakåtlänk",
+	"Visual_SelflinkWeight": "Ignorera självlänkars vikt",
+	"Visual_TooltipDisplayName": "Namn",
+	"Visual_Description_Force_Display": "Visa alla etiketter ändå"
 }

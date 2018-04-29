@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Қарау терезесінің өлшемдері",
 	"Visual_Display_Units": "Бірліктерді көрсету",
 	"Visual_SankeyScaleSettings": "Масштаб параметрлері",
-	"Visual_MinOptimalHeight": "Түйіннің минимал оңтайлы биіктігін беру"
+	"Visual_MinOptimalHeight": "Түйіннің минимал оңтайлы биіктігін беру",
+	"Visual_Cycles": "Циклдердің көрсетілуі",
+	"Visual_DuplicateNodes": "Қайталанатын ескертпелер",
+	"Visual_Duplicate": "Көшірмелеу",
+	"Visual_DrawBackwardLink": "Сілтемені артқа қарай тарту",
+	"Visual_SelflinkWeight": "Өз сілтемелерінің салмағын елемеу",
+	"Visual_TooltipDisplayName": "Аты",
+	"Visual_Description_Force_Display": "Бәрібір барлық белгілерді көрсету"
 }

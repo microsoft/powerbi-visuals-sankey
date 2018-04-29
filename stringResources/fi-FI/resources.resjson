@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Näyttöikkunoiden koot",
 	"Visual_Display_Units": "Yksiköt",
 	"Visual_SankeyScaleSettings": "Skaalausasetukset",
-	"Visual_MinOptimalHeight": "Anna solmun pienin paras mahdollinen korkeus"
+	"Visual_MinOptimalHeight": "Anna solmun pienin paras mahdollinen korkeus",
+	"Visual_Cycles": "Jaksojen näyttäminen",
+	"Visual_DuplicateNodes": "Solmujen kaksoiskappaleet",
+	"Visual_Duplicate": "Kaksoiskappale",
+	"Visual_DrawBackwardLink": "Piirrä taaksepäinlinkki",
+	"Visual_SelflinkWeight": "Ohita itseensä linkittävien linkkien painotus",
+	"Visual_TooltipDisplayName": "Nimi",
+	"Visual_Description_Force_Display": "Näytä kaikki otsikot joka tapauksessa"
 }

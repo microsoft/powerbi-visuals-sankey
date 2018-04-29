@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "ขนาดกรอบการมองเห็น",
 	"Visual_Display_Units": "หน่วยแสดงผล",
 	"Visual_SankeyScaleSettings": "การตั้งค่ามาตราส่วน",
-	"Visual_MinOptimalHeight": "แสดงความสูงที่เหมาะสมต่ำสุดของโหนด"
+	"Visual_MinOptimalHeight": "แสดงความสูงที่เหมาะสมต่ำสุดของโหนด",
+	"Visual_Cycles": "แสดงรอบ",
+	"Visual_DuplicateNodes": "โหนดที่ซ้ำกัน",
+	"Visual_Duplicate": "รายการซ้ำ",
+	"Visual_DrawBackwardLink": "Draw backward link",
+	"Visual_SelflinkWeight": "ละเว้นน้ำหนักของลิงก์ตนเอง",
+	"Visual_TooltipDisplayName": "ชื่อ",
+	"Visual_Description_Force_Display": "แสดงป้ายชื่อทั้งหมด"
 }

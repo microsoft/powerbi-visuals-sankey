@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Tailles de fenêtre d'affichage",
 	"Visual_Display_Units": "Unités d'affichage",
 	"Visual_SankeyScaleSettings": "Paramètres de mise à l'échelle",
-	"Visual_MinOptimalHeight": "Fournir la hauteur optimale minimum du nœud"
+	"Visual_MinOptimalHeight": "Fournir la hauteur optimale minimum du nœud",
+	"Visual_Cycles": "Affichage des cycles",
+	"Visual_DuplicateNodes": "Doubler les nœuds",
+	"Visual_Duplicate": "Dupliqué",
+	"Visual_DrawBackwardLink": "Tracer un lien retour",
+	"Visual_SelflinkWeight": "Ignorer l'importance des liens propres",
+	"Visual_TooltipDisplayName": "Nom",
+	"Visual_Description_Force_Display": "Afficher quand même toutes les étiquettes"
 }

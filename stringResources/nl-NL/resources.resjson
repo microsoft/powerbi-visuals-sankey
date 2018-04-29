@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Viewport-grootten",
 	"Visual_Display_Units": "Weergave-eenheden",
 	"Visual_SankeyScaleSettings": "Schaalinstellingen",
-	"Visual_MinOptimalHeight": "Minimum voor optimale hoogte van knooppunt opgeven"
+	"Visual_MinOptimalHeight": "Minimum voor optimale hoogte van knooppunt opgeven",
+	"Visual_Cycles": "Weergegeven cycli",
+	"Visual_DuplicateNodes": "Dubbele knooppunten",
+	"Visual_Duplicate": "Duplicaat",
+	"Visual_DrawBackwardLink": "Koppeling van derde tekenen",
+	"Visual_SelflinkWeight": "Gewicht van interne koppelingen negeren",
+	"Visual_TooltipDisplayName": "Naam",
+	"Visual_Description_Force_Display": "Alle labels toch weergeven"
 }

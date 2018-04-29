@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "视区大小",
 	"Visual_Display_Units": "显示单位",
 	"Visual_SankeyScaleSettings": "缩放设置",
-	"Visual_MinOptimalHeight": "提供节点的最佳高度下限"
+	"Visual_MinOptimalHeight": "提供节点的最佳高度下限",
+	"Visual_Cycles": "周期显示",
+	"Visual_DuplicateNodes": "重复节点",
+	"Visual_Duplicate": "复制",
+	"Visual_DrawBackwardLink": "绘制反向链接",
+	"Visual_SelflinkWeight": "忽略自链接的权重",
+	"Visual_TooltipDisplayName": "名称",
+	"Visual_Description_Force_Display": "仍显示所有标签"
 }

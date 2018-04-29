@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Ukuran viewport",
 	"Visual_Display_Units": "Unit tampilan",
 	"Visual_SankeyScaleSettings": "Pengaturan skala",
-	"Visual_MinOptimalHeight": "Sediakan tinggi optimal node minimal"
+	"Visual_MinOptimalHeight": "Sediakan tinggi optimal node minimal",
+	"Visual_Cycles": "Tampilan siklus",
+	"Visual_DuplicateNodes": "Gandakan node",
+	"Visual_Duplicate": "Duplikat",
+	"Visual_DrawBackwardLink": "Tarik tautan ke belakang",
+	"Visual_SelflinkWeight": "Abaikan bobot tautan mandiri",
+	"Visual_TooltipDisplayName": "Nama",
+	"Visual_Description_Force_Display": "Tetap tampilkan semua label"
 }

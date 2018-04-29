@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Rozmiary okienek ekranów",
 	"Visual_Display_Units": "Jednostki wyświetlania",
 	"Visual_SankeyScaleSettings": "Ustawienia skalowania",
-	"Visual_MinOptimalHeight": "Podaj minimalną optymalną wysokość węzła"
+	"Visual_MinOptimalHeight": "Podaj minimalną optymalną wysokość węzła",
+	"Visual_Cycles": "Wyświetlanie cykli",
+	"Visual_DuplicateNodes": "Duplikuj węzły",
+	"Visual_Duplicate": "Duplikuj",
+	"Visual_DrawBackwardLink": "Rysuj link wsteczny",
+	"Visual_SelflinkWeight": "Ignoruj wagę linków własnych",
+	"Visual_TooltipDisplayName": "Nazwa",
+	"Visual_Description_Force_Display": "Wyświetl wszystkie etykiety mimo wszystko"
 }

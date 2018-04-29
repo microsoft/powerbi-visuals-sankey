@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Veličina motrišta",
 	"Visual_Display_Units": "Jedinice za prikaz",
 	"Visual_SankeyScaleSettings": "Postavke skaliranja",
-	"Visual_MinOptimalHeight": "Navedite minimalnu optimalnu visinu čvora"
+	"Visual_MinOptimalHeight": "Navedite minimalnu optimalnu visinu čvora",
+	"Visual_Cycles": "Prikaz ciklusa",
+	"Visual_DuplicateNodes": "Dupliciranje čvorova",
+	"Visual_Duplicate": "Dupliciraj",
+	"Visual_DrawBackwardLink": "Crtanje veze unatrag",
+	"Visual_SelflinkWeight": "Zanemari debljinu samostalnih veza",
+	"Visual_TooltipDisplayName": "Naziv",
+	"Visual_Description_Force_Display": "Ipak prikaži sve oznake"
 }

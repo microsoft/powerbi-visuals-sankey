@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Peržiūros sričių dydžiai",
 	"Visual_Display_Units": "Rodomi vienetai",
 	"Visual_SankeyScaleSettings": "Mastelio keitimo parametrai",
-	"Visual_MinOptimalHeight": "Pateikti mažiausią optimalų mazgo aukštį"
+	"Visual_MinOptimalHeight": "Pateikti mažiausią optimalų mazgo aukštį",
+	"Visual_Cycles": "Rodomi ciklai",
+	"Visual_DuplicateNodes": "Mazgų dublikatai",
+	"Visual_Duplicate": "Dublikatas",
+	"Visual_DrawBackwardLink": "Perkėlimo atgal saitas",
+	"Visual_SelflinkWeight": "Nepaisyti vidinių saitų svertinės vertės",
+	"Visual_TooltipDisplayName": "Pavadinimas",
+	"Visual_Description_Force_Display": "Vis tiek rodyti visas žymas"
 }

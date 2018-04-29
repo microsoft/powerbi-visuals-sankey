@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Viewportgrößen",
 	"Visual_Display_Units": "Anzeigeeinheiten",
 	"Visual_SankeyScaleSettings": "Skalierungseinstellungen",
-	"Visual_MinOptimalHeight": "Optimale Mindesthöhe von Knoten angeben"
+	"Visual_MinOptimalHeight": "Optimale Mindesthöhe von Knoten angeben",
+	"Visual_Cycles": "Angezeigte Zyklen",
+	"Visual_DuplicateNodes": "Doppelte Knoten",
+	"Visual_Duplicate": "Doppelt",
+	"Visual_DrawBackwardLink": "Backwardlink erstellen",
+	"Visual_SelflinkWeight": "Gewichtung seiteninterner Links ignorieren",
+	"Visual_TooltipDisplayName": "Name",
+	"Visual_Description_Force_Display": "Dennoch alle Bezeichnungen anzeigen"
 }

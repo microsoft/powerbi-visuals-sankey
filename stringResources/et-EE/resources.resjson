@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Vaateavade suurused",
 	"Visual_Display_Units": "Kuva ühikud",
 	"Visual_SankeyScaleSettings": "Mõõtkava sätted",
-	"Visual_MinOptimalHeight": "Esita sõlme minimaalne optimaalne kõrgus"
+	"Visual_MinOptimalHeight": "Esita sõlme minimaalne optimaalne kõrgus",
+	"Visual_Cycles": "Tsüklite kuvamine",
+	"Visual_DuplicateNodes": "Duplikaatsõlmed",
+	"Visual_Duplicate": "Duplikaat",
+	"Visual_DrawBackwardLink": "Tahapoole saatmise link",
+	"Visual_SelflinkWeight": "Ignoreeri siselinkide kaalu",
+	"Visual_TooltipDisplayName": "Nimi",
+	"Visual_Description_Force_Display": "Kuva siiski kõik sildid"
 }

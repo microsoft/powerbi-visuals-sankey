@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "ビューポート サイズ",
 	"Visual_Display_Units": "表示単位",
 	"Visual_SankeyScaleSettings": "スケールの設定",
-	"Visual_MinOptimalHeight": "ノードの最適な最小の高さを指定する"
+	"Visual_MinOptimalHeight": "ノードの最適な最小の高さを指定する",
+	"Visual_Cycles": "表示サイクル",
+	"Visual_DuplicateNodes": "重複ノード",
+	"Visual_Duplicate": "複製",
+	"Visual_DrawBackwardLink": "後方リンクを描画",
+	"Visual_SelflinkWeight": "自己リンクの重みを無視",
+	"Visual_TooltipDisplayName": "名前",
+	"Visual_Description_Force_Display": "すべてのラベルを常に表示します"
 }

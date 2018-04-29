@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Размеры окон просмотра",
 	"Visual_Display_Units": "Показывать единицы",
 	"Visual_SankeyScaleSettings": "Настройки масштаба",
-	"Visual_MinOptimalHeight": "Укажите минимальную оптимальную высоту узла"
+	"Visual_MinOptimalHeight": "Укажите минимальную оптимальную высоту узла",
+	"Visual_Cycles": "Отображаемые циклы",
+	"Visual_DuplicateNodes": "Повторяющиеся узлы",
+	"Visual_Duplicate": "Дублировать",
+	"Visual_DrawBackwardLink": "Отрисовка обратной ссылки",
+	"Visual_SelflinkWeight": "Игнорировать толщину линии ссылок на себя",
+	"Visual_TooltipDisplayName": "Имя",
+	"Visual_Description_Force_Display": "Показывать все метки"
 }

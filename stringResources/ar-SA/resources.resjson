@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "حجم منفذ العرض",
 	"Visual_Display_Units": "وحدات العرض",
 	"Visual_SankeyScaleSettings": "إعدادات المقياس",
-	"Visual_MinOptimalHeight": "توفير أدنى ارتفاع مثالي لعقدة"
+	"Visual_MinOptimalHeight": "توفير أدنى ارتفاع مثالي لعقدة",
+	"Visual_Cycles": "عرض دورات",
+	"Visual_DuplicateNodes": "عُقد مكررة",
+	"Visual_Duplicate": "‏‏تكرار",
+	"Visual_DrawBackwardLink": "رسم ارتباط خلفي",
+	"Visual_SelflinkWeight": "تجاهل وزن الارتباطات الذاتية",
+	"Visual_TooltipDisplayName": "الاسم",
+	"Visual_Description_Force_Display": "عرض كل التسميات على أية حال"
 }

@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Billedstørrelser",
 	"Visual_Display_Units": "Vis enheder",
 	"Visual_SankeyScaleSettings": "Skalaindstillinger",
-	"Visual_MinOptimalHeight": "Angiv min optimale nodehøjde"
+	"Visual_MinOptimalHeight": "Angiv min optimale nodehøjde",
+	"Visual_Cycles": "Cyklusvisning",
+	"Visual_DuplicateNodes": "Identiske noder",
+	"Visual_Duplicate": "Dupliker",
+	"Visual_DrawBackwardLink": "Tegn bagudrettet link",
+	"Visual_SelflinkWeight": "Ignorer vægten af self-links",
+	"Visual_TooltipDisplayName": "Navn",
+	"Visual_Description_Force_Display": "Vis alle etiketter alligevel"
 }

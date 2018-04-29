@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Veličine prikaza",
 	"Visual_Display_Units": "Merne jedinice",
 	"Visual_SankeyScaleSettings": "Postavke razmere",
-	"Visual_MinOptimalHeight": "Unesite minimalnu optimalnu visinu čvora"
+	"Visual_MinOptimalHeight": "Unesite minimalnu optimalnu visinu čvora",
+	"Visual_Cycles": "Prikazani ciklusi",
+	"Visual_DuplicateNodes": "Duplikati čvorova",
+	"Visual_Duplicate": "Dupliraj",
+	"Visual_DrawBackwardLink": "Nacrtaj vezu unazad",
+	"Visual_SelflinkWeight": "Zanemari stepen važnosti veza koje upućuju na same sebe",
+	"Visual_TooltipDisplayName": "Ime",
+	"Visual_Description_Force_Display": "Ipak prikaži sve oznake"
 }

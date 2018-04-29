@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Tamaño de ventanilla",
 	"Visual_Display_Units": "Mostrar unidades",
 	"Visual_SankeyScaleSettings": "Configuración de escala",
-	"Visual_MinOptimalHeight": "Proporcione la altura mínima óptima del nodo."
+	"Visual_MinOptimalHeight": "Proporcione la altura mínima óptima del nodo.",
+	"Visual_Cycles": "Ciclos que se muestran",
+	"Visual_DuplicateNodes": "Nodos duplicados",
+	"Visual_Duplicate": "Duplicado",
+	"Visual_DrawBackwardLink": "Definir vínculo de retroceso",
+	"Visual_SelflinkWeight": "Omitir el tamaño de los autovínculos",
+	"Visual_TooltipDisplayName": "Nombre",
+	"Visual_Description_Force_Display": "Mostrar todas las etiquetas igualmente"
 }

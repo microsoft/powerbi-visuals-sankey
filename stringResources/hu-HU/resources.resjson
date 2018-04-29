@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Nézőpontméretek",
 	"Visual_Display_Units": "Megjelenítési egységek",
 	"Visual_SankeyScaleSettings": "Méretbeállítások",
-	"Visual_MinOptimalHeight": "Adja meg a csomópont minimálisan optimális magasságát"
+	"Visual_MinOptimalHeight": "Adja meg a csomópont minimálisan optimális magasságát",
+	"Visual_Cycles": "Ciklusok megjelenítése",
+	"Visual_DuplicateNodes": "Ismétlődő csomópontokk",
+	"Visual_Duplicate": "Másolat készítése",
+	"Visual_DrawBackwardLink": "Hátramutató hivatkozás rajzolása",
+	"Visual_SelflinkWeight": "Önhivatkozások vastagságának figyelmen kívül hagyása",
+	"Visual_TooltipDisplayName": "Név",
+	"Visual_Description_Force_Display": "Ennek ellenére az összes felirat megjelenítése"
 }

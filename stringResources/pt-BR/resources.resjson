@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Tamanhos do visor",
 	"Visual_Display_Units": "Exibir unidades",
 	"Visual_SankeyScaleSettings": "Configurações de dimensionamento",
-	"Visual_MinOptimalHeight": "Fornecer a altura mínima ideal do nó"
+	"Visual_MinOptimalHeight": "Fornecer a altura mínima ideal do nó",
+	"Visual_Cycles": "Ciclos exibidos",
+	"Visual_DuplicateNodes": "Nós duplicados",
+	"Visual_Duplicate": "Duplicar",
+	"Visual_DrawBackwardLink": "Desenhar link regressivo",
+	"Visual_SelflinkWeight": "Ignorar peso de autolinks",
+	"Visual_TooltipDisplayName": "Nome",
+	"Visual_Description_Force_Display": "Exibir todos os rótulos mesmo assim"
 }

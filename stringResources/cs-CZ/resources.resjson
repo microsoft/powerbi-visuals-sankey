@@ -20,5 +20,12 @@
 	"Visual_ViewportSize": "Velikosti oblastí zobrazení",
 	"Visual_Display_Units": "Zobrazené jednotky",
 	"Visual_SankeyScaleSettings": "Nastavení měřítka",
-	"Visual_MinOptimalHeight": "Zadejte minimální optimální výšku uzlu"
+	"Visual_MinOptimalHeight": "Zadejte minimální optimální výšku uzlu",
+	"Visual_Cycles": "Zobrazení cyklů",
+	"Visual_DuplicateNodes": "Duplicitní uzly",
+	"Visual_Duplicate": "Duplikovat",
+	"Visual_DrawBackwardLink": "Nakreslit propojení zpět",
+	"Visual_SelflinkWeight": "Ignorovat váhu propojení na sebe sama",
+	"Visual_TooltipDisplayName": "Název",
+	"Visual_Description_Force_Display": "Přesto zobrazit všechny popisky"
 }
