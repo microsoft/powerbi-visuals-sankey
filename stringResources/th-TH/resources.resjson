@@ -24,7 +24,7 @@
 	"Visual_Cycles": "แสดงรอบ",
 	"Visual_DuplicateNodes": "โหนดที่ซ้ำกัน",
 	"Visual_Duplicate": "รายการซ้ำ",
-	"Visual_DrawBackwardLink": "Draw backward link",
+	"Visual_DrawBackwardLink": "วาดการเชื่อมโยงย้อนกลับ",
 	"Visual_SelflinkWeight": "ละเว้นน้ำหนักของลิงก์ตนเอง",
 	"Visual_TooltipDisplayName": "ชื่อ",
 	"Visual_Description_Force_Display": "แสดงป้ายชื่อทั้งหมด"

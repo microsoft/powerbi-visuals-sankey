@@ -24,7 +24,7 @@
 	"Visual_Cycles": "Tampilan siklus",
 	"Visual_DuplicateNodes": "Gandakan node",
 	"Visual_Duplicate": "Duplikat",
-	"Visual_DrawBackwardLink": "Tarik tautan ke belakang",
+	"Visual_DrawBackwardLink": "Dapatkan backward link",
 	"Visual_SelflinkWeight": "Abaikan bobot tautan mandiri",
 	"Visual_TooltipDisplayName": "Nama",
 	"Visual_Description_Force_Display": "Tetap tampilkan semua label"
