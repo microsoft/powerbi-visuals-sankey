@@ -31,6 +31,12 @@ module powerbi.extensibility.visual {
     // powerbi.extensibility.utils.tooltip
     import TooltipEnabledDataPoint = powerbi.extensibility.utils.tooltip.TooltipEnabledDataPoint;
 
+    export enum SankeyLinkDirrections {
+        Forward,
+        Backward,
+        SelfLink
+    }
+
     export interface SankeyDiagramLabel {
         internalName: string;
         name: string;
@@ -55,6 +61,8 @@ module powerbi.extensibility.visual {
         label: SankeyDiagramLabel;
         inputWeight: number;
         outputWeight: number;
+        backwardWeight: number;
+        selftLinkWeight: number;
         links: SankeyDiagramLink[];
         x?: number;
         y?: number;
@@ -77,6 +85,7 @@ module powerbi.extensibility.visual {
         dySource?: number;
         dyDestination?: number;
         color: string;
+        direction: SankeyLinkDirrections;
     }
 
     export interface SankeyDiagramColumn {

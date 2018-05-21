@@ -40,6 +40,7 @@ module powerbi.extensibility.visual.test {
     import SankeyDiagramColumn = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramColumn;
     import SankeyDiagramDataView = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramDataView;
     import SankeyDiagramLink = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramLink;
+    import SankeyDiagramLabel = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramLabel;
     import SankeyDiagramNodePositionSetting = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramNodePositionSetting;
     import SankeyDiagramNodePositionSettingsCollection = powerbi.extensibility.visual.SankeyDiagram1446463184954.SankeyDiagramNodePositionSettingsCollection;
 
@@ -354,11 +355,18 @@ module powerbi.extensibility.visual.test {
             it("link change color", done => {
                 const color: string = "#E0F600";
 
-                dataView.categorical.categories[0].objects = [{
-                    links: {
-                        fill: { solid: { color } }
+                // change colors for all links
+                for (let index in dataView.categorical.categories) {
+                    let category = dataView.categorical.categories[index];
+                    category.objects = [];
+                    for (let valIndex in category.values) {
+                        category.objects.push({
+                            links: {
+                                fill: { solid: { color } }
+                            }
+                        } );
                     }
-                }];
+                }
 
                 visualBuilder.updateRenderTimeout(dataView, () => {
                     const currentColor: string = visualBuilder.linksElement
@@ -381,8 +389,8 @@ module powerbi.extensibility.visual.test {
                         thirdNode: string = textElement.eq(4).text();
 
                     expect(firstNode).toBe("Brazil");
-                    expect(secondNode).toBe("Morocco");
-                    expect(thirdNode).toBe("USA");
+                    expect(secondNode).toBe("Angola");
+                    expect(thirdNode).toBe("France");
 
                     done();
                 });
@@ -478,17 +486,13 @@ module powerbi.extensibility.visual.test {
 
                         let links: SankeyDiagramLink[] = transformedData.links.filter( (link: SankeyDiagramLink, index: number) => {
                             console.log(link.source.label.name + " " + link.destination.label.name);
-                            if (link.source.label.name === "England_SK_SELFLINK" &&
-                                link.destination.label.name === "USA" ||
-                                link.source.label.name === "USA_SK_SELFLINK" &&
-                                link.destination.label.name === "England") {
-
+                            if (link.source.label.name.match(/\**_SK_SELFLINK/)) {
                                 return true;
                             }
                             return false;
                         });
 
-                        expect(links.length).toBe(2);
+                        expect(links.length).toBeGreaterThan(0);
 
                         done();
                     });
@@ -609,6 +613,189 @@ module powerbi.extensibility.visual.test {
                         done();
                     });
                 });
+            });
+        });
+
+        describe("Selector tests", () => {
+            it("creation", () => {
+                let source: SankeyDiagramNode = {} as SankeyDiagramNode;
+                let destination: SankeyDiagramNode = {} as SankeyDiagramNode;
+                let label: SankeyDiagramLabel = {} as SankeyDiagramLabel;
+                let labelDest: SankeyDiagramLabel = {} as SankeyDiagramLabel;
+                label.name = "Source";
+                labelDest.name = "Destination";
+                source.label = label;
+                destination.label = labelDest;
+
+                let link: SankeyDiagramLink = {} as SankeyDiagramLink;
+                link.source = source;
+                link.destination = destination;
+                link.direction = 0;
+
+                expect(VisualClass.createLink(link)).toBe("_Source-0-_Destination");
+                expect(VisualClass.createLink(link, true)).toBe("linkLabelPaths_Source-0-_Destination");
+            });
+        });
+
+        describe("Scale settings test:", () => {
+            it("the visual must provide min height of node", done => {
+                let dataView: DataView = defaultDataViewBuilder.getDataViewWithLowValue();
+                const firstElement: number = 0;
+
+                dataView.metadata.objects = {
+                    scaleSettings: {
+                        provideMinHeight: true
+                    }
+                };
+
+                // the dataset has significantly different range of values 
+                // the visual must provide min height of node
+                dataView.categorical.values[firstElement].values[0] = 1;
+                dataView.categorical.values[firstElement].values[1] = 1;
+                dataView.categorical.values[firstElement].values[2] = 1000000;
+
+                visualBuilder.updateRenderTimeout([dataView], () => {
+                    const minHeightOfNode: number = 5;
+                    let nodes = visualBuilder.nodeElements;
+
+                    let minHeight: number = +nodes[firstElement].children[firstElement].getAttribute("height");
+                    nodes.each((index: number, el: HTMLElement) => {
+                        let height = +el.children[firstElement].getAttribute("height");
+                        if (height < minHeight) {
+                            minHeight = height;
+                        }
+                    });
+                    expect(minHeight).toBeGreaterThan(minHeightOfNode);
+                    done();
+                });
+            });
+
+            it("the visual must not provide min height of node", done => {
+                let dataView: DataView = defaultDataViewBuilder.getDataViewWithLowValue();
+                const firstElement: number = 0;
+
+                dataView.metadata.objects = {
+                    scaleSettings: {
+                        provideMinHeight: false
+                    }
+                };
+
+                // the dataset has significantly different range of values
+                // the visual must not provide min height of node
+                // the height of node can be 1px;npm
+                dataView.categorical.values[firstElement].values[0] = 1;
+                dataView.categorical.values[firstElement].values[1] = 1;
+                dataView.categorical.values[firstElement].values[2] = 1000000;
+
+                visualBuilder.updateRenderTimeout([dataView], () => {
+                    const minHeightOfNode: number = 5;
+                    let nodes = visualBuilder.nodeElements;
+
+                    let minHeight: number = +nodes[firstElement].children[firstElement].getAttribute("height");
+                    nodes.each((index: number, el: HTMLElement) => {
+                        let height = +el.children[firstElement].getAttribute("height");
+                        if (height < minHeight) {
+                            minHeight = height;
+                        }
+                    });
+                    expect(minHeight).toBeLessThan(minHeightOfNode);
+                    done();
+                });
+            });
+        });
+
+        describe("Settings tests:", () => {
+            it("nodeComplexSettings properties must be hidden", done => {
+                let objectInstanes: VisualObjectInstanceEnumerationObject = <VisualObjectInstanceEnumerationObject>visualBuilder.instance.enumerateObjectInstances({
+                    objectName: "nodeComplexSettings"
+                });
+
+                expect(objectInstanes.instances.length).toBe(0);
+                done();
+            });
+
+            it("other properties must exist", done => {
+                // defaults
+                const instance: number = 0;
+                const someColor: string = "black";
+                const fontSize: number = 12;
+                const unit: number = 0;
+                dataView.metadata.objects = {
+                    labels: {
+                        show: true,
+                        fill: { solid: { color: someColor } },
+                        fontSize: fontSize,
+                        forceDisplay: false,
+                        unit: unit
+                    },
+                    linkLabels: {
+                        show: false,
+                        fill: { solid: { color: someColor } },
+                        fontSize: fontSize,
+                    },
+                    scaleSettings: {
+                        provideMinHeight: true,
+                        lnScale: true,
+                    },
+                    nodeComplexSettings: {
+                        nodePositions: "",
+                        viewportSize: ""
+                    }
+                };
+
+                let labels: VisualObjectInstanceEnumerationObject = (<VisualObjectInstanceEnumerationObject>visualBuilder
+                    .instance.enumerateObjectInstances({
+                        objectName: "labels"
+                    }));
+
+                expect(labels.instances.length).toBe(1);
+                expect(labels.instances[instance].properties["show"]).toBeTruthy();
+                expect(labels.instances[instance].properties["fontSize"]).toBe(fontSize);
+                expect(labels.instances[instance].properties["forceDisplay"]).toBeFalsy();
+                expect(labels.instances[instance].properties["unit"]).toBe(unit);
+                expect(labels.instances[instance].properties["fill"]).toBe(someColor);
+
+                let linkLabels: VisualObjectInstanceEnumerationObject = (<VisualObjectInstanceEnumerationObject>visualBuilder
+                    .instance.enumerateObjectInstances({
+                        objectName: "linkLabels"
+                    }));
+                expect(linkLabels.instances.length).toBe(1);
+                expect(linkLabels.instances[instance].properties["show"]).toBeFalsy();
+                expect(linkLabels.instances[instance].properties["fontSize"]).toBe(fontSize);
+                expect(linkLabels.instances[instance].properties["fill"]).toBe(someColor);
+
+                let scaleSettings: VisualObjectInstanceEnumerationObject = (<VisualObjectInstanceEnumerationObject>visualBuilder
+                    .instance.enumerateObjectInstances({
+                        objectName: "scaleSettings"
+                    }));
+                expect(scaleSettings.instances.length).toBe(1);
+                expect(scaleSettings.instances[instance].properties["provideMinHeight"]).toBeTruthy();
+                expect(scaleSettings.instances[instance].properties["lnScale"]).toBeFalsy();
+                done();
+            });
+        });
+
+        describe("Capabilities tests", () => {
+            it("all items having displayName should have displayNameKey property", () => {
+                jasmine.getJSONFixtures().fixturesPath = "base";
+
+                let jsonData = getJSONFixture("capabilities.json");
+
+                let objectsChecker: Function = (obj) => {
+                    for (let property in obj) {
+                        let value: any = obj[property];
+
+                        if (value.displayName) {
+                            expect(value.displayNameKey).toBeDefined();
+                        }
+
+                        if (typeof value === "object") {
+                            objectsChecker(value);
+                        }
+                    }
+                };
+
+                objectsChecker(jsonData);
             });
         });
     });

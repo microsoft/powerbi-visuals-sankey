@@ -129,6 +129,7 @@
                     "displayName": "Force display",
                     "displayNameKey": "Visual_Force_Display",
                     "description": "Display all labels anyway",
+                    "descriptionKey": "Visual_Description_Force_Display",
                     "type": {
                         "bool": true
                     }
@@ -212,12 +213,19 @@
             }
         },
         "scaleSettings": {
-            "displayName": "Enable logarithmic scale",
-            "displayNameKey": "Visual_ScaleSettings",
+            "displayName": "Scale settings",
+            "displayNameKey": "Visual_SankeyScaleSettings",
             "properties": {
-                "show": {
-                    "displayName": "Enable",
-                    "displayNameKey": "Visual_Enable",
+                "lnScale": {
+                    "displayName": "Enable logarithmic scale",
+                    "displayNameKey": "Visual_ScaleSettings",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "provideMinHeight": {
+                    "displayName": "Provide min optimal height of node",
+                    "displayNameKey": "Visual_MinOptimalHeight",
                     "type": {
                         "bool": true
                     }
@@ -240,6 +248,37 @@
                     "displayNameKey": "Visual_ViewportSize",
                     "type": {
                         "text": true
+                    }
+                }
+            }
+        },
+        "cyclesLinks":{
+            "displayName": "Cycles displaying",
+            "displayNameKey": "Visual_Cycles",
+            "properties": {
+                "drawCycles": {
+                    "displayName": "Duplicate nodes",
+                    "displayNameKey": "Visual_DuplicateNodes",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayName": "Duplicate",
+                                "displayNameKey": "Visual_Duplicate",
+                                "value": "0"
+                            },
+                            {
+                                "displayName": "Draw backward link",
+                                "displayNameKey": "Visual_DrawBackwardLink",
+                                "value": "1"
+                            }
+                        ]
+                    }
+                },
+                "selfLinksWeight": {
+                    "displayName": "Ignore weight of self links",
+                    "displayNameKey": "Visual_SelflinkWeight",
+                    "type": {
+                        "bool": true
                     }
                 }
             }

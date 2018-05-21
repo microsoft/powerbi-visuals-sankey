@@ -1,3 +1,28 @@
+## 1.8.0
+
+* Added Power BI bookmarks support
+
+## 1.7.1
+
+* Fix drawing backward links on difficult graph (with many backward links)
+
+## 1.7.0
+
+* Options to configure to display cycles
+* Display cycles on graph as backward links
+
+## 1.6.1
+
+* Links properties were disappeared - fixed
+
+## 1.6.0
+
+* New option: provide min optimal height of node
+
+## 1.5.2
+
+* Drag&drop crashes browser - fix 
+
 ## 1.5.1
 
 * Fix error when the visual doesn't display chart without values dataset
