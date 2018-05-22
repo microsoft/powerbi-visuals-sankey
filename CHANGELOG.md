@@ -1,3 +1,7 @@
+## 1.9.0
+
+* Added localization for all supported languages
+
 ## 1.8.0
 
 * Added Power BI bookmarks support
