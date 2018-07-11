@@ -50,6 +50,9 @@ module powerbi.extensibility.visual.test {
     import getRandomNumbers = powerbi.extensibility.utils.test.helpers.getRandomNumbers;
     import assertColorsMatch = powerbi.extensibility.utils.test.helpers.color.assertColorsMatch;
 
+    import areColorsEqual = powerbi.extensibility.visual.test.helpers.areColorsEqual;
+    import isColorAppliedToElements = powerbi.extensibility.visual.test.helpers.isColorAppliedToElements;
+
     interface SankeyDiagramTestsNode {
         x: number;
         inputWeight: number;
@@ -252,7 +255,7 @@ module powerbi.extensibility.visual.test {
                     let nodes: SankeyDiagramNode[] = visualBuilder.instance
                         .converter(dataView)
                         .nodes
-                        .filter( (node: SankeyDiagramNode) => {
+                        .filter((node: SankeyDiagramNode) => {
                             if (node.links.length > 0) {
                                 return true;
                             }
@@ -279,7 +282,7 @@ module powerbi.extensibility.visual.test {
                     let nodes: SankeyDiagramNode[] = visualBuilder.instance
                         .converter(dataView)
                         .nodes
-                        .filter( (node: SankeyDiagramNode) => {
+                        .filter((node: SankeyDiagramNode) => {
                             if (node.links.length > 0) {
                                 return true;
                             }
@@ -364,7 +367,7 @@ module powerbi.extensibility.visual.test {
                             links: {
                                 fill: { solid: { color } }
                             }
-                        } );
+                        });
                     }
                 }
 
@@ -484,7 +487,7 @@ module powerbi.extensibility.visual.test {
                     visualBuilder.updateRenderTimeout([defaultDataViewBuilder.getDataView()], () => {
                         let transformedData: SankeyDiagramDataView = visualBuilder.instance.converter(dataView);
 
-                        let links: SankeyDiagramLink[] = transformedData.links.filter( (link: SankeyDiagramLink, index: number) => {
+                        let links: SankeyDiagramLink[] = transformedData.links.filter((link: SankeyDiagramLink, index: number) => {
                             console.log(link.source.label.name + " " + link.destination.label.name);
                             if (link.source.label.name.match(/\**_SK_SELFLINK/)) {
                                 return true;
@@ -796,6 +799,40 @@ module powerbi.extensibility.visual.test {
                 };
 
                 objectsChecker(jsonData);
+            });
+        });
+
+        describe("high contrast mode test", () => {
+            const backgroundColor: string = "#000000";
+            const foregroundColor: string = "#ff00ff";
+
+            let nodeElements: JQuery[],
+                linkElements: JQuery[];
+
+            beforeEach(() => {
+                visualBuilder.visualHost.colorPalette.isHighContrast = true;
+
+                visualBuilder.visualHost.colorPalette.background = { value: backgroundColor };
+                visualBuilder.visualHost.colorPalette.foreground = { value: foregroundColor };
+
+                nodeElements = visualBuilder.nodeElements.toArray().map($);
+                linkElements = visualBuilder.linkElements.toArray().map($);
+            });
+
+            it("should not use fill style", (done) => {
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    expect(isColorAppliedToElements(nodeElements, null, "fill"));
+                    expect(isColorAppliedToElements(linkElements, null, "fill"));
+                    done();
+                });
+            });
+
+            it("should use stroke style", (done) => {
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    expect(isColorAppliedToElements(nodeElements, foregroundColor, "stroke"));
+                    expect(isColorAppliedToElements(linkElements, foregroundColor, "stroke"));
+                    done();
+                });
             });
         });
     });
