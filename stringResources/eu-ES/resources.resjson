@@ -27,5 +27,7 @@
 	"Visual_DrawBackwardLink": "Marraztu atzerako esteka",
 	"Visual_SelflinkWeight": "Egin ez ikusi nork bere buruarekiko estekei",
 	"Visual_TooltipDisplayName": "Izena",
-	"Visual_Description_Force_Display": "Bistaratu etiketa guztiak, halere"
+	"Visual_Description_Force_Display": "Bistaratu etiketa guztiak, halere",
+	"Sankey_Short_Description": "Fluxu-diagrama honetan, seriearen zabalera fluxuaren kantitatearekiko proportzionala da",
+	"Sankey_Long_Description": "Sankey-rekin, begi-kolpe batean ikusi ahal izango dituzu iturburuak, helburuak eta tarteko urratsak, bai eta gauzak haietan zehar nola mugitzen diren ere. Halaber, harekin elkarrekintzan aritu ahal izango zara, dela esteka sakatuta, dela fluxua bera sakatuta; horrela, Power BI zerbitzuaren nabarmentze/iragazte gurutzatuaren eginbideari etekina atera ahal izango diozu, xehetasun eta datu erlazionatu gehiago lortzeko.\nEnergiaren industrian asko erabiltzen da, bere ezaugarriengatik horretarako aproposak delako. Halere, erabilera interesgarriak ditu industria guztietan. Hasiera eta amaiera duen informazioa bistaratzeko ikuspuntu berritzailea eskaintzen du, edota hainbat bitartekarirekin erlazio dinamikoa duen informazioa bistaratzeko; esaterako, erabiltzaileak nola iritsi diren webgune jakin batera eta nola nabigatu diren hartan, fabrikazio-unitate bateko materiala, eta enpresa-prozesuetako kontrolak eta diru-transferentziak. Gainera, xehetasun interesgarriak nabarmentzen ditu.\nKode irekikoa da elementu bisual hau. Eskuratu kodea GitHub-en: https://github.com/Microsoft/powerbi-visuals-sankey"
 }

@@ -27,5 +27,7 @@
 	"Visual_DrawBackwardLink": "Zīmēt atpakaļsaiti",
 	"Visual_SelflinkWeight": "Ignorēt iekšējo saišu svarīgumu",
 	"Visual_TooltipDisplayName": "Nosaukums",
-	"Visual_Description_Force_Display": "Vienalga rādīt visas etiķetes"
+	"Visual_Description_Force_Display": "Vienalga rādīt visas etiķetes",
+	"Sankey_Short_Description": "Plūsmas diagramma, kurā sērijas platums ir proporcionāls attiecībā pret plūsmas daudzumu.",
+	"Sankey_Long_Description": "Izmantojot Sankey diagrammu, varat acumirklī noskaidrot avotus, galamērķus un pa vidu esošās darbības, kā arī to, kā elementi pārvietojas pa to. Varat arī mijiedarboties ar to, noklikšķinot uz saites vai pašas plūsmas, un izmantot Power BI šķērseniskās iezīmēšanas/filtrēšanas līdzekli, lai gūtu vēl interesantākus ieskatus par attiecīgajiem datiem.\nŠādas diagrammas tiek plaši izmantotas enerģētikas nozarē. Taču tām ir interesants pielietojums visās nozarēs. Sankey diagramma ļauj ikvienam vizualizēt informāciju, kam ir sākums un beigas vai arī dinamiskas attiecības ar daudziem starpniekiem, piemēram, tā pavisam citā perspektīvā attēlo, kā lietotājs nonāca tīmekļa vietnē un pārvietojās pa to, parāda materiālu ražošanas struktūrā, vadības pārsūtīšanu vai naudas pārskaitījumus biznesa procesos un sniedz interesantus ieskatus par šīm darbībām.\nŠie ir atvērtā pirmkoda vizuālie dati. Iegūstiet kodu no GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
 }
