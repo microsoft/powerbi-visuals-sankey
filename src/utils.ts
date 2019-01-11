@@ -92,13 +92,13 @@ export function updateFillOpacity(
     }
 
     selection.classed(SelectedClassName, (dataPoint: SankeyDiagramLink | SankeyDiagramNode): boolean => {
-        let isDataPointSelected: boolean = this.isDataPointSelected(dataPoint),
-            isTheDataPointNode: boolean = this.isTheDataPointNode(dataPoint),
+        let dataPointSelected: boolean = isDataPointSelected(dataPoint),
+            theDataPointNode: boolean = isTheDataPointNode(dataPoint),
             selected: boolean;
 
-        selected = !isTheDataPointNode && hasSelection
-            ? !isDataPointSelected
-            : isDataPointSelected;
+        selected = !theDataPointNode && hasSelection
+            ? !dataPointSelected
+            : dataPointSelected;
 
         return getFillOpacity(
             selected,

@@ -1,3 +1,9 @@
+## 2.0.1
+* Fix selection issue
+
+## 2.0.0
+* The visual converted to use the new tools 3.0
+
 ## 1.10.0
 * High contrast mode
 * API 1.13.0
