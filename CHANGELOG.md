@@ -1,3 +1,6 @@
+## 2.0.2
+* Fix Sankey diagram colors
+
 ## 2.0.1
 * Fix selection issue
 
