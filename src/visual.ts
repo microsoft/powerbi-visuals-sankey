@@ -669,7 +669,6 @@ export class SankeyDiagram implements IVisual {
         });
 
         let categories: any[] = sourceCategories.concat(destinationCategories);
-        console.log(categories);
         categories.forEach((item: any, index: number) => {
             let formattedValue: string = valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DuplicatedNamePostfix, "")),
                 label: SankeyDiagramLabel,
