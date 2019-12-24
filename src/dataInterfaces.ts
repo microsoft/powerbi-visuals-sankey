@@ -93,6 +93,7 @@ export interface SankeyDiagramLink extends
     fillColor: string;
     strokeColor: string;
     direction: SankeyLinkDirrections;
+    heightCalculated: boolean;
 }
 
 export interface SankeyDiagramColumn {
@@ -138,4 +139,12 @@ export interface SankeyDiagramNodePositionSetting {
     name: string;
     y?: string;
     x?: string;
+    height?: string;
+}
+
+export interface SankeyDiagramLinkPositionSetting {
+    source: SankeyDiagramNodePositionSetting,
+    destination: SankeyDiagramNodePositionSetting,
+    height?: string;
+    name: string;
 }

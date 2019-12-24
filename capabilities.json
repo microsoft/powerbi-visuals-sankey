@@ -94,6 +94,19 @@
         }
     ],
     "objects": {
+        "general":{
+            "displayName": "General",
+            "displayNameKey": "Visual_General",
+            "properties": {
+                "pinPositions":{
+                    "displayName": "Save position on filter",
+                    "displayNameKey": "Visual_PinPosition",
+                    "type" :{
+                        "bool": true
+                    }
+                }
+            }
+        },
         "labels": {
             "displayName": "Data labels",
             "displayNameKey": "Visual_DataPointsLabels",
@@ -192,6 +205,13 @@
                             }
                         }
                     }
+                },
+                "pinPositions":{
+                    "displayName": "Pin",
+                    "displayNameKey": "Pin_Nodes_All",    
+                    "type":{
+                        "text": true
+                    }
                 }
             }
         },
@@ -246,6 +266,13 @@
                 "viewportSize": {
                     "displayName": "Viewport sizes",
                     "displayNameKey": "Visual_ViewportSize",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "linkPositions": {
+                    "displayName": "Link positions",
+                    "displayNameKey": "Visual_LinkPositions",
                     "type": {
                         "text": true
                     }
