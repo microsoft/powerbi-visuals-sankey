@@ -76,6 +76,7 @@ export class SankeyComplexSettings {
     public nodePositions: string = "[]";
     public viewportSize: string = "{}";
     public linkPositions: string = "[]";
+    public yScale: number = null;
 }
 
 export class SankeyNodeCycles {

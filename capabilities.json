@@ -276,6 +276,13 @@
                     "type": {
                         "text": true
                     }
+                },
+                "yScale":{
+                    "displayName": "gjgh",
+                    "displayNameKey": "ghj",
+                    "type": {
+                        "numeric": true
+                    }
                 }
             }
         },

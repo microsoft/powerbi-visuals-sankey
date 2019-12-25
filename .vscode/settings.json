@@ -8,7 +8,6 @@
     ".tmp": true
   },
   "files.exclude": {
-    ".tmp": true
   },
   "search.exclude": {
     ".tmp": true,
