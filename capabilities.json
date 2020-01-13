@@ -94,14 +94,14 @@
         }
     ],
     "objects": {
-        "general":{
+        "general": {
             "displayName": "General",
-            "displayNameKey": "Visual_General",
+            "displayNameKey": "formattingGeneral",
             "properties": {
-                "pinPositions":{
-                    "displayName": "Save position on filter",
-                    "displayNameKey": "Visual_PinPosition",
-                    "type" :{
+                "pinNodes": {
+                    "displayName": "Pin Nodes",
+                    "displayNameKey": "Visual_PinNodes",
+                    "type": {
                         "bool": true
                     }
                 }
@@ -152,10 +152,10 @@
                     "displayNameKey": "Visual_Display_Units",
                     "type": {
                         "formatting": {
-                             "labelDisplayUnits": true
-                         }
+                            "labelDisplayUnits": true
+                        }
                     }
-                 }
+                }
             }
         },
         "linkLabels": {
@@ -204,13 +204,6 @@
                                 "color": true
                             }
                         }
-                    }
-                },
-                "pinPositions":{
-                    "displayName": "Pin",
-                    "displayNameKey": "Pin_Nodes_All",    
-                    "type":{
-                        "text": true
                     }
                 }
             }
@@ -277,16 +270,23 @@
                         "text": true
                     }
                 },
-                "yScale":{
-                    "displayName": "gjgh",
-                    "displayNameKey": "ghj",
+                "columns": {
+                    "displayName": "Columns",
+                    "displayNameKey": "Visual_Columns",
                     "type": {
-                        "numeric": true
+                        "text": true
+                    }
+                },
+                "appState": {
+                    "displayName": "Application State",
+                    "displayNameKey": "Visual_AppState",
+                    "type": {
+                        "text": true
                     }
                 }
             }
         },
-        "cyclesLinks":{
+        "cyclesLinks": {
             "displayName": "Cycles displaying",
             "displayNameKey": "Visual_Cycles",
             "properties": {

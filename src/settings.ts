@@ -29,8 +29,7 @@ import {
 } from "powerbi-visuals-utils-dataviewutils";
 
 import {
-    SankeyDiagramNodePositionSetting,
-    SankeyDiagramLinkPositionSetting
+    SankeyDiagramNodePositionSetting, SankeyDiagramLinkPositionSetting, SankeyDiagramLink
 } from "./dataInterfaces";
 
 import DataViewObjectsParser = dataViewObjectsParser.DataViewObjectsParser;
@@ -40,7 +39,7 @@ export enum CyclesDrawType {
     Backward
 }
 export class SankeyDiagramGeneralSettings{
-    public pinPositions: boolean = false;
+    public pinNodes: boolean = false;
 }
 
 export class SankeyDiagramLabelsSettings {
@@ -76,7 +75,9 @@ export class SankeyComplexSettings {
     public nodePositions: string = "[]";
     public viewportSize: string = "{}";
     public linkPositions: string = "[]";
-    public yScale: number = null;
+    public columns: string = "";
+    public appState: string = "";
+    public currentColumns = "";
 }
 
 export class SankeyNodeCycles {
@@ -98,6 +99,8 @@ export class SankeyDiagramSettings extends DataViewObjectsParser {
     public _nodePositions: SankeyDiagramNodePositionSetting[] = [];
     public cyclesLinks: SankeyNodeCycles = new SankeyNodeCycles();
     public _viewportSize: ViewportSize = {};
+    // public _linkPositions: SankeyDiagramLinkPositionSetting[] = []; 
+    public _linkPositions: SankeyDiagramLink[] = []; 
     public general: SankeyDiagramGeneralSettings = new SankeyDiagramGeneralSettings();
-    public _linkPositions: SankeyDiagramLinkPositionSetting[] = []; 
 }
+
