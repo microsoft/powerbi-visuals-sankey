@@ -42,7 +42,7 @@
     "jasmine": "2.5.2",
     "jasmine-core": "2.5.2",
     "jasmine-jquery": "2.1.1",
-    "jquery": "3.1.1",
+    "jquery": "^3.4.1",
     "karma": "3.1.1",
     "karma-chrome-launcher": "2.2.0",
     "karma-coverage": "1.1.2",
@@ -50,12 +50,12 @@
     "karma-jasmine": "2.0.1",
     "karma-junit-reporter": "^1.2.0",
     "karma-sourcemap-loader": "^0.3.7",
-    "karma-typescript": "^3.0.13",
+    "karma-typescript": "4.1.1",
     "karma-typescript-preprocessor": "0.4.0",
     "karma-webpack": "3.0.5",
     "lodash-es": "4.17.11",
     "powerbi-models": "1.0.13",
-    "powerbi-visuals-api": "^2.3.2",
+    "powerbi-visuals-api": "~2.6.1",
     "powerbi-visuals-tools": "^3.0.9",
     "powerbi-visuals-utils-colorutils": "^2.1.0",
     "powerbi-visuals-utils-dataviewutils": "^2.1.0",
@@ -72,5 +72,8 @@
     "tslint": "^5.12.0",
     "typescript": "^3.1.6",
     "webpack": "4.26.0"
+  },
+  "dependencies": {
+    "serialize-javascript": "^2.1.2"
   }
 }

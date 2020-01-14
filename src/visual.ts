@@ -28,7 +28,7 @@ import powerbi from "powerbi-visuals-api";
 import "@babel/polyfill";
 
 // serizizer
-let serialize = require('serialize-javascript');
+import * as serialize from 'serialize-javascript';
 // lodash
 import * as _ from "lodash-es";
 // d3
@@ -76,18 +76,16 @@ import ClassAndSelector = CssConstants.ClassAndSelector;
 import createClassAndSelector = CssConstants.createClassAndSelector;
 
 // powerbi.extensibility.utils.type
-import { pixelConverter, stringExtensions } from "powerbi-visuals-utils-typeutils";
+import { pixelConverter } from "powerbi-visuals-utils-typeutils";
 import pixelConverterFromPoint = pixelConverter.fromPoint;
 
 // powerbi.extensibility.utils.formatting
-import { valueFormatter, textMeasurementService as tms } from "powerbi-visuals-utils-formattingutils";
-import ValueFormatter = valueFormatter.valueFormatter;
-import TextProperties = tms.TextProperties;
+import { valueFormatter, textMeasurementService, interfaces } from "powerbi-visuals-utils-formattingutils";
+import TextProperties = interfaces.TextProperties;
 import IValueFormatter = valueFormatter.IValueFormatter;
-import textMeasurementService = tms.textMeasurementService;
 
 // powerbi.extensibility.utils.interactivity
-import { interactivitySelectionService, interactivityUtils, interactivityBaseService } from "powerbi-visuals-utils-interactivityutils";
+import { interactivitySelectionService, interactivityBaseService } from "powerbi-visuals-utils-interactivityutils";
 import appendClearCatcher = interactivityBaseService.appendClearCatcher;
 import SelectableDataPoint = interactivitySelectionService.SelectableDataPoint;
 import IInteractiveBehavior = interactivityBaseService.IInteractiveBehavior;
@@ -323,6 +321,7 @@ export class SankeyDiagram implements IVisual {
     }
 
     public update(visualUpdateOptions: VisualUpdateOptions): void {
+        this.visualHost.eventService.renderingStarted(visualUpdateOptions);
         try {
 
             if (visualUpdateOptions.type & VisualUpdateType.Resize && (visualUpdateOptions.type ^ VisualUpdateType.All)) {
@@ -351,11 +350,13 @@ export class SankeyDiagram implements IVisual {
             this.applySelectionStateToData();
 
             this.render(sankeyDiagramDataView);
+            this.visualHost.eventService.renderingFinished(visualUpdateOptions);
         }
         catch (e) {
+            this.visualHost.eventService.renderingFailed(visualUpdateOptions, e);
             console.log(e);
         }
-
+        
     }
 
     private updateViewport(viewport: IViewport): void {
@@ -705,8 +706,8 @@ export class SankeyDiagram implements IVisual {
             nodeFillColor: string,
             nodeStrokeColor: string;
 
-        valueFormatterForCategories = ValueFormatter.create({
-            format: ValueFormatter.getFormatStringByColumn(source),
+        valueFormatterForCategories = valueFormatter.create({
+            format: valueFormatter.getFormatStringByColumn(source),
             value: sourceCategories[0],
             value2: destinationCategories[destinationCategories.length - 1]
         });
@@ -805,7 +806,7 @@ export class SankeyDiagram implements IVisual {
         }
 
         if (valuesColumn && valuesColumn.source) {
-            formatOfWeigth = ValueFormatter.getFormatStringByColumn(valuesColumn.source);
+            formatOfWeigth = valueFormatter.getFormatStringByColumn(valuesColumn.source);
         }
 
         dataPoints = sourceCategories.map((item: any, index: number) => {
@@ -818,7 +819,7 @@ export class SankeyDiagram implements IVisual {
             };
         });
 
-        valuesFormatterForWeigth = ValueFormatter.create({
+        valuesFormatterForWeigth = valueFormatter.create({
             format: formatOfWeigth,
             value: Math.max(
                 settings.labels.unit !== 0 ? settings.labels.unit : d3.max(weightValues) || SankeyDiagram.MinWeightValue,
