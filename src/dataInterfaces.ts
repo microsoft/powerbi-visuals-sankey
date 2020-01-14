@@ -141,8 +141,8 @@ export interface SankeyDiagramNodePositionSetting {
     x?: string;
 }
 export interface SankeyDiagramLinkPositionSetting {
-    source: SankeyDiagramNodePositionSetting,
-    destination: SankeyDiagramNodePositionSetting,
+    source: SankeyDiagramNodePositionSetting;
+    destination: SankeyDiagramNodePositionSetting;
     height?: string;
     name: string;
 }

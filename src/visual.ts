@@ -28,7 +28,7 @@ import powerbi from "powerbi-visuals-api";
 import "@babel/polyfill";
 
 // serizizer
-var serialize = require('serialize-javascript');
+let serialize = require('serialize-javascript');
 // lodash
 import * as _ from "lodash-es";
 // d3
@@ -446,7 +446,7 @@ export class SankeyDiagram implements IVisual {
         }
 
         const savedNodes = new Set<SankeyDiagramNode>();
-        settings._linkPositions.forEach(l => { savedNodes.add(l.source); savedNodes.add(l.destination) })
+        settings._linkPositions.forEach(l => { savedNodes.add(l.source); savedNodes.add(l.destination); });
 
         let savedNodesArray: SankeyDiagramNode[] = [];
 
@@ -464,7 +464,7 @@ export class SankeyDiagram implements IVisual {
             });
             settings._linkPositions.forEach(l => l.display = false);
             links.forEach(link => {
-                let foundLink: SankeyDiagramLink = settings._linkPositions.find(slink => slink.source.label.name === link.source.label.name && slink.destination.label.name === link.destination.label.name)
+                let foundLink: SankeyDiagramLink = settings._linkPositions.find(slink => slink.source.label.name === link.source.label.name && slink.destination.label.name === link.destination.label.name);
                 if (foundLink) {
                     foundLink.display = true;
                     foundLink.identity = link.identity;
@@ -1056,7 +1056,7 @@ export class SankeyDiagram implements IVisual {
                 deserializedNodes.push(link.destination);
             }
             return link;
-        })
+        });
 
         return deserializedLinks;
     }
@@ -1072,7 +1072,7 @@ export class SankeyDiagram implements IVisual {
         const currentColumns: string = dataView.metadata.columns.map(column => column.queryName).join(":");
         settings.nodeComplexSettings.currentColumns = currentColumns;
 
-        //detect sorting chosen
+        // detect sorting chosen
         const foundSortedColumn = dataView.metadata.columns.find(col => col.sort !== undefined);
         if (foundSortedColumn) {
             settings.sort = foundSortedColumn.displayName + "|" + foundSortedColumn.sort;
@@ -1080,7 +1080,7 @@ export class SankeyDiagram implements IVisual {
 
         // if data is not empty
         if (settings.nodeComplexSettings.appState) {
-            // parse and save links 
+            // parse and save links
             let deserializedLinks = this.deserializeLinks(settings.nodeComplexSettings.appState);
             try {
                 settings._linkPositions = deserializedLinks;
@@ -1457,10 +1457,9 @@ export class SankeyDiagram implements IVisual {
                     }
                     return ascending ? ((x < y) ? -1 : ((x > y) ? 1 : 0)) : -((x < y) ? -1 : ((x > y) ? 1 : 0));
                 });
-            debugger;
             sortedNodes = [...sortedNodes, ...sortedColumn];
             current += col.countOfNodes;
-        })
+        });
 
         return sortedNodes;
     }
@@ -1475,7 +1474,6 @@ export class SankeyDiagram implements IVisual {
         columns: SankeyDiagramColumn[],
         scale: SankeyDiagramScaleSettings,
         viewportHeight: number, ignoreSelfLinkWeight: boolean): void {
-        debugger;
         if (sort !== "") {
             let [sortBy, order] = sort.split("|");
             sortBy = sortBy === "Value" ? "weight" : "name";
@@ -1876,9 +1874,9 @@ export class SankeyDiagram implements IVisual {
                 source: src,
                 destination: dest,
                 ...rest
-            })
+            });
             serializedLinks.push(serializedLink);
-        })
+        });
         return JSON.stringify(serializedLinks);
     }
 
@@ -1988,7 +1986,7 @@ export class SankeyDiagram implements IVisual {
             )
             .style("stroke", (link: SankeyDiagramLink) => link.strokeColor)
             .style("fill", (link: SankeyDiagramLink) => link.fillColor)
-            .style("display", (link: SankeyDiagramLink) => link.display ? null : SankeyDiagram.DisplayNone)
+            .style("display", (link: SankeyDiagramLink) => link.display ? null : SankeyDiagram.DisplayNone);
 
         return linksElementsMerged;
     }

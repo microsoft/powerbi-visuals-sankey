@@ -38,7 +38,7 @@ export enum CyclesDrawType {
     Duplicate,
     Backward
 }
-export class SankeyDiagramGeneralSettings{
+export class SankeyDiagramGeneralSettings {
     public pinNodes: boolean = false;
 }
 
@@ -99,8 +99,7 @@ export class SankeyDiagramSettings extends DataViewObjectsParser {
     public _nodePositions: SankeyDiagramNodePositionSetting[] = [];
     public cyclesLinks: SankeyNodeCycles = new SankeyNodeCycles();
     public _viewportSize: ViewportSize = {};
-    // public _linkPositions: SankeyDiagramLinkPositionSetting[] = []; 
-    public _linkPositions: SankeyDiagramLink[] = []; 
+    public _linkPositions: SankeyDiagramLink[] = [];
     public general: SankeyDiagramGeneralSettings = new SankeyDiagramGeneralSettings();
     public sort: string = "";
 }
