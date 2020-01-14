@@ -76,7 +76,7 @@ import ClassAndSelector = CssConstants.ClassAndSelector;
 import createClassAndSelector = CssConstants.createClassAndSelector;
 
 // powerbi.extensibility.utils.type
-import { pixelConverter } from "powerbi-visuals-utils-typeutils";
+import { pixelConverter, stringExtensions } from "powerbi-visuals-utils-typeutils";
 import pixelConverterFromPoint = pixelConverter.fromPoint;
 
 // powerbi.extensibility.utils.formatting
@@ -331,31 +331,31 @@ export class SankeyDiagram implements IVisual {
 
 
 
-        
-        let sankeyDiagramDataView: SankeyDiagramDataView,
-            viewport: IViewport = visualUpdateOptions
-                && visualUpdateOptions.viewport
-                || SankeyDiagram.DefaultViewport,
-            dataView: DataView = visualUpdateOptions
-                && visualUpdateOptions.dataViews
-                && visualUpdateOptions.dataViews[0];
+
+            let sankeyDiagramDataView: SankeyDiagramDataView,
+                viewport: IViewport = visualUpdateOptions
+                    && visualUpdateOptions.viewport
+                    || SankeyDiagram.DefaultViewport,
+                dataView: DataView = visualUpdateOptions
+                    && visualUpdateOptions.dataViews
+                    && visualUpdateOptions.dataViews[0];
 
 
-        this.updateViewport(visualUpdateOptions.viewport);
-        sankeyDiagramDataView = this.converter(dataView);
+            this.updateViewport(visualUpdateOptions.viewport);
+            sankeyDiagramDataView = this.converter(dataView);
 
-        this.computePositions(sankeyDiagramDataView);
+            this.computePositions(sankeyDiagramDataView);
 
-        this.dataView = sankeyDiagramDataView;
+            this.dataView = sankeyDiagramDataView;
 
-        this.applySelectionStateToData();
+            this.applySelectionStateToData();
 
-        this.render(sankeyDiagramDataView);
-        } 
-        catch (e){
+            this.render(sankeyDiagramDataView);
+        }
+        catch (e) {
             console.log(e);
         }
-        
+
     }
 
     private updateViewport(viewport: IViewport): void {
@@ -458,7 +458,7 @@ export class SankeyDiagram implements IVisual {
             settings,
             columns: []
         };
-        if (settings._linkPositions.length > 0 && settings.general.pinNodes) {    
+        if (settings._linkPositions.length > 0 && settings.general.pinNodes) {
             settings._linkPositions.forEach(link => {
                 link.identity = this.visualHost.createSelectionIdBuilder().createSelectionId();
             });
@@ -1072,6 +1072,11 @@ export class SankeyDiagram implements IVisual {
         const currentColumns: string = dataView.metadata.columns.map(column => column.queryName).join(":");
         settings.nodeComplexSettings.currentColumns = currentColumns;
 
+        //detect sorting chosen
+        const foundSortedColumn = dataView.metadata.columns.find(col => col.sort !== undefined);
+        if (foundSortedColumn) {
+            settings.sort = foundSortedColumn.displayName + "|" + foundSortedColumn.sort;
+        }
 
         // if data is not empty
         if (settings.nodeComplexSettings.appState) {
@@ -1196,6 +1201,7 @@ export class SankeyDiagram implements IVisual {
         sankeyDiagramDataView.settings._scale.x = this.getScaleByAxisX(maxXPosition);
 
         SankeyDiagram.scalePositionsByAxes(
+            sankeyDiagramDataView.settings.sort,
             sankeyDiagramDataView.nodes,
             columns,
             sankeyDiagramDataView.settings._scale,
@@ -1426,14 +1432,56 @@ export class SankeyDiagram implements IVisual {
             : SankeyDiagram.MinSize;
     }
 
+    private static sortColumns(
+        nodes: SankeyDiagramNode[],
+        columns: SankeyDiagramColumn[],
+        ascending: boolean,
+        sortBy: string): SankeyDiagramNode[] {
+
+        let sortedNodes: SankeyDiagramNode[] = [];
+        let current: number = 0;
+
+
+
+        columns.forEach(col => {
+            let sortedColumn = nodes
+                .slice(current, current + col.countOfNodes)
+                .sort(function (a, b) {
+                    let x, y;
+                    if (sortBy === "name") {
+                        x = a.label.name;
+                        y = b.label.name;
+                    } else if (sortBy === "weight") {
+                        x = Math.max(a.inputWeight, a.outputWeight);
+                        y = Math.max(b.inputWeight, b.outputWeight);
+                    }
+                    return ascending ? ((x < y) ? -1 : ((x > y) ? 1 : 0)) : -((x < y) ? -1 : ((x > y) ? 1 : 0));
+                });
+            debugger;
+            sortedNodes = [...sortedNodes, ...sortedColumn];
+            current += col.countOfNodes;
+        })
+
+        return sortedNodes;
+    }
+
+
     /*
         This method scales positions and compute positions of node on each column
     */
     private static scalePositionsByAxes(
+        sort: string,
         nodes: SankeyDiagramNode[],
         columns: SankeyDiagramColumn[],
         scale: SankeyDiagramScaleSettings,
         viewportHeight: number, ignoreSelfLinkWeight: boolean): void {
+        debugger;
+        if (sort !== "") {
+            let [sortBy, order] = sort.split("|");
+            sortBy = sortBy === "Value" ? "weight" : "name";
+            let asc: boolean = order === "1";
+            nodes = this.sortColumns(nodes, columns, asc, sortBy);
+        }
 
         let shiftByAxisY: number = SankeyDiagram.DefaultOffset,
             currentX: number = SankeyDiagram.DefaultPosition,

@@ -102,5 +102,6 @@ export class SankeyDiagramSettings extends DataViewObjectsParser {
     // public _linkPositions: SankeyDiagramLinkPositionSetting[] = []; 
     public _linkPositions: SankeyDiagramLink[] = []; 
     public general: SankeyDiagramGeneralSettings = new SankeyDiagramGeneralSettings();
+    public sort: string = "";
 }
 

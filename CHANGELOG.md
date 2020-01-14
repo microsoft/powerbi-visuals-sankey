@@ -1,6 +1,7 @@
 ## 2.1.0
 * Pin nodes feature added
 * Fix color bug
+* Sort options
 
 ## 2.0.1
 * Fix selection issue
