@@ -356,7 +356,6 @@ export class SankeyDiagram implements IVisual {
             this.visualHost.eventService.renderingFailed(visualUpdateOptions, e);
             console.log(e);
         }
-        
     }
 
     private updateViewport(viewport: IViewport): void {
