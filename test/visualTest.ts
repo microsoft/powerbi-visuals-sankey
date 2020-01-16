@@ -620,7 +620,7 @@ describe("SankeyDiagram", () => {
                     expect((nodeToDrag as any).getBoundingClientRect().bottom).toBeGreaterThan(visualBuilder.viewport.height - 20);
 
                     // call private methods
-                    (visualBuilder.instance as any).saveNodePositions((visualBuilder.instance as any).dataView.nodes);
+                    (visualBuilder.instance as any).saveLinkPositions((visualBuilder.instance as any).dataView.links);
                     (visualBuilder.instance as any).saveViewportSize();
 
                     done();

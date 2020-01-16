@@ -1155,7 +1155,14 @@ export class SankeyDiagram implements IVisual {
             }
 
             sankeyDiagramDataView.links.forEach((l) => {
-                l.weigth = Math.floor(weightScale(l.weigth + minWeigthShift));
+                let weight = weightScale(l.weigth + minWeigthShift);
+                if (weight > 0 && weight < 1){
+                    l.weigth = 1;
+                }
+                else {
+                    l.weigth = Math.floor(weight);
+                }
+                
 
                 if (Number.NEGATIVE_INFINITY === l.weigth || Number.POSITIVE_INFINITY === l.weigth || isNaN(l.weigth)) {
                     l.weigth = 0;
@@ -1862,19 +1869,19 @@ export class SankeyDiagram implements IVisual {
         let serializedLinks: string[] = [];
 
         function getSerilizedNode(node: SankeyDiagramNode) {
-            let { links, tooltipInfo, selectableDataPoints, ...src } = node;
+            let { links, tooltipInfo, selectableDataPoints, cloneLink, ...src } = node;
             return src;
         }
 
         links.forEach((link: SankeyDiagramLink) => {
             let src = getSerilizedNode(link.source), dest = getSerilizedNode(link.destination);
             let { source, destination, tooltipInfo, identity, ...rest } = link;
-
-            const serializedLink = serialize({
+            let objToSerialize = {
                 source: src,
                 destination: dest,
                 ...rest
-            });
+            };
+            const serializedLink = serialize(objToSerialize);
             serializedLinks.push(serializedLink);
         });
         return JSON.stringify(serializedLinks);
