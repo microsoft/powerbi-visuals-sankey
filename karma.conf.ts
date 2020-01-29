@@ -42,7 +42,7 @@ module.exports = (config: Config) => {
     config.set(<ConfigOptions>{
         mode: "development",
         browserNoActivityTimeout: 100000,
-        browsers: ["Chrome"],
+        browsers: ["ChromeHeadless"],
         colors: true,
         frameworks: ["jasmine"],
         reporters: [
