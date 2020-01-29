@@ -38,7 +38,7 @@ import { SankeyDiagramBuilder } from "./visualBuilder";
 import {
     SankeyDiagram as VisualClass
 }
-from "../src/visual";
+    from "../src/visual";
 
 import {
     SankeyDiagramNode,
@@ -47,7 +47,7 @@ import {
     SankeyDiagramLink,
     SankeyDiagramLabel
 }
-from "../src/dataInterfaces";
+    from "../src/dataInterfaces";
 
 // powerbi.extensibility.utils.test
 import {
@@ -647,6 +647,127 @@ describe("SankeyDiagram", () => {
 
             expect(VisualClass.createLink(link)).toBe("_Source-0-_Destination");
             expect(VisualClass.createLink(link, true)).toBe("linkLabelPaths_Source-0-_Destination");
+        });
+    });
+
+    describe("Node pinning settings test:", () => {
+        it("the visual does not change node positions", done => {
+            let dataView: DataView = defaultDataViewBuilder.getDataView();
+            dataView.metadata.objects = {
+                general: {
+                    pinNodes: false
+                }
+            };
+            // when the pinNodes setting is on
+            // filter apply generates new data and causes node position recalculation
+            let nodesBeforeFiltering: SankeyDiagramNode[] = [];
+            let nodesAfterFiltering: SankeyDiagramNode[] = [];
+            visualBuilder.update(dataView);
+            nodesBeforeFiltering = (<any>visualBuilder).visual.dataView.nodes;
+
+            // filter simulation via data array slicing
+            let defaultData = defaultDataViewBuilder.getSourceDestination().slice(0, 4);
+            defaultDataViewBuilder.setData(defaultData);
+            dataView = defaultDataViewBuilder.getDataView();
+
+
+
+            visualBuilder.update(dataView);
+            nodesAfterFiltering = (<any>visualBuilder).visual.dataView.nodes;
+            // guarantee that nodes were recalculated when data changed
+            nodesAfterFiltering.forEach(node => {
+                expect(nodesBeforeFiltering.some(nodeBeforeFiltering =>
+                    nodeBeforeFiltering.x === node.x &&
+                    nodeBeforeFiltering.y === node.y &&
+                    nodeBeforeFiltering.height === node.height))
+                    .toBe(false);
+            });
+            done();
+        });
+
+        it("the visual saves node positions", done => {
+            let dataView: DataView = defaultDataViewBuilder.getDataView();
+            dataView.metadata.objects = {
+                general: {
+                    pinNodes: true
+                }
+            };
+            // when the pinNodes setting is on
+            // filter apply generates new data and causes node position recalculation
+            let nodesBeforeFiltering: SankeyDiagramNode[] = [];
+            let nodesAfterFiltering: SankeyDiagramNode[] = [];
+            visualBuilder.update(dataView);
+            // defaultDataViewBuilder = new SankeyDiagramData();
+            nodesBeforeFiltering = (<any>visualBuilder).visual.dataView.nodes;
+
+            // filter simulation via data array slicing
+            let defaultData = defaultDataViewBuilder.getSourceDestination().slice(0, 4);
+            defaultDataViewBuilder.setData(defaultData);
+            const savedSettings = visualBuilder.getPropertyInstances();
+            const objects = {
+                general: {
+                    pinNodes: true
+                },
+                // cyclesLinks: {
+                //     drawCycles: 1
+                // },
+                nodeComplexSettings: {
+                    appState: savedSettings.properties.appState,
+                    columns: savedSettings.properties.columns
+                }
+            };
+            dataView = defaultDataViewBuilder.getDataView();
+            dataView.metadata.objects = objects;
+            visualBuilder.update(dataView);
+            nodesAfterFiltering = (<any>visualBuilder).visual.dataView.nodes;
+            // guarantee that nodes were recalculated when data changed
+            nodesAfterFiltering.forEach(node => {
+                let found: boolean = nodesBeforeFiltering.some(nodeBeforeFiltering =>
+                    nodeBeforeFiltering.x === node.x &&
+                    nodeBeforeFiltering.y === node.y);
+                expect(found)
+                    .toBe(true);
+            });
+            done();
+        });
+    });
+
+    describe("Postupdate render options test:", () => {
+        it("the visual keeps render data on subsequent updates", done => {
+            let dataView: DataView = defaultDataViewBuilder.getDataViewWithLowValue();
+            visualBuilder.update([dataView]);
+            visualBuilder.update([dataView]);
+            let links = (<any>visualBuilder).visual.dataView.links;
+            links.forEach(link => {
+                expect(link.display).toBe(true);
+            });
+            done();
+        });
+
+        it("the visual renders data on subsequent updates", done => {
+            let dataView: DataView = defaultDataViewBuilder.getDataViewWithLowValue();
+            let linksOnInit = [];
+            let linksAfterUpdate = [];
+            visualBuilder.update([dataView]);
+            linksOnInit = (<any>visualBuilder).visual.links._groups[0][0].children;
+            visualBuilder.update([dataView]);
+            linksAfterUpdate = (<any>visualBuilder).visual.links._groups[0][0].children;
+            let links = (<any>visualBuilder).visual.dataView.links;
+            // check for data display properties
+            links.forEach(element => {
+                expect(element.display).toBe(true);
+            });
+            // check for DOM element properties
+            [...linksAfterUpdate].forEach(link => {
+                expect(link.style.display === "").toBe(true);
+                let foundElement = [...linksOnInit].find(linkOnInit => linkOnInit === link);
+                let found = false;
+                if (foundElement) {
+                    found = true;
+                }
+                expect(found).toBe(true);
+            });
+            done();
         });
     });
 

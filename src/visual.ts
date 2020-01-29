@@ -320,6 +320,27 @@ export class SankeyDiagram implements IVisual {
             .classed(SankeyDiagram.NodesSelector.className, true);
     }
 
+    private recalcConditionDetected(sankeyDiagramDataView: SankeyDiagramDataView): boolean {
+        // no data, data calculation required
+        if (sankeyDiagramDataView.settings._linkPositions.length === 0) {
+            return true;
+        }
+        // recalulate and update data when filter
+        if (sankeyDiagramDataView.settings.filterDetected && !sankeyDiagramDataView.settings.general.pinNodes) {
+            return true;
+        }
+        // sorting setting added
+        if (sankeyDiagramDataView.settings.sort !== "") {
+            return true;
+        }
+        // scale settings trigger recalculation
+        if (this.dataView.settings.scaleSettings.lnScale !== sankeyDiagramDataView.settings.scaleSettings.lnScale ||
+            this.dataView.settings.scaleSettings.provideMinHeight !== sankeyDiagramDataView.settings.scaleSettings.provideMinHeight) {
+            return true;
+        }
+        return false;
+    }
+
     public update(visualUpdateOptions: VisualUpdateOptions): void {
         this.visualHost.eventService.renderingStarted(visualUpdateOptions);
         try {
@@ -327,9 +348,6 @@ export class SankeyDiagram implements IVisual {
             if (visualUpdateOptions.type & VisualUpdateType.Resize && (visualUpdateOptions.type ^ VisualUpdateType.All)) {
                 return;
             }
-
-
-
 
             let sankeyDiagramDataView: SankeyDiagramDataView,
                 viewport: IViewport = visualUpdateOptions
@@ -342,9 +360,19 @@ export class SankeyDiagram implements IVisual {
 
             this.updateViewport(visualUpdateOptions.viewport);
             sankeyDiagramDataView = this.converter(dataView);
-
-            this.computePositions(sankeyDiagramDataView);
-
+            if (sankeyDiagramDataView.settings._linkPositions.length === 0 ||
+                sankeyDiagramDataView.settings.filterDetected && !sankeyDiagramDataView.settings.general.pinNodes ||
+                sankeyDiagramDataView.settings.sort !== "") {
+                this.computePositions(sankeyDiagramDataView);
+            } else {
+                this.restoreNodePositions(sankeyDiagramDataView.nodes, sankeyDiagramDataView.settings);
+                let columns: SankeyDiagramColumn[] = this.getColumns(sankeyDiagramDataView.nodes);
+                let maxColumn = SankeyDiagram.getMaxColumn(columns);
+                sankeyDiagramDataView.settings._scale.y = this.getScaleByAxisY(maxColumn.sumValueOfNodes);
+                sankeyDiagramDataView.settings._scale.x = this.getScaleByAxisX(Object.keys(columns).length - 1);
+            }
+            this.computeBordersOfTheNode(sankeyDiagramDataView);
+            SankeyDiagram.computeIntersections(sankeyDiagramDataView);
             this.dataView = sankeyDiagramDataView;
 
             this.applySelectionStateToData();
@@ -385,6 +413,17 @@ export class SankeyDiagram implements IVisual {
             .attr("width", width);
 
         this.main.attr("transform", translate(this.margin.left, this.margin.top));
+    }
+
+    private saveLinkProperties(link, foundLink) {
+        foundLink.display = true;
+        foundLink.identity = link.identity;
+        foundLink.source.selectableDataPoints = link.source.selectableDataPoints;
+        foundLink.destination.selectableDataPoints = link.destination.selectableDataPoints;
+        foundLink.tooltipInfo = link.tooltipInfo;
+        foundLink.source.tooltipInfo = link.source.tooltipInfo;
+        foundLink.destination.tooltipInfo = link.destination.tooltipInfo;
+        foundLink.fillColor = link.fillColor;
     }
 
     public converter(dataView: DataView): SankeyDiagramDataView {
@@ -458,24 +497,34 @@ export class SankeyDiagram implements IVisual {
             settings,
             columns: []
         };
-        if (settings._linkPositions.length > 0 && settings.general.pinNodes) {
-            settings._linkPositions.forEach(link => {
-                link.identity = this.visualHost.createSelectionIdBuilder().createSelectionId();
-            });
-            settings._linkPositions.forEach(l => l.display = false);
+        settings.filterDetected = savedNodesArray.length !== nodes.length;
+        if (settings.filterDetected) {
+            settings._linkPositions.forEach(l => l.display = true);
+            if (settings.general.pinNodes) {
+                settings._linkPositions.forEach(link => {
+                    link.identity = this.visualHost.createSelectionIdBuilder().createSelectionId();
+                    link.display = false;
+                });
+                links.forEach(link => {
+                    let foundLink: SankeyDiagramLink = settings._linkPositions.find(slink => slink.source.label.name === link.source.label.name && slink.destination.label.name === link.destination.label.name);
+                    if (foundLink) {
+                        this.saveLinkProperties(link, foundLink);
+                    }
+                });
+                sankeyDiagramDataView.nodes = savedNodesArray;
+                sankeyDiagramDataView.links = settings._linkPositions;
+            }
+        }
+        else {
             links.forEach(link => {
                 let foundLink: SankeyDiagramLink = settings._linkPositions.find(slink => slink.source.label.name === link.source.label.name && slink.destination.label.name === link.destination.label.name);
                 if (foundLink) {
-                    foundLink.display = true;
-                    foundLink.identity = link.identity;
-                    foundLink.source.selectableDataPoints = link.source.selectableDataPoints;
-                    foundLink.destination.selectableDataPoints = link.destination.selectableDataPoints;
+                    this.saveLinkProperties(link, foundLink);
                 }
             });
             sankeyDiagramDataView.nodes = savedNodesArray;
             sankeyDiagramDataView.links = settings._linkPositions;
         }
-
         if (settings.cyclesLinks.drawCycles === CyclesDrawType.Backward) {
             SankeyDiagram.computeXPositions(sankeyDiagramDataView);
             sankeyDiagramDataView.links = this.processCyclesForBackwardLinks(cycles, sankeyDiagramDataView.nodes, links, settings);
@@ -486,7 +535,6 @@ export class SankeyDiagram implements IVisual {
             });
         }
 
-        this.restoreNodePositions(nodes, settings);
 
         return sankeyDiagramDataView;
     }
@@ -1057,6 +1105,13 @@ export class SankeyDiagram implements IVisual {
             }
             return link;
         });
+        deserializedNodes.forEach(node => {
+            let foundNode: SankeyDiagramNode = deserializedNodes.find(foundCloneNode => foundCloneNode.label.name === `${node.label.name}${SankeyDiagram.DuplicatedNamePostfix}`);
+            if (foundNode) {
+                node.cloneLink = foundNode;
+                foundNode.cloneLink = node;
+            }
+        });
 
         return deserializedLinks;
     }
@@ -1082,6 +1137,14 @@ export class SankeyDiagram implements IVisual {
         if (settings.nodeComplexSettings.appState) {
             // parse and save links
             let deserializedLinks = this.deserializeLinks(settings.nodeComplexSettings.appState);
+            if (dataView.metadata.objects.labels) {
+                if (dataView.metadata.objects.labels.fill) {
+                    deserializedLinks.forEach(element => {
+                        element.source.label.color = <string>dataView.metadata.objects.labels.fill["solid"].color;
+                        element.destination.label.color = <string>dataView.metadata.objects.labels.fill["solid"].color;
+                    });
+                }
+            }
             try {
                 settings._linkPositions = deserializedLinks;
             }
@@ -1089,6 +1152,9 @@ export class SankeyDiagram implements IVisual {
                 settings._linkPositions = [];
                 settings.nodeComplexSettings.linkPositions = "[]";
             }
+        } else {
+            settings._linkPositions = [];
+            settings.nodeComplexSettings.linkPositions = "[]";
         }
 
         // if data changed
@@ -1156,13 +1222,13 @@ export class SankeyDiagram implements IVisual {
 
             sankeyDiagramDataView.links.forEach((l) => {
                 let weight = weightScale(l.weigth + minWeigthShift);
-                if (weight > 0 && weight < 1){
+                if (weight > 0 && weight < 1) {
                     l.weigth = 1;
                 }
                 else {
                     l.weigth = Math.floor(weight);
                 }
-                
+
 
                 if (Number.NEGATIVE_INFINITY === l.weigth || Number.POSITIVE_INFINITY === l.weigth || isNaN(l.weigth)) {
                     l.weigth = 0;
@@ -1224,8 +1290,6 @@ export class SankeyDiagram implements IVisual {
 
         this.applySavedPositions(sankeyDiagramDataView);
 
-        this.computeBordersOfTheNode(sankeyDiagramDataView);
-        SankeyDiagram.computeIntersections(sankeyDiagramDataView);
         // saving computed values to appState
         // let formattedColumns: string = sankeyDiagramDataView.settings.nodeComplexSettings.columns.slice(1, sankeyDiagramDataView.settings.nodeComplexSettings.columns.length - 1);
 
@@ -1276,6 +1340,7 @@ export class SankeyDiagram implements IVisual {
                 - node.width
                 - SankeyDiagram.NodeMargin * SankeyDiagram.NodeMarginFactor;
         });
+
     }
 
     private static computeIntersections(sankeyDiagramDataView: SankeyDiagramDataView): void {
@@ -1865,7 +1930,7 @@ export class SankeyDiagram implements IVisual {
     }
 
 
-    private serializeLinks(links: SankeyDiagramLink[]) {
+    private serializeLinks(links: SankeyDiagramLink[]): string {
         let serializedLinks: string[] = [];
 
         function getSerilizedNode(node: SankeyDiagramNode) {
@@ -2104,7 +2169,7 @@ export class SankeyDiagram implements IVisual {
             .style("font-size", this.dataView.settings.linkLabels.fontSize)
             .style("fill", this.dataView.settings.linkLabels.fill)
             .text((link: SankeyDiagramLink) =>
-                `${link.source.label.name || ""}-${link.destination.label.name || ""}:${(link.tooltipInfo[2] || { value: "" }).value}`
+                `${link.source.label.name || ""}-${link.destination.label.name || ""}:${(link.tooltipInfo && link.tooltipInfo[2] || { value: "" }).value}`
             );
     }
 

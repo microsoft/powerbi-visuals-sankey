@@ -320,5 +320,8 @@
     },
     "sorting": {
         "default": {}
-    }
+    },
+    "supportsKeyboardFocus": true,
+    "supportsSynchronizingFilterState": true,
+    "supportsHighlight": true
 }

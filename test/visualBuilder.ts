@@ -43,7 +43,16 @@ export class SankeyDiagramBuilder extends VisualBuilderBase<VisualClass> {
         super(width, height, "SankeyDiagram1446463184954");
     }
 
+    private instances: any;
+
+    getPropertyInstances () {
+        return this.instances;
+    }
+
     protected build(options: VisualConstructorOptions) {
+        options.host.persistProperties = (instances) => {
+            this.instances = instances.merge[0];
+        };
         return new VisualClass(options);
     }
 

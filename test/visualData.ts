@@ -77,6 +77,14 @@ export class SankeyDiagramData extends TestDataViewBuilder {
 
     public valuesWithLowValue: number[] = getRandomNumbers(this.valuesSourceDestinationWithWeigth.length, 10, 50).map( (v) => v / 100);
 
+    public setData(data: string[][]): void {
+        this.valuesSourceDestination = data;
+    }
+
+    public getSourceDestination(): string[][] {
+        return this.valuesSourceDestination;
+    }
+
     public getDataViewWithLowValue(columnNames?: string[]): DataView {
         return this.createCategoricalDataViewBuilder([
             {
@@ -134,7 +142,7 @@ export class SankeyDiagramData extends TestDataViewBuilder {
                         isMeasure: true,
                         type: ValueType.fromDescriptor({ numeric: true }),
                     },
-                    values: this.valuesValue
+                    values: this.valuesValue.slice(0, this.valuesSourceDestination.length)
                 }
             ], columnNames).build();
     }
