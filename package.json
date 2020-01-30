@@ -28,7 +28,6 @@
   },
   "homepage": "https://github.com/Microsoft/powerbi-visuals-sankey#readme",
   "devDependencies": {
-    "@babel/polyfill": "^7.8.3",
     "@types/d3": "5.7.2",
     "@types/jasmine": "3.5.2",
     "@types/jasmine-jquery": "1.5.33",
@@ -75,6 +74,7 @@
     "webpack": "4.41.5"
   },
   "dependencies": {
+    "core-js": "^3.6.4",
     "serialize-javascript": "^2.1.2"
   }
 }

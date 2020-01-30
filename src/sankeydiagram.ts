@@ -25,7 +25,7 @@
 */
 import "../style/visual.less";
 import powerbi from "powerbi-visuals-api";
-import "@babel/polyfill";
+import "core-js/stable";
 
 // serizizer
 import * as serialize from 'serialize-javascript';
