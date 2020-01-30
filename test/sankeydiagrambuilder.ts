@@ -33,7 +33,7 @@ import {
 // SankeyDiagram1446463184954
 import {
     SankeyDiagram as VisualClass
-} from "../src/visual";
+} from "../src/sankeydiagram";
 
 import  powerbi from "powerbi-visuals-api";
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;

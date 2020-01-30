@@ -11,6 +11,6 @@
     "declaration": true
   },
   "files": [
-    "src/visual.ts"
+    "src/sankeydiagram.ts"
   ]
 }

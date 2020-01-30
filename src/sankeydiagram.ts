@@ -34,7 +34,7 @@ import * as _ from "lodash-es";
 // d3
 import * as d3 from "d3";
 
-const getEvent = () => require("d3-selection").event as MouseEvent;
+const getEvent = () => <MouseEvent>require("d3-selection").event;
 
 type Selection<T> = d3.Selection<any, T, any, any>;
 type UpdateSelection<T> = d3.Selection<any, T, any, any>;
@@ -77,7 +77,7 @@ import createClassAndSelector = CssConstants.createClassAndSelector;
 
 // powerbi.extensibility.utils.type
 import { pixelConverter } from "powerbi-visuals-utils-typeutils";
-import pixelConverterFromPoint = pixelConverter.fromPoint;
+import fromPoint = pixelConverter.fromPoint;
 
 // powerbi.extensibility.utils.formatting
 import { valueFormatter, textMeasurementService, interfaces } from "powerbi-visuals-utils-formattingutils";
@@ -90,7 +90,7 @@ import appendClearCatcher = interactivityBaseService.appendClearCatcher;
 import SelectableDataPoint = interactivitySelectionService.SelectableDataPoint;
 import IInteractiveBehavior = interactivityBaseService.IInteractiveBehavior;
 import IInteractivityService = interactivityBaseService.IInteractivityService;
-import createInteractivityService = interactivitySelectionService.createInteractivitySelectionService;
+import createInteractivitySelectionService = interactivitySelectionService.createInteractivitySelectionService;
 
 // powerbi.extensibility.utils.tooltip
 import {
@@ -127,7 +127,7 @@ import {
 } from "./dataInterfaces";
 
 import {
-    SankeyDiagramSelectionIdBuilder
+    SelectionIdBuilder
 } from "./selectionIdBuilder";
 
 import * as sankeyDiagramUtils from "./utils";
@@ -278,7 +278,7 @@ export class SankeyDiagram implements IVisual {
     private get textProperties(): TextProperties {
         return {
             fontFamily: this.fontFamily,
-            fontSize: pixelConverterFromPoint(this.dataView
+            fontSize: fromPoint(this.dataView
                 ? this.dataView.settings.labels.fontSize
                 : SankeyDiagramLabelsSettings.DefaultFontSize)
         };
@@ -296,7 +296,7 @@ export class SankeyDiagram implements IVisual {
             .append("svg")
             .classed(SankeyDiagram.ClassName, true);
 
-        this.interactivityService = createInteractivityService(this.visualHost);
+        this.interactivityService = createInteractivitySelectionService(this.visualHost);
         this.behavior = SankeyDiagramBehavior.create();
         this.clearCatcher = appendClearCatcher(this.root);
 
@@ -401,6 +401,7 @@ export class SankeyDiagram implements IVisual {
         this.updateElements(height, width);
     }
 
+    // tslint:disable-next-line: function-name
     public static getPositiveNumber(value: number): number {
         return value < 0 || isNaN(value) || value === null || value === Infinity || value === -Infinity
             ? 0
@@ -436,7 +437,6 @@ export class SankeyDiagram implements IVisual {
             || !dataView.categorical.categories[1]
             || !dataView.categorical.categories[0].values
             || !dataView.categorical.categories[1].values) {
-
             return {
                 settings,
                 nodes: [],
@@ -444,7 +444,6 @@ export class SankeyDiagram implements IVisual {
                 columns: []
             };
         }
-
         let nodes: SankeyDiagramNode[],
             links: SankeyDiagramLink[],
             sourceCategory: DataViewCategoryColumn = dataView.categorical.categories[0],
@@ -452,7 +451,7 @@ export class SankeyDiagram implements IVisual {
             destinationCategories: any[] = dataView.categorical.categories[1].values,
             sourceCategoryLabels: any[] = (dataView.categorical.categories[2] || { values: [] }).values,
             destinationCategoriesLabels: any[] = (dataView.categorical.categories[3] || { values: [] }).values,
-            selectionIdBuilder: SankeyDiagramSelectionIdBuilder = new SankeyDiagramSelectionIdBuilder(
+            selectionIdBuilder: SelectionIdBuilder = new SelectionIdBuilder(
                 this.visualHost,
                 dataView.categorical.categories);
         nodes = this.createNodes(
@@ -464,7 +463,6 @@ export class SankeyDiagram implements IVisual {
             sourceCategory.objects || [],
             sourceCategoryLabels,
             destinationCategoriesLabels);
-
         links = this.createLinks(
             nodes,
             selectionIdBuilder,
@@ -477,20 +475,14 @@ export class SankeyDiagram implements IVisual {
             dataView.categorical.categories[SankeyDiagram.DestinationCategoryIndex].source.displayName,
             dataView.categorical.values ? dataView.categorical.values[SankeyDiagram.FirstValueIndex].source.displayName : null
         );
-
         let cycles: SankeyDiagramCycleDictionary = this.checkCycles(nodes);
-
         if (settings.cyclesLinks.drawCycles === CyclesDrawType.Duplicate) {
             links = this.processCyclesForwardLinks(cycles, nodes, links, settings);
         }
-
         const savedNodes = new Set<SankeyDiagramNode>();
         settings._linkPositions.forEach(l => { savedNodes.add(l.source); savedNodes.add(l.destination); });
-
         let savedNodesArray: SankeyDiagramNode[] = [];
-
         savedNodes.forEach(node => savedNodesArray.push(node));
-
         let sankeyDiagramDataView: any = {
             nodes,
             links,
@@ -507,9 +499,7 @@ export class SankeyDiagram implements IVisual {
                 });
                 links.forEach(link => {
                     let foundLink: SankeyDiagramLink = settings._linkPositions.find(slink => slink.source.label.name === link.source.label.name && slink.destination.label.name === link.destination.label.name);
-                    if (foundLink) {
-                        this.saveLinkProperties(link, foundLink);
-                    }
+                    if (foundLink) { this.saveLinkProperties(link, foundLink); }
                 });
                 sankeyDiagramDataView.nodes = savedNodesArray;
                 sankeyDiagramDataView.links = settings._linkPositions;
@@ -534,8 +524,6 @@ export class SankeyDiagram implements IVisual {
                 }
             });
         }
-
-
         return sankeyDiagramDataView;
     }
 
@@ -551,7 +539,7 @@ export class SankeyDiagram implements IVisual {
 
     private processCyclesForwardLinks(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[], settings: SankeyDiagramSettings): SankeyDiagramLink[] {
         let createdNodes: SankeyDiagramNode[] = [];
-        for (let nodeName in cycles) {
+        for (let nodeName of Object.keys(cycles)) {
             let firstCyclesNode: SankeyDiagramNode = cycles[nodeName][cycles[nodeName].length - 1];
             // create a clone of the node and save a link to each other. In selection behavior, selection of clone lead to select original and visa versa
             let nodeCopy: SankeyDiagramNode = _.cloneDeep(firstCyclesNode);
@@ -593,7 +581,7 @@ export class SankeyDiagram implements IVisual {
     // in this method we breaking simple cycles
     private processCyclesForBackwardLinks(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[], settings: SankeyDiagramSettings): SankeyDiagramLink[] {
         let createdNodes: SankeyDiagramNode[] = [];
-        for (let nodeName in cycles) {
+        for (let nodeName of Object.keys(cycles)) {
             let firstCyclesNode: SankeyDiagramNode = cycles[nodeName][cycles[nodeName].length - 1];
 
             // make output links as backward links for node
@@ -665,9 +653,11 @@ export class SankeyDiagram implements IVisual {
 
     // remove Duplicated links
     private static fixLinksCount(node: SankeyDiagramNode) {
+        // tslint:disable-next-line: underscore-consistent-invocation
         node.links = _.uniq(node.links);
     }
 
+    // tslint:disable-next-line: function-name
     public static dfs(nodes: SankeyDiagramNode[], currNode: SankeyDiagramNode, nodesStatuses: SankeyDiagramNodeStatus[], simpleCycles: SankeyDiagramCycleDictionary): void {
         nodesStatuses[currNode.label.name].status = SankeyDiagramNodeStatus.Processing;
 
@@ -742,7 +732,7 @@ export class SankeyDiagram implements IVisual {
         sourceCategories: any[],
         destinationCategories: any[],
         settings: SankeyDiagramSettings,
-        selectionIdBuilder: SankeyDiagramSelectionIdBuilder,
+        selectionIdBuilder: SelectionIdBuilder,
         source: DataViewMetadataColumn,
         linksObjects: DataViewObjects[],
         sourceCategoriesLabels?: any[],
@@ -826,16 +816,9 @@ export class SankeyDiagram implements IVisual {
     }
 
     private createLinks(
-        nodes: SankeyDiagramNode[],
-        selectionIdBuilder: SankeyDiagramSelectionIdBuilder,
-        sourceCategories: any[],
-        destinationCategories: any[],
-        valueColumns: DataViewValueColumns,
-        linksObjects: DataViewObjects[],
-        settings: SankeyDiagramSettings,
-        sourceFieldName: string,
-        destinationFieldName: string,
-        valueFieldName: string
+        nodes: SankeyDiagramNode[], selectionIdBuilder: SelectionIdBuilder, sourceCategories: any[],
+        destinationCategories: any[], valueColumns: DataViewValueColumns, linksObjects: DataViewObjects[],
+        settings: SankeyDiagramSettings, sourceFieldName: string, destinationFieldName: string, valueFieldName: string
     ): SankeyDiagramLink[] {
         let valuesColumn: DataViewValueColumn = valueColumns && valueColumns[0],
             links: SankeyDiagramLink[] = [],
@@ -843,19 +826,14 @@ export class SankeyDiagram implements IVisual {
             dataPoints: SankeyDiagramDataPoint[] = [],
             valuesFormatterForWeigth: IValueFormatter,
             formatOfWeigth: string = SankeyDiagram.DefaultFormatOfWeigth;
-
         if (valuesColumn && valuesColumn.values && valuesColumn.values.map) {
             weightValues = valuesColumn.values.map((value: any) => {
-                return value
-                    ? value
-                    : SankeyDiagram.DefaultWeightValue;
+                return value ? value : SankeyDiagram.DefaultWeightValue;
             });
         }
-
         if (valuesColumn && valuesColumn.source) {
             formatOfWeigth = valueFormatter.getFormatStringByColumn(valuesColumn.source);
         }
-
         dataPoints = sourceCategories.map((item: any, index: number) => {
             return {
                 source: item,
@@ -865,14 +843,12 @@ export class SankeyDiagram implements IVisual {
                     : SankeyDiagram.MinWeightValue
             };
         });
-
         valuesFormatterForWeigth = valueFormatter.create({
             format: formatOfWeigth,
             value: Math.max(
                 settings.labels.unit !== 0 ? settings.labels.unit : d3.max(weightValues) || SankeyDiagram.MinWeightValue,
                 SankeyDiagram.MinWeightValue),
         });
-
         dataPoints.forEach((dataPoint: SankeyDiagramDataPoint, index: number) => {
             let sourceNode: SankeyDiagramNode,
                 destinationNode: SankeyDiagramNode,
@@ -882,13 +858,8 @@ export class SankeyDiagram implements IVisual {
                 selectionId: ISelectionId;
 
             nodes.forEach((node: SankeyDiagramNode) => {
-                if (node.label.internalName === dataPoint.source) {
-                    sourceNode = node;
-                }
-
-                if (node.label.internalName === dataPoint.destination) {
-                    destinationNode = node;
-                }
+                if (node.label.internalName === dataPoint.source) { sourceNode = node; }
+                if (node.label.internalName === dataPoint.destination) { destinationNode = node; }
             });
 
             linkFillColor = this.getColor(
@@ -898,7 +869,6 @@ export class SankeyDiagram implements IVisual {
             linkStrokeColor = this.colorHelper.isHighContrast ? this.colorHelper.getHighContrastColor("foreground", linkFillColor) : linkFillColor;
 
             selectionId = selectionIdBuilder.createSelectionId(index);
-
             link = {
                 display: true,
                 source: sourceNode,
@@ -922,16 +892,13 @@ export class SankeyDiagram implements IVisual {
                 selected: false,
                 direction: SankeyLinkDirrections.Forward
             };
-
             let selectableDataPoint: SelectableDataPoint = SankeyDiagram.createSelectableDataPoint(selectionId);
+
             sourceNode.selectableDataPoints.push(selectableDataPoint);
             destinationNode.selectableDataPoints.push(selectableDataPoint);
-
             links.push(link);
-
             sourceNode.links.push(link);
             destinationNode.links.push(link);
-
             SankeyDiagram.updateValueOfNode(sourceNode);
             SankeyDiagram.updateValueOfNode(destinationNode);
         });
@@ -940,9 +907,7 @@ export class SankeyDiagram implements IVisual {
             nodes.tooltipInfo = SankeyDiagram.getTooltipForNode(
                 valuesFormatterForWeigth,
                 nodes.label.formattedName,
-                nodes.inputWeight
-                    ? nodes.inputWeight
-                    : nodes.outputWeight,
+                nodes.inputWeight ? nodes.inputWeight : nodes.outputWeight,
                 this.localizationManager,
                 nodes.inputWeight > 0 && nodes.outputWeight > 0 ? `${sourceFieldName}-${destinationFieldName}` : nodes.outputWeight > 0
                     ? sourceFieldName
@@ -951,7 +916,6 @@ export class SankeyDiagram implements IVisual {
             );
 
         });
-
         return links;
     }
 
@@ -1174,41 +1138,30 @@ export class SankeyDiagram implements IVisual {
     }
 
     private computePositions(sankeyDiagramDataView: SankeyDiagramDataView): void {
-        let maxXPosition: number,
-            maxColumn: SankeyDiagramColumn,
-            columns: SankeyDiagramColumn[];
-
+        let maxXPosition: number, maxColumn: SankeyDiagramColumn, columns: SankeyDiagramColumn[];
         maxXPosition = SankeyDiagram.computeXPositions(sankeyDiagramDataView);
-
         SankeyDiagram.sortNodesByX(sankeyDiagramDataView.nodes);
 
         let scaleShift: number = 0;
         let minWeight: number = 1;
         let minHeight: number = 1;
         let scaleStepCount: number = 0;
-
         let minWeigthShift: number = 0;
+
         let minWeigthLink = _.minBy(sankeyDiagramDataView.links, "weigth");
-        if (minWeigthLink) {
-            minWeigthShift = minWeigthLink.weigth;
-        }
-        if (minWeigthShift > 0) {
-            minWeigthShift = 0;
-        }
+        if (minWeigthLink) { minWeigthShift = minWeigthLink.weigth; }
+        if (minWeigthShift > 0) { minWeigthShift = 0; }
 
         let minWeightInData: number = minWeigthShift;
         minWeigthShift = Math.abs(minWeigthShift) + minWeight;
         let maxWeightInData: number = 0;
         let maxWeigthLink = _.maxBy(sankeyDiagramDataView.links, "weigth");
-        if (maxWeigthLink) {
-            maxWeightInData = maxWeigthLink.weigth;
-        }
+        if (maxWeigthLink) { maxWeightInData = maxWeigthLink.weigth; }
 
         let minRangeOfScale: number = sankeyDiagramDataView.settings.scaleSettings.provideMinHeight ? SankeyDiagram.DefaultMinRangeOfScale : SankeyDiagram.MinRangeOfScale;
 
         while (minHeight <= SankeyDiagram.MinHeightOfNode && scaleStepCount < SankeyDiagram.ScaleStepLimit && sankeyDiagramDataView.settings._linkPositions.length === 0) {
             let weightScale: any;
-
             if (sankeyDiagramDataView.settings.scaleSettings.lnScale) {
                 weightScale = d3.scaleLog()
                     .base(Math.E)
@@ -1219,7 +1172,6 @@ export class SankeyDiagram implements IVisual {
                     .domain([minWeightInData + scaleShift, maxWeightInData + scaleShift])
                     .range([minRangeOfScale, SankeyDiagram.DefaultMaxRangeOfScale]);
             }
-
             sankeyDiagramDataView.links.forEach((l) => {
                 let weight = weightScale(l.weigth + minWeigthShift);
                 if (weight > 0 && weight < 1) {
@@ -1228,13 +1180,10 @@ export class SankeyDiagram implements IVisual {
                 else {
                     l.weigth = Math.floor(weight);
                 }
-
-
                 if (Number.NEGATIVE_INFINITY === l.weigth || Number.POSITIVE_INFINITY === l.weigth || isNaN(l.weigth)) {
                     l.weigth = 0;
                 }
             });
-
             if (sankeyDiagramDataView.links.some((link: SankeyDiagramLink) => link.weigth <= SankeyDiagram.NegativeValueRange)) {
                 let minWeight: number = sankeyDiagramDataView.links[0].weigth;
                 sankeyDiagramDataView.links.forEach((link: SankeyDiagramLink) => {
@@ -1242,27 +1191,19 @@ export class SankeyDiagram implements IVisual {
                         minWeight = link.weigth;
                     }
                 });
-
                 minWeight = Math.abs(minWeight);
                 // shift weight values to eliminate negative values
-                sankeyDiagramDataView.links.forEach((link: SankeyDiagramLink) => {
-                    link.weigth += minWeight;
-                });
+                sankeyDiagramDataView.links.forEach((link: SankeyDiagramLink) => { link.weigth += minWeight; });
             }
-
             sankeyDiagramDataView.nodes.forEach((node: SankeyDiagramNode) => {
                 SankeyDiagram.updateValueOfNode(node);
             });
-
             columns = this.getColumns(sankeyDiagramDataView.nodes);
             maxColumn = SankeyDiagram.getMaxColumn(columns);
-
             minWeight = d3.min(sankeyDiagramDataView.nodes.filter((n) => Math.max(n.inputWeight, n.outputWeight) > 0).map((n) => Math.max(n.inputWeight, n.outputWeight)));
             minWeight = minWeight || SankeyDiagram.DefaultWeightOfLink;
             sankeyDiagramDataView.settings._scale.y = this.getScaleByAxisY(maxColumn.sumValueOfNodes);
-
             minHeight = minWeight * sankeyDiagramDataView.settings._scale.y;
-
             scaleShift += SankeyDiagram.ScaleStep;
             scaleStepCount++;
         }
@@ -1272,7 +1213,6 @@ export class SankeyDiagram implements IVisual {
             sankeyDiagramDataView.settings._scale.y = this.getScaleByAxisY(maxColumn.sumValueOfNodes);
         }
         sankeyDiagramDataView.settings._scale.x = this.getScaleByAxisX(maxXPosition);
-
         SankeyDiagram.scalePositionsByAxes(
             sankeyDiagramDataView.settings.sort,
             sankeyDiagramDataView.nodes,
@@ -1281,18 +1221,14 @@ export class SankeyDiagram implements IVisual {
             this.viewport.height,
             sankeyDiagramDataView.settings.cyclesLinks.selfLinksWeight && sankeyDiagramDataView.settings.cyclesLinks.drawCycles === CyclesDrawType.Backward
         );
-
         this.computeYPosition(
             sankeyDiagramDataView.nodes,
             sankeyDiagramDataView.settings._scale.y,
             sankeyDiagramDataView.settings.cyclesLinks.selfLinksWeight && sankeyDiagramDataView.settings.cyclesLinks.drawCycles === CyclesDrawType.Backward
         );
-
         this.applySavedPositions(sankeyDiagramDataView);
-
         // saving computed values to appState
         // let formattedColumns: string = sankeyDiagramDataView.settings.nodeComplexSettings.columns.slice(1, sankeyDiagramDataView.settings.nodeComplexSettings.columns.length - 1);
-
         let serializedLinks: string = this.serializeLinks(sankeyDiagramDataView.links);
         if (sankeyDiagramDataView.settings.nodeComplexSettings.appState !== serializedLinks || sankeyDiagramDataView.settings.nodeComplexSettings.currentColumns !== sankeyDiagramDataView.settings.nodeComplexSettings.columns) {
             this.saveSerializedLinks(serializedLinks, sankeyDiagramDataView.settings.nodeComplexSettings.currentColumns);
@@ -1376,7 +1312,7 @@ export class SankeyDiagram implements IVisual {
         });
 
         let newarray = [];
-        for (let key in unique) {
+        for (let key of Object.keys(unique)) {
             newarray.push(unique[key]);
         }
 
@@ -1439,6 +1375,7 @@ export class SankeyDiagram implements IVisual {
         return SankeyDiagram.getPositiveNumber((this.viewport.width - this.nodeWidth) / numberOfColumns);
     }
 
+    // tslint:disable-next-line: function-name
     public static sortNodesByX(nodes: SankeyDiagramNode[]): SankeyDiagramNode[] {
         return nodes.sort((firstNode: SankeyDiagramNode, secondNode: SankeyDiagramNode) => {
             return firstNode.x - secondNode.x;
@@ -1478,6 +1415,7 @@ export class SankeyDiagram implements IVisual {
         return columns;
     }
 
+    // tslint:disable-next-line: function-name
     public static getMaxColumn(columns: SankeyDiagramColumn[] = []): SankeyDiagramColumn {
         let currentMaxColumn: SankeyDiagramColumn = {
             sumValueOfNodes: SankeyDiagram.DefaultSumValueOfNodes,
@@ -1518,7 +1456,7 @@ export class SankeyDiagram implements IVisual {
         columns.forEach(col => {
             let sortedColumn = nodes
                 .slice(current, current + col.countOfNodes)
-                .sort(function (a, b) {
+                .sort((a, b) => {
                     let x, y;
                     if (sortBy === "name") {
                         x = a.label.name;
@@ -1595,7 +1533,6 @@ export class SankeyDiagram implements IVisual {
         });
     }
 
-    // TODO: Update this method to improve a distribution by height.
     private computeYPosition(
         nodes: SankeyDiagramNode[],
         scale: number,
@@ -1712,6 +1649,7 @@ export class SankeyDiagram implements IVisual {
         this.updateSelectionState(nodesSelection, linksSelection);
     }
 
+    // tslint:disable-next-line: max-func-body-length
     private renderNodes(sankeyDiagramDataView: SankeyDiagramDataView): Selection<SankeyDiagramNode> {
         let nodeElements: Selection<SankeyDiagramNode> = this.main
             .select(SankeyDiagram.NodesSelector.selectorName)
@@ -1815,7 +1753,7 @@ export class SankeyDiagram implements IVisual {
             });
 
         function dragstarted(node: SankeyDiagramNode) {
-            (getEvent() as any).sourceEvent.stopPropagation();
+            (<any>getEvent()).sourceEvent.stopPropagation();
         }
 
         let minHeight: number = d3.min(sankeyDiagramDataView.links.map(l => l.height));
@@ -1898,7 +1836,7 @@ export class SankeyDiagram implements IVisual {
         }
 
         let drag = d3.drag()
-            .subject(function (node: SankeyDiagramNode) {
+            .subject((node: SankeyDiagramNode) => {
                 return { x: node.x, y: node.y };
             })
             .on("start", dragstarted)
@@ -2062,6 +2000,8 @@ export class SankeyDiagram implements IVisual {
 
         return linksElementsMerged;
     }
+
+    // tslint:disable-next-line: function-name
     public static createLink(link: SankeyDiagramLink, addLinkLabelPath: boolean = false): string {
         return (addLinkLabelPath ? `linkLabelPaths` : ``) + `${('_' + link.source.label.name || "").replace(/\W*/g, "")}-${link.direction}-${('_' + link.destination.label.name || "").replace(/\W*/g, "")}`;
     }
@@ -2071,23 +2011,16 @@ export class SankeyDiagram implements IVisual {
         let linkTextData: SankeyDiagramLink[] = sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
             return link.height > SankeyDiagram.MinSize && this.dataView.settings.linkLabels.show;
         });
-
         let linkArrowData: SankeyDiagramLink[] = sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
             return link.height > SankeyDiagram.MinSize && link.direction !== SankeyLinkDirrections.SelfLink;
         });
-
         // add defs element to svg
-        let svgDefs: Selection<any> = this.root
-            .selectAll("defs");
+        let svgDefs: Selection<any> = this.root.selectAll("defs");
 
         let svgDefsSelectionData: UpdateSelection<Number> = svgDefs.data([1]);
-        let svgDefsSelectionEnter = svgDefsSelectionData
-            .enter()
-            .append("defs");
+        let svgDefsSelectionEnter = svgDefsSelectionData.enter().append("defs");
 
-        svgDefsSelectionData
-            .exit()
-            .remove();
+        svgDefsSelectionData.exit().remove();
 
         let svgDefsSelectionMerged = svgDefsSelectionEnter.merge(svgDefs);
 
@@ -2200,6 +2133,7 @@ export class SankeyDiagram implements IVisual {
         return `M ${x0} ${y0} C ${x2} ${y0}, ${x3} ${y1}, ${x1} ${y1}`;
     }
 
+    // tslint:disable-next-line: max-func-body-length
     private getSvgPathForSelfLink(link: SankeyDiagramLink, minHeight: number) {
         let pathParams: string = "";
         const distanceBetweenLinks: number = 3;
@@ -2213,13 +2147,7 @@ export class SankeyDiagram implements IVisual {
 
         let linkKneeSize: number = Math.min(link.destination.width, minHeight);
 
-        let x0: number,
-            x1: number,
-            xi: (t: number) => number,
-            x2: number,
-            x3: number,
-            y0: number,
-            y1: number;
+        let x0: number, x1: number, xi: (t: number) => number, x2: number, x3: number, y0: number, y1: number;
 
         if (link.destination.x < link.source.x) {
             x0 = link.source.x;
@@ -2241,7 +2169,6 @@ export class SankeyDiagram implements IVisual {
             + (fixedLinkHeight) / SankeyDiagram.MiddleFactor - (fixedLinkHeight) / 2;
 
         pathParams += `M ${x0} ${y0}`;
-
         pathParams += `L ${link.destination.x + link.destination.width} ${y1}`;
 
         pathParams +=
@@ -2260,7 +2187,7 @@ export class SankeyDiagram implements IVisual {
             limit = link.destination.y + fixedLinkHeight - linkKneeSize - distanceBetweenLinks;
         }
 
-        pathParams += `L ${link.destination.x + distanceFromNodeToLinks + link.destination.width + linkKneeSize} ${limit}`; // TODO change to C
+        pathParams += `L ${link.destination.x + distanceFromNodeToLinks + link.destination.width + linkKneeSize} ${limit}`; //change to C
 
         pathParams +=
             `C ${link.destination.x + distanceFromNodeToLinks + link.destination.width + linkKneeSize} ` +
@@ -2414,7 +2341,7 @@ export class SankeyDiagram implements IVisual {
         // left border of link
         y1 = link.source.y - (link.height + SankeyDiagram.NodeAndBackwardLinkDistance) + link.dySource + link.height / SankeyDiagram.MiddleFactor - link.height / 2;
 
-        pathParams += `C ${link.source.x - distanceFromNodeToLinks - linkKneeSize} ${y1 + linkKneeSize}, ${link.source.x - distanceFromNodeToLinks - linkKneeSize} ${y1}, ${link.source.x} ${y1}`; // TODO change to C
+        pathParams += `C ${link.source.x - distanceFromNodeToLinks - linkKneeSize} ${y1 + linkKneeSize}, ${link.source.x - distanceFromNodeToLinks - linkKneeSize} ${y1}, ${link.source.x} ${y1}`; // change to C
 
         // close path to get closed area
         pathParams += ` Z`;
@@ -2532,7 +2459,7 @@ export class SankeyDiagram implements IVisual {
 
     public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
         const settings: SankeyDiagramSettings = this.dataView && this.dataView.settings
-            || SankeyDiagramSettings.getDefault() as SankeyDiagramSettings;
+            || <SankeyDiagramSettings>SankeyDiagramSettings.getDefault();
 
         const instanceEnumeration: VisualObjectInstanceEnumeration =
             SankeyDiagramSettings.enumerateObjectInstances(settings, options);
@@ -2558,7 +2485,7 @@ export class SankeyDiagram implements IVisual {
         }
 
         links.forEach((link: SankeyDiagramLink) => {
-            const identity: ISelectionId = link.identity as ISelectionId,
+            const identity: ISelectionId = <ISelectionId>link.identity,
                 displayName: string = `${link.source.label.formattedName} - ${link.destination.label.formattedName}`;
 
             this.addAnInstanceToEnumeration(instanceEnumeration, {
@@ -2576,12 +2503,12 @@ export class SankeyDiagram implements IVisual {
         instanceEnumeration: VisualObjectInstanceEnumeration,
         instance: VisualObjectInstance): void {
 
-        if ((instanceEnumeration as VisualObjectInstanceEnumerationObject).instances) {
-            (instanceEnumeration as VisualObjectInstanceEnumerationObject)
+        if ((<VisualObjectInstanceEnumerationObject>instanceEnumeration).instances) {
+            (<VisualObjectInstanceEnumerationObject>instanceEnumeration)
                 .instances
                 .push(instance);
         } else {
-            (instanceEnumeration as VisualObjectInstance[]).push(instance);
+            (<VisualObjectInstance[]>instanceEnumeration).push(instance);
         }
     }
 }

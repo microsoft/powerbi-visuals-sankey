@@ -26,7 +26,7 @@
 
 import * as d3 from "d3";
 
-const getEvent = (): MouseEvent => require("d3-selection").event as MouseEvent;
+const getEvent = (): MouseEvent => <MouseEvent>require("d3-selection").event;
 
 import {
     SankeyDiagramLink,
@@ -60,6 +60,7 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
 
     private selectedDataPoints: SelectableDataPoint[];
 
+    // tslint:disable-next-line: function-name
     public static create(): IInteractiveBehavior {
         return new SankeyDiagramBehavior();
     }
@@ -101,7 +102,7 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
         });
 
         this.behaviorOptions.nodes.on("contextmenu", (datum: SankeyDiagramNode) => {
-            const event: MouseEvent = (getEvent() as MouseEvent) || window.event as MouseEvent;
+            const event: MouseEvent = (<MouseEvent>getEvent()) || <MouseEvent>window.event;
             if (event) {
                 this.selectionHandler.handleContextMenu(
                     <any>datum,
@@ -121,7 +122,7 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
         });
 
         this.behaviorOptions.links.on("contextmenu", (datum: SankeyDiagramLink) => {
-            const event: MouseEvent = (getEvent() as MouseEvent) || window.event as MouseEvent;
+            const event: MouseEvent = (<MouseEvent>getEvent()) || <MouseEvent>window.event;
             if (event) {
                 this.selectionHandler.handleContextMenu(
                     datum,
