@@ -669,7 +669,6 @@ export class SankeyDiagram implements IVisual {
         });
 
         let categories: any[] = sourceCategories.concat(destinationCategories);
-
         categories.forEach((item: any, index: number) => {
             let formattedValue: string = valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DuplicatedNamePostfix, "")),
                 label: SankeyDiagramLabel,
@@ -688,8 +687,7 @@ export class SankeyDiagram implements IVisual {
                 height: textMeasurementService.estimateSvgTextHeight(textProperties),
                 color: settings.labels.fill
             };
-
-            nodeFillColor = this.colorHelper.isHighContrast ? this.colorHelper.getThemeColor() : this.colorPalette.getColor(index.toString()).value;
+            nodeFillColor = this.colorHelper.isHighContrast ? this.colorHelper.getThemeColor() : this.colorPalette.getColor(item).value;
             nodeStrokeColor = this.colorHelper.getHighContrastColor("foreground", nodeFillColor);
 
             if (nodes.filter((node: SankeyDiagramNode) => {
