@@ -979,7 +979,7 @@ export class SankeyDiagram implements IVisual {
     private parseSettings(dataView: DataView): SankeyDiagramSettings {
         let settings: SankeyDiagramSettings = SankeyDiagramSettings.parse<SankeyDiagramSettings>(dataView);
 
-        //detect sorting chosen
+        // detect sorting chosen
         const foundSortedColumn = dataView.metadata.columns.find(col => col.sort !== undefined);
         if (foundSortedColumn) {
             settings.sort = foundSortedColumn.displayName + "|" + foundSortedColumn.sort;
@@ -1346,11 +1346,11 @@ export class SankeyDiagram implements IVisual {
                         x = Math.max(a.inputWeight, a.outputWeight);
                         y = Math.max(b.inputWeight, b.outputWeight);
                     }
-                    return ascending ? ((x < y) ? -1 : ((x > y) ? 1 : 0)) : -((x < y) ? -1 : ((x > y) ? 1 : 0));
+                    return (ascending ? 1 : -1) * ((x < y) ? -1 : ((x > y) ? 1 : 0));
                 });
             sortedNodes = [...sortedNodes, ...sortedColumn];
             current += col.countOfNodes;
-        })
+        });
 
         return sortedNodes;
     }
@@ -1364,7 +1364,6 @@ export class SankeyDiagram implements IVisual {
         columns: SankeyDiagramColumn[],
         scale: SankeyDiagramScaleSettings,
         viewportHeight: number, ignoreSelfLinkWeight: boolean): void {
-            
         if (sort !== "") {
             let [sortBy, order] = sort.split("|");
             sortBy = sortBy === "Value" ? "weight" : "name";
@@ -1532,16 +1531,16 @@ export class SankeyDiagram implements IVisual {
             .selectAll(SankeyDiagram.NodeSelector.selectorName);
 
         let nodesSelectionData = nodeElements
-        .data(
-            sankeyDiagramDataView.nodes
-                .filter((node: SankeyDiagramNode) => {
-                    return node.height > SankeyDiagram.MinSize;
-                })
+            .data(
+                sankeyDiagramDataView.nodes
+                    .filter((node: SankeyDiagramNode) => {
+                        return node.height > SankeyDiagram.MinSize;
+                    })
             );
 
         nodesSelectionData
-                .exit()
-                .remove();
+            .exit()
+            .remove();
 
         let nodesEnterSelection: Selection<SankeyDiagramNode> = nodesSelectionData
             .enter()
@@ -1794,15 +1793,15 @@ export class SankeyDiagram implements IVisual {
 
         let linksSelectionData: UpdateSelection<SankeyDiagramLink> =
             linksElements
-            .data(
-                sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
-                    return link.height > SankeyDiagram.MinSize;
-                }).sort((a: SankeyDiagramLink, b: SankeyDiagramLink) => {
-                    // sort links to draw forward links in the first, backward links draw as second and selflinks as the last
-                    // in this case self links will be on front side
-                    return a.direction < b.direction ? -1 : a.direction > b.direction ? 1 : 0;
-                })
-            );
+                .data(
+                    sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
+                        return link.height > SankeyDiagram.MinSize;
+                    }).sort((a: SankeyDiagramLink, b: SankeyDiagramLink) => {
+                        // sort links to draw forward links in the first, backward links draw as second and selflinks as the last
+                        // in this case self links will be on front side
+                        return a.direction < b.direction ? -1 : a.direction > b.direction ? 1 : 0;
+                    })
+                );
 
         linksSelectionData
             .exit()
