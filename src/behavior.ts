@@ -99,12 +99,38 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
                 this.createAnEmptySelectedDataPoints();
             }
         });
+
+        this.behaviorOptions.nodes.on("contextmenu", (datum: SankeyDiagramNode) => {
+            const event: MouseEvent = (<MouseEvent>getEvent()) || <MouseEvent>window.event;
+            if (event) {
+                this.selectionHandler.handleContextMenu(
+                    <any>datum,
+                    {
+                        x: event.clientX,
+                        y: event.clientY
+                    });
+                event.preventDefault();
+            }
+        });
     }
 
     private bindClickEventToLinks(): void {
         this.behaviorOptions.links.on("click", (link: SankeyDiagramLink) => {
             this.selectionHandler.handleSelection(link, getEvent().ctrlKey);
             this.createAnEmptySelectedDataPoints();
+        });
+
+        this.behaviorOptions.links.on("contextmenu", (datum: SankeyDiagramLink) => {
+            const event: MouseEvent = (<MouseEvent>getEvent()) || <MouseEvent>window.event;
+            if (event) {
+                this.selectionHandler.handleContextMenu(
+                    datum,
+                    {
+                        x: event.clientX,
+                        y: event.clientY
+                    });
+                event.preventDefault();
+            }
         });
     }
 
