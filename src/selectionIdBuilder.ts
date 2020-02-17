@@ -37,7 +37,7 @@ interface CategoryIdentityIndex {
     identityIndex: number;
 }
 
-export class SankeyDiagramSelectionIdBuilder {
+export class SelectionIdBuilder {
     private static DefaultCategoryIndex: number = 0;
 
     private visualHost: IVisualHost;
@@ -52,7 +52,7 @@ export class SankeyDiagramSelectionIdBuilder {
     }
 
     private getIdentityById(index: number): CategoryIdentityIndex {
-        let categoryIndex: number = SankeyDiagramSelectionIdBuilder.DefaultCategoryIndex,
+        let categoryIndex: number = SelectionIdBuilder.DefaultCategoryIndex,
             identityIndex: number = index;
 
         for (let length: number = this.categories.length; categoryIndex < length; categoryIndex++) {

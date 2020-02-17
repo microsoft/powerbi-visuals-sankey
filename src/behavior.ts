@@ -26,7 +26,7 @@
 
 import * as d3 from "d3";
 
-const getEvent = (): MouseEvent => require("d3-selection").event as MouseEvent;
+const getEvent = (): MouseEvent => <MouseEvent>require("d3-selection").event;
 
 import {
     SankeyDiagramLink,
@@ -60,6 +60,7 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
 
     private selectedDataPoints: SelectableDataPoint[];
 
+    // tslint:disable-next-line: function-name
     public static create(): IInteractiveBehavior {
         return new SankeyDiagramBehavior();
     }

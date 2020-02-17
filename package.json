@@ -14,7 +14,7 @@
     "pbiviz": "pbiviz",
     "start": "pbiviz start --target es6",
     "package": "pbiviz package",
-    "lint": "node node_modules/tslint/bin/tslint \"+(src|test)/**/*.ts\"",
+    "lint": "tslint -c tslint.json -p tsconfig.json --fix",
     "test": "karma start",
     "cert": "pbiviz --create-cert"
   },
