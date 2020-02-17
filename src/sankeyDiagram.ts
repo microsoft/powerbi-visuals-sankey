@@ -318,25 +318,33 @@ export class SankeyDiagram implements IVisual {
     }
 
     public update(visualUpdateOptions: VisualUpdateOptions): void {
-        let sankeyDiagramDataView: SankeyDiagramDataView,
-            viewport: IViewport = visualUpdateOptions
-                && visualUpdateOptions.viewport
-                || SankeyDiagram.DefaultViewport,
-            dataView: DataView = visualUpdateOptions
-                && visualUpdateOptions.dataViews
-                && visualUpdateOptions.dataViews[0];
+        this.visualHost.eventService.renderingStarted(visualUpdateOptions);
+        try {
+            let sankeyDiagramDataView: SankeyDiagramDataView,
+                viewport: IViewport = visualUpdateOptions
+                    && visualUpdateOptions.viewport
+                    || SankeyDiagram.DefaultViewport,
+                dataView: DataView = visualUpdateOptions
+                    && visualUpdateOptions.dataViews
+                    && visualUpdateOptions.dataViews[0];
 
-        this.updateViewport(visualUpdateOptions.viewport);
+            this.updateViewport(visualUpdateOptions.viewport);
 
-        sankeyDiagramDataView = this.converter(dataView);
+            sankeyDiagramDataView = this.converter(dataView);
 
-        this.computePositions(sankeyDiagramDataView);
+            this.computePositions(sankeyDiagramDataView);
 
-        this.dataView = sankeyDiagramDataView;
+            this.dataView = sankeyDiagramDataView;
 
-        this.applySelectionStateToData();
+            this.applySelectionStateToData();
 
-        this.render(sankeyDiagramDataView);
+            this.render(sankeyDiagramDataView);
+            this.visualHost.eventService.renderingFinished(visualUpdateOptions);
+        }
+        catch (e) {
+            this.visualHost.eventService.renderingFailed(visualUpdateOptions, e);
+            console.log(e);
+        }
     }
 
     private updateViewport(viewport: IViewport): void {
