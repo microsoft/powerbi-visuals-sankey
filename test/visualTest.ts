@@ -32,13 +32,13 @@ import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnume
 
 // powerbi.extensibility.visual.test
 import { SankeyDiagramData } from "./visualData";
-import { SankeyDiagramBuilder } from "./visualBuilder";
+import { VisualBuilder } from "./visualBuilder";
 
 // powerbi.extensibility.visual.SankeyDiagram1446463184954
 import {
     SankeyDiagram as VisualClass
 }
-from "../src/visual";
+from "../src/sankeyDiagram";
 
 import {
     SankeyDiagramNode,
@@ -70,20 +70,20 @@ interface SankeyDiagramTestsNode {
     outputWeight: number;
 }
 
-let fireMouseEvent = function (type, elem, centerX, centerY) {
+let fireMouseEvent = (type, elem, centerX, centerY) => {
     let evt = document.createEvent('MouseEvents');
     evt.initMouseEvent(type, true, true, window, 1, 1, 1, centerX, centerY, false, false, false, false, 0, elem);
     elem.dispatchEvent(evt);
 };
 
 describe("SankeyDiagram", () => {
-    let visualBuilder: SankeyDiagramBuilder,
+    let visualBuilder: VisualBuilder,
         visualInstance: VisualClass,
         defaultDataViewBuilder: SankeyDiagramData,
         dataView: DataView;
 
     beforeEach(() => {
-        visualBuilder = new SankeyDiagramBuilder(1000, 500);
+        visualBuilder = new VisualBuilder(1000, 500);
 
         defaultDataViewBuilder = new SankeyDiagramData();
         dataView = defaultDataViewBuilder.getDataView();
@@ -370,10 +370,10 @@ describe("SankeyDiagram", () => {
             const color: string = "#E0F600";
 
             // change colors for all links
-            for (let index in dataView.categorical.categories) {
+            for (let index of Object.keys(dataView.categorical.categories)) {
                 let category = dataView.categorical.categories[index];
                 category.objects = [];
-                for (let valIndex in category.values) {
+                for (let valIndex of category.values) {
                     category.objects.push({
                         links: {
                             fill: { solid: { color } }
@@ -479,6 +479,7 @@ describe("SankeyDiagram", () => {
                 let dataLength: number = defaultDataViewBuilder.valuesSourceDestination.length,
                     groupLength = Math.floor(dataLength / 3) - 2,
                     negativeValues = getRandomNumbers(groupLength, -100, 0),
+                    // tslint:disable-next-line: underscore-consistent-invocation
                     zeroValues = _.range(0, groupLength, 0),
                     positiveValues = getRandomNumbers(
                         dataLength - negativeValues.length - zeroValues.length, 1, 100);
@@ -603,8 +604,8 @@ describe("SankeyDiagram", () => {
                     fireMouseEvent('dragend', nodeToDrag, -10, -10);
 
                     // positions must match after drag and drop
-                    expect((nodeToDrag as any).getBoundingClientRect().left).toBeLessThan(20);
-                    expect((nodeToDrag as any).getBoundingClientRect().top).toBeLessThan(40);
+                    expect((<any>nodeToDrag).getBoundingClientRect().left).toBeLessThan(20);
+                    expect((<any>nodeToDrag).getBoundingClientRect().top).toBeLessThan(40);
 
                     // drag to outside of viewport
                     // mouse over dragged element and mousedown
@@ -616,12 +617,12 @@ describe("SankeyDiagram", () => {
                     fireMouseEvent('dragend', nodeToDrag, visualBuilder.viewport.width + 10, visualBuilder.viewport.height + 10);
 
                     // positions must match after drag and drop
-                    expect((nodeToDrag as any).getBoundingClientRect().right).toBeGreaterThan(visualBuilder.viewport.width - 20);
-                    expect((nodeToDrag as any).getBoundingClientRect().bottom).toBeGreaterThan(visualBuilder.viewport.height - 20);
+                    expect((<any>nodeToDrag).getBoundingClientRect().right).toBeGreaterThan(visualBuilder.viewport.width - 20);
+                    expect((<any>nodeToDrag).getBoundingClientRect().bottom).toBeGreaterThan(visualBuilder.viewport.height - 20);
 
                     // call private methods
-                    (visualBuilder.instance as any).saveNodePositions((visualBuilder.instance as any).dataView.nodes);
-                    (visualBuilder.instance as any).saveViewportSize();
+                    (<any>visualBuilder.instance).saveNodePositions((<any>visualBuilder.instance).dataView.nodes);
+                    (<any>visualBuilder.instance).saveViewportSize();
 
                     done();
                 });
@@ -631,16 +632,16 @@ describe("SankeyDiagram", () => {
 
     describe("Selector tests", () => {
         it("creation", () => {
-            let source: SankeyDiagramNode = {} as SankeyDiagramNode;
-            let destination: SankeyDiagramNode = {} as SankeyDiagramNode;
-            let label: SankeyDiagramLabel = {} as SankeyDiagramLabel;
-            let labelDest: SankeyDiagramLabel = {} as SankeyDiagramLabel;
+            let source: SankeyDiagramNode = <SankeyDiagramNode>{};
+            let destination: SankeyDiagramNode = <SankeyDiagramNode>{};
+            let label: SankeyDiagramLabel = <SankeyDiagramLabel>{};
+            let labelDest: SankeyDiagramLabel = <SankeyDiagramLabel>{};
             label.name = "Source";
             labelDest.name = "Destination";
             source.label = label;
             destination.label = labelDest;
 
-            let link: SankeyDiagramLink = {} as SankeyDiagramLink;
+            let link: SankeyDiagramLink = <SankeyDiagramLink>{};
             link.source = source;
             link.destination = destination;
             link.direction = 0;
@@ -718,16 +719,15 @@ describe("SankeyDiagram", () => {
     });
 
     describe("Settings tests:", () => {
-        it("nodeComplexSettings properties must be hidden", done => {
+        it("nodeComplexSettings properties must be hidden", () => {
             let objectInstanes: VisualObjectInstanceEnumerationObject = <VisualObjectInstanceEnumerationObject>visualBuilder.instance.enumerateObjectInstances({
                 objectName: "nodeComplexSettings"
             });
 
             expect(objectInstanes.instances.length).toBe(0);
-            done();
         });
 
-        it("other properties must exist", done => {
+        it("other properties must exist", () => {
             // defaults
             const instance: number = 0;
             const someColor: string = "black";
@@ -784,7 +784,6 @@ describe("SankeyDiagram", () => {
             expect(scaleSettings.instances.length).toBe(1);
             expect(scaleSettings.instances[instance].properties["provideMinHeight"]).toBeTruthy();
             expect(scaleSettings.instances[instance].properties["lnScale"]).toBeFalsy();
-            done();
         });
     });
 
@@ -795,7 +794,7 @@ describe("SankeyDiagram", () => {
             let jsonData = getJSONFixture("capabilities.json");
 
             let objectsChecker: Function = (obj) => {
-                for (let property in obj) {
+                for (let property of Object.keys(obj)) {
                     let value: any = obj[property];
 
                     if (value.displayName) {
@@ -825,8 +824,8 @@ describe("SankeyDiagram", () => {
             visualBuilder.visualHost.colorPalette.background = { value: backgroundColor };
             visualBuilder.visualHost.colorPalette.foreground = { value: foregroundColor };
 
-            nodeElements = visualBuilder.nodeElements.toArray().map($) as any;
-            linkElements = visualBuilder.linkElements.toArray().map($) as any;
+            nodeElements = <any>visualBuilder.nodeElements.toArray().map($);
+            linkElements = <any>visualBuilder.linkElements.toArray().map($);
         });
 
         it("should not use fill style", (done) => {

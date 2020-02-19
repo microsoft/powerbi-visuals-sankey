@@ -92,4 +92,5 @@ export class SankeyDiagramSettings extends DataViewObjectsParser {
     public _nodePositions: SankeyDiagramNodePositionSetting[] = [];
     public cyclesLinks: SankeyNodeCycles = new SankeyNodeCycles();
     public _viewportSize: ViewportSize = {};
+    public sort: string = "";
 }

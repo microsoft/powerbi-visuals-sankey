@@ -285,13 +285,8 @@
         }
     },
     "sorting": {
-        "implicit": {
-            "clauses": [
-                {
-                    "role": "Weight",
-                    "direction": 1
-                }
-            ]
-        }
-    }
+        "default": {}
+    },
+    "supportsKeyboardFocus": true,
+    "supportsSynchronizingFilterState": true
 }

@@ -140,6 +140,6 @@ export function doDataPointsIncludeIdentity(
             && dataPoint
             && selectedDataPoint.identity
             && dataPoint.identity
-            && (selectedDataPoint.identity as ISelectionId).equals(dataPoint.identity as ISelectionId);
+            && (<ISelectionId>selectedDataPoint.identity).equals(<ISelectionId>dataPoint.identity);
     });
 }
