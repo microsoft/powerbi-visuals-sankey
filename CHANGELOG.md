@@ -1,3 +1,7 @@
+## 2.1.0
+* Updated APIs
+* Sorting added
+
 ## 2.0.2
 * Fix Sankey diagram colors
 
