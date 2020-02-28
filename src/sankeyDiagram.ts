@@ -1379,12 +1379,6 @@ export class SankeyDiagram implements IVisual {
         columns: SankeyDiagramColumn[],
         scale: SankeyDiagramScaleSettings,
         viewportHeight: number, ignoreSelfLinkWeight: boolean): void {
-        if (sort !== "") {
-            let [sortBy, order] = sort.split("|");
-            sortBy = sortBy === "Value" ? "weight" : "name";
-            let asc: boolean = order === "1";
-            nodes = this.sortColumns(nodes, columns, asc, sortBy);
-        }
         let shiftByAxisY: number = SankeyDiagram.DefaultOffset,
             currentX: number = SankeyDiagram.DefaultPosition,
             index: number = SankeyDiagram.DefaultIndex;
@@ -1407,7 +1401,7 @@ export class SankeyDiagram implements IVisual {
 
             node.x *= scale.x;
 
-            let selfLinkHeight: number = d3.max(node.links.filter(l => l.direction === SankeyLinkDirrections.SelfLink).map(l => l.weigth));
+            let selfLinkHeight: number = d3.max(node.links.filter(l => l.directio SankeyLinkDirrections.SelfLink).map(l => l.weigth));
 
             if (!selfLinkHeight) {
                 selfLinkHeight = 0;
