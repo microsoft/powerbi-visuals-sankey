@@ -3,7 +3,7 @@
 
 > Sankey is a type of flow diagram in which the width of the series is in proportion to the quantity of the flow. Use it to find major contributions to an overall flow.
 
-![Sankey screenshot](https://az158878.vo.msecnd.net/marketing/Partner_21474836617/Product_42949680593/Asset_117a264e-7f8e-45fd-a112-6df8f589d56f/Sankeyscreenshot1.png)
+![Sankey screenshot](https://raw.githubusercontent.com/microsoft/powerbi-visuals-sankey/master/assets/screenshot.png)
 
 # Overview
 
