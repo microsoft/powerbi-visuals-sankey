@@ -41,9 +41,11 @@ export enum CyclesDrawType {
 
 export class SankeyDiagramLabelsSettings {
     public static DefaultFontSize: number = 12;
+    public static DefaultFontFamily: string = "Arial";
 
     public show: boolean = true;
     public fill: string = "black";
+    public fontFamily: string = SankeyDiagramLabelsSettings.DefaultFontFamily;
     public fontSize: number = SankeyDiagramLabelsSettings.DefaultFontSize;
     public forceDisplay: boolean = false;
     public minHeightOfNode: number = 10;

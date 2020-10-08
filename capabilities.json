@@ -116,6 +116,14 @@
                         }
                     }
                 },
+                "fontFamily": {
+                    "displayName": "Font Family",
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
                 "fontSize": {
                     "displayName": "Text Size",
                     "displayNameKey": "Visual_TextSize",
