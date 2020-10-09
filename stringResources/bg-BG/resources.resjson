@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Начертаване на връзка назад",
 	"Visual_SelflinkWeight": "Игнориране на тегло на връзки към себе си",
 	"Visual_TooltipDisplayName": "Име",
-	"Visual_Description_Force_Display": "Въпреки това показване на всички етикети"
+	"Visual_Description_Force_Display": "Въпреки това показване на всички етикети",
+	"Visual_FontFamily": "Семейство шрифтове"
 }

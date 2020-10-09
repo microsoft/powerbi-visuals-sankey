@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Lukis pautan ke belakang",
 	"Visual_SelflinkWeight": "Abaikan berat swapautan",
 	"Visual_TooltipDisplayName": "Nama",
-	"Visual_Description_Force_Display": "Paparkan juga semua label"
+	"Visual_Description_Force_Display": "Paparkan juga semua label",
+	"Visual_FontFamily": "Keluarga fon"
 }

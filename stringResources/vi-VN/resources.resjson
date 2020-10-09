@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Chuyển liên kết ra sau",
 	"Visual_SelflinkWeight": "Bỏ qua trọng số của các liên kết tự thực hiện",
 	"Visual_TooltipDisplayName": "Tên",
-	"Visual_Description_Force_Display": "Vẫn hiển thị tất cả các nhãn"
+	"Visual_Description_Force_Display": "Vẫn hiển thị tất cả các nhãn",
+	"Visual_FontFamily": "Nhóm phông chữ"
 }

@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Desenhar link regressivo",
 	"Visual_SelflinkWeight": "Ignorar peso de autolinks",
 	"Visual_TooltipDisplayName": "Nome",
-	"Visual_Description_Force_Display": "Exibir todos os rótulos mesmo assim"
+	"Visual_Description_Force_Display": "Exibir todos os rótulos mesmo assim",
+	"Visual_FontFamily": "Família de fontes"
 }

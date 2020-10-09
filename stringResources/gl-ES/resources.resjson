@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Debuxar ligazón de terceiros",
 	"Visual_SelflinkWeight": "Ignorar tamaño das autoligazóns",
 	"Visual_TooltipDisplayName": "Nome",
-	"Visual_Description_Force_Display": "Mostrar etiquetas de todas formas"
+	"Visual_Description_Force_Display": "Mostrar etiquetas de todas formas",
+	"Visual_FontFamily": "Familia de tipo de letra"
 }

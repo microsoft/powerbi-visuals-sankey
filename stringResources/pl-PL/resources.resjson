@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Rysuj link wsteczny",
 	"Visual_SelflinkWeight": "Ignoruj wagę linków własnych",
 	"Visual_TooltipDisplayName": "Nazwa",
-	"Visual_Description_Force_Display": "Wyświetl wszystkie etykiety mimo wszystko"
+	"Visual_Description_Force_Display": "Wyświetl wszystkie etykiety mimo wszystko",
+	"Visual_FontFamily": "Rodzina czcionek"
 }

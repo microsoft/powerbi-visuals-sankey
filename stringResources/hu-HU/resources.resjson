@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Hátramutató hivatkozás rajzolása",
 	"Visual_SelflinkWeight": "Önhivatkozások vastagságának figyelmen kívül hagyása",
 	"Visual_TooltipDisplayName": "Név",
-	"Visual_Description_Force_Display": "Ennek ellenére az összes felirat megjelenítése"
+	"Visual_Description_Force_Display": "Ennek ellenére az összes felirat megjelenítése",
+	"Visual_FontFamily": "Betűcsalád"
 }

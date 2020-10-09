@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Tegn bagudrettet link",
 	"Visual_SelflinkWeight": "Ignorer vægten af self-links",
 	"Visual_TooltipDisplayName": "Navn",
-	"Visual_Description_Force_Display": "Vis alle etiketter alligevel"
+	"Visual_Description_Force_Display": "Vis alle etiketter alligevel",
+	"Visual_FontFamily": "Skrifttypefamilie"
 }

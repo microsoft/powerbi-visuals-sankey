@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Povezava z drugega spletnega mesta do risbe",
 	"Visual_SelflinkWeight": "Prezri debelino samopovezav",
 	"Visual_TooltipDisplayName": "Ime",
-	"Visual_Description_Force_Display": "Vseeno prikaži vse oznake"
+	"Visual_Description_Force_Display": "Vseeno prikaži vse oznake",
+	"Visual_FontFamily": "Družina pisav"
 }

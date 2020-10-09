@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Tahapoole saatmise link",
 	"Visual_SelflinkWeight": "Ignoreeri siselinkide kaalu",
 	"Visual_TooltipDisplayName": "Nimi",
-	"Visual_Description_Force_Display": "Kuva siiski kõik sildid"
+	"Visual_Description_Force_Display": "Kuva siiski kõik sildid",
+	"Visual_FontFamily": "Fondipere"
 }

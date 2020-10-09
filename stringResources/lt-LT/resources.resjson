@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Perkėlimo atgal saitas",
 	"Visual_SelflinkWeight": "Nepaisyti vidinių saitų svertinės vertės",
 	"Visual_TooltipDisplayName": "Pavadinimas",
-	"Visual_Description_Force_Display": "Vis tiek rodyti visas žymas"
+	"Visual_Description_Force_Display": "Vis tiek rodyti visas žymas",
+	"Visual_FontFamily": "Šriftų šeima"
 }

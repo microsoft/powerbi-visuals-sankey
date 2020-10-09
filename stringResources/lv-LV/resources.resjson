@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Zīmēt atpakaļsaiti",
 	"Visual_SelflinkWeight": "Ignorēt iekšējo saišu svarīgumu",
 	"Visual_TooltipDisplayName": "Nosaukums",
-	"Visual_Description_Force_Display": "Vienalga rādīt visas etiķetes"
+	"Visual_Description_Force_Display": "Vienalga rādīt visas etiķetes",
+	"Visual_FontFamily": "Fontu saime"
 }

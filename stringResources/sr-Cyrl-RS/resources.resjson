@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Нацртај везу уназад",
 	"Visual_SelflinkWeight": "Занемари степен важности веза које упућују на саме себе",
 	"Visual_TooltipDisplayName": "Име",
-	"Visual_Description_Force_Display": "Ипак прикажи све ознаке"
+	"Visual_Description_Force_Display": "Ипак прикажи све ознаке",
+	"Visual_FontFamily": "Породица фонтова"
 }

@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Marraztu atzerako esteka",
 	"Visual_SelflinkWeight": "Egin ez ikusi nork bere buruarekiko estekei",
 	"Visual_TooltipDisplayName": "Izena",
-	"Visual_Description_Force_Display": "Bistaratu etiketa guztiak, halere"
+	"Visual_Description_Force_Display": "Bistaratu etiketa guztiak, halere",
+	"Visual_FontFamily": "Letra-tipoaren familia"
 }

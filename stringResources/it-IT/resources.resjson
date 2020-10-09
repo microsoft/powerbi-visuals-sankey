@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Traccia collegamento a ritroso",
 	"Visual_SelflinkWeight": "Ignora peso dei collegamenti automatici",
 	"Visual_TooltipDisplayName": "Nome",
-	"Visual_Description_Force_Display": "Visualizza tutte le etichette comunque"
+	"Visual_Description_Force_Display": "Visualizza tutte le etichette comunque",
+	"Visual_FontFamily": "Famiglia di caratteri"
 }

@@ -118,6 +118,7 @@
                 },
                 "fontFamily": {
                     "displayName": "Font Family",
+                    "displayNameKey": "Visual_FontFamily",
                     "type": {
                         "formatting": {
                             "fontFamily": true

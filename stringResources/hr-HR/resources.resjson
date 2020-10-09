@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Crtanje veze unatrag",
 	"Visual_SelflinkWeight": "Zanemari debljinu samostalnih veza",
 	"Visual_TooltipDisplayName": "Naziv",
-	"Visual_Description_Force_Display": "Ipak prikaži sve oznake"
+	"Visual_Description_Force_Display": "Ipak prikaži sve oznake",
+	"Visual_FontFamily": "Obitelj fontova"
 }

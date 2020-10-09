@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Koppeling van derde tekenen",
 	"Visual_SelflinkWeight": "Gewicht van interne koppelingen negeren",
 	"Visual_TooltipDisplayName": "Naam",
-	"Visual_Description_Force_Display": "Alle labels toch weergeven"
+	"Visual_Description_Force_Display": "Alle labels toch weergeven",
+	"Visual_FontFamily": "Lettertypefamilie"
 }

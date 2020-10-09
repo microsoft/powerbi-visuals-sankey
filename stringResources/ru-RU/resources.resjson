@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Отрисовка обратной ссылки",
 	"Visual_SelflinkWeight": "Игнорировать толщину линии ссылок на себя",
 	"Visual_TooltipDisplayName": "Имя",
-	"Visual_Description_Force_Display": "Показывать все метки"
+	"Visual_Description_Force_Display": "Показывать все метки",
+	"Visual_FontFamily": "Семейство шрифтов"
 }

@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Defineix un enllaç de retrocés",
 	"Visual_SelflinkWeight": "Ignora el pes dels enllaços propis",
 	"Visual_TooltipDisplayName": "Nom",
-	"Visual_Description_Force_Display": "Mostra totes les etiquetes igualment"
+	"Visual_Description_Force_Display": "Mostra totes les etiquetes igualment",
+	"Visual_FontFamily": "Família de tipus de lletra"
 }
