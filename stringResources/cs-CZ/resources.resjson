@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Nakreslit propojení zpět",
 	"Visual_SelflinkWeight": "Ignorovat váhu propojení na sebe sama",
 	"Visual_TooltipDisplayName": "Název",
-	"Visual_Description_Force_Display": "Přesto zobrazit všechny popisky"
+	"Visual_Description_Force_Display": "Přesto zobrazit všechny popisky",
+	"Visual_FontFamily": "Rodina písem"
 }

@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Накреслити зворотний зв’язок",
 	"Visual_SelflinkWeight": "Ігнорувати значимість рефлексивних зв’язків",
 	"Visual_TooltipDisplayName": "Ім’я",
-	"Visual_Description_Force_Display": "У будь-якому разі відображати всі підписи"
+	"Visual_Description_Force_Display": "У будь-якому разі відображати всі підписи",
+	"Visual_FontFamily": "Сімейство шрифтів"
 }

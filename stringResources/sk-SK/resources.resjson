@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Nakresliť prepojenie späť",
 	"Visual_SelflinkWeight": "Ignorovať váhu prepojení odkazujúcich na seba",
 	"Visual_TooltipDisplayName": "Názov",
-	"Visual_Description_Force_Display": "Napriek tomu zobraziť všetky označenia"
+	"Visual_Description_Force_Display": "Napriek tomu zobraziť všetky označenia",
+	"Visual_FontFamily": "Skupina písem"
 }

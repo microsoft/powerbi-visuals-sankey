@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Rita bakåtlänk",
 	"Visual_SelflinkWeight": "Ignorera självlänkars vikt",
 	"Visual_TooltipDisplayName": "Namn",
-	"Visual_Description_Force_Display": "Visa alla etiketter ändå"
+	"Visual_Description_Force_Display": "Visa alla etiketter ändå",
+	"Visual_FontFamily": "Teckensnittsfamilj"
 }

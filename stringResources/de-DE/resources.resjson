@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Backwardlink erstellen",
 	"Visual_SelflinkWeight": "Gewichtung seiteninterner Links ignorieren",
 	"Visual_TooltipDisplayName": "Name",
-	"Visual_Description_Force_Display": "Dennoch alle Bezeichnungen anzeigen"
+	"Visual_Description_Force_Display": "Dennoch alle Bezeichnungen anzeigen",
+	"Visual_FontFamily": "Schriftfamilie"
 }

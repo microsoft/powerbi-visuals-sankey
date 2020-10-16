@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Σχεδίαση αντίστροφης σύνδεσης",
 	"Visual_SelflinkWeight": "Παράβλεψη βαρύτητας συνδέσεων προς την ίδια σελίδα",
 	"Visual_TooltipDisplayName": "Όνομα",
-	"Visual_Description_Force_Display": "Εμφάνιση όλων των ετικετών ούτως ή άλλως"
+	"Visual_Description_Force_Display": "Εμφάνιση όλων των ετικετών ούτως ή άλλως",
+	"Visual_FontFamily": "Οικογένεια γραμματοσειράς"
 }

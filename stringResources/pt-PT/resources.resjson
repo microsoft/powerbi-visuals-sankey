@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Desenhar ligação para trás",
 	"Visual_SelflinkWeight": "Ignorar peso das ligações automáticas",
 	"Visual_TooltipDisplayName": "Nome",
-	"Visual_Description_Force_Display": "Mostrar todas as etiquetas mesmo assim"
+	"Visual_Description_Force_Display": "Mostrar todas as etiquetas mesmo assim",
+	"Visual_FontFamily": "Família de tipos de letra"
 }

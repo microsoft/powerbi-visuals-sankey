@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Nacrtaj vezu unazad",
 	"Visual_SelflinkWeight": "Zanemari stepen važnosti veza koje upućuju na same sebe",
 	"Visual_TooltipDisplayName": "Ime",
-	"Visual_Description_Force_Display": "Ipak prikaži sve oznake"
+	"Visual_Description_Force_Display": "Ipak prikaži sve oznake",
+	"Visual_FontFamily": "Porodica fontova"
 }

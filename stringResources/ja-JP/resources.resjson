@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "後方リンクを描画",
 	"Visual_SelflinkWeight": "自己リンクの重みを無視",
 	"Visual_TooltipDisplayName": "名前",
-	"Visual_Description_Force_Display": "すべてのラベルを常に表示します"
+	"Visual_Description_Force_Display": "すべてのラベルを常に表示します",
+	"Visual_FontFamily": "フォント ファミリ"
 }

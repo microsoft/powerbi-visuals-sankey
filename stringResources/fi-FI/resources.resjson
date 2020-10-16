@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Piirrä taaksepäinlinkki",
 	"Visual_SelflinkWeight": "Ohita itseensä linkittävien linkkien painotus",
 	"Visual_TooltipDisplayName": "Nimi",
-	"Visual_Description_Force_Display": "Näytä kaikki otsikot joka tapauksessa"
+	"Visual_Description_Force_Display": "Näytä kaikki otsikot joka tapauksessa",
+	"Visual_FontFamily": "Fonttiperhe"
 }

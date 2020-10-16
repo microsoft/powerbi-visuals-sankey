@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Tracer un lien retour",
 	"Visual_SelflinkWeight": "Ignorer l'importance des liens propres",
 	"Visual_TooltipDisplayName": "Nom",
-	"Visual_Description_Force_Display": "Afficher quand même toutes les étiquettes"
+	"Visual_Description_Force_Display": "Afficher quand même toutes les étiquettes",
+	"Visual_FontFamily": "Famille de polices"
 }

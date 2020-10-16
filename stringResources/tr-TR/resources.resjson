@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Geriye dönük bağlantı çiz",
 	"Visual_SelflinkWeight": "Kendine bağlantıların ağırlığını yoksay",
 	"Visual_TooltipDisplayName": "Ad",
-	"Visual_Description_Force_Display": "Tüm etiketleri yine de görüntüle"
+	"Visual_Description_Force_Display": "Tüm etiketleri yine de görüntüle",
+	"Visual_FontFamily": "Yazı tipi ailesi"
 }

@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "पीछे का लिंक बनाएँ",
 	"Visual_SelflinkWeight": "सेल्फ लिंक्स के महत्व को नज़रअंदाज़ करें",
 	"Visual_TooltipDisplayName": "नाम",
-	"Visual_Description_Force_Display": "किसी भी तरह सभी लेबल प्रदर्शित करें"
+	"Visual_Description_Force_Display": "किसी भी तरह सभी लेबल प्रदर्शित करें",
+	"Visual_FontFamily": "फ़ॉन्ट फ़ेमिली"
 }

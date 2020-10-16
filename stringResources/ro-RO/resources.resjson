@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Creați un link invers",
 	"Visual_SelflinkWeight": "Ignorați ponderea legăturilor automate",
 	"Visual_TooltipDisplayName": "Nume",
-	"Visual_Description_Force_Display": "Afișați toate etichetele oricum"
+	"Visual_Description_Force_Display": "Afișați toate etichetele oricum",
+	"Visual_FontFamily": "Familie de fonturi"
 }

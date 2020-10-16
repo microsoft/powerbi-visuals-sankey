@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "역방향 링크 그리기",
 	"Visual_SelflinkWeight": "자체 링크의 가중치 무시",
 	"Visual_TooltipDisplayName": "이름",
-	"Visual_Description_Force_Display": "모든 레이블 표시"
+	"Visual_Description_Force_Display": "모든 레이블 표시",
+	"Visual_FontFamily": "글꼴 패밀리"
 }

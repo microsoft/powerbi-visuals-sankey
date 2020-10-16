@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Kobling for å trekke bakover",
 	"Visual_SelflinkWeight": "Ignorer vekten av selv",
 	"Visual_TooltipDisplayName": "Navn",
-	"Visual_Description_Force_Display": "Vis alle etiketter likevel"
+	"Visual_Description_Force_Display": "Vis alle etiketter likevel",
+	"Visual_FontFamily": "Skriftserie"
 }

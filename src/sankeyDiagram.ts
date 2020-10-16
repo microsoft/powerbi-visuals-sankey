@@ -271,7 +271,9 @@ export class SankeyDiagram implements IVisual {
 
     private get textProperties(): TextProperties {
         return {
-            fontFamily: this.fontFamily,
+            fontFamily: this.dataView
+                ? this.dataView.settings.labels.fontFamily
+                : SankeyDiagramLabelsSettings.DefaultFontFamily,
             fontSize: fromPoint(this.dataView
                 ? this.dataView.settings.labels.fontSize
                 : SankeyDiagramLabelsSettings.DefaultFontSize)
@@ -1593,6 +1595,7 @@ export class SankeyDiagram implements IVisual {
             .attr("y", (node: SankeyDiagramNode) => node.top - node.y)
             .attr("dy", SankeyDiagram.DefaultDy)
             .style("fill", (node: SankeyDiagramNode) => node.label.color)
+            .style("font-family", this.textProperties.fontFamily)
             .style("font-size", this.textProperties.fontSize)
             .style("display", (node: SankeyDiagramNode) => {
                 let isNotVisibleLabel: boolean,

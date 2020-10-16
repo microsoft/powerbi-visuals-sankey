@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Definir vínculo de retroceso",
 	"Visual_SelflinkWeight": "Omitir el tamaño de los autovínculos",
 	"Visual_TooltipDisplayName": "Nombre",
-	"Visual_Description_Force_Display": "Mostrar todas las etiquetas igualmente"
+	"Visual_Description_Force_Display": "Mostrar todas las etiquetas igualmente",
+	"Visual_FontFamily": "Familia de fuentes"
 }

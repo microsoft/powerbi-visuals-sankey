@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "رسم ارتباط خلفي",
 	"Visual_SelflinkWeight": "تجاهل وزن الارتباطات الذاتية",
 	"Visual_TooltipDisplayName": "الاسم",
-	"Visual_Description_Force_Display": "عرض كل التسميات على أية حال"
+	"Visual_Description_Force_Display": "عرض كل التسميات على أية حال",
+	"Visual_FontFamily": "عائلة الخطوط"
 }

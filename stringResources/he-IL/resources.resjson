@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "צייר קישור לאחור",
 	"Visual_SelflinkWeight": "התעלם מהמשקל של קישורים עצמיים",
 	"Visual_TooltipDisplayName": "שם",
-	"Visual_Description_Force_Display": "הצג את כל התוויות בכל זאת"
+	"Visual_Description_Force_Display": "הצג את כל התוויות בכל זאת",
+	"Visual_FontFamily": "משפחת גופנים"
 }

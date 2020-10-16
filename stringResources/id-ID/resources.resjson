@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "Dapatkan backward link",
 	"Visual_SelflinkWeight": "Abaikan bobot tautan mandiri",
 	"Visual_TooltipDisplayName": "Nama",
-	"Visual_Description_Force_Display": "Tetap tampilkan semua label"
+	"Visual_Description_Force_Display": "Tetap tampilkan semua label",
+	"Visual_FontFamily": "Kelompok Font"
 }

@@ -27,5 +27,6 @@
 	"Visual_DrawBackwardLink": "繪製反向連結",
 	"Visual_SelflinkWeight": "忽略自我連結的粗細",
 	"Visual_TooltipDisplayName": "名稱",
-	"Visual_Description_Force_Display": "一律顯示所有標籤"
+	"Visual_Description_Force_Display": "一律顯示所有標籤",
+	"Visual_FontFamily": "字型家族"
 }
