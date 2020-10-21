@@ -161,7 +161,9 @@ describe("SankeyDiagram", () => {
                     height: 0,
                     colour: "",
                     selectionIds: [],
-                    tooltipData: []
+                    tooltipData: [],
+                    identity: null,
+                    selected: false
                 };
             });
         }
@@ -206,7 +208,9 @@ describe("SankeyDiagram", () => {
                     height: 0,
                     colour: "",
                     selectionIds: [],
-                    tooltipData: []
+                    tooltipData: [],
+                    identity: null,
+                    selected: false
                 };
             });
         }

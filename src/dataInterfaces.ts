@@ -61,7 +61,8 @@ export interface SankeyDiagramRect {
 
 export interface SankeyDiagramNode extends
     TooltipEnabledDataPoint,
-    SankeyDiagramRect {
+    SankeyDiagramRect,
+    SelectableDataPoint {
 
     label: SankeyDiagramLabel;
     inputWeight: number;

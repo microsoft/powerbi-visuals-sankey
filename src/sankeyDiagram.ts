@@ -655,7 +655,8 @@ export class SankeyDiagram implements IVisual {
         let nodes: SankeyDiagramNode[] = [],
             valueFormatterForCategories: IValueFormatter,
             nodeFillColor: string,
-            nodeStrokeColor: string;
+            nodeStrokeColor: string,
+            selectionId: ISelectionId;
 
         valueFormatterForCategories = valueFormatter.create({
             format: valueFormatter.getFormatStringByColumn(source),
@@ -700,8 +701,13 @@ export class SankeyDiagram implements IVisual {
                 height: textMeasurementService.estimateSvgTextHeight(textProperties),
                 color: settings.labels.fill
             };
-            nodeFillColor = this.colorHelper.isHighContrast ? this.colorHelper.getThemeColor() : this.colorPalette.getColor(item).value;
+            nodeFillColor = this.getColor(
+                SankeyDiagram.NodesPropertyIdentifier,
+                this.colorPalette.getColor(item).value,
+                linksObjects[index]);
             nodeStrokeColor = this.colorHelper.getHighContrastColor("foreground", nodeFillColor);
+
+            selectionId = selectionIdBuilder.createSelectionId(index);
 
             if (nodes.filter((node: SankeyDiagramNode) => {
                 return node.label.name === item;
@@ -720,7 +726,9 @@ export class SankeyDiagram implements IVisual {
                     strokeColor: nodeStrokeColor,
                     tooltipInfo: [],
                     selectableDataPoints: [],
-                    settings: null
+                    settings: null,
+                    identity: selectionId,
+                    selected: false
                 });
         });
 
@@ -2346,6 +2354,10 @@ export class SankeyDiagram implements IVisual {
             this.enumerateLinks(instanceEnumeration);
         }
 
+        if(options.objectName === SankeyDiagram.NodesPropertyIdentifier.objectName) {
+            this.enumerateNodeCategories(instanceEnumeration);
+        }
+
         // hide scale settings
         if (options.objectName === SankeyDiagram.NodeComplexSettingsPropertyIdentifier.objectName) {
             (<VisualObjectInstanceEnumerationObject>instanceEnumeration).instances = (<VisualObjectInstanceEnumerationObject>instanceEnumeration).instances
@@ -2353,6 +2365,29 @@ export class SankeyDiagram implements IVisual {
         }
 
         return instanceEnumeration || [];
+    }
+
+    private enumerateNodeCategories(instanceEnumeration: VisualObjectInstanceEnumeration): void {
+        const nodes: SankeyDiagramNode[] = this.dataView && this.dataView.nodes;
+
+        if (!nodes || !(nodes.length > 0)) {
+            return;
+        }
+
+        nodes.filter((node: SankeyDiagramNode) => {
+            return !node.label.name.endsWith(SankeyDiagram.DuplicatedNamePostfix);
+        }).forEach((node: SankeyDiagramNode) => {
+            const identity: ISelectionId = <ISelectionId>node.identity,
+            displayName: string = node.label.formattedName;
+            this.addAnInstanceToEnumeration(instanceEnumeration, {
+                displayName,
+                objectName: SankeyDiagram.NodesPropertyIdentifier.objectName,
+                selector: identity.getSelector(),
+                properties: {
+                    fill: { solid: { color: node.fillColor } }
+                }
+            });
+        });
     }
 
     private enumerateLinks(instanceEnumeration: VisualObjectInstanceEnumeration): void {
