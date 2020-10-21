@@ -28,56 +28,74 @@
 import powerbi from "powerbi-visuals-api";
 import ISelectionId = powerbi.visuals.ISelectionId;
 import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
+import DataViewMatrix = powerbi.DataViewMatrix;
+import DataViewMatrixNode = powerbi.DataViewMatrixNode;
 
 // powerbi.extensibility.visual
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 
-interface CategoryIdentityIndex {
-    categoryIndex: number;
-    identityIndex: number;
-}
-
 export class SelectionIdBuilder {
-    private static DefaultCategoryIndex: number = 0;
-
     private visualHost: IVisualHost;
-    private categories: DataViewCategoryColumn[];
+    private matrix: DataViewMatrix;
 
     constructor(
         IVisualHost: IVisualHost,
-        categories: DataViewCategoryColumn[]) {
+        matrix: DataViewMatrix) {
 
         this.visualHost = IVisualHost;
-        this.categories = categories || [];
-    }
-
-    private getIdentityById(index: number): CategoryIdentityIndex {
-        let categoryIndex: number = SelectionIdBuilder.DefaultCategoryIndex,
-            identityIndex: number = index;
-
-        for (let length: number = this.categories.length; categoryIndex < length; categoryIndex++) {
-            const amountOfIdentities: number = this.categories[categoryIndex].identity.length;
-
-            if (identityIndex > amountOfIdentities - 1) {
-                identityIndex -= amountOfIdentities;
-            } else {
-                break;
-            }
-        }
-
-        return {
-            categoryIndex,
-            identityIndex
-        };
+        this.matrix = matrix
     }
 
     public createSelectionId(index: number): ISelectionId {
-        const categoryIdentityIndex: CategoryIdentityIndex = this.getIdentityById(index);
+        let counter: number = 0,
+        selectionId:ISelectionId;
 
-        return this.visualHost.createSelectionIdBuilder()
-            .withCategory(
-                this.categories[categoryIdentityIndex.categoryIndex],
-                categoryIdentityIndex.identityIndex)
-            .createSelectionId();
+        this.matrix.rows.root.children.forEach((source: DataViewMatrixNode) => {
+            if (counter == index){
+                const categoryColumn: DataViewCategoryColumn = {
+                    source: {
+                        displayName: null,
+                        queryName: `${Math.random()}-${+(new Date())}`
+                    },
+                    values: null,
+                    identity: [source.identity]
+                };
+
+                selectionId = this.visualHost.createSelectionIdBuilder()
+                .withCategory(categoryColumn,0)
+                .createSelectionId();
+            }
+            counter+=1
+        });
+
+        this.matrix.rows.root.children.forEach((source: powerbi.DataViewMatrixNode) =>{
+            source.children.forEach((destination: powerbi.DataViewMatrixNode) => {
+                if (counter == index){
+                    const categoryColumn1: DataViewCategoryColumn = {
+                        source: {
+                            displayName: null,
+                            queryName: `${Math.random()}-${+(new Date())}`
+                        },
+                        values: null,
+                        identity: [source.identity]
+                    };
+                    const categoryColumn2: DataViewCategoryColumn = {
+                        source: {
+                            displayName: null,
+                            queryName: `${Math.random()}-${+(new Date())}`
+                        },
+                        values: null,
+                        identity: [destination.identity]
+                    };
+                    selectionId = this.visualHost.createSelectionIdBuilder()
+                    .withCategory(categoryColumn1,0)
+                    .withCategory(categoryColumn2, 0)
+                    .createSelectionId();
+                }
+                counter += 1
+            });
+        });
+
+        return selectionId;
     }
 }

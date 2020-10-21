@@ -57,38 +57,38 @@
                     }
                 }
             ],
-            "categorical": {
-                "categories": {
+            "matrix": {
+                "rows": {
                     "select": [
-                        {
-                            "bind": {
-                                "to": "Source"
-                            }
-                        },
-                        {
-                            "bind": {
-                                "to": "Destination"
-                            }
-                        },
-                        {
-                            "bind": {
-                                "to": "SourceLabels"
-                            }
-                        },
-                        {
-                            "bind": {
-                                "to": "DestinationLabels"
-                            }
+                    {
+                        "for": {
+                            "in": "Source"
                         }
-                    ],
-                    "dataReductionAlgorithm": {
-                        "top": {}
+                    },
+                    {
+                        "for": {
+                            "in": "Destination"
+                        }
                     }
+                    ]
                 },
                 "values": {
-                    "for": {
-                        "in": "Weight"
+                    "select": [{
+                        "for": {
+                            "in": "SourceLabels"
+                        }
+                    },
+                    {
+                        "for": {
+                            "in": "DestinationLabels"
+                        }
+                    },
+                    {
+                        "for": {
+                            "in": "Weight"
+                        }
                     }
+                    ]
                 }
             }
         }
