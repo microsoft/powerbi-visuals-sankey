@@ -380,6 +380,7 @@ export class SankeyDiagram implements IVisual {
         this.main.attr("transform", translate(this.margin.left, this.margin.top));
     }
 
+    // tslint:disable-next-line: max-func-body-length
     public converter(dataView: DataView): SankeyDiagramDataView {
         const settings: SankeyDiagramSettings = this.parseSettings(dataView);
 
