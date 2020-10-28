@@ -7,6 +7,12 @@
             "displayNameKey": "Visual_Source"
         },
         {
+            "name": "SourceLabels",
+            "kind": "Grouping",
+            "displayName": "Source labels",
+            "displayNameKey": "Visual_SourceLabels"
+        },
+        {
             "name": "Destination",
             "kind": "Grouping",
             "displayName": "Destination",
@@ -17,12 +23,6 @@
             "kind": "Grouping",
             "displayName": "Destination labels",
             "displayNameKey": "Visual_DestinationLabels"
-        },
-        {
-            "name": "SourceLabels",
-            "kind": "Grouping",
-            "displayName": "Source labels",
-            "displayNameKey": "Visual_SourceLabels"
         },
         {
             "name": "Weight",
@@ -60,34 +60,35 @@
             "matrix": {
                 "rows": {
                     "select": [
-                    {
-                        "for": {
-                            "in": "Source"
+                        {
+                            "for": {
+                                "in": "Source"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "Destination"
+                            }
                         }
-                    },
-                    {
-                        "for": {
-                            "in": "Destination"
-                        }
-                    }
                     ]
                 },
                 "values": {
-                    "select": [{
-                        "for": {
-                            "in": "SourceLabels"
+                    "select": [
+                        {
+                            "for": {
+                                "in": "SourceLabels"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "DestinationLabels"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "Weight"
+                            }
                         }
-                    },
-                    {
-                        "for": {
-                            "in": "DestinationLabels"
-                        }
-                    },
-                    {
-                        "for": {
-                            "in": "Weight"
-                        }
-                    }
                     ]
                 }
             }

@@ -55,6 +55,7 @@ export class SelectionIdBuilder {
                 const categoryColumn: DataViewCategoryColumn = {
                     source: {
                         displayName: null,
+                        // tslint:disable-next-line: insecure-random
                         queryName: `${Math.random()}-${+(new Date())}`
                     },
                     values: null,
@@ -74,6 +75,7 @@ export class SelectionIdBuilder {
                     const categoryColumn1: DataViewCategoryColumn = {
                         source: {
                             displayName: null,
+                            // tslint:disable-next-line: insecure-random
                             queryName: `${Math.random()}-${+(new Date())}`
                         },
                         values: null,
@@ -82,6 +84,7 @@ export class SelectionIdBuilder {
                     const categoryColumn2: DataViewCategoryColumn = {
                         source: {
                             displayName: null,
+                            // tslint:disable-next-line: insecure-random
                             queryName: `${Math.random()}-${+(new Date())}`
                         },
                         values: null,
