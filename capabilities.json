@@ -8,7 +8,7 @@
         },
         {
             "name": "SourceLabels",
-            "kind": "Grouping",
+            "kind": "Measure",
             "displayName": "Source labels",
             "displayNameKey": "Visual_SourceLabels"
         },
@@ -20,7 +20,7 @@
         },
         {
             "name": "DestinationLabels",
-            "kind": "Grouping",
+            "kind": "Measure",
             "displayName": "Destination labels",
             "displayNameKey": "Visual_DestinationLabels"
         },

@@ -397,7 +397,8 @@ export class SankeyDiagram implements IVisual {
             || !dataView.matrix.rows.levels[1].sources[0]
             || !dataView.matrix.rows.levels[1].sources[0].displayName
             || !dataView.matrix.rows.root
-            || !dataView.matrix.rows.root.children) {
+            || !dataView.matrix.rows.root.children
+            || !dataView.matrix.valueSources) {
                 return {
                     settings,
                     nodes: [],
@@ -417,8 +418,21 @@ export class SankeyDiagram implements IVisual {
             weights: any[] = [],
             selectionIdBuilder: SelectionIdBuilder = new SelectionIdBuilder(
                 this.visualHost,
-                dataView.matrix);
+                dataView.matrix),
+            valueSources = dataView.matrix.valueSources,
+            sourceLabelIndex: number,
+            destinationLabelIndex: number,
+            weightIndex: number;
 
+        sourceLabelIndex = valueSources.indexOf(valueSources.filter((column: powerbi.DataViewMetadataColumn) => {
+            return column.roles.SourceLabels;
+        }).pop());
+        destinationLabelIndex = valueSources.indexOf(valueSources.filter((source: powerbi.DataViewMetadataColumn) => {
+            return source.roles.DestinationLabels;
+        }).pop());
+        weightIndex = valueSources.indexOf(valueSources.filter((source: powerbi.DataViewMetadataColumn) => {
+            return source.roles.Weight;
+        }).pop());
 
         dataView.matrix.rows.root.children.forEach((source: DataViewMatrixNode) =>{
             objects.push(source.objects);
@@ -432,25 +446,16 @@ export class SankeyDiagram implements IVisual {
                 destinationCategories.push(destination.levelValues[0].value);
 
                 // If both source and destination labels are present in DataView, populate appropiate arrays
-                if(destination.levelValues[1] && destination.levelValues[2]){
-                    let metadataColumns = dataView.matrix.rows.levels[1].sources,
-                    sourceLabelIndex: number,
-                    destinationLabelIndex: number;
-
-                    sourceLabelIndex = metadataColumns.indexOf(metadataColumns.filter((column: powerbi.DataViewMetadataColumn) => {
-                        return column.roles.SourceLabels;
-                    }).pop());
-                    destinationLabelIndex = metadataColumns.indexOf(metadataColumns.filter((source: powerbi.DataViewMetadataColumn) => {
-                        return source.roles.DestinationLabels;
-                    }).pop());
-
-                    sourceCategoriesLabels.push(destination.levelValues[sourceLabelIndex].value);
-                    destinationCategoriesLabels.push(destination.levelValues[destinationLabelIndex].value);
+                if (sourceLabelIndex != -1 && destinationLabelIndex != -1)
+                {
+                    sourceCategoriesLabels.push(destination.values[sourceLabelIndex].value);
+                    destinationCategoriesLabels.push(destination.values[destinationLabelIndex].value);
                 }
 
                 // If weights are present, populate the weights array
-                if(destination.values){
-                    weights.push(destination.values[0].value);
+                if (weightIndex != -1)
+                {
+                    weights.push(destination.values[weightIndex].value);
                 }
                 objects.push(destination.objects);
                 categories.push(destination.levelValues[0].value);
@@ -480,7 +485,7 @@ export class SankeyDiagram implements IVisual {
             objects,
             dataView.matrix.rows.levels[0].sources[0].displayName,
             dataView.matrix.rows.levels[1].sources[0].displayName,
-            dataView.matrix.valueSources[0] ? dataView.matrix.valueSources[0].displayName : null,
+            dataView.matrix.valueSources[weightIndex] ? dataView.matrix.valueSources[weightIndex].displayName : null,
             dataView.matrix.valueSources
         );
 
