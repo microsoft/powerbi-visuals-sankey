@@ -51,6 +51,7 @@ import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 import DataViewValueColumns = powerbi.DataViewValueColumns;
 import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
+import DataViewMatrixNode = powerbi.DataViewMatrixNode;
 
 // powerbi.visuals
 import ISelectionId = powerbi.visuals.ISelectionId;
@@ -379,57 +380,113 @@ export class SankeyDiagram implements IVisual {
         this.main.attr("transform", translate(this.margin.left, this.margin.top));
     }
 
+    // tslint:disable-next-line: max-func-body-length
     public converter(dataView: DataView): SankeyDiagramDataView {
         const settings: SankeyDiagramSettings = this.parseSettings(dataView);
 
         if (!dataView
-            || !dataView.categorical
-            || !dataView.categorical.categories
-            || !dataView.categorical.categories[0]
-            || !dataView.categorical.categories[1]
-            || !dataView.categorical.categories[0].values
-            || !dataView.categorical.categories[1].values) {
-
-            return {
-                settings,
-                nodes: [],
-                links: [],
-                columns: []
-            };
-        }
+            || !dataView.matrix
+            || !dataView.matrix.rows
+            || !dataView.matrix.rows.levels
+            || !dataView.matrix.rows.levels[0]
+            || !dataView.matrix.rows.levels[0].sources
+            || !dataView.matrix.rows.levels[0].sources[0]
+            || !dataView.matrix.rows.levels[0].sources[0].displayName
+            || !dataView.matrix.rows.levels[1]
+            || !dataView.matrix.rows.levels[1].sources
+            || !dataView.matrix.rows.levels[1].sources[0]
+            || !dataView.matrix.rows.levels[1].sources[0].displayName
+            || !dataView.matrix.rows.root
+            || !dataView.matrix.rows.root.children
+            || !dataView.matrix.valueSources) {
+                return {
+                    settings,
+                    nodes: [],
+                    links: [],
+                    columns: []
+                }
+            }
 
         let nodes: SankeyDiagramNode[],
             links: SankeyDiagramLink[],
-            sourceCategory: DataViewCategoryColumn = dataView.categorical.categories[0],
-            sourceCategories: any[] = sourceCategory.values,
-            destinationCategories: any[] = dataView.categorical.categories[1].values,
-            sourceCategoryLabels: any[] = (dataView.categorical.categories[2] || { values: [] }).values,
-            destinationCategoriesLabels: any[] = (dataView.categorical.categories[3] || { values: [] }).values,
+            categories: any[] = [],
+            sourceCategories: any[] = [],
+            destinationCategories: any[] = [],
+            sourceCategoriesLabels: any[] = [],
+            destinationCategoriesLabels: any[] = [],
+            objects: any[] = [],
+            weights: any[] = [],
             selectionIdBuilder: SelectionIdBuilder = new SelectionIdBuilder(
                 this.visualHost,
-                dataView.categorical.categories);
+                dataView.matrix),
+            valueSources = dataView.matrix.valueSources,
+            sourceLabelIndex: number,
+            destinationLabelIndex: number,
+            weightIndex: number;
+
+        sourceLabelIndex = valueSources.indexOf(valueSources.filter((column: powerbi.DataViewMetadataColumn) => {
+            return column.roles.SourceLabels;
+        }).pop());
+        destinationLabelIndex = valueSources.indexOf(valueSources.filter((source: powerbi.DataViewMetadataColumn) => {
+            return source.roles.DestinationLabels;
+        }).pop());
+        weightIndex = valueSources.indexOf(valueSources.filter((source: powerbi.DataViewMetadataColumn) => {
+            return source.roles.Weight;
+        }).pop());
+
+        dataView.matrix.rows.root.children.forEach((source: DataViewMatrixNode) =>{
+            objects.push(source.objects);
+        });
+
+        dataView.matrix.rows.root.children.forEach((source: DataViewMatrixNode) =>{
+            categories.push(source.levelValues[0].value);
+
+            source.children.forEach((destination: DataViewMatrixNode) => {
+                sourceCategories.push(source.levelValues[0].value);
+                destinationCategories.push(destination.levelValues[0].value);
+
+                // If both source and destination labels are present in DataView, populate appropiate arrays
+                if (sourceLabelIndex != -1 && destinationLabelIndex != -1)
+                {
+                    sourceCategoriesLabels.push(destination.values[sourceLabelIndex].value);
+                    destinationCategoriesLabels.push(destination.values[destinationLabelIndex].value);
+                }
+
+                // If weights are present, populate the weights array
+                if (weightIndex != -1)
+                {
+                    weights.push(destination.values[weightIndex].value);
+                }
+                objects.push(destination.objects);
+                categories.push(destination.levelValues[0].value);
+            });
+        });
+
+
 
         nodes = this.createNodes(
+            categories,
             sourceCategories,
             destinationCategories,
             settings,
             selectionIdBuilder,
-            sourceCategory.source,
-            sourceCategory.objects || [],
-            sourceCategoryLabels,
+            dataView.matrix.rows.levels[0].sources[0],
+            objects,
+            sourceCategoriesLabels,
             destinationCategoriesLabels);
 
         links = this.createLinks(
             nodes,
-            selectionIdBuilder,
             sourceCategories,
             destinationCategories,
-            dataView.categorical.values,
-            sourceCategory.objects || [],
             settings,
-            dataView.categorical.categories[SankeyDiagram.SourceCategoryIndex].source.displayName,
-            dataView.categorical.categories[SankeyDiagram.DestinationCategoryIndex].source.displayName,
-            dataView.categorical.values ? dataView.categorical.values[SankeyDiagram.FirstValueIndex].source.displayName : null
+            selectionIdBuilder,
+            weights,
+            objects,
+            dataView.matrix.rows.levels[0].sources[0].displayName,
+            dataView.matrix.rows.levels[1].sources[0].displayName,
+            dataView.matrix.valueSources[weightIndex] ? dataView.matrix.valueSources[weightIndex].displayName : null,
+            dataView.matrix.valueSources
         );
 
         let cycles: SankeyDiagramCycleDictionary = this.checkCycles(nodes);
@@ -643,19 +700,21 @@ export class SankeyDiagram implements IVisual {
     }
 
     private createNodes(
+        categories: any[],
         sourceCategories: any[],
         destinationCategories: any[],
         settings: SankeyDiagramSettings,
         selectionIdBuilder: SelectionIdBuilder,
         source: DataViewMetadataColumn,
-        linksObjects: DataViewObjects[],
+        objects: DataViewObjects[],
         sourceCategoriesLabels?: any[],
         destinationCategoriesLabels?: any[]): SankeyDiagramNode[] {
 
         let nodes: SankeyDiagramNode[] = [],
             valueFormatterForCategories: IValueFormatter,
             nodeFillColor: string,
-            nodeStrokeColor: string;
+            nodeStrokeColor: string,
+            selectionId: ISelectionId;
 
         valueFormatterForCategories = valueFormatter.create({
             format: valueFormatter.getFormatStringByColumn(source),
@@ -681,7 +740,6 @@ export class SankeyDiagram implements IVisual {
             labelsDictionary[item] = destinationCategoriesLabels[index] || "";
         });
 
-        let categories: any[] = sourceCategories.concat(destinationCategories);
         categories.forEach((item: any, index: number) => {
             let formattedValue: string = valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DuplicatedNamePostfix, "")),
                 label: SankeyDiagramLabel,
@@ -700,8 +758,13 @@ export class SankeyDiagram implements IVisual {
                 height: textMeasurementService.estimateSvgTextHeight(textProperties),
                 color: settings.labels.fill
             };
-            nodeFillColor = this.colorHelper.isHighContrast ? this.colorHelper.getThemeColor() : this.colorPalette.getColor(item).value;
+            nodeFillColor = this.getColor(
+                SankeyDiagram.NodesPropertyIdentifier,
+                this.colorPalette.getColor(item).value,
+                objects[index]);
             nodeStrokeColor = this.colorHelper.getHighContrastColor("foreground", nodeFillColor);
+
+            selectionId = selectionIdBuilder.createSelectionId(index);
 
             if (nodes.filter((node: SankeyDiagramNode) => {
                 return node.label.name === item;
@@ -720,51 +783,43 @@ export class SankeyDiagram implements IVisual {
                     strokeColor: nodeStrokeColor,
                     tooltipInfo: [],
                     selectableDataPoints: [],
-                    settings: null
+                    settings: null,
+                    identity: selectionId,
+                    selected: false
                 });
         });
-
         return nodes;
     }
 
     // tslint:disable-next-line: max-func-body-length
     private createLinks(
         nodes: SankeyDiagramNode[],
-        selectionIdBuilder: SelectionIdBuilder,
         sourceCategories: any[],
         destinationCategories: any[],
-        valueColumns: DataViewValueColumns,
-        linksObjects: DataViewObjects[],
         settings: SankeyDiagramSettings,
+        selectionIdBuilder: SelectionIdBuilder,
+        weights: any[],
+        objects: DataViewObjects[],
         sourceFieldName: string,
         destinationFieldName: string,
-        valueFieldName: string
+        valueFieldName: string,
+        valueSources: any
     ): SankeyDiagramLink[] {
-        let valuesColumn: DataViewValueColumn = valueColumns && valueColumns[0],
-            links: SankeyDiagramLink[] = [],
+
+        let links: SankeyDiagramLink[] = [],
             weightValues: number[] = [],
             dataPoints: SankeyDiagramDataPoint[] = [],
             valuesFormatterForWeigth: IValueFormatter,
             formatOfWeigth: string = SankeyDiagram.DefaultFormatOfWeigth;
 
-        if (valuesColumn && valuesColumn.values && valuesColumn.values.map) {
-            weightValues = valuesColumn.values.map((value: any) => {
-                return value
-                    ? value
-                    : SankeyDiagram.DefaultWeightValue;
-            });
-        }
-
-        if (valuesColumn && valuesColumn.source) {
-            formatOfWeigth = valueFormatter.getFormatStringByColumn(valuesColumn.source);
-        }
+        formatOfWeigth = valueFormatter.getFormatStringByColumn(valueSources);
 
         dataPoints = sourceCategories.map((item: any, index: number) => {
             return {
                 source: item,
                 destination: destinationCategories[index],
-                weigth: valuesColumn
-                    ? weightValues[index] || SankeyDiagram.DefaultWeightValue
+                weigth: weights[index]
+                    ? weights[index] || SankeyDiagram.DefaultWeightValue
                     : SankeyDiagram.MinWeightValue
             };
         });
@@ -797,7 +852,7 @@ export class SankeyDiagram implements IVisual {
             linkFillColor = this.getColor(
                 SankeyDiagram.LinksPropertyIdentifier,
                 SankeyDiagram.DefaultColourOfLink,
-                linksObjects[index]);
+                objects[index]);
             linkStrokeColor = this.colorHelper.isHighContrast ? this.colorHelper.getHighContrastColor("foreground", linkFillColor) : linkFillColor;
 
             selectionId = selectionIdBuilder.createSelectionId(index);
@@ -2346,6 +2401,10 @@ export class SankeyDiagram implements IVisual {
             this.enumerateLinks(instanceEnumeration);
         }
 
+        if(options.objectName === SankeyDiagram.NodesPropertyIdentifier.objectName) {
+            this.enumerateNodeCategories(instanceEnumeration);
+        }
+
         // hide scale settings
         if (options.objectName === SankeyDiagram.NodeComplexSettingsPropertyIdentifier.objectName) {
             (<VisualObjectInstanceEnumerationObject>instanceEnumeration).instances = (<VisualObjectInstanceEnumerationObject>instanceEnumeration).instances
@@ -2353,6 +2412,29 @@ export class SankeyDiagram implements IVisual {
         }
 
         return instanceEnumeration || [];
+    }
+
+    private enumerateNodeCategories(instanceEnumeration: VisualObjectInstanceEnumeration): void {
+        const nodes: SankeyDiagramNode[] = this.dataView && this.dataView.nodes;
+
+        if (!nodes || !(nodes.length > 0)) {
+            return;
+        }
+
+        nodes.filter((node: SankeyDiagramNode) => {
+            return !node.label.name.endsWith(SankeyDiagram.DuplicatedNamePostfix);
+        }).forEach((node: SankeyDiagramNode) => {
+            const identity: ISelectionId = <ISelectionId>node.identity,
+            displayName: string = node.label.formattedName;
+            this.addAnInstanceToEnumeration(instanceEnumeration, {
+                displayName,
+                objectName: SankeyDiagram.NodesPropertyIdentifier.objectName,
+                selector: identity.getSelector(),
+                properties: {
+                    fill: { solid: { color: node.fillColor } }
+                }
+            });
+        });
     }
 
     private enumerateLinks(instanceEnumeration: VisualObjectInstanceEnumeration): void {
