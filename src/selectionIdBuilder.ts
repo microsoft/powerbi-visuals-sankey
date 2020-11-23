@@ -91,7 +91,7 @@ export class SelectionIdBuilder {
                         identity: [destination.identity]
                     };
                     selectionId = this.visualHost.createSelectionIdBuilder()
-                    .withCategory(categoryColumn1,0)
+                    // .withCategory(categoryColumn1,0)
                     .withCategory(categoryColumn2, 0)
                     .createSelectionId();
                 }
