@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-sankey",
-  "version": "2.1.3",
+  "version": "3.0.0",
   "description": "Sankey is a type of flow diagram in which the width of the series is in proportion to the quantity of the flow.  Use it to find major contributions to an overall flow.",
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
     "package": "pbiviz package",
     "lint": "tslint -c tslint.json -p tsconfig.json --fix",
     "test": "karma start",
-    "cert": "pbiviz --create-cert"
+    "cert": "pbiviz --install-cert"
   },
   "author": {
     "name": "Microsoft",
@@ -54,7 +54,7 @@
     "karma-webpack": "4.0.2",
     "lodash-es": "4.17.15",
     "powerbi-models": "1.3.1",
-    "powerbi-visuals-api": "^2.6.2",
+    "powerbi-visuals-api": "^3.4.0",
     "powerbi-visuals-tools": "^3.1.10",
     "powerbi-visuals-utils-colorutils": "^2.2.1",
     "powerbi-visuals-utils-dataviewutils": "^2.2.1",
