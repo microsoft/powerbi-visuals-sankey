@@ -1,3 +1,7 @@
+## 3.0.1
+* Context menu fix
+* Selection fix
+
 ## 2.1.0
 * Updated APIs
 * Sorting added
