@@ -85,6 +85,7 @@ export interface SankeyDiagramLink extends
     TooltipEnabledDataPoint,
     SelectableDataPoint {
 
+    label: string;
     source: SankeyDiagramNode;
     destination: SankeyDiagramNode;
     weigth: number;

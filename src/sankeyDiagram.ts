@@ -324,32 +324,34 @@ export class SankeyDiagram implements IVisual {
 
     public update(visualUpdateOptions: VisualUpdateOptions): void {
         this.visualHost.eventService.renderingStarted(visualUpdateOptions);
-        try {
-            let sankeyDiagramDataView: SankeyDiagramDataView,
-                viewport: IViewport = visualUpdateOptions
-                    && visualUpdateOptions.viewport
-                    || SankeyDiagram.DefaultViewport,
-                dataView: DataView = visualUpdateOptions
-                    && visualUpdateOptions.dataViews
-                    && visualUpdateOptions.dataViews[0];
+        //try {
+        let sankeyDiagramDataView: SankeyDiagramDataView,
+            viewport: IViewport = visualUpdateOptions
+                && visualUpdateOptions.viewport
+                || SankeyDiagram.DefaultViewport,
+            dataView: DataView = visualUpdateOptions
+                && visualUpdateOptions.dataViews
+                && visualUpdateOptions.dataViews[0];
 
-            this.updateViewport(visualUpdateOptions.viewport);
+        this.updateViewport(visualUpdateOptions.viewport);
 
-            sankeyDiagramDataView = this.converter(dataView);
+        sankeyDiagramDataView = this.converter(dataView);
 
-            this.computePositions(sankeyDiagramDataView);
+        this.computePositions(sankeyDiagramDataView);
 
-            this.dataView = sankeyDiagramDataView;
+        this.dataView = sankeyDiagramDataView;
 
-            this.applySelectionStateToData();
+        this.applySelectionStateToData();
 
-            this.render(sankeyDiagramDataView);
-            this.visualHost.eventService.renderingFinished(visualUpdateOptions);
-        }
-        catch (e) {
-            this.visualHost.eventService.renderingFailed(visualUpdateOptions, e);
-            console.log(e);
-        }
+        this.render(sankeyDiagramDataView);
+        this.visualHost.eventService.renderingFinished(visualUpdateOptions);
+        /*
+    }
+    catch (e) {
+        this.visualHost.eventService.renderingFailed(visualUpdateOptions, e);
+        console.log(e);
+    }
+    */
     }
 
     private updateViewport(viewport: IViewport): void {
@@ -382,16 +384,33 @@ export class SankeyDiagram implements IVisual {
         this.main.attr("transform", translate(this.margin.left, this.margin.top));
     }
 
-    private getNewNode(node: DataViewMatrixNode): SankeyDiagramNode {
+    private createNewNode(node: DataViewMatrixNode): SankeyDiagramNode {
         let nodeFillColor = this.getColor(
             SankeyDiagram.NodesPropertyIdentifier,
             this.colorPalette.getColor(<string>node.value).value,
-            <any>node);
+            <any>node.objects);
         let nodeStrokeColor = this.colorHelper.getHighContrastColor("foreground", nodeFillColor);
+
+        let name = <any>node.value;
+
+        let textProperties: TextProperties = {
+            text: name,
+            fontFamily: this.textProperties.fontFamily,
+            fontSize: this.textProperties.fontSize
+        };
+
+        let label = {
+            internalName: name,
+            name: name,
+            formattedName: name,//valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DuplicatedNamePostfix, "")),
+            width: textMeasurementService.measureSvgTextWidth(textProperties),
+            height: textMeasurementService.estimateSvgTextHeight(textProperties),
+            color: nodeFillColor,
+            nodeStrokeColor: this.colorHelper.getHighContrastColor("foreground", nodeFillColor)
+        };
+
         return {
-            label: <any>{
-                name: <any>node.value
-            },
+            label: label,
             links: [],
             inputWeight: 0,
             outputWeight: 0,
@@ -448,90 +467,103 @@ export class SankeyDiagram implements IVisual {
             selectionIdBuilder: SelectionIdBuilder = new SelectionIdBuilder(
                 this.visualHost,
                 dataView.matrix),
-            valueSources = dataView.matrix.valueSources,
-            sourceLabelIndex: number,
-            destinationLabelIndex: number,
-            weightIndex: number;
+            valueSources = dataView.matrix.valueSources;
 
-        sourceLabelIndex = valueSources.indexOf(valueSources.filter((column: powerbi.DataViewMetadataColumn) => {
+
+
+        const sourceLabelIndex: number = valueSources.indexOf(valueSources.filter((column: powerbi.DataViewMetadataColumn) => {
             return column.roles.SourceLabels;
         }).pop());
-        destinationLabelIndex = valueSources.indexOf(valueSources.filter((source: powerbi.DataViewMetadataColumn) => {
-            return source.roles.DestinationLabels;
-        }).pop());
-        weightIndex = valueSources.indexOf(valueSources.filter((source: powerbi.DataViewMetadataColumn) => {
+
+
+        const weightIndex: number = valueSources.indexOf(valueSources.filter((source: powerbi.DataViewMetadataColumn) => {
             return source.roles.Weight;
         }).pop());
 
-        dataView.matrix.rows.root.children.forEach((source: DataViewMatrixNode) => {
-            objects.push(source.objects);
-        });
+        const sourceFieldName = dataView.matrix.rows.levels[0].sources[0].displayName;
+        const destinationFieldName = dataView.matrix.rows.levels[1].sources[0].displayName;
+        const valueFieldName = dataView.matrix.valueSources[weightIndex] ? dataView.matrix.valueSources[weightIndex].displayName : null;
 
-        dataView.matrix.rows.root.children.forEach((source: DataViewMatrixNode) => {
-            categories.push(source.levelValues[0].value);
-
-            source.children.forEach((destination: DataViewMatrixNode) => {
-                sourceCategories.push(source.levelValues[0].value);
-                destinationCategories.push(destination.levelValues[0].value);
-
-                // If both source and destination labels are present in DataView, populate appropiate arrays
-                if (sourceLabelIndex != -1 && destinationLabelIndex != -1) {
-                    sourceCategoriesLabels.push(destination.values[sourceLabelIndex].value);
-                    destinationCategoriesLabels.push(destination.values[destinationLabelIndex].value);
-                }
-
-                // If weights are present, populate the weights array
-                if (weightIndex != -1) {
-                    weights.push(destination.values[weightIndex].value);
-                }
-                objects.push(destination.objects);
-                categories.push(destination.levelValues[0].value);
-            });
-        });
+        const formatOfWeigth = valueFormatter.getFormatStringByColumn(valueSources[weightIndex]);
 
 
-        debugger;
+        let weightValues: number[] = [1];
+
+
         dataView.matrix.rows.root.children.forEach(parent => {
-            // todo fix find
+            let newSourceNode = this.createNewNode(parent)
+            newSourceNode.identity = this.visualHost.createSelectionIdBuilder()
+                .withMatrixNode(parent, dataView.matrix.rows.levels)
+                .createSelectionId();
+            nodes.push(newSourceNode);
+
+            //console.log("newSourceNode", newSourceNode);
+        });
+
+
+        dataView.matrix.rows.root.children.forEach(parent => {
             let foundSource: SankeyDiagramNode = nodes.find(found => found.label.name === parent.value)
-            // creates new sankey node from matrix node
-            if (!foundSource) {
-                foundSource = this.getNewNode(parent)
-                foundSource.identity = this.visualHost.createSelectionIdBuilder()
-                    .withMatrixNode(parent, dataView.matrix.rows.levels)
-                    .createSelectionId();
-                nodes.push(foundSource)
-            } else {
-                // update identity on any new relation found
-                foundSource.identity = (<ISelectionIdBuilder>foundSource.identity)
-                    .withMatrixNode(parent, dataView.matrix.rows.levels)
-                    .createSelectionId();
-            }
+
             parent.children.forEach(child => {
+                debugger;
+                let linkLabel = undefined;
+                let weigth: any = SankeyDiagram.DefaultWeightValue;
+
                 let foundDestination: SankeyDiagramNode = nodes.find(found => found.label.name === child.value)
                 if (!foundDestination) {
-                    foundDestination = this.getNewNode(child);
+                    foundDestination = this.createNewNode(child);
                     foundDestination.identity = this.visualHost.createSelectionIdBuilder()
                         .withMatrixNode(child, dataView.matrix.rows.levels)
                         .createSelectionId();
                     nodes.push(foundDestination);
                 }
-                else {
-                    foundDestination.identity = (<ISelectionIdBuilder>foundDestination.identity)
-                        .withMatrixNode(child, dataView.matrix.rows.levels)
-                        .createSelectionId();
+
+
+                if (sourceLabelIndex != -1) {
+                    linkLabel = (child.values[sourceLabelIndex] && child.values[sourceLabelIndex].value) ?
+                        child.values[sourceLabelIndex].value || SankeyDiagram.DefaultWeightValue : SankeyDiagram.MinWeightValue;
                 }
 
-                let link = {
+
+                // If weights are present, populate the weights array
+                if (weightIndex != -1) {
+                    weigth = (child.values[weightIndex] && child.values[weightIndex].value) ?
+                        child.values[weightIndex].value || SankeyDiagram.DefaultWeightValue : SankeyDiagram.MinWeightValue;
+
+                    weightValues.push(weigth);
+
+                }
+
+                //console.log("new destination", foundSource, foundDestination);
+
+                let linkFillColor = this.getColor(
+                    SankeyDiagram.LinksPropertyIdentifier,
+                    SankeyDiagram.DefaultColourOfLink,
+                    child.objects);
+                let linkStrokeColor = this.colorHelper.isHighContrast ? this.colorHelper.getHighContrastColor("foreground", linkFillColor) : linkFillColor;
+
+
+                let tooltipInfo = SankeyDiagram.getTooltipDataForLink(
+                    valuesFormatterForWeigth,
+                    foundSource.label.formattedName,
+                    foundDestination.label.formattedName,
+                    weigth,
+                    sourceFieldName,
+                    destinationFieldName,
+                    valueFieldName
+                );
+
+                let link: SankeyDiagramLink = {
+                    label: linkLabel && linkLabel.toString(),
                     source: foundSource,
                     destination: foundDestination,
-                    weigth: 10,
+                    weigth: weigth,
                     height: 10,
-                    fillColor: "white",
-                    strokeColor: "black",
+                    fillColor: linkFillColor,
+                    strokeColor: linkStrokeColor,
                     dySource: 0,
                     dyDestination: 0,
-                    tooltipInfo: null,
+                    tooltipInfo: tooltipInfo,
                     identity: this.visualHost.createSelectionIdBuilder()
                         .withMatrixNode(parent, dataView.matrix.rows.levels)
                         .withMatrixNode(child, dataView.matrix.rows.levels)
@@ -539,8 +571,10 @@ export class SankeyDiagram implements IVisual {
                     selected: false,
                     direction: SankeyLinkDirrections.Forward
                 }
-                // debugger;
-                let selectableDataPoint: SelectableDataPoint = SankeyDiagram.createSelectableDataPoint(link.identity);
+
+                //console.log("link", link.identity);
+
+                let selectableDataPoint: SelectableDataPoint = SankeyDiagram.createSelectableDataPoint(<ISelectionId>link.identity);
                 foundSource.selectableDataPoints.push(selectableDataPoint);
                 foundDestination.selectableDataPoints.push(selectableDataPoint);
 
@@ -551,40 +585,38 @@ export class SankeyDiagram implements IVisual {
 
                 SankeyDiagram.updateValueOfNode(foundSource);
                 SankeyDiagram.updateValueOfNode(foundDestination);
-            })
-        })
+            });
+        });
 
-        debugger;
-        // nodes = this.createNodes(
-        //     categories,
-        //     sourceCategories,
-        //     destinationCategories,
-        //     settings,
-        //     selectionIdBuilder,
-        //     dataView.matrix.rows.levels[0].sources[0],
-        //     objects,
-        //     sourceCategoriesLabels,
-        //     destinationCategoriesLabels);
+        const valuesFormatterForWeigth = valueFormatter.create({
+            format: formatOfWeigth,
+            value: Math.max(
+                settings.labels.unit !== 0 ? settings.labels.unit : d3.max(weightValues) || SankeyDiagram.MinWeightValue,
+                SankeyDiagram.MinWeightValue),
+        });
 
-        // links = this.createLinks(
-        //     nodes,
-        //     sourceCategories,
-        //     destinationCategories,
-        //     settings,
-        //     selectionIdBuilder,
-        //     weights,
-        //     objects,
-        //     dataView.matrix.rows.levels[0].sources[0].displayName,
-        //     dataView.matrix.rows.levels[1].sources[0].displayName,
-        //     dataView.matrix.valueSources[weightIndex] ? dataView.matrix.valueSources[weightIndex].displayName : null,
-        //     dataView.matrix.valueSources
-        // );
 
         let cycles: SankeyDiagramCycleDictionary = this.checkCycles(nodes);
 
         if (settings.cyclesLinks.drawCycles === CyclesDrawType.Duplicate) {
             links = this.processCyclesForwardLinks(cycles, nodes, links, settings);
         }
+
+        nodes.forEach((node: SankeyDiagramNode) => {
+            node.tooltipInfo = SankeyDiagram.getTooltipForNode(
+                valuesFormatterForWeigth,
+                node.label.formattedName,
+                node.inputWeight
+                    ? node.inputWeight
+                    : node.outputWeight,
+                this.localizationManager,
+                node.inputWeight > 0 && node.outputWeight > 0 ? `${sourceFieldName}-${destinationFieldName}` : node.outputWeight > 0
+                    ? sourceFieldName
+                    : destinationFieldName,
+                valueFieldName
+            );
+        });
+
 
         let sankeyDiagramDataView = {
             nodes,
@@ -790,225 +822,227 @@ export class SankeyDiagram implements IVisual {
         return simpleCycles;
     }
 
-    private createNodes(
-        categories: any[],
-        sourceCategories: any[],
-        destinationCategories: any[],
-        settings: SankeyDiagramSettings,
-        selectionIdBuilder: SelectionIdBuilder,
-        source: DataViewMetadataColumn,
-        objects: DataViewObjects[],
-        sourceCategoriesLabels?: any[],
-        destinationCategoriesLabels?: any[]): SankeyDiagramNode[] {
 
-        let nodes: SankeyDiagramNode[] = [],
-            valueFormatterForCategories: IValueFormatter,
-            nodeFillColor: string,
-            nodeStrokeColor: string,
-            selectionId: ISelectionId;
-
-        valueFormatterForCategories = valueFormatter.create({
-            format: valueFormatter.getFormatStringByColumn(source),
-            value: sourceCategories[0],
-            value2: destinationCategories[destinationCategories.length - 1]
-        });
-
-        // check self connected links
-        for (let index: number = 0; index < destinationCategories.length; index++) {
-            if (sourceCategoriesLabels[index] === undefined) {
-                sourceCategoriesLabels[index] = sourceCategories[index];
-            }
-            if (destinationCategoriesLabels[index] === undefined) {
-                destinationCategoriesLabels[index] = destinationCategories[index];
-            }
-        }
-
-        let labelsDictionary: Object = {};
-        sourceCategories.forEach((item: any, index: number) => {
-            labelsDictionary[item] = sourceCategoriesLabels[index] || "";
-        });
-        destinationCategories.forEach((item: any, index: number) => {
-            labelsDictionary[item] = destinationCategoriesLabels[index] || "";
-        });
-
-        categories.forEach((item: any, index: number) => {
-            let formattedValue: string = valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DuplicatedNamePostfix, "")),
-                label: SankeyDiagramLabel,
-                selectableDataPoint: SelectableDataPoint,
-                textProperties: TextProperties = {
-                    text: formattedValue,
-                    fontFamily: this.textProperties.fontFamily,
-                    fontSize: this.textProperties.fontSize
-                };
-
-            label = {
-                internalName: item,
-                name: item,
-                formattedName: valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DuplicatedNamePostfix, "")),
-                width: textMeasurementService.measureSvgTextWidth(textProperties),
-                height: textMeasurementService.estimateSvgTextHeight(textProperties),
-                color: settings.labels.fill
-            };
-            nodeFillColor = this.getColor(
-                SankeyDiagram.NodesPropertyIdentifier,
-                this.colorPalette.getColor(item).value,
-                objects[index]);
-            nodeStrokeColor = this.colorHelper.getHighContrastColor("foreground", nodeFillColor);
-            debugger;
-            // if (categories.indexOf(item) === index) {
-            selectionId = selectionIdBuilder.createSelectionId(index);
-            // } else {
-            // selectionId = <any>nodes[categories.indexOf(item)]["identity"];
-            // }
-
-            if (nodes.filter((node: SankeyDiagramNode) => {
-                return node.label.name === item;
-            }).length === 0)
-
-                nodes.push({
-                    label: label,
-                    links: [],
-                    inputWeight: 0,
-                    outputWeight: 0,
-                    backwardWeight: 0,
-                    selftLinkWeight: 0,
-                    width: this.nodeWidth,
-                    height: 0,
-                    fillColor: nodeFillColor,
-                    strokeColor: nodeStrokeColor,
-                    tooltipInfo: [],
-                    selectableDataPoints: [],
-                    settings: null,
-                    identity: selectionId,
-                    selected: false
-                });
-        });
-        return nodes;
-    }
-
-    // tslint:disable-next-line: max-func-body-length
-    private createLinks(
-        nodes: SankeyDiagramNode[],
-        sourceCategories: any[],
-        destinationCategories: any[],
-        settings: SankeyDiagramSettings,
-        selectionIdBuilder: SelectionIdBuilder,
-        weights: any[],
-        objects: DataViewObjects[],
-        sourceFieldName: string,
-        destinationFieldName: string,
-        valueFieldName: string,
-        valueSources: any
-    ): SankeyDiagramLink[] {
-
-        let links: SankeyDiagramLink[] = [],
-            weightValues: number[] = [],
-            dataPoints: SankeyDiagramDataPoint[] = [],
-            valuesFormatterForWeigth: IValueFormatter,
-            formatOfWeigth: string = SankeyDiagram.DefaultFormatOfWeigth;
-
-        formatOfWeigth = valueFormatter.getFormatStringByColumn(valueSources);
-
-        dataPoints = sourceCategories.map((item: any, index: number) => {
-            return {
-                source: item,
-                destination: destinationCategories[index],
-                weigth: weights[index]
-                    ? weights[index] || SankeyDiagram.DefaultWeightValue
-                    : SankeyDiagram.MinWeightValue
-            };
-        });
-
-        valuesFormatterForWeigth = valueFormatter.create({
-            format: formatOfWeigth,
-            value: Math.max(
-                settings.labels.unit !== 0 ? settings.labels.unit : d3.max(weightValues) || SankeyDiagram.MinWeightValue,
-                SankeyDiagram.MinWeightValue),
-        });
-
-        dataPoints.forEach((dataPoint: SankeyDiagramDataPoint, index: number) => {
-            let sourceNode: SankeyDiagramNode,
-                destinationNode: SankeyDiagramNode,
-                link: SankeyDiagramLink,
-                linkFillColor: string,
-                linkStrokeColor: string,
+    /*
+        private createNodes(
+            categories: any[],
+            sourceCategories: any[],
+            destinationCategories: any[],
+            settings: SankeyDiagramSettings,
+            selectionIdBuilder: SelectionIdBuilder,
+            source: DataViewMetadataColumn,
+            objects: DataViewObjects[],
+            sourceCategoriesLabels?: any[],
+            destinationCategoriesLabels?: any[]): SankeyDiagramNode[] {
+    
+            let nodes: SankeyDiagramNode[] = [],
+                valueFormatterForCategories: IValueFormatter,
+                nodeFillColor: string,
+                nodeStrokeColor: string,
                 selectionId: ISelectionId;
-
-            nodes.forEach((node: SankeyDiagramNode) => {
-                if (node.label.internalName === dataPoint.source) {
-                    sourceNode = node;
-                }
-
-                if (node.label.internalName === dataPoint.destination) {
-                    destinationNode = node;
-                }
+    
+            valueFormatterForCategories = valueFormatter.create({
+                format: valueFormatter.getFormatStringByColumn(source),
+                value: sourceCategories[0],
+                value2: destinationCategories[destinationCategories.length - 1]
             });
-
-            linkFillColor = this.getColor(
-                SankeyDiagram.LinksPropertyIdentifier,
-                SankeyDiagram.DefaultColourOfLink,
-                objects[index]);
-            linkStrokeColor = this.colorHelper.isHighContrast ? this.colorHelper.getHighContrastColor("foreground", linkFillColor) : linkFillColor;
-
-            // if (dataPoints.indexOf(dataPoint) === index){
-            selectionId = selectionIdBuilder.createSelectionId(index);
-            // }
-
-            link = {
-                source: sourceNode,
-                destination: destinationNode,
-                weigth: dataPoint.weigth,
-                height: dataPoint.weigth,
-                fillColor: linkFillColor,
-                strokeColor: linkStrokeColor,
-                dySource: 0,
-                dyDestination: 0,
-                tooltipInfo: SankeyDiagram.getTooltipDataForLink(
+    
+            // check self connected links
+            for (let index: number = 0; index < destinationCategories.length; index++) {
+                if (sourceCategoriesLabels[index] === undefined) {
+                    sourceCategoriesLabels[index] = sourceCategories[index];
+                }
+                if (destinationCategoriesLabels[index] === undefined) {
+                    destinationCategoriesLabels[index] = destinationCategories[index];
+                }
+            }
+    
+            let labelsDictionary: Object = {};
+            sourceCategories.forEach((item: any, index: number) => {
+                labelsDictionary[item] = sourceCategoriesLabels[index] || "";
+            });
+            destinationCategories.forEach((item: any, index: number) => {
+                labelsDictionary[item] = destinationCategoriesLabels[index] || "";
+            });
+    
+            categories.forEach((item: any, index: number) => {
+                let formattedValue: string = valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DuplicatedNamePostfix, "")),
+                    label: SankeyDiagramLabel,
+                    selectableDataPoint: SelectableDataPoint,
+                    textProperties: TextProperties = {
+                        text: formattedValue,
+                        fontFamily: this.textProperties.fontFamily,
+                        fontSize: this.textProperties.fontSize
+                    };
+    
+                label = {
+                    internalName: item,
+                    name: item,
+                    formattedName: valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DuplicatedNamePostfix, "")),
+                    width: textMeasurementService.measureSvgTextWidth(textProperties),
+                    height: textMeasurementService.estimateSvgTextHeight(textProperties),
+                    color: settings.labels.fill
+                };
+                nodeFillColor = this.getColor(
+                    SankeyDiagram.NodesPropertyIdentifier,
+                    this.colorPalette.getColor(item).value,
+                    objects[index]);
+                nodeStrokeColor = this.colorHelper.getHighContrastColor("foreground", nodeFillColor);
+                debugger;
+                // if (categories.indexOf(item) === index) {
+                selectionId = selectionIdBuilder.createSelectionId(index);
+                // } else {
+                // selectionId = <any>nodes[categories.indexOf(item)]["identity"];
+                // }
+    
+                if (nodes.filter((node: SankeyDiagramNode) => {
+                    return node.label.name === item;
+                }).length === 0)
+    
+                    nodes.push({
+                        label: label,
+                        links: [],
+                        inputWeight: 0,
+                        outputWeight: 0,
+                        backwardWeight: 0,
+                        selftLinkWeight: 0,
+                        width: this.nodeWidth,
+                        height: 0,
+                        fillColor: nodeFillColor,
+                        strokeColor: nodeStrokeColor,
+                        tooltipInfo: [],
+                        selectableDataPoints: [],
+                        settings: null,
+                        identity: selectionId,
+                        selected: false
+                    });
+            });
+            return nodes;
+        }
+    
+        // tslint:disable-next-line: max-func-body-length
+        private createLinks(
+            nodes: SankeyDiagramNode[],
+            sourceCategories: any[],
+            destinationCategories: any[],
+            settings: SankeyDiagramSettings,
+            selectionIdBuilder: SelectionIdBuilder,
+            weights: any[],
+            objects: DataViewObjects[],
+            sourceFieldName: string,
+            destinationFieldName: string,
+            valueFieldName: string,
+            valueSources: any
+        ): SankeyDiagramLink[] {
+    
+            let links: SankeyDiagramLink[] = [],
+                weightValues: number[] = [],
+                dataPoints: SankeyDiagramDataPoint[] = [],
+                valuesFormatterForWeigth: IValueFormatter,
+                formatOfWeigth: string = SankeyDiagram.DefaultFormatOfWeigth;
+    
+            formatOfWeigth = valueFormatter.getFormatStringByColumn(valueSources);
+    
+            dataPoints = sourceCategories.map((item: any, index: number) => {
+                return {
+                    source: item,
+                    destination: destinationCategories[index],
+                    weigth: weights[index]
+                        ? weights[index] || SankeyDiagram.DefaultWeightValue
+                        : SankeyDiagram.MinWeightValue
+                };
+            });
+    
+            valuesFormatterForWeigth = valueFormatter.create({
+                format: formatOfWeigth,
+                value: Math.max(
+                    settings.labels.unit !== 0 ? settings.labels.unit : d3.max(weightValues) || SankeyDiagram.MinWeightValue,
+                    SankeyDiagram.MinWeightValue),
+            });
+    
+            dataPoints.forEach((dataPoint: SankeyDiagramDataPoint, index: number) => {
+                let sourceNode: SankeyDiagramNode,
+                    destinationNode: SankeyDiagramNode,
+                    link: SankeyDiagramLink,
+                    linkFillColor: string,
+                    linkStrokeColor: string,
+                    selectionId: ISelectionId;
+    
+                nodes.forEach((node: SankeyDiagramNode) => {
+                    if (node.label.internalName === dataPoint.source) {
+                        sourceNode = node;
+                    }
+    
+                    if (node.label.internalName === dataPoint.destination) {
+                        destinationNode = node;
+                    }
+                });
+    
+                linkFillColor = this.getColor(
+                    SankeyDiagram.LinksPropertyIdentifier,
+                    SankeyDiagram.DefaultColourOfLink,
+                    objects[index]);
+                linkStrokeColor = this.colorHelper.isHighContrast ? this.colorHelper.getHighContrastColor("foreground", linkFillColor) : linkFillColor;
+    
+                // if (dataPoints.indexOf(dataPoint) === index){
+                selectionId = selectionIdBuilder.createSelectionId(index);
+                // }
+    
+                link = {
+                    source: sourceNode,
+                    destination: destinationNode,
+                    weigth: dataPoint.weigth,
+                    height: dataPoint.weigth,
+                    fillColor: linkFillColor,
+                    strokeColor: linkStrokeColor,
+                    dySource: 0,
+                    dyDestination: 0,
+                    tooltipInfo: SankeyDiagram.getTooltipDataForLink(
+                        valuesFormatterForWeigth,
+                        sourceNode.label.formattedName,
+                        destinationNode.label.formattedName,
+                        dataPoint.weigth,
+                        sourceFieldName,
+                        destinationFieldName,
+                        valueFieldName
+                    ),
+                    identity: selectionId,
+                    selected: false,
+                    direction: SankeyLinkDirrections.Forward
+                };
+    
+                let selectableDataPoint: SelectableDataPoint = SankeyDiagram.createSelectableDataPoint(selectionId);
+                sourceNode.selectableDataPoints.push(selectableDataPoint);
+                destinationNode.selectableDataPoints.push(selectableDataPoint);
+    
+                links.push(link);
+    
+                sourceNode.links.push(link);
+                destinationNode.links.push(link);
+    
+                SankeyDiagram.updateValueOfNode(sourceNode);
+                SankeyDiagram.updateValueOfNode(destinationNode);
+            });
+    
+            nodes.forEach((nodes: SankeyDiagramNode) => {
+                nodes.tooltipInfo = SankeyDiagram.getTooltipForNode(
                     valuesFormatterForWeigth,
-                    sourceNode.label.formattedName,
-                    destinationNode.label.formattedName,
-                    dataPoint.weigth,
-                    sourceFieldName,
-                    destinationFieldName,
+                    nodes.label.formattedName,
+                    nodes.inputWeight
+                        ? nodes.inputWeight
+                        : nodes.outputWeight,
+                    this.localizationManager,
+                    nodes.inputWeight > 0 && nodes.outputWeight > 0 ? `${sourceFieldName}-${destinationFieldName}` : nodes.outputWeight > 0
+                        ? sourceFieldName
+                        : destinationFieldName,
                     valueFieldName
-                ),
-                identity: selectionId,
-                selected: false,
-                direction: SankeyLinkDirrections.Forward
-            };
-
-            let selectableDataPoint: SelectableDataPoint = SankeyDiagram.createSelectableDataPoint(selectionId);
-            sourceNode.selectableDataPoints.push(selectableDataPoint);
-            destinationNode.selectableDataPoints.push(selectableDataPoint);
-
-            links.push(link);
-
-            sourceNode.links.push(link);
-            destinationNode.links.push(link);
-
-            SankeyDiagram.updateValueOfNode(sourceNode);
-            SankeyDiagram.updateValueOfNode(destinationNode);
-        });
-
-        nodes.forEach((nodes: SankeyDiagramNode) => {
-            nodes.tooltipInfo = SankeyDiagram.getTooltipForNode(
-                valuesFormatterForWeigth,
-                nodes.label.formattedName,
-                nodes.inputWeight
-                    ? nodes.inputWeight
-                    : nodes.outputWeight,
-                this.localizationManager,
-                nodes.inputWeight > 0 && nodes.outputWeight > 0 ? `${sourceFieldName}-${destinationFieldName}` : nodes.outputWeight > 0
-                    ? sourceFieldName
-                    : destinationFieldName,
-                valueFieldName
-            );
-
-        });
-
-        return links;
-    }
-
+                );
+    
+            });
+    
+            return links;
+        }
+    */
     private static createSelectableDataPoint(
         selectionId: ISelectionId,
         isSelected: boolean = false): SelectableDataPoint {
@@ -2122,7 +2156,7 @@ export class SankeyDiagram implements IVisual {
                 })
             .style("font-size", this.dataView.settings.linkLabels.fontSize)
             .style("fill", this.dataView.settings.linkLabels.fill)
-            .text((link: SankeyDiagramLink) =>
+            .text((link: SankeyDiagramLink) => (link.label && (link.label.length > 0)) ? link.label :
                 `${link.source.label.name || ""}-${link.destination.label.name || ""}:${(link.tooltipInfo[2] || { value: "" }).value}`
             );
     }
@@ -2526,7 +2560,7 @@ export class SankeyDiagram implements IVisual {
             this.addAnInstanceToEnumeration(instanceEnumeration, {
                 displayName,
                 objectName: SankeyDiagram.NodesPropertyIdentifier.objectName,
-                selector: identity.getSelector(),
+                selector: ColorHelper.normalizeSelector(identity.getSelector(), false),
                 properties: {
                     fill: { solid: { color: node.fillColor } }
                 }

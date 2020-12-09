@@ -8,7 +8,7 @@
         },
         {
             "name": "Destination",
-            "kind": "Grouping",
+            "kind": "GroupingOrMeasure",
             "displayName": "Destination",
             "displayNameKey": "Visual_Destination"
         },
@@ -16,7 +16,12 @@
             "name": "Weight",
             "kind": "Measure",
             "displayName": "Weight",
-            "displayNameKey": "Visual_Weight"
+            "displayNameKey": "Visual_Weight",
+            "requiredTypes": [
+                {
+                    "numeric": true
+                }
+            ]
         },
         {
             "name": "SourceLabels",
@@ -30,7 +35,7 @@
             "conditions": [
                 {
                     "Source": {
-                        "min": 0,
+                        "min": 1,
                         "max": 1
                     },
                     "Destination": {
@@ -56,8 +61,8 @@
                             }
                         },
                         {
-                            "for": {
-                                "in": "Destination"
+                            "bind": {
+                                "to": "Destination"
                             }
                         }
                     ]
