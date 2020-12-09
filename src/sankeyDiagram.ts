@@ -384,7 +384,7 @@ export class SankeyDiagram implements IVisual {
         this.main.attr("transform", translate(this.margin.left, this.margin.top));
     }
 
-    private createNewNode(node: DataViewMatrixNode): SankeyDiagramNode {
+    private createNewNode(node: DataViewMatrixNode, settings: SankeyDiagramSettings): SankeyDiagramNode {
         let nodeFillColor = this.getColor(
             SankeyDiagram.NodesPropertyIdentifier,
             this.colorPalette.getColor(<string>node.value).value,
@@ -398,15 +398,13 @@ export class SankeyDiagram implements IVisual {
             fontFamily: this.textProperties.fontFamily,
             fontSize: this.textProperties.fontSize
         };
-
-        let label = {
+        let label: SankeyDiagramLabel = {
             internalName: name,
             name: name,
             formattedName: name,//valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DuplicatedNamePostfix, "")),
             width: textMeasurementService.measureSvgTextWidth(textProperties),
             height: textMeasurementService.estimateSvgTextHeight(textProperties),
-            color: nodeFillColor,
-            nodeStrokeColor: this.colorHelper.getHighContrastColor("foreground", nodeFillColor)
+            color: settings.labels.fill
         };
 
         return {
@@ -491,7 +489,7 @@ export class SankeyDiagram implements IVisual {
 
 
         dataView.matrix.rows.root.children.forEach(parent => {
-            let newSourceNode = this.createNewNode(parent)
+            let newSourceNode = this.createNewNode(parent, settings)
             newSourceNode.identity = this.visualHost.createSelectionIdBuilder()
                 .withMatrixNode(parent, dataView.matrix.rows.levels)
                 .createSelectionId();
@@ -510,7 +508,7 @@ export class SankeyDiagram implements IVisual {
 
                 let foundDestination: SankeyDiagramNode = nodes.find(found => found.label.name === child.value)
                 if (!foundDestination) {
-                    foundDestination = this.createNewNode(child);
+                    foundDestination = this.createNewNode(child, settings);
                     foundDestination.identity = this.visualHost.createSelectionIdBuilder()
                         .withMatrixNode(child, dataView.matrix.rows.levels)
                         .createSelectionId();
@@ -1192,7 +1190,6 @@ export class SankeyDiagram implements IVisual {
 
         // node positions
         try {
-            debugger;
             const oldValues = this.dataView.settings.valueSources;
             const newValues = settings.valueSources
             // if no values
@@ -1205,7 +1202,7 @@ export class SankeyDiagram implements IVisual {
                 settings.nodeComplexSettings.nodePositions = "[]";
             }
             // if value source shanged
-            else if (oldValues.pop().queryName !== newValues.pop().queryName){
+            else if (oldValues.pop().queryName !== newValues.pop().queryName) {
                 settings._nodePositions = [];
                 settings.nodeComplexSettings.nodePositions = "[]";
             }
