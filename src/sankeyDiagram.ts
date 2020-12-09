@@ -332,7 +332,7 @@ export class SankeyDiagram implements IVisual {
             dataView: DataView = visualUpdateOptions
                 && visualUpdateOptions.dataViews
                 && visualUpdateOptions.dataViews[0];
-
+        debugger;
         this.updateViewport(visualUpdateOptions.viewport);
 
         sankeyDiagramDataView = this.converter(dataView);
@@ -505,7 +505,6 @@ export class SankeyDiagram implements IVisual {
             let foundSource: SankeyDiagramNode = nodes.find(found => found.label.name === parent.value)
 
             parent.children.forEach(child => {
-                debugger;
                 let linkLabel = undefined;
                 let weigth: any = SankeyDiagram.DefaultWeightValue;
 
@@ -1179,6 +1178,8 @@ export class SankeyDiagram implements IVisual {
     private parseSettings(dataView: DataView): SankeyDiagramSettings {
         let settings: SankeyDiagramSettings = SankeyDiagramSettings.parse<SankeyDiagramSettings>(dataView);
 
+        settings.valueSources = dataView.matrix.valueSources;
+
         // detect sorting chosen
         const foundSortedColumn = dataView.metadata.columns.find(col => col.sort !== undefined);
         if (foundSortedColumn) {
@@ -1191,7 +1192,24 @@ export class SankeyDiagram implements IVisual {
 
         // node positions
         try {
-            settings._nodePositions = <SankeyDiagramNodePositionSetting[]>JSON.parse(settings.nodeComplexSettings.nodePositions);
+            debugger;
+            const oldValues = this.dataView.settings.valueSources;
+            const newValues = settings.valueSources
+            // if no values
+            if (oldValues.length === 0 && newValues.length === 0) {
+                settings._nodePositions = <SankeyDiagramNodePositionSetting[]>JSON.parse(settings.nodeComplexSettings.nodePositions);
+            }
+            // if values added or deleted
+            else if (oldValues.length !== newValues.length) {
+                settings._nodePositions = [];
+                settings.nodeComplexSettings.nodePositions = "[]";
+            }
+            // if value source shanged
+            else if (oldValues.pop().queryName !== newValues.pop().queryName){
+                settings._nodePositions = [];
+                settings.nodeComplexSettings.nodePositions = "[]";
+            }
+
         }
         catch (exception) {
             settings._nodePositions = [];
