@@ -487,11 +487,11 @@ export class SankeyDiagram implements IVisual {
 
         let weightValues: number[] = [1];
 
-
         dataView.matrix.rows.root.children.forEach(parent => {
             let newSourceNode = this.createNewNode(parent, settings)
             newSourceNode.identity = this.visualHost.createSelectionIdBuilder()
                 .withMatrixNode(parent, dataView.matrix.rows.levels)
+                // .withMeasure(newSourceNode.label.name)
                 .createSelectionId();
             nodes.push(newSourceNode);
 
@@ -501,6 +501,7 @@ export class SankeyDiagram implements IVisual {
 
         dataView.matrix.rows.root.children.forEach(parent => {
             let foundSource: SankeyDiagramNode = nodes.find(found => found.label.name === parent.value)
+            foundSource.label.formattedName += "|" + (<any>parent.identity).identityIndex;
 
             parent.children.forEach(child => {
                 let linkLabel = undefined;
@@ -510,11 +511,31 @@ export class SankeyDiagram implements IVisual {
                 if (!foundDestination) {
                     foundDestination = this.createNewNode(child, settings);
                     foundDestination.identity = this.visualHost.createSelectionIdBuilder()
+                        .withMatrixNode(parent, dataView.matrix.rows.levels)
                         .withMatrixNode(child, dataView.matrix.rows.levels)
+                        // .withMeasure(foundDestination.label.name)
                         .createSelectionId();
                     nodes.push(foundDestination);
                 }
 
+                // let foundDestination: SankeyDiagramNode;
+                // let foundIndex = nodes.findIndex(el => el.label.name === child.value);
+                // if (foundIndex < 0) {
+                //     foundDestination = this.createNewNode(child, settings);
+                //     foundDestination.identity = this.visualHost.createSelectionIdBuilder()
+                //         .withMatrixNode(parent, dataView.matrix.rows.levels)
+                //         .withMatrixNode(child, dataView.matrix.rows.levels)
+                //         // .withMeasure(foundDestination.label.name)
+                //         .createSelectionId();
+                //     // foundDestination.label.name += "|" + (<any>child.identity).identityIndex;
+                //     foundDestination.label.formattedName += "|" + (<any>child.identity).identityIndex;
+                //     console.log((<ISelectionId>foundDestination.identity).getKey());
+                //     nodes.push(foundDestination);
+                // } else {
+                //     debugger;
+
+                //     nodes[foundIndex].identity = (<any>nodes[foundIndex].identity).withMatrixNode(child, dataView.matrix.rows.levels).createSelectionId();
+                // }
 
                 if (sourceLabelIndex != -1) {
                     linkLabel = (child.values[sourceLabelIndex] && child.values[sourceLabelIndex].value) ?
@@ -631,10 +652,13 @@ export class SankeyDiagram implements IVisual {
                 }
             });
         }
-
+        debugger;
+        let restore = true;
+        // const oldSource = this.dataView && this.dataView.settings && this.dataView.settings.valueSourcesQuery;
+        // const newSourse = dataView.matrix.valueSources && dataView.matrix.valueSources.pop().queryName;
         this.checkNodePositionSettings(nodes, settings);
         this.restoreNodePositions(nodes, settings);
-
+        // sankeyDiagramDataView.settings.valueSourcesQuery = newSourse;
         return sankeyDiagramDataView;
     }
 
@@ -1176,7 +1200,7 @@ export class SankeyDiagram implements IVisual {
     private parseSettings(dataView: DataView): SankeyDiagramSettings {
         let settings: SankeyDiagramSettings = SankeyDiagramSettings.parse<SankeyDiagramSettings>(dataView);
 
-        settings.valueSources = dataView.matrix.valueSources;
+        // settings.valueSourcesQuery = dataView.matrix.valueSources && dataView.matrix.valueSources[0].queryName;
 
         // detect sorting chosen
         const foundSortedColumn = dataView.metadata.columns.find(col => col.sort !== undefined);
@@ -1187,25 +1211,26 @@ export class SankeyDiagram implements IVisual {
         // change settings from high contrast mode
         settings.labels.fill = this.colorHelper.getHighContrastColor("foreground", settings.labels.fill);
         settings.linkLabels.fill = this.colorHelper.getHighContrastColor("foreground", settings.linkLabels.fill);
-
         // node positions
         try {
-            const oldValues = this.dataView.settings.valueSources;
-            const newValues = settings.valueSources
-            // if no values
-            if (oldValues.length === 0 && newValues.length === 0) {
-                settings._nodePositions = <SankeyDiagramNodePositionSetting[]>JSON.parse(settings.nodeComplexSettings.nodePositions);
-            }
-            // if values added or deleted
-            else if (oldValues.length !== newValues.length) {
-                settings._nodePositions = [];
-                settings.nodeComplexSettings.nodePositions = "[]";
-            }
-            // if value source shanged
-            else if (oldValues.pop().queryName !== newValues.pop().queryName) {
-                settings._nodePositions = [];
-                settings.nodeComplexSettings.nodePositions = "[]";
-            }
+            // const oldValues = this.dataView.settings.valueSources;
+            // const newValues = settings.valueSources
+            // // if no values
+            // if (oldValues.length === 0 && newValues.length === 0) {
+            //     settings._nodePositions = <SankeyDiagramNodePositionSetting[]>JSON.parse(settings.nodeComplexSettings.nodePositions);
+            // }
+            // // if values added or deleted
+            // else if (oldValues.length !== newValues.length) {
+            //     settings._nodePositions = [];
+            //     settings.nodeComplexSettings.nodePositions = "[]";
+            // }
+            // // if value source shanged
+            // else if (oldValues.pop().queryName !== newValues.pop().queryName) {
+            //     settings._nodePositions = [];
+            //     settings.nodeComplexSettings.nodePositions = "[]";
+            // } // else{
+            settings._nodePositions = <SankeyDiagramNodePositionSetting[]>JSON.parse(settings.nodeComplexSettings.nodePositions);
+            // }
 
         }
         catch (exception) {

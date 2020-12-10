@@ -98,5 +98,5 @@ export class SankeyDiagramSettings extends DataViewObjectsParser {
     public cyclesLinks: SankeyNodeCycles = new SankeyNodeCycles();
     public _viewportSize: ViewportSize = {};
     public sort: string = "";
-    public valueSources: DataViewMetadataColumn[] = [];
+    public restorePo: string = "";
 }
