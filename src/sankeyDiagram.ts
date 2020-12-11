@@ -501,7 +501,6 @@ export class SankeyDiagram implements IVisual {
 
         dataView.matrix.rows.root.children.forEach(parent => {
             let foundSource: SankeyDiagramNode = nodes.find(found => found.label.name === parent.value)
-            foundSource.label.formattedName += "|" + (<any>parent.identity).identityIndex;
 
             parent.children.forEach(child => {
                 let linkLabel = undefined;
@@ -528,13 +527,15 @@ export class SankeyDiagram implements IVisual {
                 //         // .withMeasure(foundDestination.label.name)
                 //         .createSelectionId();
                 //     // foundDestination.label.name += "|" + (<any>child.identity).identityIndex;
-                //     foundDestination.label.formattedName += "|" + (<any>child.identity).identityIndex;
-                //     console.log((<ISelectionId>foundDestination.identity).getKey());
+                //     // foundDestination.label.formattedName += "|" + (<any>child.identity).identityIndex;
+                //     // console.log((<ISelectionId>foundDestination.identity).getKey());
                 //     nodes.push(foundDestination);
                 // } else {
                 //     debugger;
-
+                //     foundDestination = nodes[foundIndex];
                 //     nodes[foundIndex].identity = (<any>nodes[foundIndex].identity).withMatrixNode(child, dataView.matrix.rows.levels).createSelectionId();
+                //     console.log(foundDestination.label.name, (<any>nodes[foundIndex].identity).getKey());
+
                 // }
 
                 if (sourceLabelIndex != -1) {
@@ -652,13 +653,8 @@ export class SankeyDiagram implements IVisual {
                 }
             });
         }
-        debugger;
-        let restore = true;
-        // const oldSource = this.dataView && this.dataView.settings && this.dataView.settings.valueSourcesQuery;
-        // const newSourse = dataView.matrix.valueSources && dataView.matrix.valueSources.pop().queryName;
         this.checkNodePositionSettings(nodes, settings);
         this.restoreNodePositions(nodes, settings);
-        // sankeyDiagramDataView.settings.valueSourcesQuery = newSourse;
         return sankeyDiagramDataView;
     }
 
