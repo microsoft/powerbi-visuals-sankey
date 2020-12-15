@@ -34,6 +34,9 @@ import {
 
 import DataViewObjectsParser = dataViewObjectsParser.DataViewObjectsParser;
 
+import powerbi from "powerbi-visuals-api";
+import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+
 export enum CyclesDrawType {
     Duplicate,
     Backward
@@ -95,4 +98,5 @@ export class SankeyDiagramSettings extends DataViewObjectsParser {
     public cyclesLinks: SankeyNodeCycles = new SankeyNodeCycles();
     public _viewportSize: ViewportSize = {};
     public sort: string = "";
+    public valueSourcesQuery: string = "";
 }

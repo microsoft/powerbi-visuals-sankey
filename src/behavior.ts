@@ -136,6 +136,18 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
     }
 
     private bindClickEventToClearCatcher(): void {
+        this.behaviorOptions.clearCatcher.on("contextmenu", () => {
+            const event: MouseEvent = (<MouseEvent>getEvent()) || <MouseEvent>window.event;
+            if (event) {
+                this.selectionHandler.handleContextMenu(
+                    null,
+                    {
+                        x: event.clientX,
+                        y: event.clientY
+                    });
+                event.preventDefault();
+            }
+        });
         this.behaviorOptions.clearCatcher.on("click", () => {
             this.clearSelection();
             this.createAnEmptySelectedDataPoints();

@@ -7,28 +7,27 @@
             "displayNameKey": "Visual_Source"
         },
         {
-            "name": "SourceLabels",
-            "kind": "Measure",
-            "displayName": "Source labels",
-            "displayNameKey": "Visual_SourceLabels"
-        },
-        {
             "name": "Destination",
-            "kind": "Grouping",
+            "kind": "GroupingOrMeasure",
             "displayName": "Destination",
             "displayNameKey": "Visual_Destination"
-        },
-        {
-            "name": "DestinationLabels",
-            "kind": "Measure",
-            "displayName": "Destination labels",
-            "displayNameKey": "Visual_DestinationLabels"
         },
         {
             "name": "Weight",
             "kind": "Measure",
             "displayName": "Weight",
-            "displayNameKey": "Visual_Weight"
+            "displayNameKey": "Visual_Weight",
+            "requiredTypes": [
+                {
+                    "numeric": true
+                }
+            ]
+        },
+        {
+            "name": "SourceLabels",
+            "kind": "Measure",
+            "displayName": "Source labels",
+            "displayNameKey": "Visual_SourceLabels"
         }
     ],
     "dataViewMappings": [
@@ -36,7 +35,7 @@
             "conditions": [
                 {
                     "Source": {
-                        "min": 0,
+                        "min": 1,
                         "max": 1
                     },
                     "Destination": {
@@ -44,10 +43,6 @@
                         "max": 1
                     },
                     "SourceLabels": {
-                        "min": 0,
-                        "max": 1
-                    },
-                    "DestinationLabels": {
                         "min": 0,
                         "max": 1
                     },
@@ -66,8 +61,8 @@
                             }
                         },
                         {
-                            "for": {
-                                "in": "Destination"
+                            "bind": {
+                                "to": "Destination"
                             }
                         }
                     ]
@@ -77,11 +72,6 @@
                         {
                             "for": {
                                 "in": "SourceLabels"
-                            }
-                        },
-                        {
-                            "for": {
-                                "in": "DestinationLabels"
                             }
                         },
                         {

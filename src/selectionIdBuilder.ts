@@ -30,13 +30,15 @@ import ISelectionId = powerbi.visuals.ISelectionId;
 import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
 import DataViewMatrix = powerbi.DataViewMatrix;
 import DataViewMatrixNode = powerbi.DataViewMatrixNode;
-
+import ISelectionIdBuilder = powerbi.visuals.ISelectionIdBuilder;
 // powerbi.extensibility.visual
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 
 export class SelectionIdBuilder {
     private visualHost: IVisualHost;
     private matrix: DataViewMatrix;
+    private matrixDataArray: DataViewMatrixNode[] = [];
+    private builder: ISelectionIdBuilder;
 
     constructor(
         IVisualHost: IVisualHost,
@@ -44,61 +46,22 @@ export class SelectionIdBuilder {
 
         this.visualHost = IVisualHost;
         this.matrix = matrix
+        this.getMatrixArray(this.matrix.rows.root);
+        this.matrixDataArray.shift(); // delete matrix root node 
+    }
+
+    // walks the matrix deep first, adds each node to matrixDataArray
+    private getMatrixArray(node: DataViewMatrixNode) {
+        this.matrixDataArray.push(node);
+        if (node.children) {
+            node.children.forEach(child => this.getMatrixArray(child))
+        }
     }
 
     public createSelectionId(index: number): ISelectionId {
-        let counter: number = 0,
-        selectionId:ISelectionId;
-
-        this.matrix.rows.root.children.forEach((source: DataViewMatrixNode) => {
-            if (counter == index){
-                const categoryColumn: DataViewCategoryColumn = {
-                    source: {
-                        displayName: null,
-                        // tslint:disable-next-line: insecure-random
-                        queryName: `${Math.random()}-${+(new Date())}`
-                    },
-                    values: null,
-                    identity: [source.identity]
-                };
-
-                selectionId = this.visualHost.createSelectionIdBuilder()
-                .withCategory(categoryColumn,0)
-                .createSelectionId();
-            }
-            counter+=1
-        });
-
-        this.matrix.rows.root.children.forEach((source: powerbi.DataViewMatrixNode) =>{
-            source.children.forEach((destination: powerbi.DataViewMatrixNode) => {
-                if (counter == index){
-                    const categoryColumn1: DataViewCategoryColumn = {
-                        source: {
-                            displayName: null,
-                            // tslint:disable-next-line: insecure-random
-                            queryName: `${Math.random()}-${+(new Date())}`
-                        },
-                        values: null,
-                        identity: [source.identity]
-                    };
-                    const categoryColumn2: DataViewCategoryColumn = {
-                        source: {
-                            displayName: null,
-                            // tslint:disable-next-line: insecure-random
-                            queryName: `${Math.random()}-${+(new Date())}`
-                        },
-                        values: null,
-                        identity: [destination.identity]
-                    };
-                    selectionId = this.visualHost.createSelectionIdBuilder()
-                    .withCategory(categoryColumn1,0)
-                    .withCategory(categoryColumn2, 0)
-                    .createSelectionId();
-                }
-                counter += 1
-            });
-        });
-
-        return selectionId;
+        debugger;
+        return this.visualHost.createSelectionIdBuilder()
+            .withMatrixNode(this.matrixDataArray[index], this.matrix.rows.levels)
+            .createSelectionId();
     }
 }
