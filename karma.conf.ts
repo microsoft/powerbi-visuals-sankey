@@ -36,13 +36,12 @@ const coverageFolder = "coverage";
 
 process.env.CHROME_BIN = require("puppeteer").executablePath();
 
-import { Config, ConfigOptions } from "karma";
 
-module.exports = (config: Config) => {
-    config.set(<ConfigOptions>{
+module.exports = (config) => {
+    config.set({
         mode: "development",
         browserNoActivityTimeout: 100000,
-        browsers: ["ChromeHeadless"],
+        browsers: ["Chrome"],
         colors: true,
         frameworks: ["jasmine"],
         reporters: [
@@ -55,7 +54,7 @@ module.exports = (config: Config) => {
             outputFile: "TESTS-report.xml",
             useBrowserName: false
         },
-        singleRun: true,
+        singleRun: false,
         plugins: [
             "karma-coverage",
             "karma-typescript",

@@ -35,7 +35,7 @@ import {
     SankeyDiagram as VisualClass
 } from "../src/sankeyDiagram";
 
-import  powerbi from "powerbi-visuals-api";
+import powerbi from "powerbi-visuals-api";
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 
 export class VisualBuilder extends VisualBuilderBase<VisualClass> {
@@ -51,27 +51,28 @@ export class VisualBuilder extends VisualBuilderBase<VisualClass> {
         return this.visual;
     }
 
-    public get mainElement(): JQuery {
-        return this.element.children("svg.sankeyDiagram");
+    public get mainElement(): HTMLElement {
+        // return this.element.children("svg.sankeyDiagram");
+        return this.element.querySelector("svg.sankeyDiagram");
     }
 
-    public get nodesElement(): JQuery {
+    public get nodesElement(): HTMLElement {
         return this.mainElement
-            .children("g")
-            .children("g.nodes");
+            .querySelector("g.nodes");
     }
 
-    public get nodeElements(): JQuery {
-        return this.nodesElement.children("g.node");
+    public get nodeElements(): NodeListOf<HTMLElement> {
+        return this.nodesElement.querySelectorAll("g.node");
     }
 
-    public get linksElement(): JQuery {
+    // g.links element containing all the links 
+    public get linksElement(): HTMLElement {
         return this.mainElement
-            .children("g")
-            .children("g.links");
+            .querySelector("g.links");
     }
 
-    public get linkElements(): JQuery {
-        return this.linksElement.children("path.link");
+    // all links objects displayed in the visual
+    public get linkElements(): NodeListOf<HTMLElement> {
+        return this.linksElement.querySelectorAll("path.link");
     }
 }
