@@ -97,6 +97,40 @@ export class SankeyDiagramData extends TestDataViewBuilder {
         return new DataTable(result);
     }
 
+    public getDataViewWithoutValues(): DataView {
+        const data: DataTable = new DataTable([["Source", "Destination"], ...[this.valuesSourceDestination]]);
+
+        const matrixBuilder = SankeyDiagramData.createMatrixDataViewBuilder(data);
+
+        const source: ResourceColumnMetadata = {
+            name: "Source",
+            displayName: "Source",
+            type: { text: true },
+        };
+        const destination: ResourceColumnMetadata = {
+            name: "Destination",
+            displayName: "Destination",
+            type: { text: true },
+        }
+
+        return matrixBuilder
+            .withRowGroup({
+                columns: [{
+                    metadata: source,
+                    role: "Source",
+                    index: 1,
+                }]
+            })
+            .withRowGroup({
+                columns: [{
+                    metadata: destination,
+                    role: "Destination",
+                    index: 2,
+                }]
+            })
+            .build();
+    }
+
     public getDataViewWithLowValue(): DataView {
         const data: DataTable = this.getMatrixDataTable(this.valuesSourceDestinationWithWeigth, true);
 
@@ -121,20 +155,20 @@ export class SankeyDiagramData extends TestDataViewBuilder {
         const dataView: DataView = matrixBuilder
             .withValues([{
                 metadata: values,
-                role: "Values",
+                role: "Weight",
                 index: 0,
             }])
             .withRowGroup({
                 columns: [{
                     metadata: source,
-                    role: "Rows",
+                    role: "Source",
                     index: 1,
                 }]
             })
             .withRowGroup({
                 columns: [{
                     metadata: destination,
-                    role: "Rows",
+                    role: "Destination",
                     index: 2,
                 }]
             })
@@ -167,20 +201,20 @@ export class SankeyDiagramData extends TestDataViewBuilder {
             .withRowGroup({
                 columns: [{
                     metadata: source,
-                    role: "Rows",
+                    role: "Source",
                     index: 1,
                 }]
             })
             .withRowGroup({
                 columns: [{
                     metadata: destination,
-                    role: "Rows",
+                    role: "Destination",
                     index: 2,
                 }]
             })
             .withValues([{
                 metadata: values,
-                role: "Values",
+                role: "Weight",
                 index: 0,
             }])
             .build();

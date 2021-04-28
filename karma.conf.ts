@@ -40,8 +40,8 @@ process.env.CHROME_BIN = require("puppeteer").executablePath();
 module.exports = (config) => {
     config.set({
         mode: "development",
-        browserNoActivityTimeout: 100000,
-        browsers: ["Chrome"],
+        browserNoActivityTimeout: 10000,
+        browsers: ["ChromeHeadless"],
         colors: true,
         frameworks: ["jasmine"],
         reporters: [
@@ -54,7 +54,7 @@ module.exports = (config) => {
             outputFile: "TESTS-report.xml",
             useBrowserName: false
         },
-        singleRun: false,
+        singleRun: true,
         plugins: [
             "karma-coverage",
             "karma-typescript",
