@@ -323,6 +323,7 @@ export class SankeyDiagram implements IVisual {
     }
 
     public update(visualUpdateOptions: VisualUpdateOptions): void {
+        // debugger;
         this.visualHost.eventService.renderingStarted(visualUpdateOptions);
         
         let sankeyDiagramDataView: SankeyDiagramDataView,
@@ -490,6 +491,13 @@ export class SankeyDiagram implements IVisual {
 
         });
 
+        const valuesFormatterForWeigth = valueFormatter.create({
+            format: formatOfWeigth,
+            value: Math.max(
+                settings.labels.unit !== 0 ? settings.labels.unit : d3.max(weightValues) || SankeyDiagram.MinWeightValue,
+                SankeyDiagram.MinWeightValue),
+        });
+
 
         dataView.matrix.rows.root.children.forEach(parent => {
             let foundSource: SankeyDiagramNode = nodes.find(found => found.label.name === parent.value)
@@ -573,13 +581,7 @@ export class SankeyDiagram implements IVisual {
             });
         });
 
-        const valuesFormatterForWeigth = valueFormatter.create({
-            format: formatOfWeigth,
-            value: Math.max(
-                settings.labels.unit !== 0 ? settings.labels.unit : d3.max(weightValues) || SankeyDiagram.MinWeightValue,
-                SankeyDiagram.MinWeightValue),
-        });
-
+        
 
         let cycles: SankeyDiagramCycleDictionary = this.checkCycles(nodes);
 

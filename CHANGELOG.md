@@ -1,3 +1,7 @@
+## 3.0.4
+* All tests rewritten to be using matrix dataview
+* Removed JQuery and lodash from tests
+
 ## 3.0.1
 * Context menu fix
 * Selection fix
