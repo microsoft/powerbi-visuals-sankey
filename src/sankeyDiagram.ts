@@ -537,9 +537,15 @@ export class SankeyDiagram implements IVisual {
                     child.objects);
                 let linkStrokeColor = this.colorHelper.isHighContrast ? this.colorHelper.getHighContrastColor("foreground", linkFillColor) : linkFillColor;
 
+                let valuesFormatterForLinkTooltipInfo = valueFormatter.create({
+                    format: formatOfWeigth,
+                    value: Math.max(
+                        settings.labels.unit !== 0 ? settings.labels.unit : d3.max(weightValues) || SankeyDiagram.MinWeightValue,
+                        SankeyDiagram.MinWeightValue),
+                });
 
                 let tooltipInfo = SankeyDiagram.getTooltipDataForLink(
-                    valuesFormatterForWeigth,
+                    valuesFormatterForLinkTooltipInfo,
                     foundSource.label.formattedName,
                     foundDestination.label.formattedName,
                     weigth,
