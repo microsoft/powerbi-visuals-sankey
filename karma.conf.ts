@@ -36,12 +36,11 @@ const coverageFolder = "coverage";
 
 process.env.CHROME_BIN = require("puppeteer").executablePath();
 
-import { Config, ConfigOptions } from "karma";
 
-module.exports = (config: Config) => {
-    config.set(<ConfigOptions>{
+module.exports = (config) => {
+    config.set({
         mode: "development",
-        browserNoActivityTimeout: 100000,
+        browserNoActivityTimeout: 10000,
         browsers: ["ChromeHeadless"],
         colors: true,
         frameworks: ["jasmine"],

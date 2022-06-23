@@ -33,9 +33,11 @@ import DataView = powerbi.DataView;
 // powerbi.extensibility.utils.test
 import {
     testDataViewBuilder,
-    getRandomNumbers
+    getRandomNumbers,
+    getRandomNumber
 } from "powerbi-visuals-utils-testutils";
 import TestDataViewBuilder = testDataViewBuilder.TestDataViewBuilder;
+import { DataTable, ResourceColumnMetadata } from "powerbi-visuals-utils-testutils/lib/dataViewBuilder/matrixBuilder";
 
 export class SankeyDiagramData extends TestDataViewBuilder {
     public static ColumnSource: string = "Source";
@@ -73,69 +75,149 @@ export class SankeyDiagramData extends TestDataViewBuilder {
         ["Brazil", "Spain"]
     ];
 
-    public valuesValue: number[] = getRandomNumbers(this.valuesSourceDestination.length, 10, 500);
+    // public valuesValue: number[] = getRandomNumbers(this.valuesSourceDestination.length, 10, 500);
 
-    public valuesWithLowValue: number[] = getRandomNumbers(this.valuesSourceDestinationWithWeigth.length, 10, 50).map( (v) => v / 100);
+    // public valuesWithLowValue: number[] = getRandomNumbers(this.valuesSourceDestinationWithWeigth.length, 10, 50).map((v) => v / 100);
 
-    public getDataViewWithLowValue(columnNames?: string[]): DataView {
-        return this.createCategoricalDataViewBuilder([
-            {
-                source: {
-                    displayName: SankeyDiagramData.ColumnSource,
-                    roles: { [SankeyDiagramData.ColumnSource]: true },
-                    type: ValueType.fromDescriptor({ text: true })
-                },
-                values: this.valuesSourceDestinationWithWeigth.map(x => x[0])
-            },
-            {
-                source: {
-                    displayName: SankeyDiagramData.ColumnDestination,
-                    roles: { [SankeyDiagramData.ColumnDestination]: true },
-                    type: ValueType.fromDescriptor({ text: true }),
-                },
-                values: this.valuesSourceDestinationWithWeigth.map(x => x[1])
+    public getMatrixDataTable(sourceDestination: string[][], useLowValues: boolean = false): DataTable {
+        let result = [];
+
+        result[0] = ["Source", "Destination", "Weight"];
+
+        const min: number = 10;
+        const max: number = useLowValues ? 50 : 500;
+
+        for (let link of sourceDestination) {
+            let value = getRandomNumber(min, max);
+            if (useLowValues) {
+                value = value / 100;
             }
-        ], [
-                {
-                    source: {
-                        displayName: SankeyDiagramData.ColumnValue,
-                        roles: { [SankeyDiagramData.ColumnValue]: true },
-                        isMeasure: true,
-                        type: ValueType.fromDescriptor({ numeric: true }),
-                    },
-                    values: this.valuesWithLowValue
-                }
-            ], columnNames).build();
+            result.push([...link, value]);
+        }
+        return new DataTable(result);
     }
 
-    public getDataView(columnNames?: string[]): DataView {
-        return this.createCategoricalDataViewBuilder([
-            {
-                source: {
-                    displayName: SankeyDiagramData.ColumnSource,
-                    roles: { [SankeyDiagramData.ColumnSource]: true },
-                    type: ValueType.fromDescriptor({ text: true })
-                },
-                values: this.valuesSourceDestination.map(x => x[0])
-            },
-            {
-                source: {
-                    displayName: SankeyDiagramData.ColumnDestination,
-                    roles: { [SankeyDiagramData.ColumnDestination]: true },
-                    type: ValueType.fromDescriptor({ text: true }),
-                },
-                values: this.valuesSourceDestination.map(x => x[1])
-            }
-        ], [
-                {
-                    source: {
-                        displayName: SankeyDiagramData.ColumnValue,
-                        roles: { [SankeyDiagramData.ColumnValue]: true },
-                        isMeasure: true,
-                        type: ValueType.fromDescriptor({ numeric: true }),
-                    },
-                    values: this.valuesValue
-                }
-            ], columnNames).build();
+    public getDataViewWithoutValues(): DataView {
+        const data: DataTable = new DataTable([["Source", "Destination"], ...[this.valuesSourceDestination]]);
+
+        const matrixBuilder = SankeyDiagramData.createMatrixDataViewBuilder(data);
+
+        const source: ResourceColumnMetadata = {
+            name: "Source",
+            displayName: "Source",
+            type: { text: true },
+        };
+        const destination: ResourceColumnMetadata = {
+            name: "Destination",
+            displayName: "Destination",
+            type: { text: true },
+        }
+
+        return matrixBuilder
+            .withRowGroup({
+                columns: [{
+                    metadata: source,
+                    role: "Source",
+                    index: 1,
+                }]
+            })
+            .withRowGroup({
+                columns: [{
+                    metadata: destination,
+                    role: "Destination",
+                    index: 2,
+                }]
+            })
+            .build();
+    }
+
+    public getDataViewWithLowValue(): DataView {
+        const data: DataTable = this.getMatrixDataTable(this.valuesSourceDestinationWithWeigth, true);
+
+        const matrixBuilder = SankeyDiagramData.createMatrixDataViewBuilder(data);
+
+        const source: ResourceColumnMetadata = {
+            name: "Source",
+            displayName: "Source",
+            type: { text: true },
+        };
+        const destination: ResourceColumnMetadata = {
+            name: "Destination",
+            displayName: "Destination",
+            type: { text: true },
+        }
+        const values: ResourceColumnMetadata = {
+            name: "Weight",
+            displayName: "Weight",
+            type: { numeric: true },
+        }
+
+        const dataView: DataView = matrixBuilder
+            .withValues([{
+                metadata: values,
+                role: "Weight",
+                index: 0,
+            }])
+            .withRowGroup({
+                columns: [{
+                    metadata: source,
+                    role: "Source",
+                    index: 1,
+                }]
+            })
+            .withRowGroup({
+                columns: [{
+                    metadata: destination,
+                    role: "Destination",
+                    index: 2,
+                }]
+            })
+            .build();
+        return dataView;
+    }
+
+    public getDataView(): DataView {
+        const data: DataTable = this.getMatrixDataTable(this.valuesSourceDestination, false);
+
+        const matrixBuilder = SankeyDiagramData.createMatrixDataViewBuilder(data);
+
+        const source: ResourceColumnMetadata = {
+            name: "Source",
+            displayName: "Source",
+            type: { text: true },
+        };
+        const destination: ResourceColumnMetadata = {
+            name: "Destination",
+            displayName: "Destination",
+            type: { text: true },
+        }
+        const values: ResourceColumnMetadata = {
+            name: "Weight",
+            displayName: "Weight",
+            type: { numeric: true },
+        }
+
+        const dataView: DataView = matrixBuilder
+            .withRowGroup({
+                columns: [{
+                    metadata: source,
+                    role: "Source",
+                    index: 1,
+                }]
+            })
+            .withRowGroup({
+                columns: [{
+                    metadata: destination,
+                    role: "Destination",
+                    index: 2,
+                }]
+            })
+            .withValues([{
+                metadata: values,
+                role: "Weight",
+                index: 0,
+            }])
+            .build();
+        return dataView;
     }
 }
