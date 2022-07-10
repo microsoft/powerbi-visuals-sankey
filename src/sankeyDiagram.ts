@@ -132,7 +132,6 @@ import {
     SankeyDiagramBehaviorOptions,
     SankeyDiagramBehavior
 } from "./behavior";
-import { data } from "jquery";
 
 export class SankeyDiagram implements IVisual {
     private static ClassName: string = "sankeyDiagram";
@@ -284,9 +283,6 @@ export class SankeyDiagram implements IVisual {
     }
 
     constructor(options: VisualConstructorOptions) {
-        if (window.location !== window.parent.location) {
-            require("core-js/stable");
-        }
         this.init(options);
     }
 
@@ -2240,11 +2236,15 @@ export class SankeyDiagram implements IVisual {
     }
 
     private renderTooltip(selection: Selection<SankeyDiagramNode | SankeyDiagramLink>): void {
+        if (!this.tooltipServiceWrapper) {
+            return;
+        }
+
         this.tooltipServiceWrapper.addTooltip(
             selection,
-            (tooltipEvent: TooltipEventArgs<TooltipEnabledDataPoint>) => {
-                return tooltipEvent.data.tooltipInfo;
-            });
+            (data: TooltipEnabledDataPoint) => data.tooltipInfo,
+            (data: SankeyDiagramNode | SankeyDiagramLink) => data.identity
+        );
     }
 
     private updateSelectionState(

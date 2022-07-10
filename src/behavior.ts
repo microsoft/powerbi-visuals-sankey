@@ -82,7 +82,7 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
     }
 
     private bindClickEventToNodes(): void {
-        this.behaviorOptions.nodes.on("click", (node: SankeyDiagramNode) => {
+        this.behaviorOptions.nodes.on("click", (event: PointerEvent, node: SankeyDiagramNode) => {
             let selectableDataPoints: SelectableDataPoint[] = node.selectableDataPoints;
             if (node.cloneLink) {
                 selectableDataPoints = selectableDataPoints.concat(node.cloneLink.selectableDataPoints);
@@ -116,7 +116,7 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
     }
 
     private bindClickEventToLinks(): void {
-        this.behaviorOptions.links.on("click", (link: SankeyDiagramLink) => {
+        this.behaviorOptions.links.on("click", (event: PointerEvent, link: SankeyDiagramLink) => {
             this.selectionHandler.handleSelection(link, getEvent().ctrlKey);
             this.createAnEmptySelectedDataPoints();
         });
