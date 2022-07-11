@@ -29,12 +29,15 @@ import powerbi from "powerbi-visuals-api";
 // lodash
 import * as _ from "lodash-es";
 // d3
-import * as d3 from "d3";
+import { select as d3Select, Selection as d3Selection } from "d3-selection";
+import { drag as d3Drag } from "d3-drag";
+import { max as d3Max, min as d3Min } from "d3-array";
+import { scaleLog as d3ScaleLog, scaleLinear as d3ScaleLinear } from "d3-scale"
+import { rgb as d3Rgb } from "d3-color"
+import { interpolateNumber as d3InterpolateNumber } from "d3-interpolate"
 
-const getEvent = () => <MouseEvent>require("d3-selection").event;
-
-type Selection<T> = d3.Selection<any, T, any, any>;
-type UpdateSelection<T> = d3.Selection<any, T, any, any>;
+type Selection<T> = d3Selection<any, T, any, any>;
+type UpdateSelection<T> = d3Selection<any, T, any, any>;
 
 // powerbi
 import DataView = powerbi.DataView;
@@ -290,7 +293,7 @@ export class SankeyDiagram implements IVisual {
         this.visualHost = options.host;
         this.localizationManager = this.visualHost.createLocalizationManager();
 
-        this.root = d3.select(options.element)
+        this.root = d3Select(options.element)
             .append("svg")
             .classed(SankeyDiagram.ClassName, true);
 
@@ -528,7 +531,7 @@ export class SankeyDiagram implements IVisual {
                 let valuesFormatterForLinkTooltipInfo = valueFormatter.create({
                     format: formatOfWeigth,
                     value: Math.max(
-                        settings.labels.unit !== 0 ? settings.labels.unit : d3.max(weightValues) || SankeyDiagram.MinWeightValue,
+                        settings.labels.unit !== 0 ? settings.labels.unit : d3Max(weightValues) || SankeyDiagram.MinWeightValue,
                         SankeyDiagram.MinWeightValue),
                 });
 
@@ -578,7 +581,7 @@ export class SankeyDiagram implements IVisual {
         const valuesFormatterForWeigth = valueFormatter.create({
             format: formatOfWeigth,
             value: Math.max(
-                settings.labels.unit !== 0 ? settings.labels.unit : d3.max(weightValues) || SankeyDiagram.MinWeightValue,
+                settings.labels.unit !== 0 ? settings.labels.unit : d3Max(weightValues) || SankeyDiagram.MinWeightValue,
                 SankeyDiagram.MinWeightValue),
         });
 
@@ -1014,12 +1017,12 @@ export class SankeyDiagram implements IVisual {
             let weightScale: any;
 
             if (sankeyDiagramDataView.settings.scaleSettings.lnScale) {
-                weightScale = d3.scaleLog()
+                weightScale = d3ScaleLog()
                     .base(Math.E)
                     .domain([Math.exp(SankeyDiagram.MinDomainOfScale + scaleShift), Math.exp(SankeyDiagram.MaxDomainOfScale + scaleShift)])
                     .range([minRangeOfScale, SankeyDiagram.DefaultMaxRangeOfScale]);
             } else {
-                weightScale = d3.scaleLinear()
+                weightScale = d3ScaleLinear()
                     .domain([minWeightInData + scaleShift, maxWeightInData + scaleShift])
                     .range([minRangeOfScale, SankeyDiagram.DefaultMaxRangeOfScale]);
             }
@@ -1054,7 +1057,7 @@ export class SankeyDiagram implements IVisual {
             columns = this.getColumns(sankeyDiagramDataView.nodes);
             maxColumn = SankeyDiagram.getMaxColumn(columns);
 
-            minWeight = d3.min(sankeyDiagramDataView.nodes.filter((n) => Math.max(n.inputWeight, n.outputWeight) > 0).map((n) => Math.max(n.inputWeight, n.outputWeight)));
+            minWeight = d3Min(sankeyDiagramDataView.nodes.filter((n) => Math.max(n.inputWeight, n.outputWeight) > 0).map((n) => Math.max(n.inputWeight, n.outputWeight)));
             minWeight = minWeight || SankeyDiagram.DefaultWeightOfLink;
             sankeyDiagramDataView.settings._scale.y = this.getScaleByAxisY(maxColumn.sumValueOfNodes);
 
@@ -1356,7 +1359,7 @@ export class SankeyDiagram implements IVisual {
 
             node.x *= scale.x;
 
-            let selfLinkHeight: number = d3.max(node.links.filter(l => l.direction === SankeyLinkDirrections.SelfLink).map(l => l.weigth));
+            let selfLinkHeight: number = d3Max(node.links.filter(l => l.direction === SankeyLinkDirrections.SelfLink).map(l => l.weigth));
 
             if (!selfLinkHeight) {
                 selfLinkHeight = 0;
@@ -1368,7 +1371,7 @@ export class SankeyDiagram implements IVisual {
             node.height = (Math.max(node.inputWeight, node.outputWeight, node.inputWeight + selfLinkHeight, node.outputWeight + selfLinkHeight)
             ) * scale.y;
 
-            let backwardPsudoNodeSpace = SankeyDiagram.BackwardPsudoNodeMargin + d3.max([node.backwardWeight, node.selftLinkWeight / 2]) * scale.y;
+            let backwardPsudoNodeSpace = SankeyDiagram.BackwardPsudoNodeMargin + d3Max([node.backwardWeight, node.selftLinkWeight / 2]) * scale.y;
 
             node.y = shiftByAxisY + offsetByY * index + backwardPsudoNodeSpace;
             shiftByAxisY += node.height;
@@ -1533,7 +1536,7 @@ export class SankeyDiagram implements IVisual {
             .style("fill", (node: SankeyDiagramNode) => node.fillColor)
             .style(
                 "stroke", (node: SankeyDiagramNode) => this.colorHelper.isHighContrast ? node.strokeColor :
-                    d3.rgb(node.fillColor)
+                    d3Rgb(node.fillColor)
                         .darker(SankeyDiagram.StrokeColorFactor)
                         .toString()
             )
@@ -1586,15 +1589,15 @@ export class SankeyDiagram implements IVisual {
             });
 
         function dragstarted(node: SankeyDiagramNode) {
-            (<any>getEvent()).sourceEvent.stopPropagation();
+            event.stopPropagation();
         }
 
-        let minHeight: number = d3.min(sankeyDiagramDataView.links.map(l => l.height));
+        let minHeight: number = d3Min(sankeyDiagramDataView.links.map(l => l.height));
 
         let sankeyVisual = this;
-        function dragged(node: SankeyDiagramNode) {
-            node.x = (getEvent()).x;
-            node.y = (getEvent()).y;
+        function dragged(event: DragEvent, node: SankeyDiagramNode) {
+            node.x = event.x;
+            node.y = event.y;
 
             if (node.x < 0) {
                 node.x = 0;
@@ -1621,7 +1624,7 @@ export class SankeyDiagram implements IVisual {
             // Update each link related with this node
             node.links.forEach((link: SankeyDiagramLink) => {
                 // select link svg element by ID generated in link creation as Source-Destination
-                d3.select(`#${SankeyDiagram.createLink(link, true)}`).attr(
+                d3Select(`#${SankeyDiagram.createLink(link, true)}`).attr(
                     // get updated path params based on actual positions of node
                     "d", (link: SankeyDiagramLink) => {
                         if (link.direction === SankeyLinkDirrections.Forward) {
@@ -1638,7 +1641,7 @@ export class SankeyDiagram implements IVisual {
                         }
                     }
                 );
-                d3.select(`#${SankeyDiagram.createLink(link)}`).attr(
+                d3Select(`#${SankeyDiagram.createLink(link)}`).attr(
                     // get updated path params based on actual positions of node
                     "d", (link: SankeyDiagramLink) => {
                         if (link.direction === SankeyLinkDirrections.Forward) {
@@ -1658,7 +1661,7 @@ export class SankeyDiagram implements IVisual {
             });
 
             // Translate the object on the actual moved point
-            d3.select(this).attr(
+            d3Select(this).attr(
                 "transform", translate(node.x, node.y)
             );
         }
@@ -1668,10 +1671,10 @@ export class SankeyDiagram implements IVisual {
             sankeyVisual.saveViewportSize();
         }
 
-        let drag = d3.drag()
-            .subject((node: SankeyDiagramNode) => {
-                return { x: node.x, y: node.y };
-            })
+        let drag = d3Drag()
+            // .subject((node: SankeyDiagramNode) => {
+            //     return { x: node.x, y: node.y };
+            // })
             .on("start", dragstarted)
             .on("drag", dragged)
             .on("end", dragend);
@@ -1786,7 +1789,7 @@ export class SankeyDiagram implements IVisual {
             .classed(SankeyDiagram.SelftLinkSelector.className, (link: SankeyDiagramLink) => link.direction === SankeyLinkDirrections.SelfLink);
 
 
-        let minHeight = d3.min(sankeyDiagramDataView.links.map(l => l.height));
+        let minHeight = d3Min(sankeyDiagramDataView.links.map(l => l.height));
 
         linksElementsMerged
             .attr(
@@ -1846,7 +1849,7 @@ export class SankeyDiagram implements IVisual {
 
         let svgDefsSelectionMerged = svgDefsSelectionEnter.merge(svgDefs);
 
-        let singleDefsElement: Selection<any> = d3.select(svgDefsSelectionMerged.node());
+        let singleDefsElement: Selection<any> = d3Select(svgDefsSelectionMerged.node());
 
         // add text path for lables
         let linkLabelPaths: Selection<any> = singleDefsElement.selectAll(SankeyDiagram.LinkLabelPathsSelector.selectorName);
@@ -1945,7 +1948,7 @@ export class SankeyDiagram implements IVisual {
             x1 = link.destination.x - 10;
         }
 
-        xi = d3.interpolateNumber(x0, x1);
+        xi = d3InterpolateNumber(x0, x1);
         x2 = xi(this.curvatureOfLinks);
         x3 = xi(1 - this.curvatureOfLinks);
 
@@ -2107,7 +2110,7 @@ export class SankeyDiagram implements IVisual {
         // drawing area as combination of 4 lines in one path element of svg to fill this area with required color
 
         // upper border of link
-        xi = d3.interpolateNumber(x0, x1);
+        xi = d3InterpolateNumber(x0, x1);
         x2 = xi(this.curvatureOfLinks);
         x3 = xi(1 - this.curvatureOfLinks);
         y0 = link.source.y - (link.height + SankeyDiagram.NodeAndBackwardLinkDistance) + link.dySource + link.height / SankeyDiagram.MiddleFactor - link.height / 2;
@@ -2145,7 +2148,7 @@ export class SankeyDiagram implements IVisual {
         pathParams += `L ${link.destination.x + link.destination.width + distanceFromNodeToLinks} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance}`;
 
         // bottom border of link
-        xi = d3.interpolateNumber(x0, x1);
+        xi = d3InterpolateNumber(x0, x1);
         x2 = xi(this.curvatureOfLinks);
         x3 = xi(1 - this.curvatureOfLinks);
         y0 = link.source.y - (link.height + SankeyDiagram.NodeAndBackwardLinkDistance) + link.dySource + link.height / SankeyDiagram.MiddleFactor + link.height / 2;
@@ -2202,7 +2205,7 @@ export class SankeyDiagram implements IVisual {
 
         // drawing area as combination of 4 lines in one path element of svg to fill this area with required color
         // upper border of link
-        xi = d3.interpolateNumber(x0, x1);
+        xi = d3InterpolateNumber(x0, x1);
         x2 = xi(this.curvatureOfLinks);
         x3 = xi(1 - this.curvatureOfLinks);
         y0 = link.source.y + link.dySource + link.height / SankeyDiagram.MiddleFactor - (link.height - distanceBetweenLinks) / 2;
@@ -2217,7 +2220,7 @@ export class SankeyDiagram implements IVisual {
         pathParams += ` L ${x1} ${y0}`;
 
         // bottom border of link
-        xi = d3.interpolateNumber(x0, x1);
+        xi = d3InterpolateNumber(x0, x1);
         x2 = xi(this.curvatureOfLinks);
         x3 = xi(1 - this.curvatureOfLinks);
         y0 = link.source.y + link.dySource + (link.height - distanceBetweenLinks) / SankeyDiagram.MiddleFactor + (link.height - distanceBetweenLinks) / 2;

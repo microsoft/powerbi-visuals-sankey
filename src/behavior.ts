@@ -26,8 +26,6 @@
 
 import * as d3 from "d3";
 
-const getEvent = (): MouseEvent => <MouseEvent>require("d3-selection").event;
-
 import {
     SankeyDiagramLink,
     SankeyDiagramNode
@@ -101,8 +99,7 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
             }
         });
 
-        this.behaviorOptions.nodes.on("contextmenu", (datum: SankeyDiagramNode) => {
-            const event: MouseEvent = (<MouseEvent>getEvent()) || <MouseEvent>window.event;
+        this.behaviorOptions.nodes.on("contextmenu", (event: PointerEvent, datum: SankeyDiagramNode) => {
             if (event) {
                 this.selectionHandler.handleContextMenu(
                     <any>datum,
@@ -117,12 +114,11 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
 
     private bindClickEventToLinks(): void {
         this.behaviorOptions.links.on("click", (event: PointerEvent, link: SankeyDiagramLink) => {
-            this.selectionHandler.handleSelection(link, getEvent().ctrlKey);
+            this.selectionHandler.handleSelection(link, event.ctrlKey || event.metaKey);
             this.createAnEmptySelectedDataPoints();
         });
 
-        this.behaviorOptions.links.on("contextmenu", (datum: SankeyDiagramLink) => {
-            const event: MouseEvent = (<MouseEvent>getEvent()) || <MouseEvent>window.event;
+        this.behaviorOptions.links.on("contextmenu", (event: PointerEvent, datum: SankeyDiagramLink) => {
             if (event) {
                 this.selectionHandler.handleContextMenu(
                     datum,
@@ -136,8 +132,7 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
     }
 
     private bindClickEventToClearCatcher(): void {
-        this.behaviorOptions.clearCatcher.on("contextmenu", () => {
-            const event: MouseEvent = (<MouseEvent>getEvent()) || <MouseEvent>window.event;
+        this.behaviorOptions.clearCatcher.on("contextmenu", (event: PointerEvent) => {
             if (event) {
                 this.selectionHandler.handleContextMenu(
                     null,
