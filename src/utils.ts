@@ -25,7 +25,8 @@
 */
 
 // d3
-type Selection<T> = d3.Selection<any, T, any, any>;
+import { Selection as d3Selection } from "d3-selection";
+type Selection<T> = d3Selection<any, T, any, any>;
 
 // powerbi.visuals
 import powerbi from "powerbi-visuals-api";

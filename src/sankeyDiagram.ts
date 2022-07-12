@@ -27,7 +27,11 @@ import "../style/visual.less";
 import powerbi from "powerbi-visuals-api";
 
 // lodash
-import * as _ from "lodash-es";
+import lodashMaxBy from "lodash.maxby";
+import lodashMinBy from "lodash.minby";
+import lodashUniq from "lodash.uniq";
+import lodashCloneDeep from "lodash.clonedeep";
+
 // d3
 import { select as d3Select, Selection as d3Selection } from "d3-selection";
 import { drag as d3Drag } from "d3-drag";
@@ -644,7 +648,7 @@ export class SankeyDiagram implements IVisual {
         for (let nodeName of Object.keys(cycles)) {
             let firstCyclesNode: SankeyDiagramNode = cycles[nodeName][cycles[nodeName].length - 1];
             // create a clone of the node and save a link to each other. In selection behavior, selection of clone lead to select original and visa versa
-            let nodeCopy: SankeyDiagramNode = _.cloneDeep(firstCyclesNode);
+            let nodeCopy: SankeyDiagramNode = lodashCloneDeep(firstCyclesNode);
             nodeCopy.label.name += SankeyDiagram.DuplicatedNamePostfix;
             firstCyclesNode.cloneLink = nodeCopy;
             nodeCopy.cloneLink = firstCyclesNode;
@@ -736,7 +740,7 @@ export class SankeyDiagram implements IVisual {
     // remove Duplicated links
     private static fixLinksCount(node: SankeyDiagramNode) {
         // tslint:disable-next-line: underscore-consistent-invocation
-        node.links = _.uniq(node.links);
+        node.links = lodashUniq(node.links);
     }
 
     // tslint:disable-next-line: function-name
@@ -995,7 +999,7 @@ export class SankeyDiagram implements IVisual {
         let scaleStepCount: number = 0;
 
         let minWeigthShift: number = 0;
-        let minWeigthLink = _.minBy(sankeyDiagramDataView.links, "weigth");
+        let minWeigthLink = lodashMinBy(sankeyDiagramDataView.links, "weigth");
         if (minWeigthLink) {
             minWeigthShift = minWeigthLink.weigth;
         }
@@ -1006,7 +1010,7 @@ export class SankeyDiagram implements IVisual {
         let minWeightInData: number = minWeigthShift;
         minWeigthShift = Math.abs(minWeigthShift) + minWeight;
         let maxWeightInData: number = 0;
-        let maxWeigthLink = _.maxBy(sankeyDiagramDataView.links, "weigth");
+        let maxWeigthLink = lodashMaxBy(sankeyDiagramDataView.links, "weigth");
         if (maxWeigthLink) {
             maxWeightInData = maxWeigthLink.weigth;
         }

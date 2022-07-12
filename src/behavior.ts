@@ -24,7 +24,7 @@
 *  THE SOFTWARE.
 */
 
-import * as d3 from "d3";
+import { Selection as d3Selection } from "d3-selection";
 
 import {
     SankeyDiagramLink,
@@ -34,7 +34,7 @@ import {
 import * as sankeyDiagramUtils from "./utils";
 
 // d3
-type Selection<T> = d3.Selection<any, T, any, any>;
+type Selection<T> = d3Selection<any, T, any, any>;
 
 // powerbi.extensibility.utils.interactivity
 import { interactivitySelectionService, interactivityBaseService } from "powerbi-visuals-utils-interactivityutils";
