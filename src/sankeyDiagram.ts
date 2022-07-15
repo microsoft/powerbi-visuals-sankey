@@ -36,9 +36,9 @@ import lodashCloneDeep from "lodash.clonedeep";
 import { select as d3Select, Selection as d3Selection } from "d3-selection";
 import { drag as d3Drag } from "d3-drag";
 import { max as d3Max, min as d3Min } from "d3-array";
-import { scaleLog as d3ScaleLog, scaleLinear as d3ScaleLinear } from "d3-scale"
-import { rgb as d3Rgb } from "d3-color"
-import { interpolateNumber as d3InterpolateNumber } from "d3-interpolate"
+import { scaleLog as d3ScaleLog, scaleLinear as d3ScaleLinear } from "d3-scale";
+import { rgb as d3Rgb } from "d3-color";
+import { interpolateNumber as d3InterpolateNumber } from "d3-interpolate";
 
 type Selection<T> = d3Selection<any, T, any, any>;
 type UpdateSelection<T> = d3Selection<any, T, any, any>;
@@ -911,7 +911,7 @@ export class SankeyDiagram implements IVisual {
                 currentValue.source === node &&
                     currentValue.destination !== currentValue.source
                     ?
-                    currentValue.weigth
+                    currentValue.destination.label.formattedName === currentValue.source.label.formattedName ? currentValue.weigth / 2 : currentValue.weigth
                     :
                     SankeyDiagram.DefaultWeightValue;
 
@@ -1372,8 +1372,8 @@ export class SankeyDiagram implements IVisual {
                 selfLinkHeight = node.width;
             }
 
-            node.height = (Math.max(node.inputWeight, node.outputWeight, node.inputWeight + selfLinkHeight, node.outputWeight + selfLinkHeight)
-            ) * scale.y;
+            node.height = Math.max(node.links.filter(link => link.source === node).reduce((linksWeightSum, link) => linksWeightSum + link.weigth, 0),
+                        node.links.filter(link => link.destination === node).reduce((linksWeightSum, link) => linksWeightSum + link.weigth, 0)) * scale.y;
 
             let backwardPsudoNodeSpace = SankeyDiagram.BackwardPsudoNodeMargin + d3Max([node.backwardWeight, node.selftLinkWeight / 2]) * scale.y;
 
