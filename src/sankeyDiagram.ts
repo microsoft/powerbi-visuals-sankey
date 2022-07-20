@@ -602,7 +602,7 @@ export class SankeyDiagram implements IVisual {
                 node.label.formattedName,
                 node.inputWeight
                     ? node.inputWeight
-                    : node.outputWeight,
+                    : this.calculeOutputWeightForTooltip(node, node.links),
                 this.localizationManager,
                 node.inputWeight > 0 && node.outputWeight > 0 ? `${sourceFieldName}-${destinationFieldName}` : node.outputWeight > 0
                     ? sourceFieldName
@@ -631,6 +631,23 @@ export class SankeyDiagram implements IVisual {
         this.checkNodePositionSettings(nodes, settings);
         this.restoreNodePositions(nodes, settings);
         return sankeyDiagramDataView;
+    }
+
+    // Proper calculation of output weight in case of self links
+    private calculeOutputWeightForTooltip(node: SankeyDiagramNode, links: SankeyDiagramLink[]): number {
+        let outputWeight: number = 0;
+
+        links.forEach((link: SankeyDiagramLink) => {
+            outputWeight +=
+                link.source === node &&
+                    link.destination !== link.source
+                    ?
+                    link.destination.label.formattedName === link.source.label.formattedName ? link.weigth / 2 : link.weigth
+                    :
+                    SankeyDiagram.DefaultWeightValue;
+        });
+
+        return outputWeight;
     }
 
 
@@ -911,7 +928,7 @@ export class SankeyDiagram implements IVisual {
                 currentValue.source === node &&
                     currentValue.destination !== currentValue.source
                     ?
-                    currentValue.destination.label.formattedName === currentValue.source.label.formattedName ? currentValue.weigth / 2 : currentValue.weigth
+                    currentValue.weigth
                     :
                     SankeyDiagram.DefaultWeightValue;
 
@@ -927,7 +944,7 @@ export class SankeyDiagram implements IVisual {
         nodeWeight: number,
         localizationManager: ILocalizationManager,
         nodeDisplayName?: string,
-        valueDisplayName?: string
+        valueDisplayName?: string,
     ): VisualTooltipDataItem[] {
 
         let formattedNodeWeigth: string;
@@ -1372,8 +1389,8 @@ export class SankeyDiagram implements IVisual {
                 selfLinkHeight = node.width;
             }
 
-            node.height = Math.max(node.links.filter(link => link.source === node).reduce((linksWeightSum, link) => linksWeightSum + link.weigth, 0),
-                        node.links.filter(link => link.destination === node).reduce((linksWeightSum, link) => linksWeightSum + link.weigth, 0)) * scale.y;
+            node.height = (Math.max(node.inputWeight, node.outputWeight, node.inputWeight + selfLinkHeight, node.outputWeight + selfLinkHeight)
+            ) * scale.y;
 
             let backwardPsudoNodeSpace = SankeyDiagram.BackwardPsudoNodeMargin + d3Max([node.backwardWeight, node.selftLinkWeight / 2]) * scale.y;
 
