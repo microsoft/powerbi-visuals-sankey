@@ -642,7 +642,7 @@ export class SankeyDiagram implements IVisual {
                 link.source === node &&
                     link.destination !== link.source
                     ?
-                    link.destination.label.formattedName === link.source.label.formattedName ? link.weigth / 2 : link.weigth
+                    link.weigth
                     :
                     SankeyDiagram.DefaultWeightValue;
         });
