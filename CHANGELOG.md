@@ -1,3 +1,8 @@
+## 3.0.5
+* Link tooltip display format issue fixed
+* Node tooltip output weight calculation fixed
+* Dependencies updated
+
 ## 3.0.1
 * Context menu fix
 * Selection fix
