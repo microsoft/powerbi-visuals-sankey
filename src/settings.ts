@@ -34,9 +34,6 @@ import {
 
 import DataViewObjectsParser = dataViewObjectsParser.DataViewObjectsParser;
 
-import powerbi from "powerbi-visuals-api";
-import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
-
 export enum CyclesDrawType {
     Duplicate,
     Backward
