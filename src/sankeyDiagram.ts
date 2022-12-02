@@ -1517,6 +1517,8 @@ export class SankeyDiagram implements IVisual {
 
         const minHeight: number = d3Min(sankeyDiagramDataView.links.map(l => l.height));
 
+        let sankeyVisual = this;
+
         function dragged(event: DragEvent, node: SankeyDiagramNode) {
             node.x = event.x;
             node.y = event.y;
@@ -1526,11 +1528,11 @@ export class SankeyDiagram implements IVisual {
             if (node.y < 0) {
                 node.y = 0;
             }
-            if (node.x + node.width > this.viewport.width) {
-                node.x = this.viewport.width - node.width;
+            if (node.x + node.width > sankeyVisual.viewport.width) {
+                node.x = sankeyVisual.viewport.width - node.width;
             }
-            if (node.y + node.height > this.viewport.height) {
-                node.y = this.viewport.height - node.height;
+            if (node.y + node.height > sankeyVisual.viewport.height) {
+                node.y = sankeyVisual.viewport.height - node.height;
             }
             node.settings = { x: node.x.toFixed(2), y: node.y.toFixed(2),name: node.label.name
             };
@@ -1541,16 +1543,16 @@ export class SankeyDiagram implements IVisual {
                     // get updated path params based on actual positions of node
                     "d", (link: SankeyDiagramLink) => {
                         if (link.direction === SankeyLinkDirrections.Forward) {
-                            return this.getSvgPathForForwardLink(link);
+                            return sankeyVisual.getSvgPathForForwardLink(link);
                         }
                         if (link.direction === SankeyLinkDirrections.Backward) {
                             if (link.source.x + link.source.width > link.destination.x) {
-                                return this.getSvgPathForForwardLink(link);
+                                return sankeyVisual.getSvgPathForForwardLink(link);
                             }
-                            return this.getSvgPathForBackwardLink(link);
+                            return sankeyVisual.getSvgPathForBackwardLink(link);
                         }
                         if (link.direction === SankeyLinkDirrections.SelfLink) {
-                            return this.getSvgPathForSelfLink(link, minHeight);
+                            return sankeyVisual.getSvgPathForSelfLink(link, minHeight);
                         }
                     }
                 );
@@ -1558,16 +1560,16 @@ export class SankeyDiagram implements IVisual {
                     // get updated path params based on actual positions of node
                     "d", (link: SankeyDiagramLink) => {
                         if (link.direction === SankeyLinkDirrections.Forward) {
-                            return this.getSvgPathForForwardLink(link);
+                            return sankeyVisual.getSvgPathForForwardLink(link);
                         }
                         if (link.direction === SankeyLinkDirrections.Backward) {
                             if (link.source.x + link.source.width > link.destination.x) {
-                                return this.getSvgPathForForwardLink(link);
+                                return sankeyVisual.getSvgPathForForwardLink(link);
                             }
-                            return this.getSvgPathForBackwardLink(link);
+                            return sankeyVisual.getSvgPathForBackwardLink(link);
                         }
                         if (link.direction === SankeyLinkDirrections.SelfLink) {
-                            return this.getSvgPathForSelfLink(link, minHeight);
+                            return sankeyVisual.getSvgPathForSelfLink(link, minHeight);
                         }
                     }
                 );
@@ -1577,8 +1579,8 @@ export class SankeyDiagram implements IVisual {
         }
 
         function dragend(node: SankeyDiagramNode) {
-            this.saveNodePositions(this.dataView.nodes);
-            this.saveViewportSize();
+            sankeyVisual.saveNodePositions(sankeyVisual.dataView.nodes);
+            sankeyVisual.saveViewportSize();
         }
 
         const drag = d3Drag().on("start", dragstarted).on("drag", dragged).on("end", dragend);
