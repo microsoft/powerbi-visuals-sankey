@@ -408,15 +408,31 @@ export class SankeyDiagram implements IVisual {
         }
     }
 
-    // tslint:disable-next-line: max-func-body-length
+    /*eslint max-lines-per-function: ["error", 200]*/
     public converter(dataView: DataView): SankeyDiagramDataView {
         const settings: SankeyDiagramSettings = this.parseSettings(dataView);
 
-        if (!dataView || !dataView.matrix || !dataView.matrix.rows || !dataView.matrix.rows.levels || !dataView.matrix.rows.levels[0]
-            || !dataView.matrix.rows.levels[0].sources || !dataView.matrix.rows.levels[0].sources[0] || !dataView.matrix.rows.levels[0].sources[0].displayName
-            || !dataView.matrix.rows.levels[1] || !dataView.matrix.rows.levels[1].sources || !dataView.matrix.rows.levels[1].sources[0]
-            || !dataView.matrix.rows.levels[1].sources[0].displayName || !dataView.matrix.rows.root || !dataView.matrix.rows.root.children || !dataView.matrix.valueSources) {
-            return { settings, nodes: [], links: [], columns: [] }
+        if (!dataView
+            || !dataView.matrix
+            || !dataView.matrix.rows
+            || !dataView.matrix.rows.levels
+            || !dataView.matrix.rows.levels[0]
+            || !dataView.matrix.rows.levels[0].sources
+            || !dataView.matrix.rows.levels[0].sources[0]
+            || !dataView.matrix.rows.levels[0].sources[0].displayName
+            || !dataView.matrix.rows.levels[1]
+            || !dataView.matrix.rows.levels[1].sources
+            || !dataView.matrix.rows.levels[1].sources[0]
+            || !dataView.matrix.rows.levels[1].sources[0].displayName
+            || !dataView.matrix.rows.root
+            || !dataView.matrix.rows.root.children
+            || !dataView.matrix.valueSources) {
+            return {
+                settings,
+                nodes: [],
+                links: [],
+                columns: []
+            }
         }
 
         const nodes: SankeyDiagramNode[] = [];
@@ -1460,44 +1476,72 @@ export class SankeyDiagram implements IVisual {
                     })
             );
 
-        nodesSelectionData.exit().remove();
+        nodesSelectionData
+            .exit()
+            .remove();
 
-        const nodesEnterSelection: Selection<SankeyDiagramNode> = nodesSelectionData.enter().append("g");
-        nodesEnterSelection.append("rect").classed(SankeyDiagram.NodeRectSelector.className, true);
-        nodesEnterSelection.append("text").classed(SankeyDiagram.NodeLabelSelector.className, true);
+        const nodesEnterSelection: Selection<SankeyDiagramNode> = nodesSelectionData
+            .enter()
+            .append("g");
+
+        nodesEnterSelection
+            .append("rect")
+            .classed(SankeyDiagram.NodeRectSelector.className, true);
+
+        nodesEnterSelection
+            .append("text")
+            .classed(SankeyDiagram.NodeLabelSelector.className, true);
 
         const nodesSelectionMerged = nodesEnterSelection.merge(nodeElements);
-        nodesSelectionMerged.attr("transform", (node: SankeyDiagramNode) => {return translate(node.x, node.y);}).classed(SankeyDiagram.NodeSelector.className, true);
-        nodesSelectionMerged.select(SankeyDiagram.NodeRectSelector.selectorName).style("fill", (node: SankeyDiagramNode) => node.fillColor)
+
+        nodesSelectionMerged
+            .attr("transform", (node: SankeyDiagramNode) => {
+                return translate(node.x, node.y);
+            })
+            .classed(SankeyDiagram.NodeSelector.className, true);
+
+        nodesSelectionMerged
+            .select(SankeyDiagram.NodeRectSelector.selectorName)
+            .style("fill", (node: SankeyDiagramNode) => node.fillColor)
             .style(
                 "stroke", (node: SankeyDiagramNode) => this.colorHelper.isHighContrast ? node.strokeColor :
                     d3Rgb(node.fillColor)
                         .darker(SankeyDiagram.StrokeColorFactor)
                         .toString()
             )
-            .attr("x", SankeyDiagram.DefaultPosition).attr("y", SankeyDiagram.DefaultPosition)
+            .attr("x", SankeyDiagram.DefaultPosition)
+            .attr("y", SankeyDiagram.DefaultPosition)
             .attr("height", (node: SankeyDiagramNode) => node.height < SankeyDiagram.MinHeightOfNode ? SankeyDiagram.MinHeightOfNode : node.height)
             .attr("width", (node: SankeyDiagramNode) => node.width);
 
-        nodesSelectionMerged.select(SankeyDiagram.NodeLabelSelector.selectorName).attr("x", (node: SankeyDiagramNode) => node.left - node.x)
-            .attr("y", (node: SankeyDiagramNode) => node.top - node.y).attr("dy", SankeyDiagram.DefaultDy).style("fill", (node: SankeyDiagramNode) => node.label.color)
-            .style("font-family", this.textProperties.fontFamily).style("font-size", this.textProperties.fontSize)
+        nodesSelectionMerged
+            .select(SankeyDiagram.NodeLabelSelector.selectorName)
+            .attr("x", (node: SankeyDiagramNode) => node.left - node.x)
+            .attr("y", (node: SankeyDiagramNode) => node.top - node.y)
+            .attr("dy", SankeyDiagram.DefaultDy)
+            .style("fill", (node: SankeyDiagramNode) => node.label.color)
+            .style("font-family", this.textProperties.fontFamily)
+            .style("font-size", this.textProperties.fontSize)
             .style("display", (node: SankeyDiagramNode) => {
                 const labelPositionByAxisX: number = this.getCurrentPositionOfLabelByAxisX(node);
+
                 const isNotVisibleLabel: boolean =
                     (labelPositionByAxisX >= this.viewport.width ||
                         labelPositionByAxisX <= SankeyDiagram.MinSize ||
                         (node.height + SankeyDiagram.NodeMargin) < node.label.height) && !sankeyDiagramDataView.settings.labels.forceDisplay;
+
                 if (isNotVisibleLabel || !sankeyDiagramDataView.settings.labels.show
                     || node.label.maxWidth < SankeyDiagram.MinWidthOfLabel) {
                     return SankeyDiagram.DisplayNone;
                 }
+
                 return null;
             })
             .style("text-anchor", (node: SankeyDiagramNode) => {
                 if (this.isLabelLargerThanWidth(node)) {
                     return SankeyDiagram.TextAnchorEnd;
                 }
+
                 return null;
             })
             .text((node: SankeyDiagramNode) => {
@@ -1508,6 +1552,7 @@ export class SankeyDiagram implements IVisual {
                         fontSize: this.textProperties.fontSize
                     }, node.label.maxWidth);
                 }
+
                 return node.label.formattedName;
             });
 
