@@ -1562,6 +1562,7 @@ export class SankeyDiagram implements IVisual {
 
         const minHeight: number = d3Min(sankeyDiagramDataView.links.map(l => l.height));
 
+        // eslint-disable-next-line
         let self = this;
 
         function dragged(event: DragEvent, node: SankeyDiagramNode) {
