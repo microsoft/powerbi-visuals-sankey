@@ -1,3 +1,8 @@
+## 3.0.7
+* Testutils version updated to 3.2.0
+* lockFileVersion is updated to version 3
+* node version updated to 18 in build.yml config
+
 ## 3.0.6
 * Area of visibility bug fixed in dragged and draggend functions
 
