@@ -27,7 +27,6 @@
 // powerbi.visuals
 import powerbi from "powerbi-visuals-api";
 import ISelectionId = powerbi.visuals.ISelectionId;
-import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
 import DataViewMatrix = powerbi.DataViewMatrix;
 import DataViewMatrixNode = powerbi.DataViewMatrixNode;
 import ISelectionIdBuilder = powerbi.visuals.ISelectionIdBuilder;
@@ -47,7 +46,7 @@ export class SelectionIdBuilder {
         this.visualHost = IVisualHost;
         this.matrix = matrix
         this.getMatrixArray(this.matrix.rows.root);
-        this.matrixDataArray.shift(); // delete matrix root node 
+        this.matrixDataArray.shift(); // delete matrix root node
     }
 
     // walks the matrix deep first, adds each node to matrixDataArray
@@ -59,7 +58,6 @@ export class SelectionIdBuilder {
     }
 
     public createSelectionId(index: number): ISelectionId {
-        debugger;
         return this.visualHost.createSelectionIdBuilder()
             .withMatrixNode(this.matrixDataArray[index], this.matrix.rows.levels)
             .createSelectionId();

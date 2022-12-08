@@ -295,5 +295,6 @@
         }
     },
     "supportsKeyboardFocus": true,
-    "supportsSynchronizingFilterState": true
+    "supportsSynchronizingFilterState": true,
+    "privileges": []
 }

@@ -1,3 +1,16 @@
+## 3.0.7
+* Testutils version updated to 3.2.0
+* lockFileVersion is updated to version 3
+* node version updated to 18 in build.yml config
+
+## 3.0.6
+* Area of visibility bug fixed in dragged and draggend functions
+
+## 3.0.5
+* Link tooltip display format issue fixed
+* Node tooltip output weight calculation fixed
+* Dependencies updated
+
 ## 3.0.1
 * Context menu fix
 * Selection fix
@@ -46,7 +59,7 @@
 
 ## 1.5.2
 
-* Drag&drop crashes browser - fix 
+* Drag&drop crashes browser - fix
 
 ## 1.5.1
 
@@ -63,7 +76,7 @@
 ## 1.4.1
 
 * Fix restoring settings when data set was filtered
-* Fix links labels for graph with cycles 
+* Fix links labels for graph with cycles
 * Fix saving settings for graph with cycles
 
 ## 1.4.0
