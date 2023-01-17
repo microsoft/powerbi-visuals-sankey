@@ -1,5 +1,5 @@
 ## 3.0.8
-* powerbi-visuals-api and powerbi-visuals-tools packages updated
+* powerbi-visuals-tools packages updated
 
 ## 3.0.7
 * Testutils version updated to 3.2.0
