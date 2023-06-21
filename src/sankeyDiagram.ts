@@ -121,10 +121,6 @@ import {
     SankeyLinkDirrections
 } from "./dataInterfaces";
 
-import {
-    SelectionIdBuilder
-} from "./selectionIdBuilder";
-
 import * as sankeyDiagramUtils from "./utils";
 
 import {
@@ -550,7 +546,7 @@ export class SankeyDiagram implements IVisual {
         const cycles: SankeyDiagramCycleDictionary = this.checkCycles(nodes);
 
         if (settings.cyclesLinks.drawCycles === CyclesDrawType.Duplicate) {
-            links = this.processCyclesForwardLinks(cycles, nodes, links, settings);
+            links = this.processCyclesForwardLinks(cycles, nodes, links);
         }
 
         nodes.forEach((node: SankeyDiagramNode) => {
@@ -577,7 +573,7 @@ export class SankeyDiagram implements IVisual {
 
         if (settings.cyclesLinks.drawCycles === CyclesDrawType.Backward) {
             SankeyDiagram.computeXPositions(sankeyDiagramDataView);
-            sankeyDiagramDataView.links = this.processCyclesForBackwardLinks(cycles, sankeyDiagramDataView.nodes, links, settings);
+            sankeyDiagramDataView.links = this.processCyclesForBackwardLinks(cycles, sankeyDiagramDataView.nodes, links);
             sankeyDiagramDataView.links.forEach((link: SankeyDiagramLink) => {
                 if (link.destination === link.source) {
                     link.direction = SankeyLinkDirrections.SelfLink;
@@ -616,7 +612,7 @@ export class SankeyDiagram implements IVisual {
         SankeyDiagram.updateValueOfNode(link.source);
     }
 
-    private processCyclesForwardLinks(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[], settings: SankeyDiagramSettings): SankeyDiagramLink[] {
+    private processCyclesForwardLinks(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[]): SankeyDiagramLink[] {
         const createdNodes: SankeyDiagramNode[] = [];
         for (const nodeName of Object.keys(cycles)) {
             const firstCyclesNode: SankeyDiagramNode = cycles[nodeName][cycles[nodeName].length - 1];
@@ -658,7 +654,7 @@ export class SankeyDiagram implements IVisual {
     }
 
     // in this method we breaking simple cycles
-    private processCyclesForBackwardLinks(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[], settings: SankeyDiagramSettings): SankeyDiagramLink[] {
+    private processCyclesForBackwardLinks(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[]): SankeyDiagramLink[] {
         for (const nodeName of Object.keys(cycles)) {
             const firstCyclesNode: SankeyDiagramNode = cycles[nodeName][cycles[nodeName].length - 1];
 
@@ -1556,7 +1552,7 @@ export class SankeyDiagram implements IVisual {
                 return node.label.formattedName;
             });
 
-        function dragstarted(node: SankeyDiagramNode) {
+        function dragstarted() {
             event.stopPropagation();
         }
 
@@ -1624,7 +1620,7 @@ export class SankeyDiagram implements IVisual {
             d3Select(this).attr("transform", translate(node.x, node.y));
         }
 
-        function dragend(node: SankeyDiagramNode) {
+        function dragend() {
             self.saveNodePositions(self.dataView.nodes);
             self.saveViewportSize();
         }
