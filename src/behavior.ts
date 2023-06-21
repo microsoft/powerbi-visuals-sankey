@@ -58,7 +58,6 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
 
     private selectedDataPoints: SelectableDataPoint[];
 
-    // tslint:disable-next-line: function-name
     public static create(): IInteractiveBehavior {
         return new SankeyDiagramBehavior();
     }

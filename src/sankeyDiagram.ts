@@ -347,7 +347,6 @@ export class SankeyDiagram implements IVisual {
         this.updateElements(height, width);
     }
 
-    // tslint:disable-next-line: function-name
     public static getPositiveNumber(value: number): number {
         return value < 0 || isNaN(value) || value === null || value === Infinity || value === -Infinity
             ? 0
@@ -707,11 +706,9 @@ export class SankeyDiagram implements IVisual {
 
     // remove Duplicated links
     private static fixLinksCount(node: SankeyDiagramNode) {
-        // tslint:disable-next-line: underscore-consistent-invocation
         node.links = lodashUniq(node.links);
     }
 
-    // tslint:disable-next-line: function-name
     public static dfs(nodes: SankeyDiagramNode[], currNode: SankeyDiagramNode, nodesStatuses: SankeyDiagramNodeStatus[], simpleCycles: SankeyDiagramCycleDictionary): void {
         nodesStatuses[currNode.label.name].status = SankeyDiagramNodeStatus.Processing;
 
@@ -951,7 +948,6 @@ export class SankeyDiagram implements IVisual {
         return settings;
     }
 
-    // tslint:disable-next-line: max-func-body-length
     private computePositions(sankeyDiagramDataView: SankeyDiagramDataView): void {
         let maxColumn: SankeyDiagramColumn,
             columns: SankeyDiagramColumn[];
@@ -1199,7 +1195,6 @@ export class SankeyDiagram implements IVisual {
         return SankeyDiagram.getPositiveNumber((this.viewport.width - this.nodeWidth) / numberOfColumns);
     }
 
-    // tslint:disable-next-line: function-name
     public static sortNodesByX(nodes: SankeyDiagramNode[]): SankeyDiagramNode[] {
         return nodes.sort((firstNode: SankeyDiagramNode, secondNode: SankeyDiagramNode) => {
             return firstNode.x - secondNode.x;
@@ -1239,7 +1234,6 @@ export class SankeyDiagram implements IVisual {
         return columns;
     }
 
-    // tslint:disable-next-line: function-name
     public static getMaxColumn(columns: SankeyDiagramColumn[] = []): SankeyDiagramColumn {
         let currentMaxColumn: SankeyDiagramColumn = {
             sumValueOfNodes: SankeyDiagram.DefaultSumValueOfNodes,
@@ -1349,7 +1343,6 @@ export class SankeyDiagram implements IVisual {
         });
     }
 
-    // tslint:disable-next-line: no-suspicious-comment
     // TODO: Update this method to improve a distribution by height.
     private computeYPosition(
         nodes: SankeyDiagramNode[],
@@ -1458,7 +1451,6 @@ export class SankeyDiagram implements IVisual {
         this.updateSelectionState(nodesSelection, linksSelection);
     }
 
-    // tslint:disable-next-line: max-func-body-length
     private renderNodes(sankeyDiagramDataView: SankeyDiagramDataView): Selection<SankeyDiagramNode> {
         const nodeElements: Selection<SankeyDiagramNode> = this.main
             .select(SankeyDiagram.NodesSelector.selectorName)
@@ -1764,12 +1756,11 @@ export class SankeyDiagram implements IVisual {
 
         return linksElementsMerged;
     }
-    // tslint:disable-next-line: function-name
+
     public static createLink(link: SankeyDiagramLink, addLinkLabelPath: boolean = false): string {
         return (addLinkLabelPath ? `linkLabelPaths` : ``) + `${('_' + link.source.label.name || "").replace(/\W*/g, "")}-${link.direction}-${('_' + link.destination.label.name || "").replace(/\W*/g, "")}`;
     }
 
-    // tslint:disable-next-line: max-func-body-length
     private renderLinkLabels(sankeyDiagramDataView: SankeyDiagramDataView): void {
         // create labels on link as A - B : Value
         const linkTextData: SankeyDiagramLink[] = sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
@@ -1898,7 +1889,6 @@ export class SankeyDiagram implements IVisual {
         return `M ${x0} ${y0} C ${x2} ${y0}, ${x3} ${y1}, ${x1} ${y1}`;
     }
 
-    // tslint:disable-next-line: max-func-body-length
     private getSvgPathForSelfLink(link: SankeyDiagramLink, minHeight: number) {
         let pathParams: string = "";
         const distanceBetweenLinks: number = 3;
@@ -1956,7 +1946,6 @@ export class SankeyDiagram implements IVisual {
             limit = link.destination.y + fixedLinkHeight - linkKneeSize - distanceBetweenLinks;
         }
 
-        // tslint:disable-next-line: no-suspicious-comment
         pathParams += `L ${link.destination.x + distanceFromNodeToLinks + link.destination.width + linkKneeSize} ${limit}`; // TODO change to C
 
         pathParams +=
@@ -2111,7 +2100,6 @@ export class SankeyDiagram implements IVisual {
         // left border of link
         y1 = link.source.y - (link.height + SankeyDiagram.NodeAndBackwardLinkDistance) + link.dySource + link.height / SankeyDiagram.MiddleFactor - link.height / 2;
 
-        // tslint:disable-next-line: no-suspicious-comment
         pathParams += `C ${link.source.x - distanceFromNodeToLinks - linkKneeSize} ${y1 + linkKneeSize}, ${link.source.x - distanceFromNodeToLinks - linkKneeSize} ${y1}, ${link.source.x} ${y1}`; // TODO change to C
 
         // close path to get closed area
