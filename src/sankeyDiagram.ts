@@ -27,9 +27,6 @@ import "../style/visual.less";
 import powerbi from "powerbi-visuals-api";
 
 // lodash
-import lodashMaxBy from "lodash.maxby";
-import lodashMinBy from "lodash.minby";
-import lodashUniq from "lodash.uniq";
 import lodashCloneDeep from "lodash.clonedeep";
 
 // d3
@@ -706,7 +703,7 @@ export class SankeyDiagram implements IVisual {
 
     // remove Duplicated links
     private static fixLinksCount(node: SankeyDiagramNode) {
-        node.links = lodashUniq(node.links);
+        node.links = [...new Set(node.links)];
     }
 
     public static dfs(nodes: SankeyDiagramNode[], currNode: SankeyDiagramNode, nodesStatuses: SankeyDiagramNodeStatus[], simpleCycles: SankeyDiagramCycleDictionary): void {
@@ -962,7 +959,7 @@ export class SankeyDiagram implements IVisual {
         let scaleStepCount: number = 0;
 
         let minWeigthShift: number = 0;
-        const minWeigthLink = lodashMinBy(sankeyDiagramDataView.links, "weigth");
+        const minWeigthLink = sankeyDiagramDataView.links.find(link => link.weigth === Math.min(...sankeyDiagramDataView.links.map(link => link.weigth)));
         if (minWeigthLink) {
             minWeigthShift = minWeigthLink.weigth;
         }
@@ -973,7 +970,7 @@ export class SankeyDiagram implements IVisual {
         const minWeightInData: number = minWeigthShift;
         minWeigthShift = Math.abs(minWeigthShift) + minWeight;
         let maxWeightInData: number = 0;
-        const maxWeigthLink = lodashMaxBy(sankeyDiagramDataView.links, "weigth");
+        const maxWeigthLink = sankeyDiagramDataView.links.find(link => link.weigth === Math.max(...sankeyDiagramDataView.links.map(link => link.weigth)));
         if (maxWeigthLink) {
             maxWeightInData = maxWeigthLink.weigth;
         }
