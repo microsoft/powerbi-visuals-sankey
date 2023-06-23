@@ -164,7 +164,7 @@ export class SankeyDiagram implements IVisual {
     private static NodeMargin: number = 5;
     private static LabelMargin: number = 4;
 
-    private static DefaultFormatOfWeigth: string = "g";
+    private static DefaultFormatOfWeight: string = "g";
 
     private static DefaultWeightValue: number = 0;
     private static MinWeightValue: number = 1;
@@ -442,7 +442,7 @@ export class SankeyDiagram implements IVisual {
         const sourceFieldName = dataView.matrix.rows.levels[0].sources[0].displayName;
         const destinationFieldName = dataView.matrix.rows.levels[1].sources[0].displayName;
         const valueFieldName = dataView.matrix.valueSources[weightIndex] ? dataView.matrix.valueSources[weightIndex].displayName : null;
-        const formatOfWeigth = valueFormatter.getFormatStringByColumn(valueSources[weightIndex]);
+        const formatOfWeight = valueFormatter.getFormatStringByColumn(valueSources[weightIndex]);
         const weightValues: number[] = [1];
 
         dataView.matrix.rows.root.children.forEach(parent => {
@@ -458,7 +458,7 @@ export class SankeyDiagram implements IVisual {
             const foundSource: SankeyDiagramNode = nodes.find(found => found.label.name === parent.value)
             parent.children.forEach(child => {
                 let linkLabel = undefined;
-                let weigth: any = SankeyDiagram.DefaultWeightValue;
+                let weight: any = SankeyDiagram.DefaultWeightValue;
 
                 let foundDestination: SankeyDiagramNode = nodes.find(found => found.label.name === child.value)
                 if (!foundDestination) {
@@ -475,9 +475,9 @@ export class SankeyDiagram implements IVisual {
                 }
                 // If weights are present, populate the weights array
                 if (weightIndex != -1) {
-                    weigth = (child.values[weightIndex] && child.values[weightIndex].value) ?
+                    weight = (child.values[weightIndex] && child.values[weightIndex].value) ?
                         child.values[weightIndex].value || SankeyDiagram.DefaultWeightValue : SankeyDiagram.MinWeightValue;
-                    weightValues.push(weigth);
+                    weightValues.push(weight);
                 }
                 const linkFillColor = this.getColor(
                     SankeyDiagram.LinksPropertyIdentifier,
@@ -486,7 +486,7 @@ export class SankeyDiagram implements IVisual {
                 const linkStrokeColor = this.colorHelper.isHighContrast ? this.colorHelper.getHighContrastColor("foreground", linkFillColor) : linkFillColor;
 
                 const valuesFormatterForLinkTooltipInfo = valueFormatter.create({
-                    format: formatOfWeigth,
+                    format: formatOfWeight,
                     value: Math.max(
                         settings.labels.unit !== 0 ? settings.labels.unit : d3Max(weightValues) || SankeyDiagram.MinWeightValue,
                         SankeyDiagram.MinWeightValue),
@@ -496,7 +496,7 @@ export class SankeyDiagram implements IVisual {
                     valuesFormatterForLinkTooltipInfo,
                     foundSource.label.formattedName,
                     foundDestination.label.formattedName,
-                    weigth,
+                    weight,
                     sourceFieldName,
                     destinationFieldName,
                     valueFieldName
@@ -506,7 +506,7 @@ export class SankeyDiagram implements IVisual {
                     label: linkLabel && linkLabel.toString(),
                     source: foundSource,
                     destination: foundDestination,
-                    weigth: weigth,
+                    weight: weight,
                     height: 10,
                     fillColor: linkFillColor,
                     strokeColor: linkStrokeColor,
@@ -532,8 +532,8 @@ export class SankeyDiagram implements IVisual {
             });
         });
 
-        const valuesFormatterForWeigth = valueFormatter.create({
-            format: formatOfWeigth,
+        const valuesFormatterForWeight = valueFormatter.create({
+            format: formatOfWeight,
             value: Math.max(
                 settings.labels.unit !== 0 ? settings.labels.unit : d3Max(weightValues) || SankeyDiagram.MinWeightValue,
                 SankeyDiagram.MinWeightValue),
@@ -547,7 +547,7 @@ export class SankeyDiagram implements IVisual {
 
         nodes.forEach((node: SankeyDiagramNode) => {
             node.tooltipInfo = SankeyDiagram.getTooltipForNode(
-                valuesFormatterForWeigth,
+                valuesFormatterForWeight,
                 node.label.formattedName,
                 node.inputWeight
                     ? node.inputWeight
@@ -590,7 +590,7 @@ export class SankeyDiagram implements IVisual {
                 link.source === node &&
                     link.destination !== link.source
                     ?
-                    link.weigth
+                    link.weight
                     :
                     SankeyDiagram.DefaultWeightValue;
         });
@@ -865,7 +865,7 @@ export class SankeyDiagram implements IVisual {
                     currentValue.destination !== currentValue.source &&
                     currentValue.direction === SankeyLinkDirrections.Forward
                     ?
-                    currentValue.weigth
+                    currentValue.weight
                     :
                     SankeyDiagram.DefaultWeightValue;
 
@@ -873,13 +873,13 @@ export class SankeyDiagram implements IVisual {
                 currentValue.source === node &&
                     currentValue.destination !== currentValue.source
                     ?
-                    currentValue.weigth
+                    currentValue.weight
                     :
                     SankeyDiagram.DefaultWeightValue;
 
-            node.backwardWeight += currentValue.direction === SankeyLinkDirrections.Backward ? currentValue.weigth : 0;
+            node.backwardWeight += currentValue.direction === SankeyLinkDirrections.Backward ? currentValue.weight : 0;
 
-            node.selftLinkWeight += currentValue.direction === SankeyLinkDirrections.SelfLink ? currentValue.weigth : 0;
+            node.selftLinkWeight += currentValue.direction === SankeyLinkDirrections.SelfLink ? currentValue.weight : 0;
         });
     }
 
@@ -892,12 +892,12 @@ export class SankeyDiagram implements IVisual {
         valueDisplayName?: string,
     ): VisualTooltipDataItem[] {
 
-        let formattedNodeWeigth: string;
+        let formattedNodeWeight: string;
 
         if (valueFormatter && valueFormatter.format) {
-            formattedNodeWeigth = valueFormatter.format(nodeWeight);
+            formattedNodeWeight = valueFormatter.format(nodeWeight);
         } else {
-            formattedNodeWeigth = nodeWeight.toString();
+            formattedNodeWeight = nodeWeight.toString();
         }
 
         return [
@@ -906,7 +906,7 @@ export class SankeyDiagram implements IVisual {
                 value: nodeName
             }, {
                 displayName: valueDisplayName || SankeyDiagram.RoleNames.values,
-                value: formattedNodeWeigth
+                value: formattedNodeWeight
             }
         ];
     }
@@ -958,21 +958,21 @@ export class SankeyDiagram implements IVisual {
         let minHeight: number = 1;
         let scaleStepCount: number = 0;
 
-        let minWeigthShift: number = 0;
-        const minWeigthLink = sankeyDiagramDataView.links.find(link => link.weigth === Math.min(...sankeyDiagramDataView.links.map(link => link.weigth)));
-        if (minWeigthLink) {
-            minWeigthShift = minWeigthLink.weigth;
+        let minWeightShift: number = 0;
+        const minWeightLink = sankeyDiagramDataView.links.find(link => link.weight === Math.min(...sankeyDiagramDataView.links.map(link => link.weight)));
+        if (minWeightLink) {
+            minWeightShift = minWeightLink.weight;
         }
-        if (minWeigthShift > 0) {
-            minWeigthShift = 0;
+        if (minWeightShift > 0) {
+            minWeightShift = 0;
         }
 
-        const minWeightInData: number = minWeigthShift;
-        minWeigthShift = Math.abs(minWeigthShift) + minWeight;
+        const minWeightInData: number = minWeightShift;
+        minWeightShift = Math.abs(minWeightShift) + minWeight;
         let maxWeightInData: number = 0;
-        const maxWeigthLink = sankeyDiagramDataView.links.find(link => link.weigth === Math.max(...sankeyDiagramDataView.links.map(link => link.weigth)));
-        if (maxWeigthLink) {
-            maxWeightInData = maxWeigthLink.weigth;
+        const maxWeightLink = sankeyDiagramDataView.links.find(link => link.weight === Math.max(...sankeyDiagramDataView.links.map(link => link.weight)));
+        if (maxWeightLink) {
+            maxWeightInData = maxWeightLink.weight;
         }
 
         const minRangeOfScale: number = sankeyDiagramDataView.settings.scaleSettings.provideMinHeight ? SankeyDiagram.DefaultMinRangeOfScale : SankeyDiagram.MinRangeOfScale;
@@ -992,25 +992,25 @@ export class SankeyDiagram implements IVisual {
             }
 
             sankeyDiagramDataView.links.forEach((l) => {
-                l.weigth = weightScale(l.weigth + minWeigthShift);
+                l.weight = weightScale(l.weight + minWeightShift);
 
-                if (Number.NEGATIVE_INFINITY === l.weigth || Number.POSITIVE_INFINITY === l.weigth || isNaN(l.weigth)) {
-                    l.weigth = 0;
+                if (Number.NEGATIVE_INFINITY === l.weight || Number.POSITIVE_INFINITY === l.weight || isNaN(l.weight)) {
+                    l.weight = 0;
                 }
             });
 
-            if (sankeyDiagramDataView.links.some((link: SankeyDiagramLink) => link.weigth <= SankeyDiagram.NegativeValueRange)) {
-                let minWeight: number = sankeyDiagramDataView.links[0].weigth;
+            if (sankeyDiagramDataView.links.some((link: SankeyDiagramLink) => link.weight <= SankeyDiagram.NegativeValueRange)) {
+                let minWeight: number = sankeyDiagramDataView.links[0].weight;
                 sankeyDiagramDataView.links.forEach((link: SankeyDiagramLink) => {
-                    if (link.weigth <= minWeight) {
-                        minWeight = link.weigth;
+                    if (link.weight <= minWeight) {
+                        minWeight = link.weight;
                     }
                 });
 
                 minWeight = Math.abs(minWeight);
                 // shift weight values to eliminate negative values
                 sankeyDiagramDataView.links.forEach((link: SankeyDiagramLink) => {
-                    link.weigth += minWeight;
+                    link.weight += minWeight;
                 });
             }
 
@@ -1146,12 +1146,12 @@ export class SankeyDiagram implements IVisual {
         while (nodes.length > 0) {
             nextNodes = [];
 
-            nodes.forEach((node: SankeyDiagramNode) => {
-                node.x = x;
+            nodes.forEach((currentNode: SankeyDiagramNode) => {
+                currentNode.x = x;
 
-                // put all output nodes from current node to nextNodes
-                node.links.forEach((link: SankeyDiagramLink) => {
-                    if (node === link.source && node !== link.destination) {
+                // put all destination nodes from current node to nextNodes
+                currentNode.links.forEach((link: SankeyDiagramLink) => {
+                    if (currentNode === link.source && currentNode !== link.destination) {
                         if (nextNodes.every((item: SankeyDiagramNode) => {
                             return item !== link.destination;
                         })) {
@@ -1320,7 +1320,7 @@ export class SankeyDiagram implements IVisual {
 
             node.x *= scale.x;
 
-            let selfLinkHeight: number = d3Max(node.links.filter(l => l.direction === SankeyLinkDirrections.SelfLink).map(l => l.weigth));
+            let selfLinkHeight: number = d3Max(node.links.filter(l => l.direction === SankeyLinkDirrections.SelfLink).map(l => l.weight));
 
             if (!selfLinkHeight) {
                 selfLinkHeight = 0;
@@ -1371,7 +1371,7 @@ export class SankeyDiagram implements IVisual {
 
             node.links.forEach((link: SankeyDiagramLink) => {
                 let shiftByAxisY: number = SankeyDiagram.DefaultOffset;
-                link.height = link.weigth * scale;
+                link.height = link.weight * scale;
 
                 let fixedLinkHeight: number = link.height;
                 if (selfLinksWeight && link.direction === SankeyLinkDirrections.SelfLink) {
