@@ -33,7 +33,7 @@ import lodashCloneDeep from "lodash.clonedeep";
 import { select as d3Select, Selection as d3Selection } from "d3-selection";
 import { drag as d3Drag } from "d3-drag";
 import { max as d3Max, min as d3Min } from "d3-array";
-import { scaleLog as d3ScaleLog, scaleLinear as d3ScaleLinear } from "d3-scale";
+import { scaleLog as d3ScaleLog, scaleLinear as d3ScaleLinear, ScaleContinuousNumeric } from "d3-scale";
 import { rgb as d3Rgb } from "d3-color";
 import { interpolateNumber as d3InterpolateNumber } from "d3-interpolate";
 
@@ -458,7 +458,7 @@ export class SankeyDiagram implements IVisual {
             const foundSource: SankeyDiagramNode = nodes.find(found => found.label.name === parent.value)
             parent.children.forEach(child => {
                 let linkLabel = undefined;
-                let weight: any = SankeyDiagram.DefaultWeightValue;
+                let weight: number = SankeyDiagram.DefaultWeightValue;
 
                 let foundDestination: SankeyDiagramNode = nodes.find(found => found.label.name === child.value)
                 if (!foundDestination) {
@@ -476,7 +476,7 @@ export class SankeyDiagram implements IVisual {
                 // If weights are present, populate the weights array
                 if (weightIndex != -1) {
                     weight = (child.values[weightIndex] && child.values[weightIndex].value) ?
-                        child.values[weightIndex].value || SankeyDiagram.DefaultWeightValue : SankeyDiagram.MinWeightValue;
+                        Number(child.values[weightIndex].value) || SankeyDiagram.DefaultWeightValue : SankeyDiagram.MinWeightValue;
                     weightValues.push(weight);
                 }
                 const linkFillColor = this.getColor(
@@ -978,7 +978,7 @@ export class SankeyDiagram implements IVisual {
         const minRangeOfScale: number = sankeyDiagramDataView.settings.scaleSettings.provideMinHeight ? SankeyDiagram.DefaultMinRangeOfScale : SankeyDiagram.MinRangeOfScale;
 
         while (minHeight <= SankeyDiagram.MinHeightOfNode && scaleStepCount < SankeyDiagram.ScaleStepLimit) {
-            let weightScale: any;
+            let weightScale: ScaleContinuousNumeric<number, number, any>;
 
             if (sankeyDiagramDataView.settings.scaleSettings.lnScale) {
                 weightScale = d3ScaleLog()
