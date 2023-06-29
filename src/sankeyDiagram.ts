@@ -48,12 +48,9 @@ import DataView = powerbi.DataView;
 import IViewport = powerbi.IViewport;
 import DataViewObjects = powerbi.DataViewObjects;
 import VisualObjectInstance = powerbi.VisualObjectInstance;
-import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration;
 import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifier;
-import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
-import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
 import DataViewMatrixNode = powerbi.DataViewMatrixNode;
 // powerbi.visuals
 import ISelectionId = powerbi.visuals.ISelectionId;
@@ -100,13 +97,15 @@ import {
 // powerbi.extensibility.utils.color
 import { ColorHelper } from "powerbi-visuals-utils-colorutils";
 
-import {
+import { 
     SankeyDiagramSettings,
-    SankeyDiagramLabelsSettings,
-    SankeyDiagramScaleSettings,
+    DataLabelsSettings,
+    CyclesDrawType,
     ViewportSize,
-    CyclesDrawType
-} from "./settings";
+    SankeyDiagramScaleSettings,
+    FontSizeDefaultOptions
+ } from "./settings";
+import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
 
 import {
     SankeyDiagramColumn,
@@ -152,11 +151,6 @@ export class SankeyDiagram implements IVisual {
     private static LinksPropertyIdentifier: DataViewObjectPropertyIdentifier = {
         objectName: "links",
         propertyName: "fill"
-    };
-
-    private static NodeComplexSettingsPropertyIdentifier: DataViewObjectPropertyIdentifier = {
-        objectName: "nodeComplexSettings",
-        propertyName: "nodePositions"
     };
 
     private static NodesPropertyIdentifier: DataViewObjectPropertyIdentifier = {
@@ -270,14 +264,17 @@ export class SankeyDiagram implements IVisual {
     public static DestinationCategoryIndex: number = 1;
     public static FirstValueIndex: number = 0;
 
+    private sankeyDiagramSettings: SankeyDiagramSettings;
+    private formattingSettingsService: FormattingSettingsService;
+
     private get textProperties(): TextProperties {
         return {
             fontFamily: this.dataView
-                ? this.dataView.settings.labels.fontFamily
-                : SankeyDiagramLabelsSettings.DefaultFontFamily,
+                ? this.dataView.settings.labels.fontFamily.value
+                : DataLabelsSettings.DefaultFontFamily,
             fontSize: fromPoint(this.dataView
-                ? this.dataView.settings.labels.fontSize
-                : SankeyDiagramLabelsSettings.DefaultFontSize)
+                ? this.dataView.settings.labels.fontSize.value
+                : FontSizeDefaultOptions.DefaultFontSize)
         };
     }
 
@@ -288,6 +285,7 @@ export class SankeyDiagram implements IVisual {
     private init(options: VisualConstructorOptions): void {
         this.visualHost = options.host;
         this.localizationManager = this.visualHost.createLocalizationManager();
+        this.formattingSettingsService = new FormattingSettingsService(this.localizationManager);
 
         this.root = d3Select(options.element)
             .append("svg")
@@ -320,13 +318,9 @@ export class SankeyDiagram implements IVisual {
     public update(visualUpdateOptions: VisualUpdateOptions): void {
         this.visualHost.eventService.renderingStarted(visualUpdateOptions);
 
-        const dataView: DataView = visualUpdateOptions
-                && visualUpdateOptions.dataViews
-                && visualUpdateOptions.dataViews[0];
-
         this.updateViewport(visualUpdateOptions.viewport);
 
-        const sankeyDiagramDataView: SankeyDiagramDataView = this.converter(dataView);
+        const sankeyDiagramDataView: SankeyDiagramDataView = this.converter(visualUpdateOptions);
 
         this.computePositions(sankeyDiagramDataView);
 
@@ -337,6 +331,13 @@ export class SankeyDiagram implements IVisual {
         this.render(sankeyDiagramDataView);
         this.visualHost.eventService.renderingFinished(visualUpdateOptions);
 
+    }
+
+    public getFormattingModel(): powerbi.visuals.FormattingModel {
+        // nodeComplexSettings are persist properties that we do not want to show in the propery pane
+        this.sankeyDiagramSettings.removeNodeComplexSettingsFromPane();
+
+        return this.formattingSettingsService.buildFormattingModel(this.sankeyDiagramSettings);
     }
 
     private updateViewport(viewport: IViewport): void {
@@ -386,7 +387,7 @@ export class SankeyDiagram implements IVisual {
             formattedName: name,//valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DuplicatedNamePostfix, "")),
             width: textMeasurementService.measureSvgTextWidth(textProperties),
             height: textMeasurementService.estimateSvgTextHeight(textProperties),
-            color: settings.labels.fill
+            color: settings.labels.fill.value.value
         };
 
         return {
@@ -409,8 +410,13 @@ export class SankeyDiagram implements IVisual {
     }
 
     /*eslint max-lines-per-function: ["error", 200]*/
-    public converter(dataView: DataView): SankeyDiagramDataView {
-        const settings: SankeyDiagramSettings = this.parseSettings(dataView);
+    public converter(visualUpdateOptions: VisualUpdateOptions) : SankeyDiagramDataView {
+        const dataView: DataView = visualUpdateOptions
+                && visualUpdateOptions.dataViews
+                && visualUpdateOptions.dataViews[0];
+
+        this.sankeyDiagramSettings = this.parseSettings(dataView, visualUpdateOptions.dataViews);
+        const settings = this.sankeyDiagramSettings;
 
         if (!dataView
             || !dataView.matrix
@@ -496,7 +502,7 @@ export class SankeyDiagram implements IVisual {
                 const valuesFormatterForLinkTooltipInfo = valueFormatter.create({
                     format: formatOfWeigth,
                     value: Math.max(
-                        settings.labels.unit !== 0 ? settings.labels.unit : d3Max(weightValues) || SankeyDiagram.MinWeightValue,
+                        +settings.labels.unit.value !== 0 ? +settings.labels.unit.value : d3Max(weightValues) || SankeyDiagram.MinWeightValue,
                         SankeyDiagram.MinWeightValue),
                 });
 
@@ -543,13 +549,13 @@ export class SankeyDiagram implements IVisual {
         const valuesFormatterForWeigth = valueFormatter.create({
             format: formatOfWeigth,
             value: Math.max(
-                settings.labels.unit !== 0 ? settings.labels.unit : d3Max(weightValues) || SankeyDiagram.MinWeightValue,
+                +settings.labels.unit.value !== 0 ? +settings.labels.unit.value : d3Max(weightValues) || SankeyDiagram.MinWeightValue,
                 SankeyDiagram.MinWeightValue),
         });
 
         const cycles: SankeyDiagramCycleDictionary = this.checkCycles(nodes);
 
-        if (settings.cyclesLinks.drawCycles === CyclesDrawType.Duplicate) {
+        if (settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.Duplicate) {
             links = this.processCyclesForwardLinks(cycles, nodes, links, settings);
         }
 
@@ -568,6 +574,10 @@ export class SankeyDiagram implements IVisual {
             );
         });
 
+        // add ColorPicker for each node and link to the Format pane
+        this.sankeyDiagramSettings.populateNodesColorSelector(nodes);
+        this.sankeyDiagramSettings.populateLinksColorSelector(links);
+
         const sankeyDiagramDataView = {
             nodes,
             links,
@@ -575,7 +585,7 @@ export class SankeyDiagram implements IVisual {
             columns: []
         };
 
-        if (settings.cyclesLinks.drawCycles === CyclesDrawType.Backward) {
+        if (settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.Backward) {
             SankeyDiagram.computeXPositions(sankeyDiagramDataView);
             sankeyDiagramDataView.links = this.processCyclesForBackwardLinks(cycles, sankeyDiagramDataView.nodes, links, settings);
             sankeyDiagramDataView.links.forEach((link: SankeyDiagramLink) => {
@@ -696,7 +706,7 @@ export class SankeyDiagram implements IVisual {
 
             // if check failed then reset positions
             if (!check) {
-                settings.nodeComplexSettings.nodePositions = "{}";
+                settings.nodeComplexSettings.nodePositions.value = "{}";
                 settings._nodePositions = [];
             }
         });
@@ -921,10 +931,8 @@ export class SankeyDiagram implements IVisual {
         ];
     }
 
-    private parseSettings(dataView: DataView): SankeyDiagramSettings {
-        const settings: SankeyDiagramSettings = SankeyDiagramSettings.parse<SankeyDiagramSettings>(dataView);
-
-        // settings.valueSourcesQuery = dataView.matrix.valueSources && dataView.matrix.valueSources[0].queryName;
+    private parseSettings(dataView: DataView, dataViews: DataView[]): SankeyDiagramSettings {
+        const settings: SankeyDiagramSettings = this.formattingSettingsService.populateFormattingSettingsModel(SankeyDiagramSettings, dataViews);
 
         // detect sorting chosen
         const foundSortedColumn = dataView.metadata.columns.find(col => col.sort !== undefined);
@@ -933,24 +941,24 @@ export class SankeyDiagram implements IVisual {
         }
 
         // change settings from high contrast mode
-        settings.labels.fill = this.colorHelper.getHighContrastColor("foreground", settings.labels.fill);
-        settings.linkLabels.fill = this.colorHelper.getHighContrastColor("foreground", settings.linkLabels.fill);
+        settings.labels.fill.value.value = this.colorHelper.getHighContrastColor("foreground", settings.labels.fill.value.value);
+        settings.linkLabels.fill.value.value = this.colorHelper.getHighContrastColor("foreground", settings.linkLabels.fill.value.value);
         // node positions
         try {
-            settings._nodePositions = <SankeyDiagramNodePositionSetting[]>JSON.parse(settings.nodeComplexSettings.nodePositions);
+            settings._nodePositions = <SankeyDiagramNodePositionSetting[]>JSON.parse(settings.nodeComplexSettings.nodePositions.value);
         }
         catch (exception) {
             settings._nodePositions = [];
-            settings.nodeComplexSettings.nodePositions = "[]";
+            settings.nodeComplexSettings.nodePositions.value = "[]";
         }
 
         // viewport size
         try {
-            settings._viewportSize = <ViewportSize>JSON.parse(settings.nodeComplexSettings.viewportSize);
+            settings._viewportSize = <ViewportSize>JSON.parse(settings.nodeComplexSettings.viewportSize.value);
         }
         catch (exception) {
             settings._nodePositions = settings._nodePositions || [];
-            settings.nodeComplexSettings.viewportSize = "{}";
+            settings.nodeComplexSettings.viewportSize.value = "{}";
         }
         return settings;
     }
@@ -986,12 +994,12 @@ export class SankeyDiagram implements IVisual {
             maxWeightInData = maxWeigthLink.weigth;
         }
 
-        const minRangeOfScale: number = sankeyDiagramDataView.settings.scaleSettings.provideMinHeight ? SankeyDiagram.DefaultMinRangeOfScale : SankeyDiagram.MinRangeOfScale;
+        const minRangeOfScale: number = sankeyDiagramDataView.settings.scale.provideMinHeight.value ? SankeyDiagram.DefaultMinRangeOfScale : SankeyDiagram.MinRangeOfScale;
 
         while (minHeight <= SankeyDiagram.MinHeightOfNode && scaleStepCount < SankeyDiagram.ScaleStepLimit) {
             let weightScale: any;
 
-            if (sankeyDiagramDataView.settings.scaleSettings.lnScale) {
+            if (sankeyDiagramDataView.settings.scale.lnScale.value) {
                 weightScale = d3ScaleLog()
                     .base(Math.E)
                     .domain([Math.exp(SankeyDiagram.MinDomainOfScale + scaleShift), Math.exp(SankeyDiagram.MaxDomainOfScale + scaleShift)])
@@ -1049,13 +1057,13 @@ export class SankeyDiagram implements IVisual {
             columns,
             sankeyDiagramDataView.settings._scale,
             this.viewport.height,
-            sankeyDiagramDataView.settings.cyclesLinks.selfLinksWeight && sankeyDiagramDataView.settings.cyclesLinks.drawCycles === CyclesDrawType.Backward
+            sankeyDiagramDataView.settings.cyclesLinks.selfLinksWeight.value && sankeyDiagramDataView.settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.Backward
         );
 
         this.computeYPosition(
             sankeyDiagramDataView.nodes,
             sankeyDiagramDataView.settings._scale.y,
-            sankeyDiagramDataView.settings.cyclesLinks.selfLinksWeight && sankeyDiagramDataView.settings.cyclesLinks.drawCycles === CyclesDrawType.Backward
+            sankeyDiagramDataView.settings.cyclesLinks.selfLinksWeight.value && sankeyDiagramDataView.settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.Backward
         );
 
         this.applySavedPositions(sankeyDiagramDataView);
@@ -1528,9 +1536,9 @@ export class SankeyDiagram implements IVisual {
                 const isNotVisibleLabel: boolean =
                     (labelPositionByAxisX >= this.viewport.width ||
                         labelPositionByAxisX <= SankeyDiagram.MinSize ||
-                        (node.height + SankeyDiagram.NodeMargin) < node.label.height) && !sankeyDiagramDataView.settings.labels.forceDisplay;
+                        (node.height + SankeyDiagram.NodeMargin) < node.label.height) && !sankeyDiagramDataView.settings.labels.forceDisplay.value;
 
-                if (isNotVisibleLabel || !sankeyDiagramDataView.settings.labels.show
+                if (isNotVisibleLabel || !sankeyDiagramDataView.settings.labels.show.value
                     || node.label.maxWidth < SankeyDiagram.MinWidthOfLabel) {
                     return SankeyDiagram.DisplayNone;
                 }
@@ -1777,7 +1785,7 @@ export class SankeyDiagram implements IVisual {
     private renderLinkLabels(sankeyDiagramDataView: SankeyDiagramDataView): void {
         // create labels on link as A - B : Value
         const linkTextData: SankeyDiagramLink[] = sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
-            return link.height > SankeyDiagram.MinSize && this.dataView.settings.linkLabels.show;
+            return link.height > SankeyDiagram.MinSize && this.dataView.settings.linkLabels.show.value;
         });
 
         const linkArrowData: SankeyDiagramLink[] = sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
@@ -1874,8 +1882,8 @@ export class SankeyDiagram implements IVisual {
                 "href", (link: SankeyDiagramLink) => {
                     return `#${SankeyDiagram.createLink(link, true)}`;
                 })
-            .style("font-size", this.dataView.settings.linkLabels.fontSize)
-            .style("fill", this.dataView.settings.linkLabels.fill)
+            .style("font-size", this.dataView.settings.linkLabels.fontSize.value)
+            .style("fill", this.dataView.settings.linkLabels.fill.value.value)
             .text((link: SankeyDiagramLink) => (link.label && (link.label.length > 0)) ? link.label :
                 `${link.source.label.name || ""}-${link.destination.label.name || ""}:${(link.tooltipInfo[2] || { value: "" }).value}`
             );
@@ -1910,7 +1918,7 @@ export class SankeyDiagram implements IVisual {
 
         let fixedLinkHeight = link.height - distanceBetweenLinks;
 
-        if (this.dataView.settings.cyclesLinks.selfLinksWeight && this.dataView.settings.cyclesLinks.drawCycles === CyclesDrawType.Backward) {
+        if (this.dataView.settings.cyclesLinks.selfLinksWeight.value && this.dataView.settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.Backward) {
             fixedLinkHeight = Math.min(link.destination.width, minHeight);
         }
 
@@ -2233,88 +2241,6 @@ export class SankeyDiagram implements IVisual {
     public onClearSelection(): void {
         if (this.interactivityService) {
             this.interactivityService.clearSelection();
-        }
-    }
-
-    public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
-        const settings: SankeyDiagramSettings = this.dataView && this.dataView.settings
-            || <SankeyDiagramSettings>SankeyDiagramSettings.getDefault();
-
-        const instanceEnumeration: VisualObjectInstanceEnumeration =
-            SankeyDiagramSettings.enumerateObjectInstances(settings, options);
-
-        if (options.objectName === SankeyDiagram.LinksPropertyIdentifier.objectName) {
-            this.enumerateLinks(instanceEnumeration);
-        }
-
-        if (options.objectName === SankeyDiagram.NodesPropertyIdentifier.objectName) {
-            this.enumerateNodeCategories(instanceEnumeration);
-        }
-
-        // hide scale settings
-        if (options.objectName === SankeyDiagram.NodeComplexSettingsPropertyIdentifier.objectName) {
-            (<VisualObjectInstanceEnumerationObject>instanceEnumeration).instances = (<VisualObjectInstanceEnumerationObject>instanceEnumeration).instances
-                .filter((instance) => instance.objectName !== SankeyDiagram.NodeComplexSettingsPropertyIdentifier.objectName);
-        }
-
-        return instanceEnumeration || [];
-    }
-
-    private enumerateNodeCategories(instanceEnumeration: VisualObjectInstanceEnumeration): void {
-        const nodes: SankeyDiagramNode[] = this.dataView && this.dataView.nodes;
-
-        if (!nodes || !(nodes.length > 0)) {
-            return;
-        }
-
-        nodes.filter((node: SankeyDiagramNode) => {
-            return !node.label.name.endsWith(SankeyDiagram.DuplicatedNamePostfix);
-        }).forEach((node: SankeyDiagramNode) => {
-            const identity: ISelectionId = <ISelectionId>node.identity,
-                displayName: string = node.label.formattedName;
-            this.addAnInstanceToEnumeration(instanceEnumeration, {
-                displayName,
-                objectName: SankeyDiagram.NodesPropertyIdentifier.objectName,
-                selector: ColorHelper.normalizeSelector(identity.getSelector(), false),
-                properties: {
-                    fill: { solid: { color: node.fillColor } }
-                }
-            });
-        });
-    }
-
-    private enumerateLinks(instanceEnumeration: VisualObjectInstanceEnumeration): void {
-        const links: SankeyDiagramLink[] = this.dataView && this.dataView.links;
-
-        if (!links || !(links.length > 0)) {
-            return;
-        }
-
-        links.forEach((link: SankeyDiagramLink) => {
-            const identity: ISelectionId = <ISelectionId>link.identity,
-                displayName: string = `${link.source.label.formattedName} - ${link.destination.label.formattedName}`;
-
-            this.addAnInstanceToEnumeration(instanceEnumeration, {
-                displayName,
-                objectName: SankeyDiagram.LinksPropertyIdentifier.objectName,
-                selector: ColorHelper.normalizeSelector(identity.getSelector(), false),
-                properties: {
-                    fill: { solid: { color: link.fillColor } }
-                }
-            });
-        });
-    }
-
-    private addAnInstanceToEnumeration(
-        instanceEnumeration: VisualObjectInstanceEnumeration,
-        instance: VisualObjectInstance): void {
-
-        if ((<VisualObjectInstanceEnumerationObject>instanceEnumeration).instances) {
-            (<VisualObjectInstanceEnumerationObject>instanceEnumeration)
-                .instances
-                .push(instance);
-        } else {
-            (<VisualObjectInstance[]>instanceEnumeration).push(instance);
         }
     }
 }
