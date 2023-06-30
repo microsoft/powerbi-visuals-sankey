@@ -264,7 +264,7 @@ export class SankeyDiagram implements IVisual {
     public static DestinationCategoryIndex: number = 1;
     public static FirstValueIndex: number = 0;
 
-    private sankeyDiagramSettings: SankeyDiagramSettings;
+    public sankeyDiagramSettings: SankeyDiagramSettings;
     private formattingSettingsService: FormattingSettingsService;
 
     private get textProperties(): TextProperties {
@@ -320,7 +320,13 @@ export class SankeyDiagram implements IVisual {
 
         this.updateViewport(visualUpdateOptions.viewport);
 
-        const sankeyDiagramDataView: SankeyDiagramDataView = this.converter(visualUpdateOptions);
+        const dataView: DataView = visualUpdateOptions
+                && visualUpdateOptions.dataViews
+                && visualUpdateOptions.dataViews[0];
+
+        this.sankeyDiagramSettings = this.parseSettings(dataView, visualUpdateOptions.dataViews);
+
+        const sankeyDiagramDataView: SankeyDiagramDataView = this.converter(dataView);
 
         this.computePositions(sankeyDiagramDataView);
 
@@ -410,12 +416,7 @@ export class SankeyDiagram implements IVisual {
     }
 
     /*eslint max-lines-per-function: ["error", 200]*/
-    public converter(visualUpdateOptions: VisualUpdateOptions) : SankeyDiagramDataView {
-        const dataView: DataView = visualUpdateOptions
-                && visualUpdateOptions.dataViews
-                && visualUpdateOptions.dataViews[0];
-
-        this.sankeyDiagramSettings = this.parseSettings(dataView, visualUpdateOptions.dataViews);
+    public converter(dataView: DataView) : SankeyDiagramDataView {
         const settings = this.sankeyDiagramSettings;
 
         if (!dataView

@@ -274,7 +274,6 @@ export class SankeyDiagramSettings extends FormattingSettingsModel {
                     selector: ColorHelper.normalizeSelector((<ISelectionId>node.identity).getSelector())
                 }));
             });
-            slices.sort((firstColorSelector: FormattingSettingsSlice, secondColorSelector: FormattingSettingsCard) => firstColorSelector.displayName.localeCompare(secondColorSelector.displayName));
         }
     }
 

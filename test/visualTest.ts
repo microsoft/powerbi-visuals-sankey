@@ -24,11 +24,11 @@
 *  THE SOFTWARE.
 */
 import powerbi from "powerbi-visuals-api";
+import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
 
 // powerbi
 import DataView = powerbi.DataView;
-import PrimitiveValue = powerbi.PrimitiveValue;
-import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
+import FormattingSettingsCard = formattingSettings.Card;
 
 // powerbi.extensibility.visual.test
 import { SankeyDiagramData } from "./visualData";
@@ -60,6 +60,8 @@ import {
 import {
     isColorAppliedToElements
 } from "./helpers/helpers";
+
+import { DataLabelsSettings, LinkLabelsSettings, SankeyDiagramSettings } from "../src/settings";
 
 
 interface SankeyDiagramTestsNode {
@@ -733,71 +735,48 @@ describe("SankeyDiagram", () => {
 
 
     describe("Settings tests:", () => {
-        it("nodeComplexSettings properties must be hidden", () => {
-            let objectInstanes: VisualObjectInstanceEnumerationObject = <VisualObjectInstanceEnumerationObject>visualBuilder.instance.enumerateObjectInstances({
-                objectName: "nodeComplexSettings"
+        it("nodeComplexSettings properties must be hidden", done => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                visualBuilder.instance.getFormattingModel();
+                expect(visualBuilder.instance.sankeyDiagramSettings.cards.some((card: FormattingSettingsCard) => card.displayName === "Node Complex Settings")).toBeFalse();
+                done();
             });
-
-            expect(objectInstanes.instances.length).toBe(0);
         });
 
-        it("other properties must exist", () => {
-            // defaults
-            const instance: number = 0;
-            const someColor: string = "black";
-            const fontSize: number = 12;
-            const unit: number = 0;
-            dataView.metadata.objects = {
-                labels: {
-                    show: true,
-                    fill: { solid: { color: someColor } },
-                    fontSize: fontSize,
-                    forceDisplay: false,
-                    unit: unit
-                },
-                linkLabels: {
-                    show: false,
-                    fill: { solid: { color: someColor } },
-                    fontSize: fontSize,
-                },
-                scaleSettings: {
-                    provideMinHeight: true,
-                    lnScale: true,
-                },
-                nodeComplexSettings: {
-                    nodePositions: "",
-                    viewportSize: ""
-                }
-            };
+        it("other properties must exist", done => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                // defaults
+                const someColor: string = "#000000";
+                const fontSize: number = 12;
+                const unit: number = 0;
 
-            let labels: VisualObjectInstanceEnumerationObject = (<VisualObjectInstanceEnumerationObject>visualBuilder
-                .instance.enumerateObjectInstances({
-                    objectName: "labels"
-                }));
+                visualBuilder.instance.getFormattingModel();
 
-            expect(labels.instances.length).toBe(1);
-            expect(labels.instances[instance].properties["show"]).toBeTruthy();
-            expect(labels.instances[instance].properties["fontSize"]).toBe(fontSize);
-            expect(labels.instances[instance].properties["forceDisplay"]).toBeFalsy();
-            expect(labels.instances[instance].properties["unit"]).toBe(unit);
-            expect(labels.instances[instance].properties["fill"]).toBe(someColor);
+                let labels: DataLabelsSettings = visualBuilder.instance.sankeyDiagramSettings.labels;
 
-            let linkLabels: VisualObjectInstanceEnumerationObject = (<VisualObjectInstanceEnumerationObject>visualBuilder
-                .instance.enumerateObjectInstances({
-                    objectName: "linkLabels"
-                }));
-            expect(linkLabels.instances.length).toBe(1);
-            expect(linkLabels.instances[instance].properties["show"]).toBeFalsy();
-            expect(linkLabels.instances[instance].properties["fontSize"]).toBe(fontSize);
-            expect(linkLabels.instances[instance].properties["fill"]).toBe(someColor);
+                expect(labels.slices.length).toBe(6);
+                expect(labels.show.value).toBeTruthy();
+                expect(labels.fontSize.value).toBe(fontSize);
+                expect(labels.forceDisplay.value).toBeFalsy();
+                expect(labels.unit.value).toBe(unit);
+                expect(labels.fill.value.value).toBe(someColor);
 
-            let scaleSettings: VisualObjectInstanceEnumerationObject = (<VisualObjectInstanceEnumerationObject>visualBuilder
-                .instance.enumerateObjectInstances({
-                    objectName: "scaleSettings"
-                }));
-            expect(scaleSettings.instances.length).toBe(1);
-            expect(scaleSettings.instances[instance].properties["provideMinHeight"]).toBeTruthy();
-            expect(scaleSettings.instances[instance].properties["lnScale"]).toBeFalsy();
+                let linkLabels: LinkLabelsSettings = visualBuilder.instance.sankeyDiagramSettings.linkLabels;
+
+                expect(linkLabels.slices.length).toBe(3);
+                expect(linkLabels.show.value).toBeFalsy();
+                expect(linkLabels.fontSize.value).toBe(fontSize);
+                expect(linkLabels.fill.value.value).toBe(someColor);
+
+                let scaleSettings = visualBuilder.instance.sankeyDiagramSettings.scale;
+
+                expect(scaleSettings.slices.length).toBe(2);
+                expect(scaleSettings.provideMinHeight.value).toBeTruthy();
+                expect(scaleSettings.lnScale.value).toBeFalsy();
+
+                expect(visualBuilder.instance.sankeyDiagramSettings.cards.length).toBe(6);
+                done();
+            });
         });
     });
 
