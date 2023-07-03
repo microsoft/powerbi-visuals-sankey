@@ -1541,7 +1541,7 @@ export class SankeyDiagram implements IVisual {
                 return node.label.formattedName;
             });
 
-        function dragstarted() {
+        function dragstarted(event: DragEvent) {
             event.stopPropagation();
         }
 
