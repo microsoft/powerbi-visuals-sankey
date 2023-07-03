@@ -1,7 +1,7 @@
 {
   "visual": {
     "name": "SankeyDiagram",
-    "displayName": "Sankey 3.0.8",
+    "displayName": "Sankey 3.1.0",
     "guid": "sankey02300D1BE6F5427989F3DE31CCA9E0F32020",
     "visualClassName": "SankeyDiagram",
     "version": "3.0.8",
