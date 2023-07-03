@@ -1,3 +1,6 @@
+## 3.1.1
+* Update outdated packages
+
 ## 3.0.8
 * powerbi-visuals-tools packages updated
 
