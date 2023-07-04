@@ -1,3 +1,6 @@
+## 3.1.1
+* Update outdated packages
+
 ## 3.1.0
 * Migration to Formatting model
 

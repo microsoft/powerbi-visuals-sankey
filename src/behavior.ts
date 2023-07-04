@@ -58,7 +58,6 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
 
     private selectedDataPoints: SelectableDataPoint[];
 
-    // tslint:disable-next-line: function-name
     public static create(): IInteractiveBehavior {
         return new SankeyDiagramBehavior();
     }
@@ -102,7 +101,7 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
         this.behaviorOptions.nodes.on("contextmenu", (event: PointerEvent, datum: SankeyDiagramNode) => {
             if (event) {
                 this.selectionHandler.handleContextMenu(
-                    <any>datum,
+                    datum,
                     {
                         x: event.clientX,
                         y: event.clientY
