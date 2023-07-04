@@ -1,6 +1,9 @@
 ## 3.1.1
 * Update outdated packages
 
+## 3.1.0
+* Migration to Formatting model
+
 ## 3.0.8
 * powerbi-visuals-tools packages updated
 
