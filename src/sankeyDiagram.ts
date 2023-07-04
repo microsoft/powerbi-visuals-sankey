@@ -31,7 +31,7 @@ import lodashCloneDeep from "lodash.clonedeep";
 
 // d3
 import { select as d3Select, Selection as d3Selection } from "d3-selection";
-import { drag as d3Drag } from "d3-drag";
+import { drag as d3Drag, D3DragEvent} from "d3-drag";
 import { max as d3Max, min as d3Min } from "d3-array";
 import { scaleLog as d3ScaleLog, scaleLinear as d3ScaleLinear, ScaleContinuousNumeric } from "d3-scale";
 import { rgb as d3Rgb } from "d3-color";
@@ -1541,8 +1541,8 @@ export class SankeyDiagram implements IVisual {
                 return node.label.formattedName;
             });
 
-        function dragstarted(event: DragEvent) {
-            event.stopPropagation();
+        function dragstarted(event: D3DragEvent<Element, SankeyDiagramNode, SankeyDiagramNode>) {
+            event.sourceEvent.stopPropagation();
         }
 
         const minHeight: number = d3Min(sankeyDiagramDataView.links.map(l => l.height));
