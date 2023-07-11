@@ -7,28 +7,27 @@
             "displayNameKey": "Visual_Source"
         },
         {
-            "name": "SourceLabels",
-            "kind": "Measure",
-            "displayName": "Source labels",
-            "displayNameKey": "Visual_SourceLabels"
-        },
-        {
             "name": "Destination",
-            "kind": "Grouping",
+            "kind": "GroupingOrMeasure",
             "displayName": "Destination",
             "displayNameKey": "Visual_Destination"
-        },
-        {
-            "name": "DestinationLabels",
-            "kind": "Measure",
-            "displayName": "Destination labels",
-            "displayNameKey": "Visual_DestinationLabels"
         },
         {
             "name": "Weight",
             "kind": "Measure",
             "displayName": "Weight",
-            "displayNameKey": "Visual_Weight"
+            "displayNameKey": "Visual_Weight",
+            "requiredTypes": [
+                {
+                    "numeric": true
+                }
+            ]
+        },
+        {
+            "name": "SourceLabels",
+            "kind": "Measure",
+            "displayName": "Source labels",
+            "displayNameKey": "Visual_SourceLabels"
         }
     ],
     "dataViewMappings": [
@@ -36,7 +35,7 @@
             "conditions": [
                 {
                     "Source": {
-                        "min": 0,
+                        "min": 1,
                         "max": 1
                     },
                     "Destination": {
@@ -44,10 +43,6 @@
                         "max": 1
                     },
                     "SourceLabels": {
-                        "min": 0,
-                        "max": 1
-                    },
-                    "DestinationLabels": {
                         "min": 0,
                         "max": 1
                     },
@@ -66,8 +61,8 @@
                             }
                         },
                         {
-                            "for": {
-                                "in": "Destination"
+                            "bind": {
+                                "to": "Destination"
                             }
                         }
                     ]
@@ -77,11 +72,6 @@
                         {
                             "for": {
                                 "in": "SourceLabels"
-                            }
-                        },
-                        {
-                            "for": {
-                                "in": "DestinationLabels"
                             }
                         },
                         {
@@ -96,19 +86,13 @@
     ],
     "objects": {
         "labels": {
-            "displayName": "Data labels",
-            "displayNameKey": "Visual_DataPointsLabels",
             "properties": {
                 "show": {
-                    "displayName": "Show",
-                    "displayNameKey": "Visual_Show",
                     "type": {
                         "bool": true
                     }
                 },
                 "fill": {
-                    "displayName": "Color",
-                    "displayNameKey": "Visual_LabelsFill",
                     "type": {
                         "fill": {
                             "solid": {
@@ -118,8 +102,6 @@
                     }
                 },
                 "fontFamily": {
-                    "displayName": "Font Family",
-                    "displayNameKey": "Visual_FontFamily",
                     "type": {
                         "formatting": {
                             "fontFamily": true
@@ -127,8 +109,6 @@
                     }
                 },
                 "fontSize": {
-                    "displayName": "Text Size",
-                    "displayNameKey": "Visual_TextSize",
                     "type": {
                         "formatting": {
                             "fontSize": true
@@ -136,17 +116,11 @@
                     }
                 },
                 "forceDisplay": {
-                    "displayName": "Force display",
-                    "displayNameKey": "Visual_Force_Display",
-                    "description": "Display all labels anyway",
-                    "descriptionKey": "Visual_Description_Force_Display",
                     "type": {
                         "bool": true
                     }
                 },
                 "unit": {
-                    "displayName": "Display units",
-                    "displayNameKey": "Visual_Display_Units",
                     "type": {
                         "formatting": {
                              "labelDisplayUnits": true
@@ -156,19 +130,13 @@
             }
         },
         "linkLabels": {
-            "displayName": "Data link labels",
-            "displayNameKey": "Visual_DataPointsLinkLabels",
             "properties": {
                 "show": {
-                    "displayName": "Show",
-                    "displayNameKey": "Visual_Show",
                     "type": {
                         "bool": true
                     }
                 },
                 "fill": {
-                    "displayName": "Color",
-                    "displayNameKey": "Visual_LabelsFill",
                     "type": {
                         "fill": {
                             "solid": {
@@ -178,8 +146,6 @@
                     }
                 },
                 "fontSize": {
-                    "displayName": "Text Size",
-                    "displayNameKey": "Visual_TextSize",
                     "type": {
                         "formatting": {
                             "fontSize": true
@@ -189,12 +155,8 @@
             }
         },
         "links": {
-            "displayName": "Links",
-            "displayNameKey": "Visual_Links",
             "properties": {
                 "fill": {
-                    "displayName": "Color",
-                    "displayNameKey": "Visual_LabelsFill",
                     "type": {
                         "fill": {
                             "solid": {
@@ -206,12 +168,8 @@
             }
         },
         "nodes": {
-            "displayName": "Nodes",
-            "displayNameKey": "Visual_Nodes",
             "properties": {
                 "fill": {
-                    "displayName": "Color",
-                    "displayNameKey": "Visual_LabelsFill",
                     "type": {
                         "fill": {
                             "solid": {
@@ -223,19 +181,13 @@
             }
         },
         "scaleSettings": {
-            "displayName": "Scale settings",
-            "displayNameKey": "Visual_SankeyScaleSettings",
             "properties": {
                 "lnScale": {
-                    "displayName": "Enable logarithmic scale",
-                    "displayNameKey": "Visual_ScaleSettings",
                     "type": {
                         "bool": true
                     }
                 },
                 "provideMinHeight": {
-                    "displayName": "Provide min optimal height of node",
-                    "displayNameKey": "Visual_MinOptimalHeight",
                     "type": {
                         "bool": true
                     }
@@ -243,19 +195,13 @@
             }
         },
         "nodeComplexSettings": {
-            "displayName": "Sankey settigns",
-            "displayNameKey": "Visual_SankeySettings",
             "properties": {
                 "nodePositions": {
-                    "displayName": "Node positions",
-                    "displayNameKey": "Visual_NodePositions",
                     "type": {
                         "text": true
                     }
                 },
                 "viewportSize": {
-                    "displayName": "Viewport sizes",
-                    "displayNameKey": "Visual_ViewportSize",
                     "type": {
                         "text": true
                     }
@@ -263,30 +209,13 @@
             }
         },
         "cyclesLinks":{
-            "displayName": "Cycles displaying",
-            "displayNameKey": "Visual_Cycles",
             "properties": {
                 "drawCycles": {
-                    "displayName": "Duplicate nodes",
-                    "displayNameKey": "Visual_DuplicateNodes",
                     "type": {
-                        "enumeration": [
-                            {
-                                "displayName": "Duplicate",
-                                "displayNameKey": "Visual_Duplicate",
-                                "value": "0"
-                            },
-                            {
-                                "displayName": "Draw backward link",
-                                "displayNameKey": "Visual_DrawBackwardLink",
-                                "value": "1"
-                            }
-                        ]
+                        "enumeration": []
                     }
                 },
                 "selfLinksWeight": {
-                    "displayName": "Ignore weight of self links",
-                    "displayNameKey": "Visual_SelflinkWeight",
                     "type": {
                         "bool": true
                     }
@@ -305,5 +234,6 @@
         }
     },
     "supportsKeyboardFocus": true,
-    "supportsSynchronizingFilterState": true
+    "supportsSynchronizingFilterState": true,
+    "privileges": []
 }

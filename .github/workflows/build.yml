@@ -5,18 +5,16 @@ name: build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x, 16.x, 18.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -24,8 +22,12 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - run: npm audit
+      continue-on-error: true
     - run: npm ci
-    - run: npm run lint
+    - run: npm run eslint --if-present
+    - run: npm run lint --if-present
+    - run: npm run package
     - run: npm test
       env:
         CI: true

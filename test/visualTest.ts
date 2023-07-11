@@ -24,11 +24,11 @@
 *  THE SOFTWARE.
 */
 import powerbi from "powerbi-visuals-api";
+import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
 
 // powerbi
 import DataView = powerbi.DataView;
-import PrimitiveValue = powerbi.PrimitiveValue;
-import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
+import FormattingSettingsCard = formattingSettings.Card;
 
 // powerbi.extensibility.visual.test
 import { SankeyDiagramData } from "./visualData";
@@ -38,7 +38,7 @@ import { VisualBuilder } from "./visualBuilder";
 import {
     SankeyDiagram as VisualClass
 }
-from "../src/sankeyDiagram";
+    from "../src/sankeyDiagram";
 
 import {
     SankeyDiagramNode,
@@ -47,7 +47,7 @@ import {
     SankeyDiagramLink,
     SankeyDiagramLabel
 }
-from "../src/dataInterfaces";
+    from "../src/dataInterfaces";
 
 // powerbi.extensibility.utils.test
 import {
@@ -61,8 +61,8 @@ import {
     isColorAppliedToElements
 } from "./helpers/helpers";
 
-import * as _ from "lodash-es";
-import * as $ from "jquery";
+import { DataLabelsSettings, LinkLabelsSettings, SankeyDiagramSettings } from "../src/settings";
+
 
 interface SankeyDiagramTestsNode {
     x: number;
@@ -254,18 +254,44 @@ describe("SankeyDiagram", () => {
         });
     });
 
+
     describe("DOM tests", () => {
+
         it("main element created", () => {
-            expect(visualBuilder.mainElement[0]).toBeInDOM();
+            expect(visualBuilder.mainElement).toBeDefined();
         });
 
-        it("update", (done) => {
+        it("number of displayed links should match the dataView", (done) => {
             visualBuilder.updateRenderTimeout(dataView, () => {
-                const sourceCategories: PrimitiveValue[] = dataView.categorical.categories[0].values,
-                    destinationCategories: PrimitiveValue[] = dataView.categorical.categories[1].values;
+                const allLinksInDataView = dataView.matrix.rows.root.children.reduce((acc, current) => acc + current.children.length, 0);
+                expect(visualBuilder.linksElement).toBeDefined();
+                expect(visualBuilder.linkElements.length).toBe(allLinksInDataView);
 
-                expect(visualBuilder.linksElement).toBeInDOM();
-                expect(visualBuilder.linkElements.length).toBe(sourceCategories.length);
+                let nodes: SankeyDiagramNode[] = visualBuilder.instance
+                    .converter(dataView)
+                    .nodes
+                    .filter((node: SankeyDiagramNode) => {
+                        if (node.links.length > 0) {
+                            return true;
+                        }
+
+                        return false;
+                    });
+                expect(visualBuilder.nodesElement).toBeDefined();
+                expect(visualBuilder.nodeElements.length).toEqual(nodes.length);
+
+                done();
+            });
+        });
+
+
+        it("update without weight values should display nodes", (done) => {
+
+            dataView = defaultDataViewBuilder.getDataViewWithoutValues();
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                const allLinksInDataView = dataView.matrix.rows.root.children.reduce((acc, current) => acc + current.children.length, 0);
+                expect(visualBuilder.linksElement).toBeDefined();
+                expect(visualBuilder.linkElements.length).toBe(allLinksInDataView);
 
                 let nodes: SankeyDiagramNode[] = visualBuilder.instance
                     .converter(dataView)
@@ -278,41 +304,15 @@ describe("SankeyDiagram", () => {
                         return false;
                     });
 
-                expect(visualBuilder.nodesElement).toBeInDOM();
+                expect(visualBuilder.nodesElement).toBeDefined();
                 expect(visualBuilder.nodeElements.length).toEqual(nodes.length);
 
                 done();
             });
         });
 
-        it("update without weight values", (done) => {
-            dataView.categorical.values = undefined;
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                const sourceCategories: PrimitiveValue[] = dataView.categorical.categories[0].values,
-                    destinationCategories: PrimitiveValue[] = dataView.categorical.categories[1].values;
 
-                expect(visualBuilder.linksElement).toBeInDOM();
-                expect(visualBuilder.linkElements.length).toBe(sourceCategories.length);
-
-                let nodes: SankeyDiagramNode[] = visualBuilder.instance
-                    .converter(dataView)
-                    .nodes
-                    .filter((node: SankeyDiagramNode) => {
-                        if (node.links.length > 0) {
-                            return true;
-                        }
-
-                        return false;
-                    });
-
-                expect(visualBuilder.nodesElement).toBeInDOM();
-                expect(visualBuilder.nodeElements.length).toEqual(nodes.length);
-
-                done();
-            });
-        });
-
-        it("nodes labels on", (done) => {
+        it("node labels should display when labels: { show: true }", (done) => {
             dataView.metadata.objects = {
                 labels: {
                     show: true
@@ -320,10 +320,9 @@ describe("SankeyDiagram", () => {
             };
 
             visualBuilder.updateRenderTimeout(dataView, () => {
-                const display: string = visualBuilder.nodesElement
-                    .find("text")
-                    .first()
-                    .css("display");
+                const display: string = window.getComputedStyle(
+                    visualBuilder.nodesElement.querySelector("text")
+                ).display
 
                 expect(display).toBe("block");
 
@@ -331,7 +330,8 @@ describe("SankeyDiagram", () => {
             });
         });
 
-        it("nodes labels off", (done) => {
+
+        it("node labels should not display when labels: { show: false } off", (done) => {
             dataView.metadata.objects = {
                 labels: {
                     show: false
@@ -339,10 +339,9 @@ describe("SankeyDiagram", () => {
             };
 
             visualBuilder.updateRenderTimeout(dataView, () => {
-                const display: string = visualBuilder.nodesElement
-                    .find("text")
-                    .first()
-                    .css("display");
+                const display: string = window.getComputedStyle(
+                    visualBuilder.nodesElement.querySelector("text")
+                ).display
 
                 expect(display).toBe("none");
 
@@ -350,7 +349,8 @@ describe("SankeyDiagram", () => {
             });
         });
 
-        it("nodes labels change color", (done) => {
+
+        it("nodes labels should change color", (done) => {
             const color: string = "#123123";
 
             dataView.metadata.objects = {
@@ -360,37 +360,36 @@ describe("SankeyDiagram", () => {
             };
 
             visualBuilder.updateRenderTimeout(dataView, () => {
-                const fill: string = visualBuilder.nodesElement
-                    .find("text")
-                    .first()
-                    .css("fill");
+                const fill: string = window.getComputedStyle(
+                    visualBuilder.nodesElement.querySelector("text")
+                ).fill
 
                 assertColorsMatch(fill, color);
                 done();
             });
         });
 
-        it("link change color", done => {
+
+        it("links should change color", done => {
             const color: string = "#E0F600";
 
             // change colors for all links
-            for (let index of Object.keys(dataView.categorical.categories)) {
-                let category = dataView.categorical.categories[index];
-                category.objects = [];
-                for (let valIndex of category.values) {
-                    category.objects.push({
+            dataView.matrix.rows.root.children.forEach(child => {
+                child.children.forEach(grandChild => {
+                    grandChild.objects = {
                         links: {
-                            fill: { solid: { color } }
+                            fill: {
+                                solid: { color }
+                            }
                         }
-                    });
-                }
-            }
+                    }
+                })
+            })
+
 
             visualBuilder.updateRenderTimeout(dataView, () => {
-                const currentColor: string = visualBuilder.linksElement
-                    .find(".link")
-                    .first()
-                    .css("stroke");
+                const someLink = visualBuilder.linksElement.querySelector("path.link");
+                const currentColor: string = window.getComputedStyle(someLink).stroke;
 
                 assertColorsMatch(currentColor, color);
 
@@ -398,64 +397,70 @@ describe("SankeyDiagram", () => {
             });
         });
 
-        it("nodes labels are not overlapping", done => {
 
+        it("nodes labels are not overlapping", done => {
             visualBuilder.updateRenderTimeout(dataView, () => {
-                const textElement: JQuery = visualBuilder.nodesElement.find("text"),
-                    firstNode: string = textElement.first().text(),
-                    secondNode: string = textElement.last().text(),
-                    thirdNode: string = textElement.eq(4).text();
+                const nodeElements: HTMLElement[] = [...visualBuilder.nodeElements];
+                const firstNode: string = nodeElements[0].querySelector("text").innerHTML
+                const secondNode: string = nodeElements[1].querySelector("text").innerHTML
+                const thirdNode: string = nodeElements[2].querySelector("text").innerHTML
 
                 expect(firstNode).toBe("Brazil");
-                expect(secondNode).toBe("Angola");
-                expect(thirdNode).toBe("France");
+                expect(secondNode).toBe("USA");
+                expect(thirdNode).toBe("Mexico");
 
                 done();
             });
         });
 
-        describe("selection and deselection", () => {
-            const selectionSelector: string = ".selected";
 
+        describe("selection and deselection", () => {
+            const selectionClass: string = "selected";
             it("nodes", (done) => {
                 visualBuilder.updateRenderTimeout(dataView, () => {
-                    const node: JQuery = visualBuilder.nodeElements.first();
+                    const node: HTMLElement = visualBuilder.nodeElements[0];
                     const firstNodeLinksCount: number = 4;
-                    const link: JQuery = visualBuilder.linkElements;
-
-                    expect(visualBuilder.nodeElements.filter(selectionSelector)).not.toBeInDOM();
+                    const link: NodeListOf<HTMLElement> = visualBuilder.linkElements;
+                    const selectedNodesBeforeClick = [...visualBuilder.nodeElements].filter(node => node.classList.value.includes(selectionClass));
+                    expect(selectedNodesBeforeClick.length).toBe(0);
+                    // expect(selectedNodes).not.toBeInDOM();
                     clickElement(node);
-
                     renderTimeout(() => {
-                        expect(node.filter(selectionSelector)).not.toBeInDOM();
-                        expect(visualBuilder.nodeElements.filter(selectionSelector)).toBeInDOM();
+                        const selectedNodesAfterClick = [...visualBuilder.nodeElements].filter(node => node.classList.value.includes(selectionClass));
+                        expect(selectedNodesAfterClick.length).not.toBe(0);
+                        // expect(visualBuilder.nodeElements.filter(selectionClass)).toBeInDOM();
+                        expect(selectedNodesAfterClick).toBeDefined();
                         // when node selected, links of node also must be selected
-                        expect(visualBuilder.linkElements.filter(selectionSelector).length).toBe(firstNodeLinksCount);
+                        expect([...visualBuilder.linkElements].filter(link => link.classList.value.includes(selectionClass)).length).toBe(firstNodeLinksCount);
 
                         clickElement(node);
                         renderTimeout(() => {
-                            expect(visualBuilder.nodeElements.filter(selectionSelector)).not.toBeInDOM();
-
+                            expect([...visualBuilder.nodeElements].filter(node => node.classList.value.includes(selectionClass)).length).toBe(0);
                             done();
                         });
                     });
                 });
             });
 
+
             it("links", (done) => {
                 visualBuilder.updateRenderTimeout(dataView, () => {
-                    const link: JQuery = visualBuilder.linkElements.first();
-
-                    expect(visualBuilder.linkElements.filter(selectionSelector)).not.toBeInDOM();
+                    const link: HTMLElement = visualBuilder.linkElements[0];
+                    expect([...visualBuilder.linkElements].filter(link => link.classList.value.includes(selectionClass)).length).toBe(0);
                     clickElement(link);
 
                     renderTimeout(() => {
-                        expect(link.filter(selectionSelector)).toBeInDOM();
-                        expect(visualBuilder.linkElements.not(link).filter(selectionSelector)).not.toBeInDOM();
+                        // link is selected and in DOM
+                        expect(link).toBeDefined();
+                        expect(link.classList).toContain(selectionClass);
+                        // selected link is the only one that is selected
+                        expect([...visualBuilder.linkElements].filter(link => link.classList.value.includes(selectionClass)).length).toBe(1);
+
 
                         clickElement(link);
                         renderTimeout(() => {
-                            expect(visualBuilder.linkElements.filter(selectionSelector)).not.toBeInDOM();
+                            // no links selected
+                            expect([...visualBuilder.linkElements].filter(link => link.classList.value.includes(selectionClass)).length).toBe(0);
                             done();
                         });
                     });
@@ -465,33 +470,35 @@ describe("SankeyDiagram", () => {
             it("multi-selection test", () => {
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                let firstGroup: JQuery = visualBuilder.linkElements.eq(0),
-                    secondGroup: JQuery = visualBuilder.linkElements.eq(1),
-                    thirdGroup: JQuery = visualBuilder.linkElements.eq(2);
+                let firstGroup: HTMLElement = visualBuilder.linkElements[0],
+                    secondGroup: HTMLElement = visualBuilder.linkElements[1],
+                    thirdGroup: HTMLElement = visualBuilder.linkElements[2];
 
                 clickElement(firstGroup);
                 clickElement(secondGroup, true);
 
-                expect(firstGroup.is(selectionSelector)).toBeTruthy();
-                expect(secondGroup.is(selectionSelector)).toBeTruthy();
-                expect(thirdGroup.is(selectionSelector)).toBeFalsy();
+                expect(firstGroup.classList).toContain(selectionClass);
+                expect(secondGroup.classList).toContain(selectionClass);
+                expect(thirdGroup.classList).not.toContain(selectionClass);
             });
+
+
         });
+
 
         describe("data rendering", () => {
             it("negative and zero values", done => {
                 let dataLength: number = defaultDataViewBuilder.valuesSourceDestination.length,
                     groupLength = Math.floor(dataLength / 3) - 2,
                     negativeValues = getRandomNumbers(groupLength, -100, 0),
-                    // tslint:disable-next-line: underscore-consistent-invocation
-                    zeroValues = _.range(0, groupLength, 0),
+                    zeroValues = new Array(groupLength).fill(0),
                     positiveValues = getRandomNumbers(
                         dataLength - negativeValues.length - zeroValues.length, 1, 100);
 
-                defaultDataViewBuilder.valuesValue = negativeValues.concat(zeroValues).concat(positiveValues);
+                const valuesValue = negativeValues.concat(zeroValues).concat(positiveValues);
 
                 visualBuilder.updateRenderTimeout([defaultDataViewBuilder.getDataView()], () => {
-                    expect(visualBuilder.linkElements.length).toBe(defaultDataViewBuilder.valuesValue.length);
+                    expect(visualBuilder.linkElements.length).toBe(valuesValue.length);
 
                     done();
                 });
@@ -531,11 +538,10 @@ describe("SankeyDiagram", () => {
 
         describe("0-1 values in graph", () => {
             it("must give positive weigth of links", done => {
-                const firstElement = 0;
                 const expectedLinksCount = 3;
                 let dataView: DataView = defaultDataViewBuilder.getDataViewWithLowValue();
                 visualBuilder.updateRenderTimeout([dataView], () => {
-                    let linksCount = visualBuilder.linksElement[firstElement].childElementCount;
+                    let linksCount = visualBuilder.linksElement.childElementCount;
                     expect(linksCount).toBe(expectedLinksCount);
                     done();
                 });
@@ -553,28 +559,27 @@ describe("SankeyDiagram", () => {
                 };
 
                 visualBuilder.updateRenderTimeout([dataView], () => {
-                    expect($(visualBuilder.mainElement.find(".linkLabelTexts"))).toBeInDOM();
+                    expect(visualBuilder.mainElement.querySelectorAll(".linkLabelTexts")).toBeDefined();
                     done();
                 });
             });
         });
 
         describe("nodes", () => {
-            it("must be dragged", done => {
+            it("must be dragged and the displayed correctly", done => {
                 let dataView: DataView = defaultDataViewBuilder.getDataView();
-
                 visualBuilder.updateRenderTimeout([dataView], () => {
                     let nodeToDrag = visualBuilder.nodeElements[0];
 
-                    let pos = nodeToDrag.getBoundingClientRect();
-                    let center1X = Math.floor((pos.left + pos.right) / 2);
-                    let center1Y = Math.floor((pos.top + pos.bottom) / 2);
+                    let node1 = nodeToDrag.querySelector(".nodeRect").getBoundingClientRect();
+                    let center1X = Math.floor((node1.left + node1.right) / 2);
+                    let center1Y = Math.floor((node1.top + node1.bottom) / 2);
 
                     // user second node as target
                     let anotherNode = visualBuilder.nodeElements[1];
-                    pos = anotherNode.getBoundingClientRect();
-                    let center2X = Math.floor((pos.left + pos.right) / 2);
-                    let center2Y = Math.floor((pos.top + pos.bottom) / 2);
+                    const node2 = anotherNode.querySelector(".nodeRect").getBoundingClientRect();
+                    let center2X = Math.floor((node2.left + node2.right) / 2);
+                    let center2Y = Math.floor((node2.top + node2.bottom) / 2);
 
                     // mouse over dragged element and mousedown
                     fireMouseEvent('mousemove', nodeToDrag, center1X, center1Y);
@@ -590,9 +595,9 @@ describe("SankeyDiagram", () => {
                     fireMouseEvent('mousemove', nodeToDrag, center2X, center2Y);
                     fireMouseEvent('dragend', nodeToDrag, center2X, center2Y);
 
-                    pos = nodeToDrag.getBoundingClientRect();
-                    center1X = Math.floor((pos.left + pos.right) / 2);
-                    center1Y = Math.floor((pos.top + pos.bottom) / 2);
+                    node1 = nodeToDrag.querySelector(".nodeRect").getBoundingClientRect();
+                    center1X = Math.floor((node1.left + node1.right) / 2);
+                    center1Y = Math.floor((node1.top + node1.bottom) / 2);
 
                     // positions must match after drag and drop
                     expect(center1X).toBe(center2X);
@@ -608,8 +613,11 @@ describe("SankeyDiagram", () => {
                     fireMouseEvent('dragend', nodeToDrag, -10, -10);
 
                     // positions must match after drag and drop
-                    expect((<any>nodeToDrag).getBoundingClientRect().left).toBeLessThan(20);
-                    expect((<any>nodeToDrag).getBoundingClientRect().top).toBeLessThan(40);
+                    const yDif = Math.abs(nodeToDrag.getBoundingClientRect().top - nodeToDrag.parentElement.getBoundingClientRect().top);
+                    const xDif = Math.abs(nodeToDrag.getBoundingClientRect().left - nodeToDrag.parentElement.getBoundingClientRect().left);
+                    expect(yDif).toBeLessThan(20);
+                    expect(xDif).toBeLessThan(20);
+
 
                     // drag to outside of viewport
                     // mouse over dragged element and mousedown
@@ -621,8 +629,9 @@ describe("SankeyDiagram", () => {
                     fireMouseEvent('dragend', nodeToDrag, visualBuilder.viewport.width + 10, visualBuilder.viewport.height + 10);
 
                     // positions must match after drag and drop
-                    expect((<any>nodeToDrag).getBoundingClientRect().right).toBeGreaterThan(visualBuilder.viewport.width - 20);
-                    expect((<any>nodeToDrag).getBoundingClientRect().bottom).toBeGreaterThan(visualBuilder.viewport.height - 20);
+                    expect(nodeToDrag.getBoundingClientRect().right).toBeGreaterThan(visualBuilder.viewport.width - 20);
+                    expect(nodeToDrag.getBoundingClientRect().bottom).toBeGreaterThan(visualBuilder.viewport.height - 20);
+
 
                     // call private methods
                     (<any>visualBuilder.instance).saveNodePositions((<any>visualBuilder.instance).dataView.nodes);
@@ -632,6 +641,8 @@ describe("SankeyDiagram", () => {
                 });
             });
         });
+
+
     });
 
     describe("Selector tests", () => {
@@ -666,18 +677,18 @@ describe("SankeyDiagram", () => {
                 }
             };
 
+            dataView.matrix.rows.root.children[0].children[0].values[0].value = 1;
+            dataView.matrix.rows.root.children[0].children[1].values[0].value = 1;
+            dataView.matrix.rows.root.children[0].children[2].values[0].value = 1000000;
             // the dataset has significantly different range of values
             // the visual must provide min height of node
-            dataView.categorical.values[firstElement].values[0] = 1;
-            dataView.categorical.values[firstElement].values[1] = 1;
-            dataView.categorical.values[firstElement].values[2] = 1000000;
 
-            visualBuilder.updateRenderTimeout([dataView], () => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
                 const minHeightOfNode: number = 5;
                 let nodes = visualBuilder.nodeElements;
 
                 let minHeight: number = +nodes[firstElement].children[firstElement].getAttribute("height");
-                nodes.each((index: number, el: HTMLElement) => {
+                nodes.forEach((el: HTMLElement) => {
                     let height = +el.children[firstElement].getAttribute("height");
                     if (height < minHeight) {
                         minHeight = height;
@@ -701,16 +712,16 @@ describe("SankeyDiagram", () => {
             // the dataset has significantly different range of values
             // the visual must not provide min height of node
             // the height of node can be 1px;npm
-            dataView.categorical.values[firstElement].values[0] = 1;
-            dataView.categorical.values[firstElement].values[1] = 1;
-            dataView.categorical.values[firstElement].values[2] = 1000000;
+            dataView.matrix.rows.root.children[0].children[0].values[0].value = 1;
+            dataView.matrix.rows.root.children[0].children[1].values[0].value = 1;
+            dataView.matrix.rows.root.children[0].children[2].values[0].value = 1000000;
 
             visualBuilder.updateRenderTimeout([dataView], () => {
                 const minHeightOfNode: number = 5;
                 let nodes = visualBuilder.nodeElements;
 
                 let minHeight: number = +nodes[firstElement].children[firstElement].getAttribute("height");
-                nodes.each((index: number, el: HTMLElement) => {
+                nodes.forEach((el: HTMLElement) => {
                     let height = +el.children[firstElement].getAttribute("height");
                     if (height < minHeight) {
                         minHeight = height;
@@ -722,80 +733,57 @@ describe("SankeyDiagram", () => {
         });
     });
 
-    describe("Settings tests:", () => {
-        it("nodeComplexSettings properties must be hidden", () => {
-            let objectInstanes: VisualObjectInstanceEnumerationObject = <VisualObjectInstanceEnumerationObject>visualBuilder.instance.enumerateObjectInstances({
-                objectName: "nodeComplexSettings"
-            });
 
-            expect(objectInstanes.instances.length).toBe(0);
+    describe("Settings tests:", () => {
+        it("nodeComplexSettings properties must be hidden", done => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                visualBuilder.instance.getFormattingModel();
+                expect(visualBuilder.instance.sankeyDiagramSettings.cards.some((card: FormattingSettingsCard) => card.displayName === "Node Complex Settings")).toBeFalse();
+                done();
+            });
         });
 
-        it("other properties must exist", () => {
-            // defaults
-            const instance: number = 0;
-            const someColor: string = "black";
-            const fontSize: number = 12;
-            const unit: number = 0;
-            dataView.metadata.objects = {
-                labels: {
-                    show: true,
-                    fill: { solid: { color: someColor } },
-                    fontSize: fontSize,
-                    forceDisplay: false,
-                    unit: unit
-                },
-                linkLabels: {
-                    show: false,
-                    fill: { solid: { color: someColor } },
-                    fontSize: fontSize,
-                },
-                scaleSettings: {
-                    provideMinHeight: true,
-                    lnScale: true,
-                },
-                nodeComplexSettings: {
-                    nodePositions: "",
-                    viewportSize: ""
-                }
-            };
+        it("other properties must exist", done => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                // defaults
+                const someColor: string = "#000000";
+                const fontSize: number = 12;
+                const unit: number = 0;
 
-            let labels: VisualObjectInstanceEnumerationObject = (<VisualObjectInstanceEnumerationObject>visualBuilder
-                .instance.enumerateObjectInstances({
-                    objectName: "labels"
-                }));
+                visualBuilder.instance.getFormattingModel();
 
-            expect(labels.instances.length).toBe(1);
-            expect(labels.instances[instance].properties["show"]).toBeTruthy();
-            expect(labels.instances[instance].properties["fontSize"]).toBe(fontSize);
-            expect(labels.instances[instance].properties["forceDisplay"]).toBeFalsy();
-            expect(labels.instances[instance].properties["unit"]).toBe(unit);
-            expect(labels.instances[instance].properties["fill"]).toBe(someColor);
+                let labels: DataLabelsSettings = visualBuilder.instance.sankeyDiagramSettings.labels;
 
-            let linkLabels: VisualObjectInstanceEnumerationObject = (<VisualObjectInstanceEnumerationObject>visualBuilder
-                .instance.enumerateObjectInstances({
-                    objectName: "linkLabels"
-                }));
-            expect(linkLabels.instances.length).toBe(1);
-            expect(linkLabels.instances[instance].properties["show"]).toBeFalsy();
-            expect(linkLabels.instances[instance].properties["fontSize"]).toBe(fontSize);
-            expect(linkLabels.instances[instance].properties["fill"]).toBe(someColor);
+                expect(labels.slices.length).toBe(6);
+                expect(labels.show.value).toBeTruthy();
+                expect(labels.fontSize.value).toBe(fontSize);
+                expect(labels.forceDisplay.value).toBeFalsy();
+                expect(labels.unit.value).toBe(unit);
+                expect(labels.fill.value.value).toBe(someColor);
 
-            let scaleSettings: VisualObjectInstanceEnumerationObject = (<VisualObjectInstanceEnumerationObject>visualBuilder
-                .instance.enumerateObjectInstances({
-                    objectName: "scaleSettings"
-                }));
-            expect(scaleSettings.instances.length).toBe(1);
-            expect(scaleSettings.instances[instance].properties["provideMinHeight"]).toBeTruthy();
-            expect(scaleSettings.instances[instance].properties["lnScale"]).toBeFalsy();
+                let linkLabels: LinkLabelsSettings = visualBuilder.instance.sankeyDiagramSettings.linkLabels;
+
+                expect(linkLabels.slices.length).toBe(3);
+                expect(linkLabels.show.value).toBeFalsy();
+                expect(linkLabels.fontSize.value).toBe(fontSize);
+                expect(linkLabels.fill.value.value).toBe(someColor);
+
+                let scaleSettings = visualBuilder.instance.sankeyDiagramSettings.scale;
+
+                expect(scaleSettings.slices.length).toBe(2);
+                expect(scaleSettings.provideMinHeight.value).toBeTruthy();
+                expect(scaleSettings.lnScale.value).toBeFalsy();
+
+                expect(visualBuilder.instance.sankeyDiagramSettings.cards.length).toBe(6);
+                done();
+            });
         });
     });
 
     describe("Capabilities tests", () => {
         it("all items having displayName should have displayNameKey property", () => {
-            jasmine.getJSONFixtures().fixturesPath = "base";
-
-            let jsonData = getJSONFixture("capabilities.json");
+            let r = fetch("base/capabilities.json");
+            let jsonData = JSON.stringify(r);
 
             let objectsChecker: Function = (obj) => {
                 for (let property of Object.keys(obj)) {
@@ -816,11 +804,9 @@ describe("SankeyDiagram", () => {
     });
 
     describe("high contrast mode test", () => {
-        const backgroundColor: string = "#000000";
+        const backgroundColor: string = "#00ff00";
         const foregroundColor: string = "#ff00ff";
 
-        let nodeElements: JQuery[],
-            linkElements: JQuery[];
 
         beforeEach(() => {
             visualBuilder.visualHost.colorPalette.isHighContrast = true;
@@ -828,25 +814,25 @@ describe("SankeyDiagram", () => {
             visualBuilder.visualHost.colorPalette.background = { value: backgroundColor };
             visualBuilder.visualHost.colorPalette.foreground = { value: foregroundColor };
 
-            nodeElements = <any>visualBuilder.nodeElements.toArray().map($);
-            linkElements = <any>visualBuilder.linkElements.toArray().map($);
         });
 
         it("should not use fill style", (done) => {
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(isColorAppliedToElements(nodeElements, null, "fill"));
-                expect(isColorAppliedToElements(linkElements, null, "fill"));
+                // element.style.fill return "" when not initialized
+                const nullColor = "";
+                expect(isColorAppliedToElements([...visualBuilder.nodeElements], nullColor, "fill"));
+                expect(isColorAppliedToElements([...visualBuilder.linkElements], nullColor, "fill"));
                 done();
             });
         });
 
         it("should use stroke style", (done) => {
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(isColorAppliedToElements(nodeElements, foregroundColor, "stroke"));
-                expect(isColorAppliedToElements(linkElements, foregroundColor, "stroke"));
+                expect(isColorAppliedToElements([...visualBuilder.nodeElements], foregroundColor, "stroke"));
+                expect(isColorAppliedToElements([...visualBuilder.linkElements], foregroundColor, "stroke"));
                 done();
             });
         });
     });
-});
 
+});

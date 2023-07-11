@@ -85,9 +85,10 @@ export interface SankeyDiagramLink extends
     TooltipEnabledDataPoint,
     SelectableDataPoint {
 
+    label: string;
     source: SankeyDiagramNode;
     destination: SankeyDiagramNode;
-    weigth: number;
+    weight: number;
     height?: number;
     dySource?: number;
     dyDestination?: number;
@@ -132,7 +133,7 @@ export interface SankeyDiagramRoleNames {
 export interface SankeyDiagramDataPoint {
     source: any;
     destination: any;
-    weigth: number;
+    weight: number;
 }
 
 export interface SankeyDiagramNodePositionSetting {
