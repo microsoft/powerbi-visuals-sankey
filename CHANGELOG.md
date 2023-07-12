@@ -1,3 +1,6 @@
+## 3.1.2
+* Add typescript to dependencies
+
 ## 3.1.1
 * Update outdated packages
 
