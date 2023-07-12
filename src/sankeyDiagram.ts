@@ -31,7 +31,7 @@ import lodashCloneDeep from "lodash.clonedeep";
 
 // d3
 import { select as d3Select, Selection as d3Selection } from "d3-selection";
-import { drag as d3Drag, D3DragEvent} from "d3-drag";
+import { drag as d3Drag, D3DragEvent } from "d3-drag";
 import { max as d3Max, min as d3Min } from "d3-array";
 import { scaleLog as d3ScaleLog, scaleLinear as d3ScaleLinear, ScaleContinuousNumeric } from "d3-scale";
 import { rgb as d3Rgb } from "d3-color";
@@ -94,14 +94,14 @@ import {
 // powerbi.extensibility.utils.color
 import { ColorHelper } from "powerbi-visuals-utils-colorutils";
 
-import { 
+import {
     SankeyDiagramSettings,
     DataLabelsSettings,
     CyclesDrawType,
     ViewportSize,
     SankeyDiagramScaleSettings,
     FontSizeDefaultOptions
- } from "./settings";
+} from "./settings";
 import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
 
 import {
@@ -300,10 +300,14 @@ export class SankeyDiagram implements IVisual {
         this.main = this.root.append("g");
 
         this.links = this.main
+            .attr("role", "listbox")
+            .attr("aria-multiselectable", "true")
+            .attr("tabindex", 0)
             .append("g")
             .classed(SankeyDiagram.LinksSelector.className, true);
 
         this.nodes = this.main
+
             .append("g")
             .classed(SankeyDiagram.NodesSelector.className, true);
     }
@@ -314,8 +318,8 @@ export class SankeyDiagram implements IVisual {
         this.updateViewport(visualUpdateOptions.viewport);
 
         const dataView: DataView = visualUpdateOptions
-                && visualUpdateOptions.dataViews
-                && visualUpdateOptions.dataViews[0];
+            && visualUpdateOptions.dataViews
+            && visualUpdateOptions.dataViews[0];
 
         this.sankeyDiagramSettings = this.parseSettings(dataView, visualUpdateOptions.dataViews);
 
@@ -408,7 +412,7 @@ export class SankeyDiagram implements IVisual {
     }
 
     /*eslint max-lines-per-function: ["error", 200]*/
-    public converter(dataView: DataView) : SankeyDiagramDataView {
+    public converter(dataView: DataView): SankeyDiagramDataView {
         const settings = this.sankeyDiagramSettings;
 
         if (!dataView
@@ -1574,7 +1578,8 @@ export class SankeyDiagram implements IVisual {
             if (node.y + node.height > self.viewport.height) {
                 node.y = self.viewport.height - node.height;
             }
-            node.settings = { x: node.x.toFixed(2), y: node.y.toFixed(2),name: node.label.name
+            node.settings = {
+                x: node.x.toFixed(2), y: node.y.toFixed(2), name: node.label.name
             };
             // Update each link related with this node
             node.links.forEach((link: SankeyDiagramLink) => {
@@ -1757,6 +1762,9 @@ export class SankeyDiagram implements IVisual {
                     return SankeyDiagram.createLink(link);
                 }
             )
+            .attr("role", "option")
+            .attr("tabindex", 0)
+
             .style("stroke", (link: SankeyDiagramLink) => link.strokeColor)
             .style("fill", (link: SankeyDiagramLink) => link.fillColor);
 
@@ -1855,7 +1863,7 @@ export class SankeyDiagram implements IVisual {
             .exit()
             .remove();
 
-            const textPathSelectionEnter = textPathSelectionData
+        const textPathSelectionEnter = textPathSelectionData
             .enter()
             .append("textPath");
 
