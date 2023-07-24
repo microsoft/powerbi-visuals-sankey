@@ -30,6 +30,7 @@
             "displayNameKey": "Visual_SourceLabels"
         }
     ],
+    
     "dataViewMappings": [
         {
             "conditions": [

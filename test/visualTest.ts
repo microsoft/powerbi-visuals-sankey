@@ -803,6 +803,118 @@ describe("SankeyDiagram", () => {
         });
     });
 
+    function timeout(ms: number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    const DefaultWaitForRender: number = 500;
+
+    describe("Keyboard Navigation check", () =>{
+        it("links should have attributes tabindex=0, role=option and aria-selected=false", (done) => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                // defaults
+                const someColor: string = "#000000";
+                const fontSize: number = 12;
+                const unit: number = 0;
+
+                visualBuilder.instance.getFormattingModel();
+
+                let nodes = visualBuilder.linkElements;
+                nodes.forEach((el: Element) => {
+                    expect(el.getAttribute("role")).toBe("option");
+                    expect(el.getAttribute("tabindex")).toBe("0");
+                    expect(el.getAttribute("aria-selected")).toBe("false");
+                });
+                done();
+            },);
+        });
+
+        it("enter toggles the correct slice", (done: DoneFn) => {
+            const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
+            visualBuilder.updateRenderTimeout(
+                dataView,
+                    async () => {
+                        visualBuilder.linkElements[0].dispatchEvent(enterEvent);
+                        await timeout(DefaultWaitForRender);
+                        expect(visualBuilder.linkElements[0].getAttribute("aria-selected")).toBe("true");
+                        for (const slice of visualBuilder.linkElements) {
+                            if (slice !== visualBuilder.linkElements[0]) {
+                                expect(slice.getAttribute("aria-selected")).toBe("false");
+                            }
+                        }
+
+                        visualBuilder.linkElements[0].dispatchEvent(enterEvent);
+                        await timeout(DefaultWaitForRender);
+                        for (const slice of visualBuilder.linkElements) {
+                            expect(slice.getAttribute("aria-selected")).toBe("false");
+                        }
+
+                        done();
+                    },
+                2,
+                );
+        });
+    });
+    
+    it("space toggles the correct slice", (done: DoneFn) => {
+        const spaceEvent = new KeyboardEvent("keydown", { code: "Space", bubbles: true });
+        visualBuilder.updateRenderTimeout(
+            dataView,
+                async () => {
+                    visualBuilder.linkElements[0].dispatchEvent(spaceEvent);
+                    await timeout(DefaultWaitForRender);
+                    expect(visualBuilder.linkElements[0].getAttribute("aria-selected")).toBe("true");
+                    for (const slice of visualBuilder.linkElements) {
+                        if (slice !== visualBuilder.linkElements[0]) {
+                            expect(slice.getAttribute("aria-selected")).toBe("false");
+                        }
+                    }
+
+                    visualBuilder.linkElements[0].dispatchEvent(spaceEvent);
+                    await timeout(DefaultWaitForRender);
+                    for (const slice of visualBuilder.linkElements) {
+                        expect(slice.getAttribute("aria-selected")).toBe("false");
+                    }
+
+                    done();
+                },
+            2,
+            );
+    });
+
+    it("tab between slices works", (done: DoneFn) => {
+        const tabEvent = new KeyboardEvent("keydown", { code: "Tab", bubbles: true });
+        const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
+        visualBuilder.updateRenderTimeout(
+            dataView,
+            async () => {
+                visualBuilder.linkElements[0].dispatchEvent(enterEvent);
+                await timeout(DefaultWaitForRender);
+                expect(visualBuilder.linkElements[0].getAttribute("aria-selected")).toBe("true");
+                for (const slice of visualBuilder.linkElements) {
+                    if (slice !== visualBuilder.linkElements[0]) {
+                        expect(slice.getAttribute("aria-selected")).toBe("false");
+                    }
+                }
+
+                visualBuilder.element.dispatchEvent(tabEvent);
+                await timeout(DefaultWaitForRender);
+
+                visualBuilder.linkElements[1].dispatchEvent(enterEvent);
+                await timeout(DefaultWaitForRender);
+                expect(visualBuilder.linkElements[1].getAttribute("aria-selected")).toBe("true");
+                for (const slice of visualBuilder.linkElements) {
+                    if (slice !== visualBuilder.linkElements[1]) {
+                        expect(slice.getAttribute("aria-selected")).toBe("false");
+                    }
+                }
+
+                done();
+            },
+            2,
+            );
+    });
+
     describe("high contrast mode test", () => {
         const backgroundColor: string = "#00ff00";
         const foregroundColor: string = "#ff00ff";

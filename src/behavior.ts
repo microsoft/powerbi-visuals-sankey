@@ -209,6 +209,7 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
     }
 
     public renderSelection(hasSelection: boolean): void {
+        this.behaviorOptions.links.attr("aria-selected", sankeyDiagramUtils.isDataPointSelected)
         sankeyDiagramUtils.updateFillOpacity(
             this.behaviorOptions.links,
             this.behaviorOptions.interactivityService,
