@@ -1764,7 +1764,8 @@ export class SankeyDiagram implements IVisual {
             )
             .attr("role", "option")
             .attr("tabindex", 0)
-            .attr("aria-selected", sankeyDiagramUtils.isDataPointSelected)
+            .attr("aria-selected", "false")
+            .attr('aria-label', (link: SankeyDiagramLink) => {return SankeyDiagram.createLink(link)})
 
             .style("stroke", (link: SankeyDiagramLink) => link.strokeColor)
             .style("fill", (link: SankeyDiagramLink) => link.fillColor);

@@ -810,7 +810,7 @@ describe("SankeyDiagram", () => {
     const DefaultWaitForRender: number = 500;
 
     describe("Keyboard Navigation check", () =>{
-        it("links should have attributes tabindex=0, role=option and aria-selected=false", (done) => {
+        it("links should have attributes tabindex=0, role=option, aria-label=(its label) and aria-selected=false", (done) => {
             visualBuilder.updateRenderTimeout(dataView, () => {
                 // defaults
                 const someColor: string = "#000000";
@@ -824,6 +824,7 @@ describe("SankeyDiagram", () => {
                     expect(el.getAttribute("role")).toBe("option");
                     expect(el.getAttribute("tabindex")).toBe("0");
                     expect(el.getAttribute("aria-selected")).toBe("false");
+                    expect(el.getAttribute("aria-label")).toBe(el.id);
                 });
                 done();
             },);
