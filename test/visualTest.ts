@@ -661,8 +661,8 @@ describe("SankeyDiagram", () => {
             link.destination = destination;
             link.direction = 0;
 
-            expect(VisualClass.createLink(link)).toBe("_Source-0-_Destination");
-            expect(VisualClass.createLink(link, true)).toBe("linkLabelPaths_Source-0-_Destination");
+            expect(VisualClass.createLinkId(link)).toBe("_Source-0-_Destination");
+            expect(VisualClass.createLinkId(link, true)).toBe("linkLabelPaths_Source-0-_Destination");
         });
     });
 
