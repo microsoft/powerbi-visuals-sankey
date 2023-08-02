@@ -24,9 +24,7 @@
 *  THE SOFTWARE.
 */
 
-import * as d3 from "d3";
-
-const getEvent = (): MouseEvent => <MouseEvent>require("d3-selection").event;
+import { Selection as d3Selection } from "d3-selection";
 
 import {
     SankeyDiagramLink,
@@ -36,7 +34,7 @@ import {
 import * as sankeyDiagramUtils from "./utils";
 
 // d3
-type Selection<T> = d3.Selection<any, T, any, any>;
+type Selection<T> = d3Selection<any, T, any, any>;
 
 // powerbi.extensibility.utils.interactivity
 import { interactivitySelectionService, interactivityBaseService } from "powerbi-visuals-utils-interactivityutils";
@@ -60,7 +58,6 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
 
     private selectedDataPoints: SelectableDataPoint[];
 
-    // tslint:disable-next-line: function-name
     public static create(): IInteractiveBehavior {
         return new SankeyDiagramBehavior();
     }
@@ -82,7 +79,7 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
     }
 
     private bindClickEventToNodes(): void {
-        this.behaviorOptions.nodes.on("click", (node: SankeyDiagramNode) => {
+        this.behaviorOptions.nodes.on("click", (event: PointerEvent, node: SankeyDiagramNode) => {
             let selectableDataPoints: SelectableDataPoint[] = node.selectableDataPoints;
             if (node.cloneLink) {
                 selectableDataPoints = selectableDataPoints.concat(node.cloneLink.selectableDataPoints);
@@ -101,11 +98,10 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
             }
         });
 
-        this.behaviorOptions.nodes.on("contextmenu", (datum: SankeyDiagramNode) => {
-            const event: MouseEvent = (<MouseEvent>getEvent()) || <MouseEvent>window.event;
+        this.behaviorOptions.nodes.on("contextmenu", (event: PointerEvent, datum: SankeyDiagramNode) => {
             if (event) {
                 this.selectionHandler.handleContextMenu(
-                    <any>datum,
+                    datum,
                     {
                         x: event.clientX,
                         y: event.clientY
@@ -116,13 +112,12 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
     }
 
     private bindClickEventToLinks(): void {
-        this.behaviorOptions.links.on("click", (link: SankeyDiagramLink) => {
-            this.selectionHandler.handleSelection(link, getEvent().ctrlKey);
+        this.behaviorOptions.links.on("click", (event: PointerEvent, link: SankeyDiagramLink) => {
+            this.selectionHandler.handleSelection(link, event.ctrlKey || event.metaKey);
             this.createAnEmptySelectedDataPoints();
         });
 
-        this.behaviorOptions.links.on("contextmenu", (datum: SankeyDiagramLink) => {
-            const event: MouseEvent = (<MouseEvent>getEvent()) || <MouseEvent>window.event;
+        this.behaviorOptions.links.on("contextmenu", (event: PointerEvent, datum: SankeyDiagramLink) => {
             if (event) {
                 this.selectionHandler.handleContextMenu(
                     datum,
@@ -136,8 +131,7 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
     }
 
     private bindClickEventToClearCatcher(): void {
-        this.behaviorOptions.clearCatcher.on("contextmenu", () => {
-            const event: MouseEvent = (<MouseEvent>getEvent()) || <MouseEvent>window.event;
+        this.behaviorOptions.clearCatcher.on("contextmenu", (event: PointerEvent) => {
             if (event) {
                 this.selectionHandler.handleContextMenu(
                     null,

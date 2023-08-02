@@ -25,7 +25,8 @@
 */
 
 // d3
-type Selection<T> = d3.Selection<any, T, any, any>;
+import { Selection as d3Selection } from "d3-selection";
+type Selection<T> = d3Selection<any, T, any, any>;
 
 // powerbi.visuals
 import powerbi from "powerbi-visuals-api";
@@ -57,7 +58,7 @@ export function getFillOpacity(
 }
 
 export function isTheDataPointNode(dataPoint: SankeyDiagramLink | SankeyDiagramNode): boolean {
-    let node: SankeyDiagramNode = <SankeyDiagramNode>dataPoint;
+    const node: SankeyDiagramNode = <SankeyDiagramNode>dataPoint;
 
     return node.selectableDataPoints && node.selectableDataPoints.length
         ? true
@@ -65,9 +66,10 @@ export function isTheDataPointNode(dataPoint: SankeyDiagramLink | SankeyDiagramN
 }
 
 export function isDataPointSelected(dataPoint: SankeyDiagramLink | SankeyDiagramNode): boolean {
-    let node: SankeyDiagramNode = <SankeyDiagramNode>dataPoint,
-        link: SankeyDiagramLink = <SankeyDiagramLink>dataPoint,
-        selected: boolean = false;
+    const node: SankeyDiagramNode = <SankeyDiagramNode>dataPoint,
+        link: SankeyDiagramLink = <SankeyDiagramLink>dataPoint;
+
+    let selected: boolean;
 
     if (isTheDataPointNode(dataPoint)) {
         node.selectableDataPoints.forEach((selectableDataPoint: SelectableDataPoint) => {
@@ -92,11 +94,10 @@ export function updateFillOpacity(
     }
 
     selection.classed(SelectedClassName, (dataPoint: SankeyDiagramLink | SankeyDiagramNode): boolean => {
-        let dataPointSelected: boolean = isDataPointSelected(dataPoint),
-            theDataPointNode: boolean = isTheDataPointNode(dataPoint),
-            selected: boolean;
+        const dataPointSelected: boolean = isDataPointSelected(dataPoint),
+            theDataPointNode: boolean = isTheDataPointNode(dataPoint);
 
-        selected = !theDataPointNode && hasSelection
+        const selected: boolean = !theDataPointNode && hasSelection
             ? !dataPointSelected
             : dataPointSelected;
 
