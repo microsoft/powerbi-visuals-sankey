@@ -106,26 +106,6 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
     }
 
     private bindKeyboardEventToNodes(): void {
-        this.behaviorOptions.nodes.on("keydown", (event: KeyboardEvent, node: SankeyDiagramNode) => {
-            let selectableDataPoints: SelectableDataPoint[] = node.selectableDataPoints;
-            if (node.cloneLink) {
-                selectableDataPoints = selectableDataPoints.concat(node.cloneLink.selectableDataPoints);
-            }
-
-            this.clearSelection();
-
-            if (!sankeyDiagramUtils.areDataPointsSelected(this.selectedDataPoints, selectableDataPoints)) {
-                selectableDataPoints.forEach((subDataPoint: SelectableDataPoint) => {
-                    this.selectionHandler.handleSelection(subDataPoint, true);
-                });
-
-                this.selectedDataPoints = selectableDataPoints;
-            } else {
-                this.createAnEmptySelectedDataPoints();
-            }
-        });
-
-
         this.behaviorOptions.nodes.on("contextmenu", (event: PointerEvent, datum: SankeyDiagramNode) => {
             if (event) {
                 this.selectionHandler.handleContextMenu(

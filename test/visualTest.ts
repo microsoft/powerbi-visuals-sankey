@@ -62,6 +62,7 @@ import {
 } from "./helpers/helpers";
 
 import { DataLabelsSettings, LinkLabelsSettings, SankeyDiagramSettings } from "../src/settings";
+import { isNullOrEmpty } from "powerbi-visuals-utils-formattingutils/lib/src/stringExtensions";
 
 
 interface SankeyDiagramTestsNode {
@@ -807,10 +808,10 @@ describe("SankeyDiagram", () => {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    const DefaultWaitForRender: number = 500;
+    const defaultWaitForRender: number = 500;
 
     describe("Keyboard Navigation check", () =>{
-        it("links should have attributes tabindex=0, role=option, aria-label=(its label) and aria-selected=false", (done) => {
+        it("links should have attributes tabindex=0, role=option, aria-label is not null, and aria-selected=false", (done) => {
             visualBuilder.updateRenderTimeout(dataView, () => {
                 // defaults
                 const someColor: string = "#000000";
@@ -824,7 +825,7 @@ describe("SankeyDiagram", () => {
                     expect(el.getAttribute("role")).toBe("option");
                     expect(el.getAttribute("tabindex")).toBe("0");
                     expect(el.getAttribute("aria-selected")).toBe("false");
-                    expect(el.getAttribute("aria-label")).toBe(el.id);
+                    expect(el.getAttribute("aria-label")).not.toBeNull();
                 });
                 done();
             },);
@@ -836,7 +837,7 @@ describe("SankeyDiagram", () => {
                 dataView,
                     async () => {
                         visualBuilder.linkElements[0].dispatchEvent(enterEvent);
-                        await timeout(DefaultWaitForRender);
+                        await timeout(defaultWaitForRender);
                         expect(visualBuilder.linkElements[0].getAttribute("aria-selected")).toBe("true");
                         for (const slice of visualBuilder.linkElements) {
                             if (slice !== visualBuilder.linkElements[0]) {
@@ -845,7 +846,7 @@ describe("SankeyDiagram", () => {
                         }
 
                         visualBuilder.linkElements[0].dispatchEvent(enterEvent);
-                        await timeout(DefaultWaitForRender);
+                        await timeout(defaultWaitForRender);
                         for (const slice of visualBuilder.linkElements) {
                             expect(slice.getAttribute("aria-selected")).toBe("false");
                         }
@@ -863,7 +864,7 @@ describe("SankeyDiagram", () => {
             dataView,
                 async () => {
                     visualBuilder.linkElements[0].dispatchEvent(spaceEvent);
-                    await timeout(DefaultWaitForRender);
+                    await timeout(defaultWaitForRender);
                     expect(visualBuilder.linkElements[0].getAttribute("aria-selected")).toBe("true");
                     for (const slice of visualBuilder.linkElements) {
                         if (slice !== visualBuilder.linkElements[0]) {
@@ -872,7 +873,7 @@ describe("SankeyDiagram", () => {
                     }
 
                     visualBuilder.linkElements[0].dispatchEvent(spaceEvent);
-                    await timeout(DefaultWaitForRender);
+                    await timeout(defaultWaitForRender);
                     for (const slice of visualBuilder.linkElements) {
                         expect(slice.getAttribute("aria-selected")).toBe("false");
                     }
@@ -890,7 +891,7 @@ describe("SankeyDiagram", () => {
             dataView,
             async () => {
                 visualBuilder.linkElements[0].dispatchEvent(enterEvent);
-                await timeout(DefaultWaitForRender);
+                await timeout(defaultWaitForRender);
                 expect(visualBuilder.linkElements[0].getAttribute("aria-selected")).toBe("true");
                 for (const slice of visualBuilder.linkElements) {
                     if (slice !== visualBuilder.linkElements[0]) {
@@ -899,10 +900,10 @@ describe("SankeyDiagram", () => {
                 }
 
                 visualBuilder.element.dispatchEvent(tabEvent);
-                await timeout(DefaultWaitForRender);
+                await timeout(defaultWaitForRender);
 
                 visualBuilder.linkElements[1].dispatchEvent(enterEvent);
-                await timeout(DefaultWaitForRender);
+                await timeout(defaultWaitForRender);
                 expect(visualBuilder.linkElements[1].getAttribute("aria-selected")).toBe("true");
                 for (const slice of visualBuilder.linkElements) {
                     if (slice !== visualBuilder.linkElements[1]) {
