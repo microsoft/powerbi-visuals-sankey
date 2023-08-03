@@ -1579,8 +1579,7 @@ export class SankeyDiagram implements IVisual {
             // Update each link related with this node
             self.main.select(SankeyDiagram.LinksSelector.selectorName)
                 .selectAll(SankeyDiagram.LinkSelector.selectorName)
-                .filter((...args) => {
-                    const currentLink = <SankeyDiagramLink>args[0];
+                .filter((currentLink: SankeyDiagramLink) => {
                     return currentLink.source === node || currentLink.destination === node;
                 }).attr(
                     // get updated path params based on actual positions of node
@@ -1602,8 +1601,7 @@ export class SankeyDiagram implements IVisual {
             // Update each link label related with this node
             self.root.select("defs")
                 .selectAll(SankeyDiagram.LinkLabelPathsSelector.selectorName)
-                .filter(function (...args) {
-                    const currentLink = <SankeyDiagramLink>args[0];
+                .filter(function (currentLink: SankeyDiagramLink) {
                     return currentLink.source === node || currentLink.destination === node;
                 })
                 .attr(
