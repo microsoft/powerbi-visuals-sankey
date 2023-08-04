@@ -1,3 +1,6 @@
+## 3.2.0
+* Add keyboard support
+
 ## 3.1.1
 * Update outdated packages
 
