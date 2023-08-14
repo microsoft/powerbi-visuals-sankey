@@ -62,6 +62,7 @@ import {
 } from "./helpers/helpers";
 
 import { DataLabelsSettings, LinkLabelsSettings, SankeyDiagramSettings } from "../src/settings";
+import { isNullOrEmpty } from "powerbi-visuals-utils-formattingutils/lib/src/stringExtensions";
 
 
 interface SankeyDiagramTestsNode {
@@ -661,8 +662,8 @@ describe("SankeyDiagram", () => {
             link.destination = destination;
             link.direction = 0;
 
-            expect(VisualClass.createLink(link)).toBe("_Source-0-_Destination");
-            expect(VisualClass.createLink(link, true)).toBe("linkLabelPaths_Source-0-_Destination");
+            expect(VisualClass.createLinkId(link)).toBe("_Source-0-_Destination");
+            expect(VisualClass.createLinkId(link, true)).toBe("linkLabelPaths_Source-0-_Destination");
         });
     });
 
@@ -801,6 +802,119 @@ describe("SankeyDiagram", () => {
 
             objectsChecker(jsonData);
         });
+    });
+
+    function timeout(ms: number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    const defaultWaitForRender: number = 500;
+
+    describe("Keyboard Navigation check", () =>{
+        it("links should have attributes tabindex=0, role=option, aria-label is not null, and aria-selected=false", (done) => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                // defaults
+                const someColor: string = "#000000";
+                const fontSize: number = 12;
+                const unit: number = 0;
+
+                visualBuilder.instance.getFormattingModel();
+
+                let nodes = visualBuilder.linkElements;
+                nodes.forEach((el: Element) => {
+                    expect(el.getAttribute("role")).toBe("option");
+                    expect(el.getAttribute("tabindex")).toBe("0");
+                    expect(el.getAttribute("aria-selected")).toBe("false");
+                    expect(el.getAttribute("aria-label")).not.toBeNull();
+                });
+                done();
+            },);
+        });
+
+        it("enter toggles the correct slice", (done: DoneFn) => {
+            const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
+            visualBuilder.updateRenderTimeout(
+                dataView,
+                    async () => {
+                        visualBuilder.linkElements[0].dispatchEvent(enterEvent);
+                        await timeout(defaultWaitForRender);
+                        expect(visualBuilder.linkElements[0].getAttribute("aria-selected")).toBe("true");
+                        for (const slice of visualBuilder.linkElements) {
+                            if (slice !== visualBuilder.linkElements[0]) {
+                                expect(slice.getAttribute("aria-selected")).toBe("false");
+                            }
+                        }
+
+                        visualBuilder.linkElements[0].dispatchEvent(enterEvent);
+                        await timeout(defaultWaitForRender);
+                        for (const slice of visualBuilder.linkElements) {
+                            expect(slice.getAttribute("aria-selected")).toBe("false");
+                        }
+
+                        done();
+                    },
+                2,
+                );
+        });
+    });
+    
+    it("space toggles the correct slice", (done: DoneFn) => {
+        const spaceEvent = new KeyboardEvent("keydown", { code: "Space", bubbles: true });
+        visualBuilder.updateRenderTimeout(
+            dataView,
+                async () => {
+                    visualBuilder.linkElements[0].dispatchEvent(spaceEvent);
+                    await timeout(defaultWaitForRender);
+                    expect(visualBuilder.linkElements[0].getAttribute("aria-selected")).toBe("true");
+                    for (const slice of visualBuilder.linkElements) {
+                        if (slice !== visualBuilder.linkElements[0]) {
+                            expect(slice.getAttribute("aria-selected")).toBe("false");
+                        }
+                    }
+
+                    visualBuilder.linkElements[0].dispatchEvent(spaceEvent);
+                    await timeout(defaultWaitForRender);
+                    for (const slice of visualBuilder.linkElements) {
+                        expect(slice.getAttribute("aria-selected")).toBe("false");
+                    }
+
+                    done();
+                },
+            2,
+            );
+    });
+
+    it("tab between slices works", (done: DoneFn) => {
+        const tabEvent = new KeyboardEvent("keydown", { code: "Tab", bubbles: true });
+        const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
+        visualBuilder.updateRenderTimeout(
+            dataView,
+            async () => {
+                visualBuilder.linkElements[0].dispatchEvent(enterEvent);
+                await timeout(defaultWaitForRender);
+                expect(visualBuilder.linkElements[0].getAttribute("aria-selected")).toBe("true");
+                for (const slice of visualBuilder.linkElements) {
+                    if (slice !== visualBuilder.linkElements[0]) {
+                        expect(slice.getAttribute("aria-selected")).toBe("false");
+                    }
+                }
+
+                visualBuilder.element.dispatchEvent(tabEvent);
+                await timeout(defaultWaitForRender);
+
+                visualBuilder.linkElements[1].dispatchEvent(enterEvent);
+                await timeout(defaultWaitForRender);
+                expect(visualBuilder.linkElements[1].getAttribute("aria-selected")).toBe("true");
+                for (const slice of visualBuilder.linkElements) {
+                    if (slice !== visualBuilder.linkElements[1]) {
+                        expect(slice.getAttribute("aria-selected")).toBe("false");
+                    }
+                }
+
+                done();
+            },
+            2,
+            );
     });
 
     describe("high contrast mode test", () => {
