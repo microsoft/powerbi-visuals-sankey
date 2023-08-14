@@ -660,8 +660,6 @@ export class SankeyDiagram implements IVisual {
 
             SankeyDiagram.updateValueOfNode(firstCyclesNode);
             SankeyDiagram.updateValueOfNode(nodeCopy);
-            SankeyDiagram.fixLinksCount(firstCyclesNode);
-            SankeyDiagram.fixLinksCount(nodeCopy);
             nodes.push(nodeCopy);
             createdNodes.push(nodeCopy);
         }
@@ -688,7 +686,6 @@ export class SankeyDiagram implements IVisual {
             });
 
             SankeyDiagram.updateValueOfNode(firstCyclesNode);
-            SankeyDiagram.fixLinksCount(firstCyclesNode);
         }
 
         return links;
@@ -719,11 +716,6 @@ export class SankeyDiagram implements IVisual {
             const nodeSettings: SankeyDiagramNodePositionSetting = this.getNodeSettings(node.label.name, settings);
             node.settings = nodeSettings;
         });
-    }
-
-    // remove Duplicated links
-    private static fixLinksCount(node: SankeyDiagramNode) {
-        node.links = [...new Set(node.links)];
     }
 
     public static dfs(nodes: SankeyDiagramNode[], currNode: SankeyDiagramNode, nodesStatuses: SankeyDiagramNodeStatus[], simpleCycles: SankeyDiagramCycleDictionary): void {
