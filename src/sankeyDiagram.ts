@@ -871,27 +871,46 @@ export class SankeyDiagram implements IVisual {
         node.outputWeight = 0;
         node.backwardWeight = 0;
         node.selftLinkWeight = 0;
-        node.links.forEach((currentValue: SankeyDiagramLink) => {
+        node.links.forEach((currentLink: SankeyDiagramLink) => {
             node.inputWeight +=
-                currentValue.destination === node &&
-                    currentValue.destination !== currentValue.source &&
-                    currentValue.direction === SankeyLinkDirrections.Forward
-                    ?
-                    currentValue.weight
-                    :
-                    SankeyDiagram.DefaultWeightValue;
+                currentLink.destination === node &&
+                currentLink.destination !== currentLink.source &&
+                currentLink.direction === SankeyLinkDirrections.Forward
+                ?
+                currentLink.weight
+                :
+                SankeyDiagram.DefaultWeightValue;
+
+            node.inputWeight +=
+                currentLink.source === node &&
+                currentLink.destination !== currentLink.source &&
+                currentLink.direction === SankeyLinkDirrections.Backward
+                ?
+                currentLink.weight
+                :
+                SankeyDiagram.DefaultWeightValue;
 
             node.outputWeight +=
-                currentValue.source === node &&
-                    currentValue.destination !== currentValue.source
-                    ?
-                    currentValue.weight
-                    :
-                    SankeyDiagram.DefaultWeightValue;
+                currentLink.source === node &&
+                currentLink.destination !== currentLink.source &&
+                currentLink.direction === SankeyLinkDirrections.Forward
+                ?
+                currentLink.weight
+                :
+                SankeyDiagram.DefaultWeightValue;
 
-            node.backwardWeight += currentValue.direction === SankeyLinkDirrections.Backward ? currentValue.weight : 0;
+            node.outputWeight +=
+                currentLink.destination === node &&
+                currentLink.destination !== currentLink.source &&
+                currentLink.direction === SankeyLinkDirrections.Backward
+                ?
+                currentLink.weight
+                :
+                SankeyDiagram.DefaultWeightValue;
 
-            node.selftLinkWeight += currentValue.direction === SankeyLinkDirrections.SelfLink ? currentValue.weight : 0;
+            node.backwardWeight += currentLink.direction === SankeyLinkDirrections.Backward ? currentLink.weight : 0;
+
+            node.selftLinkWeight += currentLink.direction === SankeyLinkDirrections.SelfLink ? currentLink.weight : 0;
         });
     }
 
@@ -1342,10 +1361,10 @@ export class SankeyDiagram implements IVisual {
             node.height = (Math.max(node.inputWeight, node.outputWeight, node.inputWeight + selfLinkHeight, node.outputWeight + selfLinkHeight)
             ) * scale.y;
 
-            const backwardPsudoNodeSpace = SankeyDiagram.BackwardPsudoNodeMargin + d3Max([node.backwardWeight, node.selftLinkWeight / 2]) * scale.y;
+            const backwardPsudoNodeSpace = d3Max([node.backwardWeight, node.selftLinkWeight / 2]) * scale.y;
 
             node.y = shiftByAxisY + offsetByY * index + backwardPsudoNodeSpace;
-            shiftByAxisY += node.height;
+            shiftByAxisY += node.height + backwardPsudoNodeSpace;
             index++;
         });
     }
