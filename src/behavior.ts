@@ -59,6 +59,7 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
     private behaviorOptions: SankeyDiagramBehaviorOptions;
     private selectionHandler: ISelectionHandler;
 
+
     private selectedDataPoints: SelectableDataPoint[];
 
     public static create(): IInteractiveBehavior {

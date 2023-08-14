@@ -307,6 +307,7 @@ export class SankeyDiagram implements IVisual {
             .classed(SankeyDiagram.LinksSelector.className, true);
 
         this.nodes = this.main
+
             .append("g")
             .classed(SankeyDiagram.NodesSelector.className, true);
     }
