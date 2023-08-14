@@ -587,7 +587,7 @@ export class SankeyDiagram implements IVisual {
 
         if (settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.Backward) {
             SankeyDiagram.computeXPositions(sankeyDiagramDataView);
-            sankeyDiagramDataView.links = this.processCyclesForBackwardLinks(cycles, sankeyDiagramDataView.nodes, links);
+            sankeyDiagramDataView.links = this.processCyclesForBackwardLinks(cycles, links);
             sankeyDiagramDataView.links.forEach((link: SankeyDiagramLink) => {
                 if (link.destination === link.source) {
                     link.direction = SankeyLinkDirrections.SelfLink;
@@ -627,65 +627,64 @@ export class SankeyDiagram implements IVisual {
     }
 
     private processCyclesForwardLinks(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[]): SankeyDiagramLink[] {
-        const createdNodes: SankeyDiagramNode[] = [];
         for (const nodeName of Object.keys(cycles)) {
-            const firstCyclesNode: SankeyDiagramNode = cycles[nodeName][cycles[nodeName].length - 1];
-            // create a clone of the node and save a link to each other. In selection behavior, selection of clone lead to select original and visa versa
-            const nodeCopy: SankeyDiagramNode = lodashCloneDeep(firstCyclesNode);
-            nodeCopy.label.name += SankeyDiagram.DuplicatedNamePostfix;
-            nodeCopy.selectableDataPoints = firstCyclesNode.selectableDataPoints;
-            nodeCopy.links = firstCyclesNode.links;
-            nodeCopy.cloneLink = firstCyclesNode;
-            firstCyclesNode.cloneLink = nodeCopy;
+            cycles[nodeName].forEach((cycleNode: SankeyDiagramNode) => {
+                const nodeCopy: SankeyDiagramNode = lodashCloneDeep(cycleNode);
+                nodeCopy.label.name += SankeyDiagram.DuplicatedNamePostfix;
+                nodeCopy.selectableDataPoints = cycleNode.selectableDataPoints;
+                nodeCopy.links = cycleNode.links;
+                nodeCopy.cloneLink = cycleNode;
+                cycleNode.cloneLink = nodeCopy;
 
-            // copy only! output links to new node;
-            nodeCopy.links = firstCyclesNode.links.filter((link: SankeyDiagramLink) => {
-                if (link.source === firstCyclesNode || link.source === link.destination) {
-                    return true;
-                }
-                return false;
+                // create a clone of the node and save a link to each other. In selection behavior, selection of clone lead to select original and visa versa
+                nodeCopy.links = cycleNode.links.filter((link: SankeyDiagramLink) => {
+                    if (link.source === cycleNode || link.source === link.destination) {
+                        return true;
+                    }
+                    return false;
+                });
+
+                 // copy only! output links to new node;
+                 nodeCopy.links.forEach((link: SankeyDiagramLink) => {
+                    link.source = nodeCopy;
+                });
+
+                // remove output links from original node
+                cycleNode.links = cycleNode.links.filter((link: SankeyDiagramLink) => {
+                    if (link.destination === cycleNode || link.destination === link.source) {
+                        return true;
+                    }
+
+                    return false;
+                });
+                
+                SankeyDiagram.updateValueOfNode(cycleNode);
+                SankeyDiagram.updateValueOfNode(nodeCopy);
+                nodes.push(nodeCopy);
             });
-            nodeCopy.links.forEach((link: SankeyDiagramLink) => {
-                link.source = nodeCopy;
-            });
-
-            // remove output links from original node
-            firstCyclesNode.links = firstCyclesNode.links.filter((link: SankeyDiagramLink) => {
-                if (link.destination === firstCyclesNode || link.destination === link.source) {
-                    return true;
-                }
-
-                return false;
-            });
-
-            SankeyDiagram.updateValueOfNode(firstCyclesNode);
-            SankeyDiagram.updateValueOfNode(nodeCopy);
-            nodes.push(nodeCopy);
-            createdNodes.push(nodeCopy);
         }
-
         return links;
     }
 
     // in this method we breaking simple cycles
-    private processCyclesForBackwardLinks(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[]): SankeyDiagramLink[] {
+    private processCyclesForBackwardLinks(cycles: SankeyDiagramCycleDictionary, links: SankeyDiagramLink[]): SankeyDiagramLink[] {
         for (const nodeName of Object.keys(cycles)) {
-            const firstCyclesNode: SankeyDiagramNode = cycles[nodeName][cycles[nodeName].length - 1];
+            cycles[nodeName].forEach((cycleNode: SankeyDiagramNode) => {
+                // make output links as backward links for node
+                const outputLinks = cycleNode.links.filter((link: SankeyDiagramLink) => {
+                    if (link.source === cycleNode && link.destination.label.name === nodeName) {
+                        return true;
+                    }
+                    return false;
+                });
 
-            // make output links as backward links for node
-            const outputLinks = firstCyclesNode.links.filter((link: SankeyDiagramLink) => {
-                if (link.source === firstCyclesNode || link.source === link.destination) {
-                    return true;
-                }
-                return false;
+                outputLinks.forEach((link: SankeyDiagramLink) => {
+                    link.direction === SankeyLinkDirrections.Backward;
+                    SankeyDiagram.swapNodes(link);
+                });
+
+                SankeyDiagram.updateValueOfNode(cycleNode);
             });
-
-            outputLinks.forEach((link: SankeyDiagramLink) => {
-                link.direction === SankeyLinkDirrections.Backward;
-                SankeyDiagram.swapNodes(link);
-            });
-
-            SankeyDiagram.updateValueOfNode(firstCyclesNode);
         }
 
         return links;
@@ -736,23 +735,12 @@ export class SankeyDiagram implements IVisual {
             // if cycle was found
             if (nodesStatuses[nextNode.label.name].status === SankeyDiagramNodeStatus.Processing) {
                 // add item to dictionary
-                let cycleName: string = nextNode.label.name;
-                let nameIndex: number = 0;
-                // get new name if name already used
-                if (simpleCycles[cycleName]) {
-                    while (simpleCycles[cycleName]) {
-                        cycleName = cycleName + nameIndex++;
-                    }
-                }
-                simpleCycles[cycleName] = <SankeyDiagramNode[]>[];
+                const cycleName: string = nextNode.label.name;
 
-                // collect all nodes which were processed in current step
-                nodes.forEach((node: SankeyDiagramNode) => {
-                    if (nodesStatuses[node.label.name].status === SankeyDiagramNodeStatus.Processing &&
-                        node.links.length > 0 && currNode !== node) { // push current node always as the last
-                        simpleCycles[cycleName].push(node);
-                    }
-                });
+                if (!simpleCycles[cycleName]) {
+                    simpleCycles[cycleName] = <SankeyDiagramNode[]>[];
+                }
+
                 // push current node always as the last
                 simpleCycles[cycleName].push(currNode);
             }
@@ -908,7 +896,9 @@ export class SankeyDiagram implements IVisual {
                 :
                 SankeyDiagram.DefaultWeightValue;
 
-            node.backwardWeight += currentLink.direction === SankeyLinkDirrections.Backward ? currentLink.weight : 0;
+            if (currentLink.direction === SankeyLinkDirrections.Backward) {
+                node.backwardWeight = currentLink.weight > node.backwardWeight ? currentLink.weight : node.backwardWeight;
+            }
 
             node.selftLinkWeight += currentLink.direction === SankeyLinkDirrections.SelfLink ? currentLink.weight : 0;
         });
@@ -1241,20 +1231,26 @@ export class SankeyDiagram implements IVisual {
             columns[node.x].sumValueOfNodes += Math.max(node.inputWeight, node.outputWeight);
             columns[node.x].countOfNodes++;
 
+            let nodeBackwardWeight = 0;
+            let nodeSelflinkWeight = 0;
+
             // if node containg backward link it influence to node position (nodes shifts to down)
             if (node.links.some((link: SankeyDiagramLink) => {
                 return link.direction === SankeyLinkDirrections.Backward ? true : false;
             })) {
-                columns[node.x].sumValueOfNodes += node.backwardWeight;
+                nodeBackwardWeight = node.backwardWeight;
                 columns[node.x].countOfNodes++;
             }
 
             if (node.links.some((link: SankeyDiagramLink) => {
                 return link.direction === SankeyLinkDirrections.SelfLink ? true : false;
             })) {
+                nodeSelflinkWeight = node.selftLinkWeight;
                 columns[node.x].sumValueOfNodes += node.selftLinkWeight;
                 columns[node.x].countOfNodes++;
             }
+
+            columns[node.x].sumValueOfNodes += nodeBackwardWeight > nodeSelflinkWeight ? nodeBackwardWeight : nodeSelflinkWeight;
         });
 
         return columns;
@@ -1361,7 +1357,7 @@ export class SankeyDiagram implements IVisual {
             node.height = (Math.max(node.inputWeight, node.outputWeight, node.inputWeight + selfLinkHeight, node.outputWeight + selfLinkHeight)
             ) * scale.y;
 
-            const backwardPsudoNodeSpace = d3Max([node.backwardWeight, node.selftLinkWeight / 2]) * scale.y;
+            const backwardPsudoNodeSpace = d3Max([node.backwardWeight, node.selftLinkWeight]) * scale.y;
 
             node.y = shiftByAxisY + offsetByY * index + backwardPsudoNodeSpace;
             shiftByAxisY += node.height + backwardPsudoNodeSpace;
