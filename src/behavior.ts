@@ -52,6 +52,9 @@ export interface SankeyDiagramBehaviorOptions extends IBehaviorOptions<Selectabl
     interactivityService: IInteractivityService<SelectableDataPoint>;
 }
 
+const EnterCode = "Enter";
+const SpaceCode = "Space";
+
 export class SankeyDiagramBehavior implements IInteractiveBehavior {
     private behaviorOptions: SankeyDiagramBehaviorOptions;
     private selectionHandler: ISelectionHandler;
@@ -74,7 +77,9 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
         this.selectionHandler = selectionHandler;
 
         this.bindClickEventToNodes();
+        this.bindKeyboardEventToNodes();
         this.bindClickEventToLinks();
+        this.bindKeyboardEventToLinks();
         this.bindClickEventToClearCatcher();
     }
 
@@ -97,7 +102,9 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
                 this.createAnEmptySelectedDataPoints();
             }
         });
+    }
 
+    private bindKeyboardEventToNodes(): void {
         this.behaviorOptions.nodes.on("contextmenu", (event: PointerEvent, datum: SankeyDiagramNode) => {
             if (event) {
                 this.selectionHandler.handleContextMenu(
@@ -115,6 +122,29 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
         this.behaviorOptions.links.on("click", (event: PointerEvent, link: SankeyDiagramLink) => {
             this.selectionHandler.handleSelection(link, event.ctrlKey || event.metaKey);
             this.createAnEmptySelectedDataPoints();
+        });
+
+        this.behaviorOptions.links.on("contextmenu", (event: PointerEvent, datum: SankeyDiagramLink) => {
+            if (event) {
+                this.selectionHandler.handleContextMenu(
+                    datum,
+                    {
+                        x: event.clientX,
+                        y: event.clientY
+                    });
+                event.preventDefault();
+            }
+        });
+    }
+
+    private bindKeyboardEventToLinks(): void {
+        this.behaviorOptions.links.on("keydown", (event: KeyboardEvent, link: SankeyDiagramLink) => {
+            if (event.code !== EnterCode && event.code !== SpaceCode) {
+                return;
+            }
+            this.selectionHandler.handleSelection(link, event.ctrlKey || event.metaKey);
+            this.createAnEmptySelectedDataPoints();
+
         });
 
         this.behaviorOptions.links.on("contextmenu", (event: PointerEvent, datum: SankeyDiagramLink) => {
@@ -157,6 +187,7 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
     }
 
     public renderSelection(hasSelection: boolean): void {
+        this.behaviorOptions.links.attr("aria-selected", sankeyDiagramUtils.isDataPointSelected);
         sankeyDiagramUtils.updateFillOpacity(
             this.behaviorOptions.links,
             this.behaviorOptions.interactivityService,
