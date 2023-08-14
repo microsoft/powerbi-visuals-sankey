@@ -80,10 +80,7 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
 
     private bindClickEventToNodes(): void {
         this.behaviorOptions.nodes.on("click", (event: PointerEvent, node: SankeyDiagramNode) => {
-            let selectableDataPoints: SelectableDataPoint[] = node.selectableDataPoints;
-            if (node.cloneLink) {
-                selectableDataPoints = selectableDataPoints.concat(node.cloneLink.selectableDataPoints);
-            }
+            const selectableDataPoints: SelectableDataPoint[] = node.selectableDataPoints;
 
             this.clearSelection();
 

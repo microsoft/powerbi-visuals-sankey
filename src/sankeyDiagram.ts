@@ -468,6 +468,8 @@ export class SankeyDiagram implements IVisual {
                 let weight: number = SankeyDiagram.DefaultWeightValue;
 
                 let foundDestination: SankeyDiagramNode = nodes.find(found => found.label.name === child.value)
+                const selfLinkFound: boolean = foundDestination === foundSource;
+
                 if (!foundDestination) {
                     foundDestination = this.createNewNode(child, settings);
                     foundDestination.identity = this.visualHost.createSelectionIdBuilder()
@@ -528,12 +530,17 @@ export class SankeyDiagram implements IVisual {
                     direction: SankeyLinkDirrections.Forward
                 }
 
-                const selectableDataPoint: SelectableDataPoint = SankeyDiagram.createSelectableDataPoint(<ISelectionId>link.identity);
-                foundSource.selectableDataPoints.push(selectableDataPoint);
-                foundDestination.selectableDataPoints.push(selectableDataPoint);
-                links.push(link);
-                foundSource.links.push(link);
+                const linkDataPoint: SelectableDataPoint = SankeyDiagram.createSelectableDataPoint(<ISelectionId>link.identity);
+
+                // preventing double copying of selectableDataPoints and links to a node with selflink 
+                if (!selfLinkFound){
+                    foundSource.selectableDataPoints.push(linkDataPoint);
+                    foundSource.links.push(link);
+                }
+                foundDestination.selectableDataPoints.push(linkDataPoint);
                 foundDestination.links.push(link);
+                links.push(link);
+
                 SankeyDiagram.updateValueOfNode(foundSource);
                 SankeyDiagram.updateValueOfNode(foundDestination);
             });
@@ -626,8 +633,10 @@ export class SankeyDiagram implements IVisual {
             // create a clone of the node and save a link to each other. In selection behavior, selection of clone lead to select original and visa versa
             const nodeCopy: SankeyDiagramNode = lodashCloneDeep(firstCyclesNode);
             nodeCopy.label.name += SankeyDiagram.DuplicatedNamePostfix;
-            firstCyclesNode.cloneLink = nodeCopy;
+            nodeCopy.selectableDataPoints = firstCyclesNode.selectableDataPoints;
+            nodeCopy.links = firstCyclesNode.links;
             nodeCopy.cloneLink = firstCyclesNode;
+            firstCyclesNode.cloneLink = nodeCopy;
 
             // copy only! output links to new node;
             nodeCopy.links = firstCyclesNode.links.filter((link: SankeyDiagramLink) => {
