@@ -1,3 +1,8 @@
+## 3.1.4.0
+* Fix a bug with selection cycle nodes
+* Change the way the cycle links are processed
+* Update outdated packages
+
 ## 3.1.3.0
 * Fix a bug with displaying japanese characters in link labels
 * Update outdated packages
