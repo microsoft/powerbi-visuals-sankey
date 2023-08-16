@@ -394,7 +394,7 @@ export class SankeyDiagram implements IVisual {
             inputWeight: 0,
             outputWeight: 0,
             backwardWeight: 0,
-            selftLinkWeight: 0,
+            selfLinkWeight: 0,
             width: 10, //fix
             height: 0,
             fillColor: nodeFillColor,
@@ -858,7 +858,7 @@ export class SankeyDiagram implements IVisual {
         node.inputWeight = 0;
         node.outputWeight = 0;
         node.backwardWeight = 0;
-        node.selftLinkWeight = 0;
+        node.selfLinkWeight = 0;
         node.links.forEach((currentLink: SankeyDiagramLink) => {
             node.inputWeight +=
                 currentLink.destination === node &&
@@ -900,7 +900,7 @@ export class SankeyDiagram implements IVisual {
                 node.backwardWeight = currentLink.weight > node.backwardWeight ? currentLink.weight : node.backwardWeight;
             }
 
-            node.selftLinkWeight += currentLink.direction === SankeyLinkDirrections.SelfLink ? currentLink.weight : 0;
+            node.selfLinkWeight += currentLink.direction === SankeyLinkDirrections.SelfLink ? currentLink.weight : 0;
         });
     }
 
@@ -1245,8 +1245,8 @@ export class SankeyDiagram implements IVisual {
             if (node.links.some((link: SankeyDiagramLink) => {
                 return link.direction === SankeyLinkDirrections.SelfLink ? true : false;
             })) {
-                nodeSelflinkWeight = node.selftLinkWeight;
-                columns[node.x].sumValueOfNodes += node.selftLinkWeight;
+                nodeSelflinkWeight = node.selfLinkWeight;
+                columns[node.x].sumValueOfNodes += node.selfLinkWeight;
                 columns[node.x].countOfNodes++;
             }
 
@@ -1357,7 +1357,7 @@ export class SankeyDiagram implements IVisual {
             node.height = (Math.max(node.inputWeight, node.outputWeight, node.inputWeight + selfLinkHeight, node.outputWeight + selfLinkHeight)
             ) * scale.y;
 
-            const backwardPsudoNodeSpace = d3Max([node.backwardWeight, node.selftLinkWeight]) * scale.y;
+            const backwardPsudoNodeSpace = d3Max([node.backwardWeight, node.selfLinkWeight]) * scale.y;
 
             node.y = shiftByAxisY + offsetByY * index + backwardPsudoNodeSpace;
             shiftByAxisY += node.height + backwardPsudoNodeSpace;

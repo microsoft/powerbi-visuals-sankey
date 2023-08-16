@@ -68,7 +68,7 @@ export interface SankeyDiagramNode extends
     inputWeight: number;
     outputWeight: number;
     backwardWeight?: number;
-    selftLinkWeight?: number;
+    selfLinkWeight?: number;
     links: SankeyDiagramLink[];
     x?: number;
     y?: number;
