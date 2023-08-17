@@ -1,3 +1,6 @@
+## 3.2.0.0
+* Add keyboard support
+
 ## 3.1.3.0
 * Fix a bug with displaying japanese characters in link labels
 * Update outdated packages
