@@ -1,3 +1,8 @@
+## 3.2.1.0
+* Fix a bug with selection cycle nodes
+* Change the way the cycle links are processed
+* Update outdated packages
+
 ## 3.2.0.0
 * Add keyboard support
 
