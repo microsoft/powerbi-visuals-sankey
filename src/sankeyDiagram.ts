@@ -214,6 +214,9 @@ export class SankeyDiagram implements IVisual {
         values: "Weight"
     };
 
+    public static InputTooltipFValue: string = "Input ";
+    public static OutputTooltipValue: string = "Output ";
+
     private static DefaultViewport: IViewport = {
         height: 100,
         width: 100
@@ -563,21 +566,6 @@ export class SankeyDiagram implements IVisual {
             links = this.processCyclesForwardLinks(cycles, nodes, links);
         }
 
-        nodes.forEach((node: SankeyDiagramNode) => {
-            node.tooltipInfo = SankeyDiagram.getTooltipForNode(
-                valuesFormatterForWeight,
-                node.label.formattedName,
-                node.inputWeight
-                    ? node.inputWeight
-                    : this.calculeOutputWeightForTooltip(node, node.links),
-                this.localizationManager,
-                node.inputWeight > 0 && node.outputWeight > 0 ? `${sourceFieldName}-${destinationFieldName}` : node.outputWeight > 0
-                    ? sourceFieldName
-                    : destinationFieldName,
-                valueFieldName
-            );
-        });
-
         // add ColorPicker for each node and link to the Format pane
         this.sankeyDiagramSettings.populateNodesColorSelector(nodes);
         this.sankeyDiagramSettings.populateLinksColorSelector(links);
@@ -595,31 +583,26 @@ export class SankeyDiagram implements IVisual {
             sankeyDiagramDataView.links.forEach((link: SankeyDiagramLink) => {
                 if (link.destination === link.source) {
                     link.direction = SankeyLinkDirrections.SelfLink;
+                    SankeyDiagram.updateValueOfNode(link.source);
                 }
             });
         }
+
+        nodes.forEach((node: SankeyDiagramNode) => {
+            node.tooltipInfo = SankeyDiagram.getTooltipForNode(
+                valuesFormatterForWeight,
+                node.label.formattedName,
+                node.inputWeight + node.selfLinkWeight,
+                node.outputWeight + node.selfLinkWeight,
+                this.localizationManager,
+                valueFieldName
+            );
+        });
+
         this.checkNodePositionSettings(nodes, settings);
         this.restoreNodePositions(nodes, settings);
         return sankeyDiagramDataView;
     }
-
-    // Proper calculation of output weight in case of self links
-    private calculeOutputWeightForTooltip(node: SankeyDiagramNode, links: SankeyDiagramLink[]): number {
-        let outputWeight: number = 0;
-
-        links.forEach((link: SankeyDiagramLink) => {
-            outputWeight +=
-                link.source === node &&
-                    link.destination !== link.source
-                    ?
-                    link.weight
-                    :
-                    SankeyDiagram.DefaultWeightValue;
-        });
-
-        return outputWeight;
-    }
-
 
     private static swapNodes(link: SankeyDiagramLink) {
         link.direction = SankeyLinkDirrections.Backward;
@@ -911,29 +894,42 @@ export class SankeyDiagram implements IVisual {
     private static getTooltipForNode(
         valueFormatter: IValueFormatter,
         nodeName: string,
-        nodeWeight: number,
+        nodeInputWeight: number,
+        nodeOutputWeight: number,
         localizationManager: ILocalizationManager,
-        nodeDisplayName?: string,
         valueDisplayName?: string,
     ): VisualTooltipDataItem[] {
 
-        let formattedNodeWeight: string;
+        let formattedNodeInputWeight: string;
+        let formattedNodeOutputWeight: string;
 
         if (valueFormatter && valueFormatter.format) {
-            formattedNodeWeight = valueFormatter.format(nodeWeight);
+            formattedNodeInputWeight = valueFormatter.format(nodeInputWeight);
+            formattedNodeOutputWeight = valueFormatter.format(nodeOutputWeight);
         } else {
-            formattedNodeWeight = nodeWeight.toString();
+            formattedNodeInputWeight = nodeInputWeight.toString();
+            formattedNodeOutputWeight = nodeOutputWeight.toString();
         }
 
-        return [
+        const tooltips: VisualTooltipDataItem[] = [
             {
                 displayName: localizationManager.getDisplayName("Visual_TooltipDisplayName"),
                 value: nodeName
-            }, {
-                displayName: valueDisplayName || SankeyDiagram.RoleNames.values,
-                value: formattedNodeWeight
             }
         ];
+
+        if (valueDisplayName) {
+            tooltips.push({
+                displayName: SankeyDiagram.InputTooltipFValue + valueDisplayName || SankeyDiagram.RoleNames.values,
+                value: formattedNodeInputWeight
+            });
+            tooltips.push({
+                displayName: SankeyDiagram.OutputTooltipValue + valueDisplayName || SankeyDiagram.RoleNames.values,
+                value: formattedNodeOutputWeight
+            });
+        }
+
+        return tooltips;
     }
 
     private parseSettings(dataView: DataView, dataViews: DataView[]): SankeyDiagramSettings {
