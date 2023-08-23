@@ -303,16 +303,16 @@ export class SankeyDiagram implements IVisual {
         this.main = this.root.append("g");
 
         this.links = this.main
-            .attr("role", "listbox")
-            .attr("aria-multiselectable", "true")
-            .attr("tabindex", 0)
             .append("g")
-            .classed(SankeyDiagram.LinksSelector.className, true);
+            .classed(SankeyDiagram.LinksSelector.className, true)
+            .attr("role", "listbox")
+            .attr("aria-multiselectable", "true");
 
         this.nodes = this.main
-
             .append("g")
-            .classed(SankeyDiagram.NodesSelector.className, true);
+            .classed(SankeyDiagram.NodesSelector.className, true)
+            .attr("role", "listbox")
+            .attr("aria-multiselectable", "true");
     }
 
     public update(visualUpdateOptions: VisualUpdateOptions): void {
@@ -1519,6 +1519,10 @@ export class SankeyDiagram implements IVisual {
                         .darker(SankeyDiagram.StrokeColorFactor)
                         .toString()
             )
+            .attr("tabindex", 0)
+            .attr("role", "option")
+            .attr("aria-selected", "false")
+            .attr('aria-label', (node: SankeyDiagramNode) => `${node.label.name}`)
             .attr("x", SankeyDiagram.DefaultPosition)
             .attr("y", SankeyDiagram.DefaultPosition)
             .attr("height", (node: SankeyDiagramNode) => node.height < SankeyDiagram.MinHeightOfNode ? SankeyDiagram.MinHeightOfNode : node.height)
@@ -1772,8 +1776,8 @@ export class SankeyDiagram implements IVisual {
                     return SankeyDiagram.createLinkId(link);
                 }
             )
-            .attr("role", "option")
             .attr("tabindex", 0)
+            .attr("role", "option")
             .attr("aria-selected", "false")
             .attr('aria-label', (link: SankeyDiagramLink) => `${link.source.label.name} to ${link.destination.label.name} weighted at ${link.weight}`)
             .style("stroke", (link: SankeyDiagramLink) => link.strokeColor)
