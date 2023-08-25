@@ -235,5 +235,15 @@
     },
     "supportsKeyboardFocus": true,
     "supportsSynchronizingFilterState": true,
-    "privileges": []
+    "privileges": [],
+    "tooltips": {
+        "supportedTypes": {
+            "default": true,
+            "canvas": true
+        },
+        "supportEnhancedTooltips": true,
+        "roles": [
+            "tooltips"
+        ]
+    }
 }
