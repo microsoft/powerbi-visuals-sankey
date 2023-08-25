@@ -1,3 +1,9 @@
+## 3.2.2.0
+* Add input/output tooltip values for node
+* Fix styles for keyboard navigation
+* Change backward links positions
+* Update outdated packages
+
 ## 3.2.1.0
 * Fix a bug with selection cycle nodes
 * Change the way the cycle links are processed
