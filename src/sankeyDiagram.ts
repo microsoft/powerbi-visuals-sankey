@@ -216,7 +216,7 @@ export class SankeyDiagram implements IVisual {
         values: "Weight"
     };
 
-    public static InputTooltipFValue: string = "Input ";
+    public static InputTooltipValue: string = "Input ";
     public static OutputTooltipValue: string = "Output ";
 
     private static DefaultViewport: IViewport = {
@@ -923,7 +923,7 @@ export class SankeyDiagram implements IVisual {
 
         if (valueDisplayName) {
             tooltips.push({
-                displayName: SankeyDiagram.InputTooltipFValue + valueDisplayName || SankeyDiagram.RoleNames.values,
+                displayName: SankeyDiagram.InputTooltipValue + valueDisplayName || SankeyDiagram.RoleNames.values,
                 value: formattedNodeInputWeight
             });
             tooltips.push({
