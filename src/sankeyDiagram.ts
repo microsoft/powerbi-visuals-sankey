@@ -1404,22 +1404,23 @@ export class SankeyDiagram implements IVisual {
                 }
 
                 if (link.source.x < node.x || link.destination.x < node.x) {
-                    if (link.direction !== SankeyLinkDirrections.Backward)
+                    if (link.direction !== SankeyLinkDirrections.Backward) {
                         shiftByAxisY = shiftByAxisYOfLeftLink;
-
-                    if (link.direction !== SankeyLinkDirrections.Backward)
                         shiftByAxisYOfLeftLink += fixedLinkHeight;
-                    else
+                    }
+                    else {
+                        shiftByAxisY = shiftByAxisYOfRightLink;
                         shiftByAxisYOfRightLink += fixedLinkHeight;
+                    }
                 }
                 else {
                     if (link.source.x > node.x || link.destination.x > node.x) {
-                        if (link.direction !== SankeyLinkDirrections.Backward)
-                            shiftByAxisY = shiftByAxisYOfRightLink;
                         if (link.direction !== SankeyLinkDirrections.Backward) {
+                            shiftByAxisY = shiftByAxisYOfRightLink;
                             shiftByAxisYOfRightLink += fixedLinkHeight;
                         }
                         else {
+                            shiftByAxisY = shiftByAxisYOfLeftLink;
                             shiftByAxisYOfLeftLink += fixedLinkHeight;
                         }
                     }
