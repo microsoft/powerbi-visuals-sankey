@@ -1430,16 +1430,10 @@ export class SankeyDiagram implements IVisual {
                 }
 
                 if (link.source === node) {
-                    if (link.direction === SankeyLinkDirrections.Forward)
-                        link.dySource = shiftByAxisY;
-                    else
-                        link.dyDestination = shiftByAxisY;
+                    link.dySource = shiftByAxisY;
                 }
                 if (link.destination === node) {
-                    if (link.direction === SankeyLinkDirrections.Forward)
-                        link.dyDestination = shiftByAxisY;
-                    else
-                        link.dySource = shiftByAxisY;
+                    link.dyDestination = shiftByAxisY;
                 }
             });
         });
