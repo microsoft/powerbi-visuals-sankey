@@ -234,8 +234,8 @@ export class SankeyDiagram implements IVisual {
     private nodeWidth: number = 21.5;
     private curvatureOfLinks: number = 0.5;
 
-    private static NodeAndBackwardLinkDistance = 5;
-    private static DistanceBetweenLinks = 3;
+    private static NodeAndBackwardLinkDistance: number = 5;
+    private static DistanceBetweenLinks: number = 3;
 
     private root: Selection<any>;
     private clearCatcher: Selection<any>;
@@ -2039,7 +2039,7 @@ export class SankeyDiagram implements IVisual {
     private getSvgPathForBackwardLink(link: SankeyDiagramLink, minHeight: number) {
         let pathParams: string = "";
 
-        const fixedLinkHeight = link.height - SankeyDiagram.DistanceBetweenLinks;
+        const fixedLinkHeight: number = link.height - SankeyDiagram.DistanceBetweenLinks;
         const linkKneeSize: number = Math.max(fixedLinkHeight, minHeight);
 
         let xi: (t: number) => number,
