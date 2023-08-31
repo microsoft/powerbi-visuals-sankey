@@ -2098,10 +2098,9 @@ export class SankeyDiagram implements IVisual {
             ` ${curveCenterX + linkInnerKneeSize} ${curveCenterY}`;      
 
         pathParams +=
-            `C ${link.destination.x + link.destination.width + linkInnerKneeSize} ${curveCenterY}, ` +
-            `${link.destination.x + link.destination.width + linkInnerKneeSize} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance}, ` +
-            `${link.destination.x + link.destination.width/2} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance}`; 
-
+            `C ${curveCenterX + linkInnerKneeSize} ${curveCenterY}, ` +
+            `${curveCenterX + linkInnerKneeSize} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance}, ` +
+            `${curveCenterX - link.destination.width/2} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance}`; 
         // bottom border of link
         xi = d3InterpolateNumber(x0, x1);
         x2 = xi(this.curvatureOfLinks);
