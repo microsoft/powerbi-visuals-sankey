@@ -1508,6 +1508,9 @@ export class SankeyDiagram implements IVisual {
             })
             .classed(SankeyDiagram.NodeSelector.className, true);
 
+
+        let nodeTabIndex: number = 0;
+
         nodesSelectionMerged
             .select(SankeyDiagram.NodeRectSelector.selectorName)
             .style("fill", (node: SankeyDiagramNode) => node.fillColor)
@@ -1517,7 +1520,7 @@ export class SankeyDiagram implements IVisual {
                         .darker(SankeyDiagram.StrokeColorFactor)
                         .toString()
             )
-            .attr("tabindex", 0)
+            .attr("tabindex", (node: SankeyDiagramNode) => ++nodeTabIndex)
             .attr("role", "option")
             .attr("aria-selected", "false")
             .attr('aria-label', (node: SankeyDiagramNode) => `${node.label.name}`)
@@ -1750,7 +1753,8 @@ export class SankeyDiagram implements IVisual {
             .classed(SankeyDiagram.SelftLinkSelector.className, (link: SankeyDiagramLink) => link.direction === SankeyLinkDirrections.SelfLink);
 
 
-        const minHeight = d3Min(sankeyDiagramDataView.links.map(l => l.height));
+        const minHeight: number = d3Min(sankeyDiagramDataView.links.map(l => l.height));
+        let linkTabIndex: number = sankeyDiagramDataView.nodes.length;
 
         linksElementsMerged
             .attr(
@@ -1774,7 +1778,7 @@ export class SankeyDiagram implements IVisual {
                     return SankeyDiagram.createLinkId(link);
                 }
             )
-            .attr("tabindex", 0)
+            .attr("tabindex", (link: SankeyDiagramLink) => ++linkTabIndex)
             .attr("role", "option")
             .attr("aria-selected", "false")
             .attr('aria-label', (link: SankeyDiagramLink) => `${link.source.label.name} to ${link.destination.label.name} weighted at ${link.weight}`)
