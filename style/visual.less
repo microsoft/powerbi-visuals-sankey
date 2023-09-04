@@ -42,16 +42,16 @@
                 stroke-width: 1px;
                 fill-opacity: 0.9;
                 shape-rendering: crispEdges;
-            }
 
-            .nodeRect:focus {
-                outline: none;
-            }
+                &:focus {
+                    outline: none;
+                }
 
-            .nodeRect:focus-visible {
-                outline: none;
-                stroke-width: 4px;
-                stroke-opacity: 1;
+                &:focus-visible {
+                    outline: none;
+                    stroke-width: 4px;
+                    stroke-opacity: 1;
+                }
             }
 
             .nodeLabel {
@@ -70,6 +70,16 @@
             stroke-opacity: 0.2;
             fill-opacity: 0.2;
             stroke-width: 1;
+            
+            &:focus {
+                outline: none;
+            }
+    
+            &:focus-visible {
+                outline: none;
+                stroke-width: 2px;
+                stroke-opacity: 1;
+            }
         }
 
         .link:hover,
@@ -77,16 +87,6 @@
             stroke-opacity: 0.7;
             fill-opacity: 0.7;
             stroke-width: 1;
-        }
-
-        .link:focus {
-            outline: none;
-        }
-
-        .link:focus-visible {
-            outline: none;
-            stroke-width: 2px;
-            stroke-opacity: 1;
         }
     }
 }
