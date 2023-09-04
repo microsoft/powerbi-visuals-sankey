@@ -216,9 +216,6 @@ export class SankeyDiagram implements IVisual {
         values: "Weight"
     };
 
-    public static InputTooltipValue: string = "Input ";
-    public static OutputTooltipValue: string = "Output ";
-
     private static DefaultViewport: IViewport = {
         height: 100,
         width: 100
@@ -597,8 +594,7 @@ export class SankeyDiagram implements IVisual {
                 node.label.formattedName,
                 node.inputWeight + node.selfLinkWeight,
                 node.outputWeight + node.selfLinkWeight,
-                this.localizationManager,
-                valueFieldName
+                this.localizationManager
             );
         });
 
@@ -899,8 +895,7 @@ export class SankeyDiagram implements IVisual {
         nodeName: string,
         nodeInputWeight: number,
         nodeOutputWeight: number,
-        localizationManager: ILocalizationManager,
-        valueDisplayName?: string,
+        localizationManager: ILocalizationManager
     ): VisualTooltipDataItem[] {
 
         let formattedNodeInputWeight: string;
@@ -918,19 +913,16 @@ export class SankeyDiagram implements IVisual {
             {
                 displayName: localizationManager.getDisplayName("Visual_TooltipDisplayName"),
                 value: nodeName
+            },
+            {
+                displayName: localizationManager.getDisplayName("Visual_TooltipDisplayInput"),
+                value: formattedNodeInputWeight
+            },
+            {
+                displayName: localizationManager.getDisplayName("Visual_TooltipDisplayOutput"),
+                value: formattedNodeOutputWeight
             }
         ];
-
-        if (valueDisplayName) {
-            tooltips.push({
-                displayName: SankeyDiagram.InputTooltipValue + valueDisplayName || SankeyDiagram.RoleNames.values,
-                value: formattedNodeInputWeight
-            });
-            tooltips.push({
-                displayName: SankeyDiagram.OutputTooltipValue + valueDisplayName || SankeyDiagram.RoleNames.values,
-                value: formattedNodeOutputWeight
-            });
-        }
 
         return tooltips;
     }
