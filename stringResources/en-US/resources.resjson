@@ -30,5 +30,6 @@
 	"Visual_Description_Force_Display": "Display all labels anyway",
 	"Visual_FontFamily": "Font Family",
 	"Visual_TooltipDisplayInput": "Input",
-	"Visual_TooltipDisplayOutput": "Output"
+	"Visual_TooltipDisplayOutput": "Output",
+	"Visual_NodeWidth": "Width"
 }

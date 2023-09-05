@@ -153,8 +153,6 @@ export class SankeyDiagram implements IVisual {
 
     private static MinWidthOfLabel: number = 21;
 
-    private static DefaultNodeWidth: number = 10;
-
     private static NodeBottomMargin: number = 5; // 5%
 
     private static NodeMargin: number = 5;
@@ -402,7 +400,7 @@ export class SankeyDiagram implements IVisual {
             outputWeight: 0,
             backwardWeight: 0,
             selfLinkWeight: 0,
-            width: SankeyDiagram.DefaultNodeWidth,
+            width: settings.nodesSettings.nodeWidth.value,
             height: 0,
             fillColor: nodeFillColor,
             strokeColor: nodeStrokeColor,
@@ -1512,7 +1510,7 @@ export class SankeyDiagram implements IVisual {
                         .darker(SankeyDiagram.StrokeColorFactor)
                         .toString()
             )
-            .attr("tabindex", (node: SankeyDiagramNode) => ++nodeTabIndex)
+            .attr("tabindex", () => ++nodeTabIndex)
             .attr("role", "option")
             .attr("aria-selected", "false")
             .attr('aria-label', (node: SankeyDiagramNode) => `${node.label.name}`)
@@ -1770,7 +1768,7 @@ export class SankeyDiagram implements IVisual {
                     return SankeyDiagram.createLinkId(link);
                 }
             )
-            .attr("tabindex", (link: SankeyDiagramLink) => ++linkTabIndex)
+            .attr("tabindex", () => ++linkTabIndex)
             .attr("role", "option")
             .attr("aria-selected", "false")
             .attr('aria-label', (link: SankeyDiagramLink) => `${link.source.label.name} to ${link.destination.label.name} weighted at ${link.weight}`)
@@ -2069,8 +2067,8 @@ export class SankeyDiagram implements IVisual {
         linkInnerKneeSize = (link.destination.selfLinkWeight? Math.min(link.destination.width, minHeight) + SankeyDiagram.DistanceBetweenLinks : 0) + SankeyDiagram.NodeAndBackwardLinkDistance;
         fixedLinkKneeSize = linkKneeSize + SankeyDiagram.NodeAndBackwardLinkDistance;
 
-        if (fixedLinkKneeSize - linkInnerKneeSize < SankeyDiagram.DefaultNodeWidth){
-            fixedLinkKneeSize = SankeyDiagram.DefaultNodeWidth + linkInnerKneeSize;
+        if (fixedLinkKneeSize - linkInnerKneeSize < link.destination.width){
+            fixedLinkKneeSize = link.destination.width + linkInnerKneeSize;
         }
         
         pathParams +=
@@ -2113,8 +2111,8 @@ export class SankeyDiagram implements IVisual {
         linkInnerKneeSize = (link.source.selfLinkWeight? Math.min(link.source.width, minHeight) + SankeyDiagram.DistanceBetweenLinks : 0) + SankeyDiagram.NodeAndBackwardLinkDistance;
         fixedLinkKneeSize = linkKneeSize + SankeyDiagram.NodeAndBackwardLinkDistance;
 
-        if (fixedLinkKneeSize - linkInnerKneeSize < SankeyDiagram.DefaultNodeWidth){
-            fixedLinkKneeSize = SankeyDiagram.DefaultNodeWidth + linkInnerKneeSize;
+        if (fixedLinkKneeSize - linkInnerKneeSize < link.source.width){
+            fixedLinkKneeSize = link.source.width + linkInnerKneeSize;
         }
         pathParams +=
             `C ${curveCenterX + link.source.width/2} ${curveCenterY - curveRadius}, ` +
