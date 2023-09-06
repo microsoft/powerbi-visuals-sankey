@@ -1928,13 +1928,8 @@ export class SankeyDiagram implements IVisual {
             y0: number,
             y1: number;
 
-        if (link.destination.x < link.source.x) {
-            x0 = link.source.x;
-            x1 = link.destination.x + link.destination.width;
-        } else {
-            x0 = link.source.x + link.source.width;
-            x1 = link.destination.x;
-        }
+        x0 = link.source.x + link.source.width / 2;
+        x1 = link.destination.x; 
 
         // drawing area as combination of 4 lines in one path element of svg to fill this area with required color
 
@@ -1949,12 +1944,10 @@ export class SankeyDiagram implements IVisual {
 
         pathParams += `M ${x0} ${y0}`;
 
-        pathParams += `L ${link.destination.x + link.destination.width} ${y1}`;
-
         pathParams +=
-            `C ${link.destination.x + distanceFromNodeToLinks + link.destination.width} ${y1},` +
+            `C ${link.destination.x + link.destination.width / 2} ${y1},` +
             ` ${link.destination.x + distanceFromNodeToLinks + link.destination.width + linkKneeSize} ${y1},` +
-            ` ${link.destination.x + distanceFromNodeToLinks + link.destination.width + linkKneeSize} ${y1 + linkKneeSize}`;
+            ` ${link.destination.x + distanceFromNodeToLinks + link.destination.width + linkKneeSize} ${y1 + fixedLinkHeight}`;
 
         // right border of link
         y0 = link.destination.y - (fixedLinkHeight + SankeyDiagram.NodeAndBackwardLinkDistance)
@@ -1967,33 +1960,28 @@ export class SankeyDiagram implements IVisual {
             limit = link.destination.y + fixedLinkHeight - linkKneeSize - distanceBetweenLinks;
         }
 
-        pathParams += `L ${link.destination.x + distanceFromNodeToLinks + link.destination.width + linkKneeSize} ${limit}`; // TODO change to C
-
         pathParams +=
             `C ${link.destination.x + distanceFromNodeToLinks + link.destination.width + linkKneeSize} ` +
-            `${link.destination.y + fixedLinkHeight - linkKneeSize}, ` +
-            `${link.destination.x + link.destination.width + linkKneeSize} ${link.destination.y + fixedLinkHeight} ,` +
-            `${link.destination.x + link.destination.width} ${link.destination.y + fixedLinkHeight}`;
+            `${link.destination.y}, ` +
+            `${link.destination.x + distanceFromNodeToLinks + link.destination.width + linkKneeSize} ${link.destination.y + fixedLinkHeight} ,` +
+            `${link.destination.x + link.destination.width} ${link.destination.y + fixedLinkHeight - SankeyDiagram.DistanceBetweenLinks / 2}`;
 
         pathParams += `L ${link.destination.x + link.destination.width} ${link.destination.y + distanceBetweenLinks}`;
 
         pathParams += `C ${link.destination.x + link.destination.width} ${link.destination.y + distanceBetweenLinks},`;
         pathParams += `${link.destination.x + distanceFromNodeToLinks + link.destination.width} ${link.destination.y + distanceBetweenLinks},`;
         pathParams += `${link.destination.x + distanceFromNodeToLinks + link.destination.width} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance / 2}`;
-        pathParams += `L ${link.destination.x + distanceFromNodeToLinks + link.destination.width} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance / 2}`;
 
         pathParams += `C ${link.destination.x + distanceFromNodeToLinks + link.destination.width} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance / 2},`;
         pathParams += `${link.destination.x + distanceFromNodeToLinks + link.destination.width} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance},`;
         pathParams += `${link.destination.x + link.destination.width} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance}`;
 
-        pathParams += `L ${link.destination.x + link.destination.width} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance}`;
         pathParams += `L ${x1} ${link.source.y - SankeyDiagram.NodeAndBackwardLinkDistance}`;
 
         pathParams += `C ${x1} ${link.source.y - SankeyDiagram.NodeAndBackwardLinkDistance},`;
         pathParams += `${x1 - distanceFromNodeToLinks} ${link.source.y - SankeyDiagram.NodeAndBackwardLinkDistance},`;
         pathParams += `${x1 - distanceFromNodeToLinks} ${link.source.y - SankeyDiagram.NodeAndBackwardLinkDistance / 2}`;
 
-        pathParams += `L ${x1 - distanceFromNodeToLinks} ${link.source.y - SankeyDiagram.NodeAndBackwardLinkDistance / 2}`;
         pathParams += `C ${x1 - distanceFromNodeToLinks} ${link.source.y - SankeyDiagram.NodeAndBackwardLinkDistance / 2},`;
         pathParams += ` ${x1 - distanceFromNodeToLinks} ${link.source.y + distanceBetweenLinks},`;
         pathParams += ` ${link.source.x} ${link.source.y + distanceBetweenLinks}`;
@@ -2008,21 +1996,16 @@ export class SankeyDiagram implements IVisual {
         pathParams +=
             `C ${link.source.x} ${limit},` +
             `${link.source.x - linkKneeSize - distanceFromNodeToLinks} ${limit},` +
-            `${link.source.x - linkKneeSize - distanceFromNodeToLinks} ${limit - linkKneeSize}`;
+            `${link.source.x - linkKneeSize - distanceFromNodeToLinks} ${limit - fixedLinkHeight}`;
 
         // left border of link
         y1 = link.source.y - (fixedLinkHeight + SankeyDiagram.NodeAndBackwardLinkDistance)
             + (link.shiftByAxisYDestination || 0) + (fixedLinkHeight) / SankeyDiagram.MiddleFactor - (fixedLinkHeight) / 2;
 
         pathParams +=
-            `L ${link.source.x - distanceFromNodeToLinks - linkKneeSize} ${y1 + linkKneeSize},`;
-
-        pathParams +=
-            `C ${link.source.x - distanceFromNodeToLinks - linkKneeSize} ${y1 + linkKneeSize},` +
+            `C ${link.source.x - distanceFromNodeToLinks - linkKneeSize} ${limit - fixedLinkHeight},` +
             `${link.source.x - distanceFromNodeToLinks - linkKneeSize} ${y1},` +
-            `${link.source.x - distanceFromNodeToLinks} ${y1}`;
-
-        pathParams += `L ${link.source.x} ${y1}`;
+            `${link.source.x + link.source.width / 2} ${y1}`;
 
         // close path to get closed area
         pathParams += ` Z`;
