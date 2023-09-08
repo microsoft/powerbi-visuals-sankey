@@ -1923,13 +1923,11 @@ export class SankeyDiagram implements IVisual {
 
         const linkKneeSize: number = Math.min(link.destination.width, minHeight);
 
-        let x0: number,
-            x1: number,
-            y0: number,
+        let y0: number,
             y1: number;
 
-        x0 = link.source.x + link.source.width / 2;
-        x1 = link.destination.x; 
+        const x0 = link.source.x + link.source.width / 2;
+        const x1 = link.destination.x; 
 
         // drawing area as combination of 4 lines in one path element of svg to fill this area with required color
 
