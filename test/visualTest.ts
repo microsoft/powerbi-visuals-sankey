@@ -804,117 +804,164 @@ describe("SankeyDiagram", () => {
         });
     });
 
-    function timeout(ms: number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    const defaultWaitForRender: number = 500;
-
-    describe("Keyboard Navigation check", () =>{
-        it("links should have attributes tabindex>0, role=option, aria-label is not null, and aria-selected=false", (done) => {
+    describe("Keyboard Navigation tests:", () => {
+        it("links should have attributes tabindex>0, role=option, aria-label is not null, and aria-selected=false", (done: DoneFn) => {
             visualBuilder.updateRenderTimeout(dataView, () => {
-                // defaults
-                const someColor: string = "#000000";
-                const fontSize: number = 12;
-                const unit: number = 0;
-
-                visualBuilder.instance.getFormattingModel();
-
-                let nodes = visualBuilder.linkElements;
-                nodes.forEach((el: Element) => {
+                let links = visualBuilder.linkElements;
+                links.forEach((el: Element) => {
                     expect(el.getAttribute("role")).toBe("option");
                     expect(el.getAttribute("tabindex")).toBeGreaterThanOrEqual(1);
                     expect(el.getAttribute("aria-selected")).toBe("false");
                     expect(el.getAttribute("aria-label")).not.toBeNull();
                 });
                 done();
-            },);
+            });
+        });
+
+        it("nodes should have attributes tabindex>0, role=option, aria-label is not null, and aria-selected=false", (done: DoneFn) => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                let nodeRects = visualBuilder.nodeRectElements;
+                nodeRects.forEach((el: Element) => {
+                    expect(el.getAttribute("role")).toBe("option");
+                    expect(el.getAttribute("tabindex")).toBeGreaterThanOrEqual(1);
+                    expect(el.getAttribute("aria-selected")).toBe("false");
+                    expect(el.getAttribute("aria-label")).not.toBeNull();
+                });
+                done();
+            });
         });
 
         it("enter toggles the correct slice", (done: DoneFn) => {
             const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
             visualBuilder.updateRenderTimeout(
-                dataView,
-                    async () => {
-                        visualBuilder.linkElements[0].dispatchEvent(enterEvent);
-                        await timeout(defaultWaitForRender);
-                        expect(visualBuilder.linkElements[0].getAttribute("aria-selected")).toBe("true");
-                        for (const slice of visualBuilder.linkElements) {
-                            if (slice !== visualBuilder.linkElements[0]) {
-                                expect(slice.getAttribute("aria-selected")).toBe("false");
+                dataView, () => {
+                        const links: NodeListOf<HTMLElement> = visualBuilder.linkElements;
+
+                        links[0].dispatchEvent(enterEvent);
+
+                        links.forEach((element: Element, index: number) => {
+                            if (index === 0){
+                                expect(element.getAttribute("aria-selected")).toBe("true");
                             }
-                        }
+                            else {
+                                expect(element.getAttribute("aria-selected")).toBe("false");
+                            }
+                        })
 
-                        visualBuilder.linkElements[0].dispatchEvent(enterEvent);
-                        await timeout(defaultWaitForRender);
-                        for (const slice of visualBuilder.linkElements) {
-                            expect(slice.getAttribute("aria-selected")).toBe("false");
-                        }
+                        links[0].dispatchEvent(enterEvent);
 
+                        links.forEach((element: Element) => {
+                            expect(element.getAttribute("aria-selected")).toBe("false");
+                        });
                         done();
                     },
                 2,
-                );
+            );
+        });
+        
+        it("space toggles the correct slice", (done: DoneFn) => {
+            const spaceEvent = new KeyboardEvent("keydown", { code: "Space", bubbles: true });
+            visualBuilder.updateRenderTimeout(
+                dataView,
+                    () => {
+                        const links: NodeListOf<HTMLElement> = visualBuilder.linkElements;
+
+                        links[0].dispatchEvent(spaceEvent);
+
+                        links.forEach((element: Element, index: number) => {
+                            if (index === 0) {
+                                expect(element.getAttribute("aria-selected")).toBe("true");
+                            }
+                            else {
+                                expect(element.getAttribute("aria-selected")).toBe("false");
+                            }
+                        });
+
+                        links[0].dispatchEvent(spaceEvent);
+
+                        links.forEach((element: Element) => {
+                            expect(element.getAttribute("aria-selected")).toBe("false");
+                        });
+                        done();
+                    },
+                2,
+            );
+        });
+        
+        it("tab between slices works", (done: DoneFn) => {
+            const tabEvent = new KeyboardEvent("keydown", { code: "Tab", bubbles: true });
+            const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
+            visualBuilder.updateRenderTimeout(
+                dataView,
+                    () => {
+                        const links: NodeListOf<HTMLElement> = visualBuilder.linkElements;
+
+                        links[0].dispatchEvent(enterEvent);
+
+                        links.forEach((element: Element, index: number) => {
+                            if (index === 0) {
+                                expect(element.getAttribute("aria-selected")).toBe("true");
+                            }
+                            else {
+                                expect(element.getAttribute("aria-selected")).toBe("false");
+                            }
+                        });
+
+                        visualBuilder.element.dispatchEvent(tabEvent);
+
+                        links[1].dispatchEvent(enterEvent);
+
+                        links.forEach((element: Element, index: number) => {
+                            if (index === 1) {
+                                expect(element.getAttribute("aria-selected")).toBe("true");
+                            }
+                            else {
+                                expect(element.getAttribute("aria-selected")).toBe("false");
+                            }
+                        });
+                        done();
+                    },
+                2,
+            );
         });
     });
-    
-    it("space toggles the correct slice", (done: DoneFn) => {
-        const spaceEvent = new KeyboardEvent("keydown", { code: "Space", bubbles: true });
-        visualBuilder.updateRenderTimeout(
-            dataView,
-                async () => {
-                    visualBuilder.linkElements[0].dispatchEvent(spaceEvent);
-                    await timeout(defaultWaitForRender);
-                    expect(visualBuilder.linkElements[0].getAttribute("aria-selected")).toBe("true");
-                    for (const slice of visualBuilder.linkElements) {
-                        if (slice !== visualBuilder.linkElements[0]) {
-                            expect(slice.getAttribute("aria-selected")).toBe("false");
-                        }
+
+    describe("Focus elements tests:", () => {
+        it("links should have :focus-visible style", (done: DoneFn) => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                const links: NodeListOf<HTMLElement> = visualBuilder.linkElements;
+
+                links[0].focus();
+
+                links.forEach((element: Element, index: number) => {
+                    if (index === 0){
+                        expect(element.matches(':focus-visible')).toBeTrue();
                     }
-
-                    visualBuilder.linkElements[0].dispatchEvent(spaceEvent);
-                    await timeout(defaultWaitForRender);
-                    for (const slice of visualBuilder.linkElements) {
-                        expect(slice.getAttribute("aria-selected")).toBe("false");
+                    else  {
+                        expect(element.matches(':focus-visible')).toBeFalse();
                     }
-
-                    done();
-                },
-            2,
-            );
-    });
-
-    it("tab between slices works", (done: DoneFn) => {
-        const tabEvent = new KeyboardEvent("keydown", { code: "Tab", bubbles: true });
-        const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
-        visualBuilder.updateRenderTimeout(
-            dataView,
-            async () => {
-                visualBuilder.linkElements[0].dispatchEvent(enterEvent);
-                await timeout(defaultWaitForRender);
-                expect(visualBuilder.linkElements[0].getAttribute("aria-selected")).toBe("true");
-                for (const slice of visualBuilder.linkElements) {
-                    if (slice !== visualBuilder.linkElements[0]) {
-                        expect(slice.getAttribute("aria-selected")).toBe("false");
-                    }
-                }
-
-                visualBuilder.element.dispatchEvent(tabEvent);
-                await timeout(defaultWaitForRender);
-
-                visualBuilder.linkElements[1].dispatchEvent(enterEvent);
-                await timeout(defaultWaitForRender);
-                expect(visualBuilder.linkElements[1].getAttribute("aria-selected")).toBe("true");
-                for (const slice of visualBuilder.linkElements) {
-                    if (slice !== visualBuilder.linkElements[1]) {
-                        expect(slice.getAttribute("aria-selected")).toBe("false");
-                    }
-                }
-
+                });
                 done();
-            },
-            2,
-            );
+            });
+        });
+
+        it("nodes should have :focus-visible style", (done: DoneFn) => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                const nodeRects: NodeListOf<HTMLElement> = visualBuilder.nodeRectElements;
+
+                nodeRects[0].focus();
+
+                nodeRects.forEach((element: Element, index: number) => {
+                    if (index === 0){
+                        expect(element.matches(':focus-visible')).toBeTrue();
+                    }
+                    else  {
+                        expect(element.matches(':focus-visible')).toBeFalse();
+                    }
+                });
+                done();
+            });
+        });
     });
 
     describe("high contrast mode test", () => {

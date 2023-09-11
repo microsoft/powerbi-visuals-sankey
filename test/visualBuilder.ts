@@ -65,6 +65,10 @@ export class VisualBuilder extends VisualBuilderBase<VisualClass> {
         return this.nodesElement.querySelectorAll("g.node");
     }
 
+    public get nodeRectElements(): NodeListOf<HTMLElement> {
+        return this.nodesElement.querySelectorAll("rect.nodeRect");
+    }
+
     // g.links element containing all the links 
     public get linksElement(): HTMLElement {
         return this.mainElement
