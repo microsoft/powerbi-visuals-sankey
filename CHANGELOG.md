@@ -1,4 +1,5 @@
 ## 3.2.2.0
+* Add weight option on the formatting pane
 * Add input/output tooltip values for node
 * Fix styles for keyboard navigation
 * Change backward links positions

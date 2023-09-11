@@ -88,6 +88,7 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
         this.behaviorOptions.nodes.on("click", (event: PointerEvent, node: SankeyDiagramNode) => {
             const selectableDataPoints: SelectableDataPoint[] = node.selectableDataPoints;
 
+            // the following line does not allow nodes multiselection
             this.clearSelection();
 
             if (!sankeyDiagramUtils.areDataPointsSelected(this.selectedDataPoints, selectableDataPoints)) {
