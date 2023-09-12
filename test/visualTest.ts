@@ -927,7 +927,7 @@ describe("SankeyDiagram", () => {
     });
 
     describe("Focus elements tests:", () => {
-        it("links should have :focus-visible style", (done: DoneFn) => {
+        it("focused links should have :focus-visible style", (done: DoneFn) => {
             visualBuilder.updateRenderTimeout(dataView, () => {
                 const links: NodeListOf<HTMLElement> = visualBuilder.linkElements;
 
@@ -939,6 +939,41 @@ describe("SankeyDiagram", () => {
                     }
                     else  {
                         expect(element.matches(':focus-visible')).toBeFalse();
+                    }
+                });
+                done();
+            });
+        });
+
+        it("focused links should have styled stroke and outline", (done: DoneFn) => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                // defaults
+                const focusedStrokeWidth: string = "2px";
+                const focusedStrokeOpacity: string = "1";
+                const focusedOutline: string = "rgb(0, 0, 0) none 0px";
+                const strokeWidth: string = "1px";
+                const strokeOpacity: string = "0.2";
+                const outline: string = "rgb(0, 0, 0) none 0px";
+
+                const links: NodeListOf<HTMLElement> = visualBuilder.linkElements;
+
+                links[0].focus();
+                
+                links.forEach((element: Element, index: number) => {
+                    const linkComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                    const linkStrokeWidth: string = linkComputedStyle.getPropertyValue("stroke-width");
+                    const linkStrokeOpacity: string = linkComputedStyle.getPropertyValue("stroke-opacity");
+                    const linkOutline: string = linkComputedStyle.getPropertyValue("outline");
+
+                    if (index === 0){
+                        expect(linkStrokeWidth).toBe(focusedStrokeWidth);
+                        expect(linkStrokeOpacity).toBe(focusedStrokeOpacity);
+                        expect(linkOutline).toBe(focusedOutline);
+                    }
+                    else  {
+                        expect(linkStrokeWidth).toBe(strokeWidth);
+                        expect(linkStrokeOpacity).toBe(strokeOpacity);
+                        expect(linkOutline).toBe(outline);
                     }
                 });
                 done();
@@ -957,6 +992,36 @@ describe("SankeyDiagram", () => {
                     }
                     else  {
                         expect(element.matches(':focus-visible')).toBeFalse();
+                    }
+                });
+                done();
+            });
+        });
+
+        it("focused nodes should have styled stroke and outline", (done: DoneFn) => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                // defaults
+                const focusedStrokeWidth: string = "4px";
+                const focusedOutline: string = "rgb(0, 0, 0) none 0px";
+                const strokeWidth: string = "1px";
+                const outline: string = "rgb(0, 0, 0) none 0px";
+
+                const nodes: NodeListOf<HTMLElement> = visualBuilder.nodeRectElements;
+
+                nodes[0].focus();
+                
+                nodes.forEach((element: Element, index: number) => {
+                    const nodeComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                    const nodeStrokeWidth: string = nodeComputedStyle.getPropertyValue("stroke-width");
+                    const nodeOutline: string = nodeComputedStyle.getPropertyValue("outline");
+
+                    if (index === 0){
+                        expect(nodeStrokeWidth).toBe(focusedStrokeWidth);
+                        expect(nodeOutline).toBe(focusedOutline);
+                    }
+                    else  {
+                        expect(nodeStrokeWidth).toBe(strokeWidth);
+                        expect(nodeOutline).toBe(outline);
                     }
                 });
                 done();
