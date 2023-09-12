@@ -835,17 +835,15 @@ describe("SankeyDiagram", () => {
             const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
             visualBuilder.updateRenderTimeout(
                 dataView, () => {
-                        const links: NodeListOf<HTMLElement> = visualBuilder.linkElements;
+                        const links: HTMLElement[] = [...visualBuilder.linkElements];
 
                         links[0].dispatchEvent(enterEvent);
 
-                        links.forEach((element: Element, index: number) => {
-                            if (index === 0){
-                                expect(element.getAttribute("aria-selected")).toBe("true");
-                            }
-                            else {
-                                expect(element.getAttribute("aria-selected")).toBe("false");
-                            }
+                        expect(links[0].getAttribute("aria-selected")).toBe("true");
+
+                        const otherLinks: HTMLElement[] = links.slice(1);
+                        otherLinks.forEach((link: HTMLElement) => {
+                            expect(link.getAttribute("aria-selected")).toBe("false");
                         })
 
                         links[0].dispatchEvent(enterEvent);
@@ -864,22 +862,20 @@ describe("SankeyDiagram", () => {
             visualBuilder.updateRenderTimeout(
                 dataView,
                     () => {
-                        const links: NodeListOf<HTMLElement> = visualBuilder.linkElements;
+                        const links: HTMLElement[] = [...visualBuilder.linkElements];
 
                         links[0].dispatchEvent(spaceEvent);
 
-                        links.forEach((element: Element, index: number) => {
-                            if (index === 0) {
-                                expect(element.getAttribute("aria-selected")).toBe("true");
-                            }
-                            else {
-                                expect(element.getAttribute("aria-selected")).toBe("false");
-                            }
+                        expect(links[0].getAttribute("aria-selected")).toBe("true");
+                        
+                        const otherLinks: HTMLElement[] = links.slice(1);
+                        otherLinks.forEach((link: HTMLElement) => {
+                            expect(link.getAttribute("aria-selected")).toBe("false");
                         });
 
                         links[0].dispatchEvent(spaceEvent);
 
-                        links.forEach((element: Element) => {
+                        links.forEach((element: HTMLElement) => {
                             expect(element.getAttribute("aria-selected")).toBe("false");
                         });
                         done();
@@ -894,30 +890,24 @@ describe("SankeyDiagram", () => {
             visualBuilder.updateRenderTimeout(
                 dataView,
                     () => {
-                        const links: NodeListOf<HTMLElement> = visualBuilder.linkElements;
+                        const links: HTMLElement[] = [...visualBuilder.linkElements];
 
                         links[0].dispatchEvent(enterEvent);
+                        expect(links[0].getAttribute("aria-selected")).toBe("true");
 
-                        links.forEach((element: Element, index: number) => {
-                            if (index === 0) {
-                                expect(element.getAttribute("aria-selected")).toBe("true");
-                            }
-                            else {
-                                expect(element.getAttribute("aria-selected")).toBe("false");
-                            }
+                        const otherLinks: HTMLElement[] = links.slice(1);
+                        otherLinks.forEach((link: HTMLElement) => {
+                            expect(link.getAttribute("aria-selected")).toBe("false");
                         });
 
                         visualBuilder.element.dispatchEvent(tabEvent);
 
                         links[1].dispatchEvent(enterEvent);
+                        expect(links[1].getAttribute("aria-selected")).toBe("true");
 
-                        links.forEach((element: Element, index: number) => {
-                            if (index === 1) {
-                                expect(element.getAttribute("aria-selected")).toBe("true");
-                            }
-                            else {
-                                expect(element.getAttribute("aria-selected")).toBe("false");
-                            }
+                        links.splice(1, 1);
+                        links.forEach((link: HTMLElement) => {
+                            expect(link.getAttribute("aria-selected")).toBe("false");
                         });
                         done();
                     },
@@ -929,17 +919,14 @@ describe("SankeyDiagram", () => {
     describe("Focus elements tests:", () => {
         it("focused links should have :focus-visible style", (done: DoneFn) => {
             visualBuilder.updateRenderTimeout(dataView, () => {
-                const links: NodeListOf<HTMLElement> = visualBuilder.linkElements;
+                const links: HTMLElement[] = [...visualBuilder.linkElements];
 
                 links[0].focus();
+                expect(links[0].matches(':focus-visible')).toBeTrue();
 
-                links.forEach((element: Element, index: number) => {
-                    if (index === 0){
-                        expect(element.matches(':focus-visible')).toBeTrue();
-                    }
-                    else  {
-                        expect(element.matches(':focus-visible')).toBeFalse();
-                    }
+                const otherLinks: HTMLElement[] = links.slice(1);
+                otherLinks.forEach((link: HTMLElement) => {
+                    expect(link.matches(':focus-visible')).toBeFalse();
                 });
                 done();
             });
@@ -955,26 +942,29 @@ describe("SankeyDiagram", () => {
                 const strokeOpacity: string = "0.2";
                 const outline: string = "rgb(0, 0, 0) none 0px";
 
-                const links: NodeListOf<HTMLElement> = visualBuilder.linkElements;
+                const links: HTMLElement[] = [...visualBuilder.linkElements];
 
                 links[0].focus();
-                
-                links.forEach((element: Element, index: number) => {
-                    const linkComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
-                    const linkStrokeWidth: string = linkComputedStyle.getPropertyValue("stroke-width");
-                    const linkStrokeOpacity: string = linkComputedStyle.getPropertyValue("stroke-opacity");
-                    const linkOutline: string = linkComputedStyle.getPropertyValue("outline");
 
-                    if (index === 0){
-                        expect(linkStrokeWidth).toBe(focusedStrokeWidth);
-                        expect(linkStrokeOpacity).toBe(focusedStrokeOpacity);
-                        expect(linkOutline).toBe(focusedOutline);
-                    }
-                    else  {
-                        expect(linkStrokeWidth).toBe(strokeWidth);
-                        expect(linkStrokeOpacity).toBe(strokeOpacity);
-                        expect(linkOutline).toBe(outline);
-                    }
+                let linkComputedStyle: CSSStyleDeclaration = getComputedStyle(links[0]);
+                let linkStrokeWidth: string = linkComputedStyle.getPropertyValue("stroke-width");
+                let linkStrokeOpacity: string = linkComputedStyle.getPropertyValue("stroke-opacity");
+                let linkOutline: string = linkComputedStyle.getPropertyValue("outline");
+
+                expect(linkStrokeWidth).toBe(focusedStrokeWidth);
+                expect(linkStrokeOpacity).toBe(focusedStrokeOpacity);
+                expect(linkOutline).toBe(focusedOutline);
+
+                const otherLinks: HTMLElement[] = links.slice(1);
+                otherLinks.forEach((link: HTMLElement) => {
+                    linkComputedStyle = getComputedStyle(link);
+                    linkStrokeWidth = linkComputedStyle.getPropertyValue("stroke-width");
+                    linkStrokeOpacity = linkComputedStyle.getPropertyValue("stroke-opacity");
+                    linkOutline = linkComputedStyle.getPropertyValue("outline");
+
+                    expect(linkStrokeWidth).toBe(strokeWidth);
+                    expect(linkStrokeOpacity).toBe(strokeOpacity);
+                    expect(linkOutline).toBe(outline);
                 });
                 done();
             });
@@ -982,17 +972,14 @@ describe("SankeyDiagram", () => {
 
         it("nodes should have :focus-visible style", (done: DoneFn) => {
             visualBuilder.updateRenderTimeout(dataView, () => {
-                const nodeRects: NodeListOf<HTMLElement> = visualBuilder.nodeRectElements;
+                const nodeRects: HTMLElement[] = [...visualBuilder.nodeRectElements];
 
                 nodeRects[0].focus();
+                expect(nodeRects[0].matches(':focus-visible')).toBeTrue();
 
-                nodeRects.forEach((element: Element, index: number) => {
-                    if (index === 0){
-                        expect(element.matches(':focus-visible')).toBeTrue();
-                    }
-                    else  {
-                        expect(element.matches(':focus-visible')).toBeFalse();
-                    }
+                const otherNodeRects: HTMLElement[] = nodeRects.slice(1);
+                otherNodeRects.forEach((nodeRect: HTMLElement) => {
+                    expect(nodeRect.matches(':focus-visible')).toBeFalse();
                 });
                 done();
             });
@@ -1006,23 +993,23 @@ describe("SankeyDiagram", () => {
                 const strokeWidth: string = "1px";
                 const outline: string = "rgb(0, 0, 0) none 0px";
 
-                const nodes: NodeListOf<HTMLElement> = visualBuilder.nodeRectElements;
+                const nodeRects: HTMLElement[] = [...visualBuilder.nodeRectElements];
 
-                nodes[0].focus();
-                
-                nodes.forEach((element: Element, index: number) => {
-                    const nodeComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
-                    const nodeStrokeWidth: string = nodeComputedStyle.getPropertyValue("stroke-width");
-                    const nodeOutline: string = nodeComputedStyle.getPropertyValue("outline");
+                nodeRects[0].focus();
 
-                    if (index === 0){
-                        expect(nodeStrokeWidth).toBe(focusedStrokeWidth);
-                        expect(nodeOutline).toBe(focusedOutline);
-                    }
-                    else  {
-                        expect(nodeStrokeWidth).toBe(strokeWidth);
-                        expect(nodeOutline).toBe(outline);
-                    }
+                let nodeComputedStyle: CSSStyleDeclaration = getComputedStyle(nodeRects[0]);
+                let nodeStrokeWidth: string = nodeComputedStyle.getPropertyValue("stroke-width");
+                let nodeOutline: string = nodeComputedStyle.getPropertyValue("outline");
+                expect(nodeStrokeWidth).toBe(focusedStrokeWidth);
+                expect(nodeOutline).toBe(focusedOutline);
+
+                const otherNodeRects: HTMLElement[] = nodeRects.slice(1);
+                otherNodeRects.forEach((nodeRect: HTMLElement) => {
+                    nodeComputedStyle = getComputedStyle(nodeRect);
+                    nodeStrokeWidth = nodeComputedStyle.getPropertyValue("stroke-width");
+                    nodeOutline = nodeComputedStyle.getPropertyValue("outline");
+                    expect(nodeStrokeWidth).toBe(strokeWidth);
+                    expect(nodeOutline).toBe(outline);
                 });
                 done();
             });
