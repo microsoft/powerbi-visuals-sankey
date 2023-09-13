@@ -169,6 +169,11 @@
         },
         "nodes": {
             "properties": {
+                "nodesWidth":{
+                    "type": {
+                        "numeric": true
+                    }
+                },
                 "fill": {
                     "type": {
                         "fill": {

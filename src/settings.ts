@@ -60,6 +60,12 @@ export class FontSizeDefaultOptions {
     public static MaxFontSize: number = 60;
 }
 
+export class NodeWidthDefaultOptions {
+    public static DefaultWidth: number = 10;
+    public static MinWidth: number = 10;
+    public static MaxWidth: number = 30;
+}
+
 export class SankeyDiagramScaleSettings {
     public x: number = 1;
     public y: number = 1;
@@ -181,7 +187,24 @@ export class NodesSettings extends FormattingSettingsCard {
     public name: string = "nodes";
     public displayName: string = "Nodes";
     public displayNameKey: string = "Visual_Nodes";
-    public slices: FormattingSettingsSlice[] = [];
+
+    public nodeWidth = new formattingSettings.NumUpDown({
+        name: "nodesWidth",
+        displayName: "Width",
+        displayNameKey: "Visual_NodeWidth",
+        value: NodeWidthDefaultOptions.DefaultWidth,
+        options: {
+            minValue: {
+                type: powerbiVisualsApi.visuals.ValidatorType.Min,
+                value: NodeWidthDefaultOptions.MinWidth,
+            },
+            maxValue: {
+                type: powerbiVisualsApi.visuals.ValidatorType.Max,
+                value: NodeWidthDefaultOptions.MaxWidth
+            }
+        }
+    });
+    public slices: FormattingSettingsSlice[] = [this.nodeWidth];
 }
 
 export class ScaleSettings extends FormattingSettingsCard {
@@ -254,14 +277,14 @@ export class SankeyDiagramSettings extends FormattingSettingsModel {
     public labels: DataLabelsSettings = new DataLabelsSettings();
     public linkLabels: LinkLabelsSettings = new LinkLabelsSettings();
     public linksColorSelector: LinksSettings = new LinksSettings();
-    public nodesColorSelector: NodesSettings = new NodesSettings();
+    public nodesSettings: NodesSettings = new NodesSettings();
     public scale: ScaleSettings = new ScaleSettings();
     public cyclesLinks: CyclesLinkSettings = new CyclesLinkSettings();
     public nodeComplexSettings: NodeComplexSettings = new NodeComplexSettings();
-    public cards: FormattingSettingsCard[] = [this.labels, this.linkLabels, this.linksColorSelector, this.nodesColorSelector, this.scale, this.cyclesLinks, this.nodeComplexSettings];
+    public cards: FormattingSettingsCard[] = [this.labels, this.linkLabels, this.linksColorSelector, this.nodesSettings, this.scale, this.cyclesLinks, this.nodeComplexSettings];
 
     populateNodesColorSelector(nodes: SankeyDiagramNode[]) {
-        const slices = this.nodesColorSelector.slices;
+        const slices = this.nodesSettings.slices;
         if (nodes) {
             nodes.forEach(node => {
                 if(slices.some((nodeColorSelector: FormattingSettingsSlice) => nodeColorSelector.displayName === node.label.formattedName)){
@@ -292,6 +315,6 @@ export class SankeyDiagramSettings extends FormattingSettingsModel {
     }
 
     removeNodeComplexSettingsFromPane(){
-        this.cards = [this.labels, this.linkLabels, this.linksColorSelector, this.nodesColorSelector, this.scale, this.cyclesLinks];
+        this.cards = [this.labels, this.linkLabels, this.linksColorSelector, this.nodesSettings, this.scale, this.cyclesLinks];
     }
 }

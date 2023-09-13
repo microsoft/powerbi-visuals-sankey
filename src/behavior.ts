@@ -52,8 +52,8 @@ export interface SankeyDiagramBehaviorOptions extends IBehaviorOptions<Selectabl
     interactivityService: IInteractivityService<SelectableDataPoint>;
 }
 
-const EnterCode = "Enter";
-const SpaceCode = "Space";
+const EnterCode: string = "Enter";
+const SpaceCode: string = "Space";
 
 export class SankeyDiagramBehavior implements IInteractiveBehavior {
     private behaviorOptions: SankeyDiagramBehaviorOptions;
@@ -88,6 +88,7 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
         this.behaviorOptions.nodes.on("click", (event: PointerEvent, node: SankeyDiagramNode) => {
             const selectableDataPoints: SelectableDataPoint[] = node.selectableDataPoints;
 
+            // the following line does not allow nodes multiselection
             this.clearSelection();
 
             if (!sankeyDiagramUtils.areDataPointsSelected(this.selectedDataPoints, selectableDataPoints)) {
@@ -100,18 +101,37 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
                 this.createAnEmptySelectedDataPoints();
             }
         });
-    }
 
-    private bindKeyboardEventToNodes(): void {
-        this.behaviorOptions.nodes.on("contextmenu", (event: PointerEvent, datum: SankeyDiagramNode) => {
+        this.behaviorOptions.nodes.on("contextmenu", (event: PointerEvent, node: SankeyDiagramNode) => {
             if (event) {
                 this.selectionHandler.handleContextMenu(
-                    datum,
+                    node,
                     {
                         x: event.clientX,
                         y: event.clientY
                     });
                 event.preventDefault();
+            }
+        });
+    }
+
+    private bindKeyboardEventToNodes(): void {
+        this.behaviorOptions.nodes.on("keydown", (event: KeyboardEvent, node: SankeyDiagramNode) => {
+            if (event.code !== EnterCode && event.code !== SpaceCode) {
+                return;
+            }
+            const selectableDataPoints: SelectableDataPoint[] = node.selectableDataPoints;
+
+            this.clearSelection();
+
+            if (!sankeyDiagramUtils.areDataPointsSelected(this.selectedDataPoints, selectableDataPoints)) {
+                selectableDataPoints.forEach((subDataPoint: SelectableDataPoint) => {
+                    this.selectionHandler.handleSelection(subDataPoint, true);
+                });
+
+                this.selectedDataPoints = selectableDataPoints;
+            } else {
+                this.createAnEmptySelectedDataPoints();
             }
         });
     }
@@ -144,18 +164,6 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
             this.createAnEmptySelectedDataPoints();
 
         });
-
-        this.behaviorOptions.links.on("contextmenu", (event: PointerEvent, datum: SankeyDiagramLink) => {
-            if (event) {
-                this.selectionHandler.handleContextMenu(
-                    datum,
-                    {
-                        x: event.clientX,
-                        y: event.clientY
-                    });
-                event.preventDefault();
-            }
-        });
     }
 
     private bindClickEventToClearCatcher(): void {
@@ -185,7 +193,9 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
     }
 
     public renderSelection(hasSelection: boolean): void {
+        this.behaviorOptions.nodes.attr("aria-selected", sankeyDiagramUtils.isDataPointSelected);
         this.behaviorOptions.links.attr("aria-selected", sankeyDiagramUtils.isDataPointSelected);
+
         sankeyDiagramUtils.updateFillOpacity(
             this.behaviorOptions.links,
             this.behaviorOptions.interactivityService,

@@ -90,8 +90,8 @@ export interface SankeyDiagramLink extends
     destination: SankeyDiagramNode;
     weight: number;
     height?: number;
-    dySource?: number;
-    dyDestination?: number;
+    shiftByAxisYSource?: number;
+    shiftByAxisYDestination?: number;
     fillColor: string;
     strokeColor: string;
     direction: SankeyLinkDirrections;

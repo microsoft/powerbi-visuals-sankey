@@ -42,6 +42,16 @@
                 stroke-width: 1px;
                 fill-opacity: 0.9;
                 shape-rendering: crispEdges;
+
+                &:focus {
+                    outline: none;
+                }
+
+                &:focus-visible {
+                    outline: none;
+                    stroke-width: 4px;
+                    stroke-opacity: 1;
+                }
             }
 
             .nodeLabel {
@@ -60,6 +70,16 @@
             stroke-opacity: 0.2;
             fill-opacity: 0.2;
             stroke-width: 1;
+            
+            &:focus {
+                outline: none;
+            }
+    
+            &:focus-visible {
+                outline: none;
+                stroke-width: 2px;
+                stroke-opacity: 1;
+            }
         }
 
         .link:hover,
@@ -68,14 +88,5 @@
             fill-opacity: 0.7;
             stroke-width: 1;
         }
-    }
-
-    &:focus {
-        outline: none;
-    }
-    
-    &:focus-visible {
-        outline: auto 1px;
-        outline-color: -webkit-focus-ring-color;
     }
 }
