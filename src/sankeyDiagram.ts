@@ -1726,9 +1726,26 @@ export class SankeyDiagram implements IVisual {
                     sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
                         return link.height > SankeyDiagram.MinSize;
                     }).sort((a: SankeyDiagramLink, b: SankeyDiagramLink) => {
-                        // sort links to draw forward links in the first, backward links draw as second and selflinks as the last
-                        // in this case self links will be on front side
-                        return a.direction < b.direction ? -1 : a.direction > b.direction ? 1 : 0;
+                        // sort links to set tabindex according to their source nodes
+                        if (a.source.x < b.source.x){
+                            return -1;
+                        }
+                        if (a.source.x > b.source.x) {
+                            return 1;
+                        }
+                        if (a.source.x === b.source.x){
+                            // in this case self links and backward links will be on front side
+                            if (a.direction > b.direction){
+                                return 1;
+                            }
+                            if (a.source.y + a.shiftByAxisYSource < b.source.y + b.shiftByAxisYSource) {
+                                return -1;
+                            }
+                            if (a.source.y + a.shiftByAxisYSource > b.source.y + b.shiftByAxisYSource) {
+                                return 1;
+                            }
+                            return 0;
+                        }
                     })
                 );
 
