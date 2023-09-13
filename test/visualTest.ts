@@ -965,6 +965,7 @@ describe("SankeyDiagram", () => {
                     expect(linkStrokeWidth).toBe(strokeWidth);
                     expect(linkStrokeOpacity).toBe(strokeOpacity);
                     expect(linkOutline).toBe(outline);
+                    expect(linkStrokeWidth < focusedStrokeWidth).toBeTrue();
                 });
                 done();
             });
@@ -1010,6 +1011,7 @@ describe("SankeyDiagram", () => {
                     nodeOutline = nodeComputedStyle.getPropertyValue("outline");
                     expect(nodeStrokeWidth).toBe(strokeWidth);
                     expect(nodeOutline).toBe(outline);
+                    expect(nodeStrokeWidth < focusedStrokeWidth).toBeTrue();
                 });
                 done();
             });
