@@ -592,7 +592,8 @@ export class SankeyDiagram implements IVisual {
                 node.label.formattedName,
                 node.inputWeight + node.selfLinkWeight,
                 node.outputWeight + node.selfLinkWeight,
-                this.localizationManager
+                this.localizationManager,
+                valueFieldName
             );
         });
 
@@ -893,7 +894,8 @@ export class SankeyDiagram implements IVisual {
         nodeName: string,
         nodeInputWeight: number,
         nodeOutputWeight: number,
-        localizationManager: ILocalizationManager
+        localizationManager: ILocalizationManager,
+        valueDisplayName?: string
     ): VisualTooltipDataItem[] {
 
         let formattedNodeInputWeight: string;
@@ -911,16 +913,19 @@ export class SankeyDiagram implements IVisual {
             {
                 displayName: localizationManager.getDisplayName("Visual_TooltipDisplayName"),
                 value: nodeName
-            },
-            {
+            }
+        ];
+
+        if (valueDisplayName) {
+            tooltips.push({
                 displayName: localizationManager.getDisplayName("Visual_TooltipDisplayInput"),
                 value: formattedNodeInputWeight
             },
             {
                 displayName: localizationManager.getDisplayName("Visual_TooltipDisplayOutput"),
                 value: formattedNodeOutputWeight
-            }
-        ];
+            });
+        }
 
         return tooltips;
     }
