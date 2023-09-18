@@ -49,12 +49,11 @@ import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifi
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 import DataViewMatrixNode = powerbi.DataViewMatrixNode;
-// powerbi.visuals
-import ISelectionId = powerbi.visuals.ISelectionId;
 
 // powerbi.extensibility
 import IColorPalette = powerbi.extensibility.IColorPalette;
 import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
+import ISelectionManager = powerbi.extensibility.ISelectionManager;
 
 // powerbi.extensibility.visual
 import IVisual = powerbi.extensibility.visual.IVisual;
@@ -80,7 +79,6 @@ import IValueFormatter = valueFormatter.IValueFormatter;
 import { interactivitySelectionService, interactivityBaseService } from "powerbi-visuals-utils-interactivityutils";
 import appendClearCatcher = interactivityBaseService.appendClearCatcher;
 import SelectableDataPoint = interactivitySelectionService.SelectableDataPoint;
-import IInteractiveBehavior = interactivityBaseService.IInteractiveBehavior;
 import IInteractivityService = interactivityBaseService.IInteractivityService;
 import createInteractivitySelectionService = interactivitySelectionService.createInteractivitySelectionService;
 
@@ -242,13 +240,14 @@ export class SankeyDiagram implements IVisual {
     private colorHelper: ColorHelper;
     private visualHost: IVisualHost;
     private localizationManager: ILocalizationManager;
+    private selectionManager: ISelectionManager;
 
     private viewport: IViewport;
 
     private dataView: SankeyDiagramDataView;
 
     private interactivityService: IInteractivityService<SelectableDataPoint>;
-    private behavior: IInteractiveBehavior;
+    private behavior: SankeyDiagramBehavior;
 
     private tooltipServiceWrapper: ITooltipServiceWrapper;
 
@@ -285,8 +284,9 @@ export class SankeyDiagram implements IVisual {
             .append("svg")
             .classed(SankeyDiagram.ClassName, true);
 
+        this.selectionManager = this.visualHost.createSelectionManager();
         this.interactivityService = createInteractivitySelectionService(this.visualHost);
-        this.behavior = SankeyDiagramBehavior.create();
+        this.behavior = new SankeyDiagramBehavior(this.selectionManager);
         this.clearCatcher = appendClearCatcher(this.root);
 
         this.colorPalette = this.visualHost.colorPalette;
@@ -329,8 +329,6 @@ export class SankeyDiagram implements IVisual {
         this.computePositions(sankeyDiagramDataView);
 
         this.dataView = sankeyDiagramDataView;
-
-        this.applySelectionStateToData();
 
         this.render(sankeyDiagramDataView);
         this.visualHost.eventService.renderingFinished(visualUpdateOptions);
@@ -405,10 +403,9 @@ export class SankeyDiagram implements IVisual {
             fillColor: nodeFillColor,
             strokeColor: nodeStrokeColor,
             tooltipInfo: [],
-            selectableDataPoints: [],
             settings: null,
-            identity: null,
-            selected: false
+            linkSelectableIds: [],
+            selectionId: null
         }
     }
 
@@ -459,7 +456,7 @@ export class SankeyDiagram implements IVisual {
 
         dataView.matrix.rows.root.children.forEach(parent => {
             const newSourceNode = this.createNewNode(parent, settings)
-            newSourceNode.identity = this.visualHost.createSelectionIdBuilder()
+            newSourceNode.selectionId = this.visualHost.createSelectionIdBuilder()
                 .withMatrixNode(parent, dataView.matrix.rows.levels)
                 .createSelectionId();
             nodes.push(newSourceNode);
@@ -477,7 +474,7 @@ export class SankeyDiagram implements IVisual {
 
                 if (!foundDestination) {
                     foundDestination = this.createNewNode(child, settings);
-                    foundDestination.identity = this.visualHost.createSelectionIdBuilder()
+                    foundDestination.selectionId = this.visualHost.createSelectionIdBuilder()
                         .withMatrixNode(parent, dataView.matrix.rows.levels)
                         .withMatrixNode(child, dataView.matrix.rows.levels)
                         .createSelectionId();
@@ -527,22 +524,19 @@ export class SankeyDiagram implements IVisual {
                     shiftByAxisYSource: 0,
                     shiftByAxisYDestination: 0,
                     tooltipInfo: tooltipInfo,
-                    identity: this.visualHost.createSelectionIdBuilder()
+                    selectionId: this.visualHost.createSelectionIdBuilder()
                         .withMatrixNode(parent, dataView.matrix.rows.levels)
                         .withMatrixNode(child, dataView.matrix.rows.levels)
                         .createSelectionId(),
-                    selected: false,
                     direction: SankeyLinkDirrections.Forward
                 }
 
-                const linkDataPoint: SelectableDataPoint = SankeyDiagram.createSelectableDataPoint(<ISelectionId>link.identity);
-
                 // preventing double copying of selectableDataPoints and links to a node with selflink 
                 if (!selfLinkFound){
-                    foundSource.selectableDataPoints.push(linkDataPoint);
+                    foundSource.linkSelectableIds.push(link.selectionId);
                     foundSource.links.push(link);
                 }
-                foundDestination.selectableDataPoints.push(linkDataPoint);
+                foundDestination.linkSelectableIds.push(link.selectionId);
                 foundDestination.links.push(link);
                 links.push(link);
 
@@ -616,7 +610,7 @@ export class SankeyDiagram implements IVisual {
             cycles[nodeName].forEach((cycleNode: SankeyDiagramNode) => {
                 const nodeCopy: SankeyDiagramNode = lodashCloneDeep(cycleNode);
                 nodeCopy.label.name += SankeyDiagram.DuplicatedNamePostfix;
-                nodeCopy.selectableDataPoints = cycleNode.selectableDataPoints;
+                nodeCopy.linkSelectableIds = cycleNode.linkSelectableIds;
                 nodeCopy.links = cycleNode.links;
                 nodeCopy.cloneLink = cycleNode;
                 cycleNode.cloneLink = nodeCopy;
@@ -759,18 +753,6 @@ export class SankeyDiagram implements IVisual {
         });
 
         return simpleCycles;
-    }
-
-
-
-    private static createSelectableDataPoint(
-        selectionId: ISelectionId,
-        isSelected: boolean = false): SelectableDataPoint {
-
-        return {
-            identity: selectionId,
-            selected: isSelected
-        };
     }
 
     private getNodeSettings(
@@ -1438,18 +1420,6 @@ export class SankeyDiagram implements IVisual {
         });
     }
 
-    private applySelectionStateToData(): void {
-        this.interactivityService.applySelectionStateToData(this.getSelectableDataPoints());
-    }
-
-    private getSelectableDataPoints(): SelectableDataPoint[] {
-        return this.dataView.nodes.reduce((
-            dataPoints: SelectableDataPoint[],
-            node: SankeyDiagramNode) => {
-
-            return dataPoints.concat(node.selectableDataPoints);
-        }, this.dataView.links);
-    }
 
     private render(sankeyDiagramDataView: SankeyDiagramDataView): void {
         const linksSelection: Selection<SankeyDiagramLink> = this.renderLinks(sankeyDiagramDataView);
@@ -2212,7 +2182,7 @@ export class SankeyDiagram implements IVisual {
         this.tooltipServiceWrapper.addTooltip(
             selection,
             (data: TooltipEnabledDataPoint) => data.tooltipInfo,
-            (data: SankeyDiagramNode | SankeyDiagramLink) => data.identity
+            (data: SankeyDiagramNode | SankeyDiagramLink) => data.selectionId
         );
     }
 
@@ -2220,15 +2190,13 @@ export class SankeyDiagram implements IVisual {
         nodesSelection: Selection<SankeyDiagramNode>,
         linksSelection: Selection<SankeyDiagramLink>): void {
 
-        sankeyDiagramUtils.updateFillOpacity(
+        sankeyDiagramUtils.updateNodesFillOpacity(
             nodesSelection,
-            this.interactivityService,
-            false);
+            this.selectionManager);
 
-        sankeyDiagramUtils.updateFillOpacity(
+        sankeyDiagramUtils.updateLinksFillOpacity(
             linksSelection,
-            this.interactivityService,
-            true);
+            this.selectionManager);
     }
 
     private bindSelectionHandler(
@@ -2243,16 +2211,10 @@ export class SankeyDiagram implements IVisual {
         const behaviorOptions: SankeyDiagramBehaviorOptions = {
             nodes: nodesSelection,
             links: linksSelection,
-            clearCatcher: this.clearCatcher,
-            interactivityService: this.interactivityService,
-            behavior: this.behavior,
-            dataPoints: this.getSelectableDataPoints(),
-            interactivityServiceOptions: {
-                overrideSelectionFromData: true
-            }
+            clearCatcher: this.clearCatcher
         };
 
-        this.interactivityService.bind(behaviorOptions);
+        this.behavior.bindEvents(behaviorOptions);
     }
 
     public onClearSelection(): void {
