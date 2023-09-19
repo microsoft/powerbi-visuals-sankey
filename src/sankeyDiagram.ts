@@ -76,11 +76,8 @@ import TextProperties = interfaces.TextProperties;
 import IValueFormatter = valueFormatter.IValueFormatter;
 
 // powerbi.extensibility.utils.interactivity
-import { interactivitySelectionService, interactivityBaseService } from "powerbi-visuals-utils-interactivityutils";
+import { interactivityBaseService } from "powerbi-visuals-utils-interactivityutils";
 import appendClearCatcher = interactivityBaseService.appendClearCatcher;
-import SelectableDataPoint = interactivitySelectionService.SelectableDataPoint;
-import IInteractivityService = interactivityBaseService.IInteractivityService;
-import createInteractivitySelectionService = interactivitySelectionService.createInteractivitySelectionService;
 
 // powerbi.extensibility.utils.tooltip
 import {
@@ -246,7 +243,6 @@ export class SankeyDiagram implements IVisual {
 
     private dataView: SankeyDiagramDataView;
 
-    private interactivityService: IInteractivityService<SelectableDataPoint>;
     private behavior: SankeyDiagramBehavior;
 
     private tooltipServiceWrapper: ITooltipServiceWrapper;
@@ -285,7 +281,6 @@ export class SankeyDiagram implements IVisual {
             .classed(SankeyDiagram.ClassName, true);
 
         this.selectionManager = this.visualHost.createSelectionManager();
-        this.interactivityService = createInteractivitySelectionService(this.visualHost);
         this.behavior = new SankeyDiagramBehavior(this.selectionManager);
         this.clearCatcher = appendClearCatcher(this.root);
 
@@ -2203,7 +2198,7 @@ export class SankeyDiagram implements IVisual {
         nodesSelection: Selection<SankeyDiagramNode>,
         linksSelection: Selection<SankeyDiagramLink>): void {
 
-        if (!this.interactivityService
+        if (!this.selectionManager
             || !this.dataView) {
             return;
         }
@@ -2215,11 +2210,5 @@ export class SankeyDiagram implements IVisual {
         };
 
         this.behavior.bindEvents(behaviorOptions);
-    }
-
-    public onClearSelection(): void {
-        if (this.interactivityService) {
-            this.interactivityService.clearSelection();
-        }
     }
 }
