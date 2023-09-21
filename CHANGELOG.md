@@ -1,3 +1,7 @@
+## 3.2.3.0
+* Use selection manager instead of interactivity utils
+* Change links style
+
 ## 3.2.2.0
 * Add weight option on the formatting pane
 * Add input/output tooltip values for node
