@@ -939,7 +939,7 @@ describe("SankeyDiagram", () => {
                 const focusedStrokeOpacity: string = "1";
                 const focusedOutline: string = "rgb(0, 0, 0) none 0px";
                 const strokeWidth: string = "1px";
-                const strokeOpacity: string = "0.2";
+                const strokeOpacity: string = "0.6";
                 const outline: string = "rgb(0, 0, 0) none 0px";
 
                 const links: HTMLElement[] = [...visualBuilder.linkElements];

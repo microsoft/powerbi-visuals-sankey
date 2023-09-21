@@ -134,7 +134,7 @@ export class SankeyDiagram implements IVisual {
     private static LinkLabelPathsSelector: ClassAndSelector = createClassAndSelector("linkLabelPaths");
     private static LinkLabelTextsSelector: ClassAndSelector = createClassAndSelector("linkLabelTexts");
 
-    private static DefaultColourOfLink: string = "black";
+    private static DefaultColourOfLink: string = "#4F4F4F";
 
     private static LinksPropertyIdentifier: DataViewObjectPropertyIdentifier = {
         objectName: "links",
