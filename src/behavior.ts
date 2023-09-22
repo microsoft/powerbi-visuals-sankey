@@ -81,6 +81,7 @@ export class SankeyDiagramBehavior{
                     this.selectionManager.select(notSelectedIds, true);
                 }
                 else {
+                    // deselecting previously selected ids so that all node.linkSelectableIds are in the same deselected state
                     this.selectionManager.select(selectedIds, false);
                     this.selectionManager.select(node.linkSelectableIds, false);
                 }
@@ -119,6 +120,7 @@ export class SankeyDiagramBehavior{
                     this.selectionManager.select(notSelectedIds, true);
                 }
                 else {
+                    // deselecting previously selected ids so that all node.linkSelectableIds are in the same deselected state
                     this.selectionManager.select(selectedIds, false);
                     this.selectionManager.select(node.linkSelectableIds, false);
                 }
