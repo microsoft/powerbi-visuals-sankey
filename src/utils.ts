@@ -44,8 +44,9 @@ const SelectedClassName: string = "selected";
 
 export function isNodeSelected(node: SankeyDiagramNode, selectionManager: ISelectionManager): boolean {
     let isSelected: boolean = false;
+    const selectedIds: ISelectionId[] = <ISelectionId[]>selectionManager.getSelectionIds();
     node.linkSelectableIds.forEach((selectableId: ISelectionId) => {
-        if (selectionManager.getSelectionIds().some((id: ISelectionId) => id.equals(selectableId))){
+        if (selectedIds.some((id: ISelectionId) => id.equals(selectableId))){
             isSelected = true;
         }
     });
@@ -57,18 +58,18 @@ export function isLinkSelected(link: SankeyDiagramLink, selectionManager: ISelec
 }
 
 export function updateLinksFillOpacity(
-    selection: Selection<SankeyDiagramLink>,
+    links: Selection<SankeyDiagramLink>,
     selectionManager: ISelectionManager): void {
 
-    selection.classed(SelectedClassName, (link: SankeyDiagramLink): boolean => isLinkSelected(link, selectionManager));
+    links.classed(SelectedClassName, (link: SankeyDiagramLink): boolean => isLinkSelected(link, selectionManager));
 }
 
 export function updateNodesFillOpacity(
-    selection: Selection<SankeyDiagramNode>,
+    nodes: Selection<SankeyDiagramNode>,
     selectionManager: ISelectionManager): void {
 
     const hasSelection: boolean = selectionManager.hasSelection();
-    selection.classed(SelectedClassName, (node: SankeyDiagramNode): boolean => {
+    nodes.classed(SelectedClassName, (node: SankeyDiagramNode): boolean => {
         const isSelected: boolean = isNodeSelected(node, selectionManager);
         return hasSelection && !isSelected;
     });
