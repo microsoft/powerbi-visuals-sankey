@@ -454,7 +454,8 @@ describe("SankeyDiagram", () => {
                         expect(link.classList).toContain(selectionClass);
                         // selected link is the only one that is selected
                         expect([...visualBuilder.linkElements].filter(link => link.classList.value.includes(selectionClass)).length).toBe(1);
-
+                        
+                        // deselection does not work without passing 'true' as second argument
                         clickElement(link, true);
 
                         renderTimeout(() => {
