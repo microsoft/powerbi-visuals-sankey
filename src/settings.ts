@@ -294,7 +294,7 @@ export class SankeyDiagramSettings extends FormattingSettingsModel {
                     name: "fill",
                     displayName: node.label.formattedName,
                     value: { value: node.fillColor },
-                    selector: ColorHelper.normalizeSelector((<ISelectionId>node.identity).getSelector())
+                    selector: ColorHelper.normalizeSelector((<ISelectionId>node.selectionId).getSelector())
                 }));
             });
         }
@@ -308,7 +308,7 @@ export class SankeyDiagramSettings extends FormattingSettingsModel {
                     name: "fill",
                     displayName: link.source.label.formattedName + " - " + link.destination.label.formattedName,
                     value: { value: link.fillColor },
-                    selector: ColorHelper.normalizeSelector((<ISelectionId>link.identity).getSelector())
+                    selector: ColorHelper.normalizeSelector((<ISelectionId>link.selectionId).getSelector())
                 }));
             });
         }

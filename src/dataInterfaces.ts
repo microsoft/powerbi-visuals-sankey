@@ -24,9 +24,8 @@
 *  THE SOFTWARE.
 */
 
-// powerbi.extensibility.utils.interactivity
-import { interactivitySelectionService } from "powerbi-visuals-utils-interactivityutils";
-import SelectableDataPoint = interactivitySelectionService.SelectableDataPoint;
+import ISelectionId = powerbi.visuals.ISelectionId;
+
 import {
     SankeyDiagramSettings
 } from "./settings";
@@ -61,12 +60,12 @@ export interface SankeyDiagramRect {
 
 export interface SankeyDiagramNode extends
     TooltipEnabledDataPoint,
-    SankeyDiagramRect,
-    SelectableDataPoint {
+    SankeyDiagramRect{
 
     label: SankeyDiagramLabel;
     inputWeight: number;
     outputWeight: number;
+    selectionId: ISelectionId;
     backwardWeight?: number;
     selfLinkWeight?: number;
     links: SankeyDiagramLink[];
@@ -76,14 +75,13 @@ export interface SankeyDiagramNode extends
     height?: number;
     fillColor?: string;
     strokeColor?: string;
-    selectableDataPoints?: SelectableDataPoint[];
     cloneLink?: SankeyDiagramNode;
     settings?: SankeyDiagramNodePositionSetting;
+    linkSelectableIds?: ISelectionId[];
 }
 
 export interface SankeyDiagramLink extends
-    TooltipEnabledDataPoint,
-    SelectableDataPoint {
+    TooltipEnabledDataPoint{
 
     label: string;
     source: SankeyDiagramNode;
@@ -95,6 +93,7 @@ export interface SankeyDiagramLink extends
     fillColor: string;
     strokeColor: string;
     direction: SankeyLinkDirrections;
+    selectionId: ISelectionId;
 }
 
 export interface SankeyDiagramColumn {

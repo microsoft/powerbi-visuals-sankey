@@ -32,10 +32,8 @@ type Selection<T> = d3Selection<any, T, any, any>;
 import powerbi from "powerbi-visuals-api";
 import ISelectionId = powerbi.visuals.ISelectionId;
 
-// powerbi.extensibility.utils.interactivity
-import { interactivitySelectionService, interactivityBaseService } from "powerbi-visuals-utils-interactivityutils";
-import SelectableDataPoint = interactivitySelectionService.SelectableDataPoint;
-import IInteractivityService = interactivityBaseService.IInteractivityService;
+// powerbi.extensibility
+import ISelectionManager = powerbi.extensibility.ISelectionManager;
 
 import {
 SankeyDiagramNode,
@@ -44,103 +42,35 @@ SankeyDiagramLink
 
 const SelectedClassName: string = "selected";
 
-export function getFillOpacity(
-    selected: boolean,
-    highlight: boolean,
-    hasSelection: boolean,
-    hasPartialHighlights: boolean): boolean {
-
-    if ((hasPartialHighlights && !highlight) || (hasSelection && !selected)) {
-        return true;
-    }
-
-    return false;
-}
-
-export function isTheDataPointNode(dataPoint: SankeyDiagramLink | SankeyDiagramNode): boolean {
-    const node: SankeyDiagramNode = <SankeyDiagramNode>dataPoint;
-
-    return node.selectableDataPoints && node.selectableDataPoints.length
-        ? true
-        : false;
-}
-
-export function isDataPointSelected(dataPoint: SankeyDiagramLink | SankeyDiagramNode): boolean {
-    const node: SankeyDiagramNode = <SankeyDiagramNode>dataPoint,
-        link: SankeyDiagramLink = <SankeyDiagramLink>dataPoint;
-
-    let selected: boolean;
-
-    if (isTheDataPointNode(dataPoint)) {
-        node.selectableDataPoints.forEach((selectableDataPoint: SelectableDataPoint) => {
-            selected = selected || selectableDataPoint.selected;
-        });
-    } else if (link.identity) {
-        selected = link.selected;
-    }
-
-    return selected;
-}
-
-export function updateFillOpacity(
-    selection: Selection<SankeyDiagramNode | SankeyDiagramLink>,
-    interactivityService?: IInteractivityService<SelectableDataPoint>,
-    hasSelection: boolean = false): void {
-
-    let hasHighlights: boolean = false;
-
-    if (interactivityService) {
-        hasHighlights = interactivityService.hasSelection();
-    }
-
-    selection.classed(SelectedClassName, (dataPoint: SankeyDiagramLink | SankeyDiagramNode): boolean => {
-        const dataPointSelected: boolean = isDataPointSelected(dataPoint),
-            theDataPointNode: boolean = isTheDataPointNode(dataPoint);
-
-        const selected: boolean = !theDataPointNode && hasSelection
-            ? !dataPointSelected
-            : dataPointSelected;
-
-        return getFillOpacity(
-            selected,
-            false,
-            hasSelection,
-            !selected && hasHighlights);
+export function isNodeSelected(node: SankeyDiagramNode, selectionManager: ISelectionManager): boolean {
+    let isSelected: boolean = false;
+    const selectedIds: ISelectionId[] = <ISelectionId[]>selectionManager.getSelectionIds();
+    node.linkSelectableIds.forEach((selectableId: ISelectionId) => {
+        if (selectedIds.some((id: ISelectionId) => id.equals(selectableId))){
+            isSelected = true;
+        }
     });
+    return isSelected;
 }
 
-export function areDataPointsSelected(
-    selectedDataPoints: SelectableDataPoint[],
-    dataPoints: SelectableDataPoint[]): boolean {
-
-    if (!dataPoints
-        || !selectedDataPoints
-        || dataPoints.length !== selectedDataPoints.length) {
-
-        return false;
-    }
-
-    return doDataPointsIncludeIdentities(selectedDataPoints, dataPoints);
+export function isLinkSelected(link: SankeyDiagramLink, selectionManager: ISelectionManager): boolean {
+    return selectionManager.getSelectionIds().some((id: ISelectionId) => id.equals(link.selectionId));
 }
 
-export function doDataPointsIncludeIdentities(
-    selectedDataPoints: SelectableDataPoint[],
-    dataPoints: SelectableDataPoint[]): boolean {
+export function updateLinksFillOpacity(
+    links: Selection<SankeyDiagramLink>,
+    selectionManager: ISelectionManager): void {
 
-    return selectedDataPoints.every((selectedDataPoint: SelectableDataPoint) => {
-        return doDataPointsIncludeIdentity(dataPoints, selectedDataPoint);
-    });
+    links.classed(SelectedClassName, (link: SankeyDiagramLink): boolean => isLinkSelected(link, selectionManager));
 }
 
-export function doDataPointsIncludeIdentity(
-    dataPoints: SelectableDataPoint[],
-    selectedDataPoint: SelectableDataPoint): boolean {
+export function updateNodesFillOpacity(
+    nodes: Selection<SankeyDiagramNode>,
+    selectionManager: ISelectionManager): void {
 
-    return dataPoints.some((dataPoint: SelectableDataPoint) => {
-        return selectedDataPoint
-            && dataPoint
-            && selectedDataPoint.identity
-            && dataPoint.identity
-            && (<ISelectionId>selectedDataPoint.identity).equals(<ISelectionId>dataPoint.identity);
+    const hasSelection: boolean = selectionManager.hasSelection();
+    nodes.classed(SelectedClassName, (node: SankeyDiagramNode): boolean => {
+        const isSelected: boolean = isNodeSelected(node, selectionManager);
+        return hasSelection && !isSelected;
     });
 }

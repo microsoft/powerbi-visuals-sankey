@@ -155,6 +155,7 @@ describe("SankeyDiagram", () => {
                     },
                     inputWeight: 0,
                     outputWeight: 0,
+                    selectionId: null,
                     links: [],
                     x: xValue,
                     y: 0,
@@ -162,9 +163,7 @@ describe("SankeyDiagram", () => {
                     height: 0,
                     colour: "",
                     selectionIds: [],
-                    tooltipData: [],
-                    identity: null,
-                    selected: false
+                    tooltipData: []
                 };
             });
         }
@@ -202,6 +201,7 @@ describe("SankeyDiagram", () => {
                     },
                     inputWeight: testNode.inputWeight,
                     outputWeight: testNode.outputWeight,
+                    selectionId: null,
                     links: [],
                     x: testNode.x,
                     y: 0,
@@ -209,9 +209,7 @@ describe("SankeyDiagram", () => {
                     height: 0,
                     colour: "",
                     selectionIds: [],
-                    tooltipData: [],
-                    identity: null,
-                    selected: false
+                    tooltipData: []
                 };
             });
         }
@@ -456,9 +454,10 @@ describe("SankeyDiagram", () => {
                         expect(link.classList).toContain(selectionClass);
                         // selected link is the only one that is selected
                         expect([...visualBuilder.linkElements].filter(link => link.classList.value.includes(selectionClass)).length).toBe(1);
+                        
+                        // deselection does not work without passing 'true' as second argument
+                        clickElement(link, true);
 
-
-                        clickElement(link);
                         renderTimeout(() => {
                             // no links selected
                             expect([...visualBuilder.linkElements].filter(link => link.classList.value.includes(selectionClass)).length).toBe(0);
@@ -838,7 +837,6 @@ describe("SankeyDiagram", () => {
                         const links: HTMLElement[] = [...visualBuilder.linkElements];
 
                         links[0].dispatchEvent(enterEvent);
-
                         expect(links[0].getAttribute("aria-selected")).toBe("true");
 
                         const otherLinks: HTMLElement[] = links.slice(1);
@@ -846,10 +844,12 @@ describe("SankeyDiagram", () => {
                             expect(link.getAttribute("aria-selected")).toBe("false");
                         })
 
-                        links[0].dispatchEvent(enterEvent);
+                        links[1].dispatchEvent(enterEvent);
+                        expect(links[1].getAttribute("aria-selected")).toBe("true");
 
-                        links.forEach((element: Element) => {
-                            expect(element.getAttribute("aria-selected")).toBe("false");
+                        links.splice(1,1);
+                        links.forEach((link: HTMLElement) => {
+                            expect(link.getAttribute("aria-selected")).toBe("false");
                         });
                         done();
                     },
@@ -865,7 +865,6 @@ describe("SankeyDiagram", () => {
                         const links: HTMLElement[] = [...visualBuilder.linkElements];
 
                         links[0].dispatchEvent(spaceEvent);
-
                         expect(links[0].getAttribute("aria-selected")).toBe("true");
                         
                         const otherLinks: HTMLElement[] = links.slice(1);
@@ -873,8 +872,10 @@ describe("SankeyDiagram", () => {
                             expect(link.getAttribute("aria-selected")).toBe("false");
                         });
 
-                        links[0].dispatchEvent(spaceEvent);
+                        links[1].dispatchEvent(spaceEvent);
+                        expect(links[1].getAttribute("aria-selected")).toBe("true");
 
+                        links.splice(1, 1);
                         links.forEach((element: HTMLElement) => {
                             expect(element.getAttribute("aria-selected")).toBe("false");
                         });
@@ -939,7 +940,7 @@ describe("SankeyDiagram", () => {
                 const focusedStrokeOpacity: string = "1";
                 const focusedOutline: string = "rgb(0, 0, 0) none 0px";
                 const strokeWidth: string = "1px";
-                const strokeOpacity: string = "0.2";
+                const strokeOpacity: string = "0.6";
                 const outline: string = "rgb(0, 0, 0) none 0px";
 
                 const links: HTMLElement[] = [...visualBuilder.linkElements];

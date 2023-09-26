@@ -36,46 +36,30 @@ import * as sankeyDiagramUtils from "./utils";
 // d3
 type Selection<T> = d3Selection<any, T, any, any>;
 
-// powerbi.extensibility.utils.interactivity
-import { interactivitySelectionService, interactivityBaseService } from "powerbi-visuals-utils-interactivityutils";
-import SelectableDataPoint = interactivitySelectionService.SelectableDataPoint;
-import IInteractiveBehavior = interactivityBaseService.IInteractiveBehavior;
-import IInteractivityService = interactivityBaseService.IInteractivityService;
+import ISelectionManager = powerbi.extensibility.ISelectionManager;
+import ISelectionId = powerbi.visuals.ISelectionId;
 
-import ISelectionHandler = interactivityBaseService.ISelectionHandler;
-import IBehaviorOptions = interactivityBaseService.IBehaviorOptions;
-
-export interface SankeyDiagramBehaviorOptions extends IBehaviorOptions<SelectableDataPoint> {
+export interface SankeyDiagramBehaviorOptions {
     nodes: Selection<SankeyDiagramNode>;
     links: Selection<SankeyDiagramLink>;
     clearCatcher: Selection<any>;
-    interactivityService: IInteractivityService<SelectableDataPoint>;
 }
 
 const EnterCode: string = "Enter";
 const SpaceCode: string = "Space";
 
-export class SankeyDiagramBehavior implements IInteractiveBehavior {
+export class SankeyDiagramBehavior{
     private behaviorOptions: SankeyDiagramBehaviorOptions;
-    private selectionHandler: ISelectionHandler;
+    private selectionManager: ISelectionManager;
 
-
-    private selectedDataPoints: SelectableDataPoint[];
-
-    public static create(): IInteractiveBehavior {
-        return new SankeyDiagramBehavior();
-    }
-
-    constructor() {
-        this.createAnEmptySelectedDataPoints();
+    constructor(selectionManager: ISelectionManager) {
+        this.selectionManager = selectionManager;
     }
 
     public bindEvents(
-        behaviorOptions: SankeyDiagramBehaviorOptions,
-        selectionHandler: ISelectionHandler): void {
+        behaviorOptions: SankeyDiagramBehaviorOptions): void {
 
         this.behaviorOptions = behaviorOptions;
-        this.selectionHandler = selectionHandler;
 
         this.bindClickEventToNodes();
         this.bindKeyboardEventToNodes();
@@ -86,25 +70,29 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
 
     private bindClickEventToNodes(): void {
         this.behaviorOptions.nodes.on("click", (event: PointerEvent, node: SankeyDiagramNode) => {
-            const selectableDataPoints: SelectableDataPoint[] = node.selectableDataPoints;
+            const selectedIds: ISelectionId[] = node.linkSelectableIds.filter((selectedId: ISelectionId) => this.selectionManager.getSelectionIds().some((id: ISelectionId) =>id.equals(selectedId)));
+            const notSelectedIds: ISelectionId[] = node.linkSelectableIds.filter((notSelectedId:ISelectionId) => !this.selectionManager.getSelectionIds().some((id: ISelectionId) =>id.equals(notSelectedId)));
 
-            // the following line does not allow nodes multiselection
-            this.clearSelection();
-
-            if (!sankeyDiagramUtils.areDataPointsSelected(this.selectedDataPoints, selectableDataPoints)) {
-                selectableDataPoints.forEach((subDataPoint: SelectableDataPoint) => {
-                    this.selectionHandler.handleSelection(subDataPoint, true);
-                });
-
-                this.selectedDataPoints = selectableDataPoints;
-            } else {
-                this.createAnEmptySelectedDataPoints();
+            if (selectedIds.length === node.linkSelectableIds.length){
+                this.selectionManager.select(selectedIds, true);
             }
+            else {
+                if (event.ctrlKey || event.metaKey){
+                    this.selectionManager.select(notSelectedIds, true);
+                }
+                else {
+                    // deselecting previously selected ids so that all node.linkSelectableIds are in the same deselected state
+                    this.selectionManager.select(selectedIds, false);
+                    this.selectionManager.select(node.linkSelectableIds, false);
+                }
+            }
+
+            this.renderSelection();
         });
 
         this.behaviorOptions.nodes.on("contextmenu", (event: PointerEvent, node: SankeyDiagramNode) => {
             if (event) {
-                this.selectionHandler.handleContextMenu(
+                this.selectionManager.showContextMenu(
                     node,
                     {
                         x: event.clientX,
@@ -120,32 +108,38 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
             if (event.code !== EnterCode && event.code !== SpaceCode) {
                 return;
             }
-            const selectableDataPoints: SelectableDataPoint[] = node.selectableDataPoints;
 
-            this.clearSelection();
+            const selectedIds: ISelectionId[] = node.linkSelectableIds.filter((selectedId: ISelectionId) => this.selectionManager.getSelectionIds().some((id: ISelectionId) =>id.equals(selectedId)));
+            const notSelectedIds: ISelectionId[] = node.linkSelectableIds.filter((notSelectedId:ISelectionId) => !this.selectionManager.getSelectionIds().some((id: ISelectionId) =>id.equals(notSelectedId)));
 
-            if (!sankeyDiagramUtils.areDataPointsSelected(this.selectedDataPoints, selectableDataPoints)) {
-                selectableDataPoints.forEach((subDataPoint: SelectableDataPoint) => {
-                    this.selectionHandler.handleSelection(subDataPoint, true);
-                });
-
-                this.selectedDataPoints = selectableDataPoints;
-            } else {
-                this.createAnEmptySelectedDataPoints();
+            if (selectedIds.length === node.linkSelectableIds.length){
+                this.selectionManager.select(selectedIds, true);
             }
+            else {
+                if (event.ctrlKey || event.metaKey){
+                    this.selectionManager.select(notSelectedIds, true);
+                }
+                else {
+                    // deselecting previously selected ids so that all node.linkSelectableIds are in the same deselected state
+                    this.selectionManager.select(selectedIds, false);
+                    this.selectionManager.select(node.linkSelectableIds, false);
+                }
+            }
+
+            this.renderSelection();
         });
     }
 
     private bindClickEventToLinks(): void {
         this.behaviorOptions.links.on("click", (event: PointerEvent, link: SankeyDiagramLink) => {
-            this.selectionHandler.handleSelection(link, event.ctrlKey || event.metaKey);
-            this.createAnEmptySelectedDataPoints();
+            this.selectionManager.select(link.selectionId, event.ctrlKey || event.metaKey);
+            this.renderSelection();
         });
 
-        this.behaviorOptions.links.on("contextmenu", (event: PointerEvent, datum: SankeyDiagramLink) => {
+        this.behaviorOptions.links.on("contextmenu", (event: PointerEvent, link: SankeyDiagramLink) => {
             if (event) {
-                this.selectionHandler.handleContextMenu(
-                    datum,
+                this.selectionManager.showContextMenu(
+                    link,
                     {
                         x: event.clientX,
                         y: event.clientY
@@ -160,16 +154,15 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
             if (event.code !== EnterCode && event.code !== SpaceCode) {
                 return;
             }
-            this.selectionHandler.handleSelection(link, event.ctrlKey || event.metaKey);
-            this.createAnEmptySelectedDataPoints();
-
+            this.selectionManager.select(link.selectionId, event.ctrlKey || event.metaKey);
+            this.renderSelection();
         });
     }
 
     private bindClickEventToClearCatcher(): void {
         this.behaviorOptions.clearCatcher.on("contextmenu", (event: PointerEvent) => {
             if (event) {
-                this.selectionHandler.handleContextMenu(
+                this.selectionManager.showContextMenu(
                     null,
                     {
                         x: event.clientX,
@@ -179,31 +172,21 @@ export class SankeyDiagramBehavior implements IInteractiveBehavior {
             }
         });
         this.behaviorOptions.clearCatcher.on("click", () => {
-            this.clearSelection();
-            this.createAnEmptySelectedDataPoints();
+            this.selectionManager.clear();
+            this.renderSelection();
         });
     }
 
-    private clearSelection(): void {
-        this.selectionHandler.handleClearSelection();
-    }
+    public renderSelection(): void {
+        this.behaviorOptions.nodes.attr("aria-selected", (node: SankeyDiagramNode) => sankeyDiagramUtils.isNodeSelected(node, this.selectionManager));
+        this.behaviorOptions.links.attr("aria-selected", (link: SankeyDiagramLink) => sankeyDiagramUtils.isLinkSelected(link, this.selectionManager));
 
-    private createAnEmptySelectedDataPoints(): void {
-        this.selectedDataPoints = [];
-    }
-
-    public renderSelection(hasSelection: boolean): void {
-        this.behaviorOptions.nodes.attr("aria-selected", sankeyDiagramUtils.isDataPointSelected);
-        this.behaviorOptions.links.attr("aria-selected", sankeyDiagramUtils.isDataPointSelected);
-
-        sankeyDiagramUtils.updateFillOpacity(
+        sankeyDiagramUtils.updateLinksFillOpacity(
             this.behaviorOptions.links,
-            this.behaviorOptions.interactivityService,
-            hasSelection);
+            this.selectionManager);
 
-        sankeyDiagramUtils.updateFillOpacity(
+        sankeyDiagramUtils.updateNodesFillOpacity(
             this.behaviorOptions.nodes,
-            this.behaviorOptions.interactivityService,
-            hasSelection);
+            this.selectionManager);
     }
 }
