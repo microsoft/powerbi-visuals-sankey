@@ -1,4 +1,4 @@
-## 3.2.3.0
+## 3.3.0.0
 * Use selection manager instead of interactivity utils
 * Change links style
 
