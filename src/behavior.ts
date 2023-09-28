@@ -77,7 +77,7 @@ export class SankeyDiagramBehavior{
                 this.selectionManager.select(selectedIds, true);
             }
             else {
-                if (event.ctrlKey || event.metaKey){
+                if (event.ctrlKey || event.metaKey || event.shiftKey){
                     this.selectionManager.select(notSelectedIds, true);
                 }
                 else {
@@ -116,7 +116,7 @@ export class SankeyDiagramBehavior{
                 this.selectionManager.select(selectedIds, true);
             }
             else {
-                if (event.ctrlKey || event.metaKey){
+                if (event.ctrlKey || event.metaKey || event.shiftKey){
                     this.selectionManager.select(notSelectedIds, true);
                 }
                 else {
@@ -132,7 +132,7 @@ export class SankeyDiagramBehavior{
 
     private bindClickEventToLinks(): void {
         this.behaviorOptions.links.on("click", (event: PointerEvent, link: SankeyDiagramLink) => {
-            this.selectionManager.select(link.selectionId, event.ctrlKey || event.metaKey);
+            this.selectionManager.select(link.selectionId, event.ctrlKey || event.metaKey || event.shiftKey);
             this.renderSelection();
         });
 
@@ -154,7 +154,7 @@ export class SankeyDiagramBehavior{
             if (event.code !== EnterCode && event.code !== SpaceCode) {
                 return;
             }
-            this.selectionManager.select(link.selectionId, event.ctrlKey || event.metaKey);
+            this.selectionManager.select(link.selectionId, event.ctrlKey || event.metaKey || event.shiftKey);
             this.renderSelection();
         });
     }
