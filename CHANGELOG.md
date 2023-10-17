@@ -1,3 +1,6 @@
+## 3.3.1.0
+* Localization update
+
 ## 3.3.0.0
 * Use selection manager instead of interactivity utils
 * Change links style
