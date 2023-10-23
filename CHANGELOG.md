@@ -1,3 +1,6 @@
+## 3.4.0.0
+* Change forward cycles links processing
+
 ## 3.3.1.0
 * Localization update
 
