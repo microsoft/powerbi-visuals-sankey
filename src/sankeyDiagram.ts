@@ -601,41 +601,65 @@ export class SankeyDiagram implements IVisual {
     }
 
     private processCyclesForwardLinks(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[]): SankeyDiagramLink[] {
+        const nodesToClone: Set<SankeyDiagramNode> = new Set();
+        const nodesNotToClone: Set<SankeyDiagramNode> = new Set();
         for (const nodeName of Object.keys(cycles)) {
+            const keyNode: SankeyDiagramNode = nodes.find(node => node.label.name === nodeName);
             cycles[nodeName].forEach((cycleNode: SankeyDiagramNode) => {
-                const nodeCopy: SankeyDiagramNode = lodashCloneDeep(cycleNode);
-                nodeCopy.label.name += SankeyDiagram.DuplicatedNamePostfix;
-                nodeCopy.linkSelectableIds = cycleNode.linkSelectableIds;
-                nodeCopy.links = cycleNode.links;
-                nodeCopy.cloneLink = cycleNode;
-                cycleNode.cloneLink = nodeCopy;
-
-                // create a clone of the node and save a link to each other. In selection behavior, selection of clone lead to select original and visa versa
-                nodeCopy.links = cycleNode.links.filter((link: SankeyDiagramLink) => {
-                    if (link.source === cycleNode || link.source === link.destination) {
-                        return true;
+                const cycleNodeName: string = cycleNode.label.name; 
+                if (cycles[cycleNodeName])
+                {
+                    // if the current value is also a key, then we need to clone the current key
+                    nodesToClone.add(keyNode);
+                    // if the current value is also a key and does not have a selflink, we dont need to clone it
+                    const hasSelflink: boolean = cycles[cycleNodeName]?.some(node => node.label.name === cycleNodeName);
+                    if(!hasSelflink){
+                        nodesNotToClone.add(cycleNode);
                     }
-                    return false;
-                });
-
-                 // copy only! output links to new node;
-                 nodeCopy.links.forEach((link: SankeyDiagramLink) => {
-                    link.source = nodeCopy;
-                });
-
-                // remove output links from original node
-                cycleNode.links = cycleNode.links.filter((link: SankeyDiagramLink) => {
-                    if (link.destination === cycleNode || link.destination === link.source) {
-                        return true;
-                    }
-
-                    return false;
-                });
-                
-                SankeyDiagram.updateValueOfNode(cycleNode);
-                SankeyDiagram.updateValueOfNode(nodeCopy);
-                nodes.push(nodeCopy);
+                }
+                nodesToClone.add(cycleNode);
             });
+        }
+
+        for (const node of nodesToClone){
+            if (nodesNotToClone.has(node)){
+                nodesToClone.delete(node);
+            }
+        }
+
+        for (const node of nodesToClone){
+            const nodeCopy: SankeyDiagramNode = lodashCloneDeep(node);
+            nodeCopy.label.name += SankeyDiagram.DuplicatedNamePostfix;
+            nodeCopy.linkSelectableIds = node.linkSelectableIds;
+            nodeCopy.links = node.links;
+            nodeCopy.cloneLink = node;
+            node.cloneLink = nodeCopy;
+
+            // create a clone of the node and save a link to each other. In selection behavior, selection of clone lead to select original and visa versa
+            nodeCopy.links = node.links.filter((link: SankeyDiagramLink) => {
+                if (link.source === node || link.source === link.destination) {
+                    return true;
+                }
+                return false;
+            });
+
+            // copy only! output links to new node;
+            nodeCopy.links.forEach((link: SankeyDiagramLink) => {
+                link.source = nodeCopy;
+            });
+
+            // remove output links from original node
+            node.links = node.links.filter((link: SankeyDiagramLink) => {
+                if (link.destination === node || link.destination === link.source) {
+                    return true;
+                }
+
+                return false;
+            });
+                
+            SankeyDiagram.updateValueOfNode(node);
+            SankeyDiagram.updateValueOfNode(nodeCopy);
+            nodes.push(nodeCopy);
         }
         return links;
     }
