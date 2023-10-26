@@ -552,6 +552,10 @@ export class SankeyDiagram implements IVisual {
         if (settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.Duplicate) {
             links = this.processCyclesForwardLinks(cycles, nodes, links);
         }
+        
+        if (settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.DuplicateOptimized){
+            links = this.processCyclesForwardLinksOptimized(cycles, nodes, links);
+        }
 
         // add ColorPicker for each node and link to the Format pane
         this.sankeyDiagramSettings.populateNodesColorSelector(nodes);
@@ -600,7 +604,7 @@ export class SankeyDiagram implements IVisual {
         SankeyDiagram.updateValueOfNode(link.source);
     }
 
-    private processCyclesForwardLinks(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[]): SankeyDiagramLink[] {
+    private processCyclesForwardLinksOptimized(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[]): SankeyDiagramLink[] {
         const nodesToClone: Set<SankeyDiagramNode> = new Set();
         const nodesNotToClone: Set<SankeyDiagramNode> = new Set();
         for (const nodeName of Object.keys(cycles)) {
@@ -660,6 +664,46 @@ export class SankeyDiagram implements IVisual {
             SankeyDiagram.updateValueOfNode(node);
             SankeyDiagram.updateValueOfNode(nodeCopy);
             nodes.push(nodeCopy);
+        }
+        return links;
+    }
+
+    private processCyclesForwardLinks(cycles: SankeyDiagramCycleDictionary, nodes: SankeyDiagramNode[], links: SankeyDiagramLink[]): SankeyDiagramLink[] {
+        for (const nodeName of Object.keys(cycles)) {
+            cycles[nodeName].forEach((cycleNode: SankeyDiagramNode) => {
+                const nodeCopy: SankeyDiagramNode = lodashCloneDeep(cycleNode);
+                nodeCopy.label.name += SankeyDiagram.DuplicatedNamePostfix;
+                nodeCopy.linkSelectableIds = cycleNode.linkSelectableIds;
+                nodeCopy.links = cycleNode.links;
+                nodeCopy.cloneLink = cycleNode;
+                cycleNode.cloneLink = nodeCopy;
+
+                // create a clone of the node and save a link to each other. In selection behavior, selection of clone lead to select original and visa versa
+                nodeCopy.links = cycleNode.links.filter((link: SankeyDiagramLink) => {
+                    if (link.source === cycleNode || link.source === link.destination) {
+                        return true;
+                    }
+                    return false;
+                });
+
+                 // copy only! output links to new node;
+                 nodeCopy.links.forEach((link: SankeyDiagramLink) => {
+                    link.source = nodeCopy;
+                });
+
+                // remove output links from original node
+                cycleNode.links = cycleNode.links.filter((link: SankeyDiagramLink) => {
+                    if (link.destination === cycleNode || link.destination === link.source) {
+                        return true;
+                    }
+
+                    return false;
+                });
+                
+                SankeyDiagram.updateValueOfNode(cycleNode);
+                SankeyDiagram.updateValueOfNode(nodeCopy);
+                nodes.push(nodeCopy);
+            });
         }
         return links;
     }
