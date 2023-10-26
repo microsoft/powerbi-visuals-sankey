@@ -41,7 +41,8 @@ import IEnumMember = powerbi.IEnumMember;
 
 export enum CyclesDrawType {
     Duplicate,
-    Backward
+    Backward,
+    DuplicateOptimized
 }
 
 export interface ViewportSize {
@@ -51,7 +52,8 @@ export interface ViewportSize {
 
 export const duplicateNodesOptions : IEnumMember[] = [
     {value : 0, displayName : "Duplicate"},
-    {value : 1, displayName : "Draw backward link"}
+    {value : 1, displayName : "Draw backward link"},
+    {value : 2, displayName : "Duplicate optimized"}
 ];
 
 export class FontSizeDefaultOptions {
