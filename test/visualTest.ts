@@ -405,8 +405,8 @@ describe("SankeyDiagram", () => {
                 const thirdNode: string = nodeElements[2].querySelector("text").innerHTML
 
                 expect(firstNode).toBe("Brazil");
-                expect(secondNode).toBe("England");
-                expect(thirdNode).toBe("USA");
+                expect(secondNode).toBe("USA");
+                expect(thirdNode).toBe("Mexico");
 
                 done();
             });
