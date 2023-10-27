@@ -51,9 +51,9 @@ export interface ViewportSize {
 }
 
 export const duplicateNodesOptions : IEnumMember[] = [
-    {value : 0, displayName : "Duplicate"},
-    {value : 1, displayName : "Draw backward link"},
-    {value : 2, displayName : "Duplicate optimized"}
+    {value : CyclesDrawType.Duplicate, displayName : "Duplicate"},
+    {value : CyclesDrawType.Backward, displayName : "Draw backward link"},
+    {value : CyclesDrawType.DuplicateOptimized, displayName : "Duplicate optimized"}
 ];
 
 export class FontSizeDefaultOptions {
