@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Nhãn liên kết dữ liệu",
   "Visual_Links": "Liên kết",
   "Visual_ScaleSettings": "Bật chia tỷ lệ theo lô-ga-rít",
+  "Visual_SankeyScaleSettings": "Cài đặt cấp độ",
+  "Visual_MinOptimalHeight": "Cung cấp chiều cao nút tối ưu tối thiểu",
   "Visual_Enable": "Kích hoạt",
   "Visual_SankeySettings": "Cài đặt Sankey",
   "Visual_NodePositions": "Vị trí nút",
   "Visual_ViewportSize": "Kích cỡ cổng xem",
   "Visual_Display_Units": "Hiển thị đơn vị",
-  "Visual_SankeyScaleSettings": "Cài đặt cấp độ",
-  "Visual_MinOptimalHeight": "Cung cấp chiều cao nút tối ưu tối thiểu",
   "Visual_Cycles": "Hiển thị chu kỳ",
   "Visual_DuplicateNodes": "Nút trùng lặp",
   "Visual_Duplicate": "Sao chép",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Bỏ qua trọng số của các liên kết tự thực hiện",
   "Visual_TooltipDisplayName": "Tên",
   "Visual_Description_Force_Display": "Vẫn hiển thị tất cả các nhãn",
-  "Sankey_Short_Description": "Sơ đồ dòng trong đó chiều rộng của chuỗi tỷ lệ chất số lượng dòng",
-  "Sankey_Long_Description": "Với Sankey, bạn có thể tìm thấy ngay nguồn, điểm đến và các bước liên quan cũng như cách nội dung di chuyển giữa các thành phần này một cách nhanh chóng. Bạn cũng có thể tương tác vớ từng thành phần bằng cách bấm vào liên kết ing the link or the flow itself and leverage the cross highlighting/filtering feature of Power BI to get even more interesting insights in related data.\nFittingly they are used widely in the energy industry. But it finds interesting use cases across all industries. It energies everyone to visualize information that has a start and an end or dynamic relationship with many intermediaries, for ex how the user landed and navigated in a web site, or a material in a manufacturing unit, control or money transfers in business processes in a completely different perspective and bring interesting insights to the forefront.\nThis is an open source visual. Get the code from GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Họ phông",
+  "Visual_TooltipDisplayInput": "Đầu vào",
+  "Visual_TooltipDisplayOutput": "Đầu ra",
+  "Visual_NodeWidth": "Chiều rộng"
 }

@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "データ リンクのラベル",
   "Visual_Links": "リンク",
   "Visual_ScaleSettings": "対数スケールを有効にする",
+  "Visual_SankeyScaleSettings": "スケールの設定",
+  "Visual_MinOptimalHeight": "ノードの最適な最小の高さを指定する",
   "Visual_Enable": "有効",
   "Visual_SankeySettings": "Sankey の設定",
   "Visual_NodePositions": "ノードの位置",
   "Visual_ViewportSize": "ビューポート サイズ",
   "Visual_Display_Units": "表示単位",
-  "Visual_SankeyScaleSettings": "スケールの設定",
-  "Visual_MinOptimalHeight": "ノードの最適な最小の高さを指定する",
   "Visual_Cycles": "表示サイクル",
   "Visual_DuplicateNodes": "重複ノード",
   "Visual_Duplicate": "複製",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "自己リンクの重みを無視",
   "Visual_TooltipDisplayName": "名前",
   "Visual_Description_Force_Display": "すべてのラベルを常に表示します",
-  "Sankey_Short_Description": "系列の幅がフローの量に比例しているフロー ダイアグラム",
-  "Sankey_Long_Description": "Sankey を使うと、ソース、宛先、それらの間にあるステップと、物事がそれらを通ってどのように流れるかを、一目ですべて明確に把握できます。このグラフでリンクまたはフローそのものをクリックし、Power BI のクロス強調表示/フィルター機能を活用すると、関連したデータからさらに興味深い分析情報を取得できます。\nこのグラフは、エネルギー業界で適切な用途に幅広く利用されています。とはいえ、どの業界でも、興味深いユース ケースが見つかります。このグラフは、始まりと終わりのある情報や、多くの中間段階のある動的な関係を持つ情報を視覚化するために、どのユーザーでも活用できます。たとえば、ユーザーが Web サイトにアクセスしてから Web サイト内でナビゲートする様子、製造単位を構成する素材、ビジネス プロセスでの制御や資金の移動などを、まったく異なる視点で視覚化して、興味深い分析情報を最先端の現場に届けることができます。\nこれは、オープンソースの視覚エフェクトです。コードは GitHub から取得します : https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "フォント ファミリ",
+  "Visual_TooltipDisplayInput": "入力",
+  "Visual_TooltipDisplayOutput": "出力",
+  "Visual_NodeWidth": "幅"
 }

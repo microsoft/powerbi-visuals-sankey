@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Labels voor gegevenskoppelingen",
   "Visual_Links": "Koppelingen",
   "Visual_ScaleSettings": "Logaritmische schaal inschakelen",
+  "Visual_SankeyScaleSettings": "Schaalinstellingen",
+  "Visual_MinOptimalHeight": "Minimum voor optimale hoogte van knooppunt opgeven",
   "Visual_Enable": "Inschakelen",
   "Visual_SankeySettings": "Sankey-instellingen",
   "Visual_NodePositions": "Knooppuntposities",
   "Visual_ViewportSize": "Viewport-grootten",
   "Visual_Display_Units": "Weergave-eenheden",
-  "Visual_SankeyScaleSettings": "Schaalinstellingen",
-  "Visual_MinOptimalHeight": "Minimum voor optimale hoogte van knooppunt opgeven",
   "Visual_Cycles": "Weergegeven cycli",
   "Visual_DuplicateNodes": "Dubbele knooppunten",
   "Visual_Duplicate": "Duplicaat",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Gewicht van interne koppelingen negeren",
   "Visual_TooltipDisplayName": "Naam",
   "Visual_Description_Force_Display": "Alle labels toch weergeven",
-  "Sankey_Short_Description": "Stroomdiagram waarbij de breedte van de reeks zich verhoudt tot de hoeveelheid van de stroom",
-  "Sankey_Long_Description": "In een Sankey-diagram kunt u eenvoudig de bronnen, bestemmingen, tussenliggende stappen en de stromen hiertussen in één oogopslag bekijken. U kunt ook met het diagram werken door op de koppeling of de stroom zelf te klikken en de functie voor kruislings markeren/filteren van Power BI te gebruiken om nog meer interessante inzichten te verwerven in gerelateerde gegevens.\nHet diagram wordt daarom vaak in de energievoorzieningsbranche gebruikt. Het wordt echter op interessante wijze toegepast in alle bedrijfstakken. Het diagram biedt iedereen de mogelijkheid om gegevens weer te geven die een begin en een einde kennen of die een dynamische relatie met veel tussenschakels uitbeelden, bijvoorbeeld hoe een gebruiker op een website is gekomen en hierin heeft genavigeerd, een materiaal in een productie-eenheid of de overdracht van beheer of geld in bedrijfsprocessen. In dit diagram wordt dit alles vanuit een volledig ander perspectief in beeld gebracht, waarbij interessante inzichten worden opgedaan.\nDit is een open source visual. U kunt de code op GitHub ophalen: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Lettertypefamilie",
+  "Visual_TooltipDisplayInput": "Invoer",
+  "Visual_TooltipDisplayOutput": "Uitvoer",
+  "Visual_NodeWidth": "Breedte"
 }

@@ -1,5 +1,5 @@
 {
-  "Visual_DataPointsLabels": "Datanavne",
+  "Visual_DataPointsLabels": "Datamærkater",
   "Visual_Show": "Vis",
   "Visual_LabelsFill": "Farve",
   "Visual_Fill": "Udfyldning",
@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Datalinketiketter",
   "Visual_Links": "Links",
   "Visual_ScaleSettings": "Aktivér logaritmisk skala",
+  "Visual_SankeyScaleSettings": "Skalaindstillinger",
+  "Visual_MinOptimalHeight": "Angiv min optimale nodehøjde",
   "Visual_Enable": "Aktivér",
   "Visual_SankeySettings": "Sankey-indstillinger",
   "Visual_NodePositions": "Nodeplaceringer",
   "Visual_ViewportSize": "Billedstørrelser",
   "Visual_Display_Units": "Vis enheder",
-  "Visual_SankeyScaleSettings": "Skalaindstillinger",
-  "Visual_MinOptimalHeight": "Angiv min optimale nodehøjde",
   "Visual_Cycles": "Cyklusvisning",
   "Visual_DuplicateNodes": "Identiske noder",
   "Visual_Duplicate": "Dupliker",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Ignorer vægten af self-links",
   "Visual_TooltipDisplayName": "Navn",
   "Visual_Description_Force_Display": "Vis alle etiketter alligevel",
-  "Sankey_Short_Description": "Rutediagram, hvor bredden på serien er proportional med mængden af strømmen",
-  "Sankey_Long_Description": "Med Sankey finder du hurtigt og i ét klart og overskueligt overblik kilder, destinationer og de mellemliggende trin, og hvordan tingene overføres på tværs af dem alle. Du kan også interagere med det ved enten at klikke på linket eller selve flowet og benytte den tværgående fremhævnings/filtreringsfunktionen i Power BI til at få endnu mere interessant indsigt i relaterede data.\nDe er velegnede til energisektoren, hvor de finder udbredt brug men finder spændende anvendelse til forskellige formål i alle brancher. Den inspirerer alle til at visualisere data, der har en start og slutning eller dynamiske relationer med mange mellemled for eksempelhvordan brugeren landede og navigerede på et websted eller et materiale i en produktionsenhed, styring eller pengeoverførsler i forretningsgange i et helt anderledes perspektiv og sætter helt anderledes indsigt i forgrunden.\nDette er en open source illustration. Koden kan hentes fra GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Skrifttypefamilie",
+  "Visual_TooltipDisplayInput": "Input",
+  "Visual_TooltipDisplayOutput": "Output",
+  "Visual_NodeWidth": "Bredde"
 }

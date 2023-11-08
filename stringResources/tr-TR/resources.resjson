@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Veri bağlantısı etiketleri",
   "Visual_Links": "Bağlantılar",
   "Visual_ScaleSettings": "Logaritmik ölçeği etkinleştir",
+  "Visual_SankeyScaleSettings": "Ölçek ayarları",
+  "Visual_MinOptimalHeight": "Düğüm için en düşük ideal yüksekliği sağlayın",
   "Visual_Enable": "Etkinleştir",
   "Visual_SankeySettings": "Sankey ayarları",
   "Visual_NodePositions": "Düğüm konumları",
   "Visual_ViewportSize": "Görünüm penceresi boyutları",
   "Visual_Display_Units": "Görüntüleme birimleri",
-  "Visual_SankeyScaleSettings": "Ölçek ayarları",
-  "Visual_MinOptimalHeight": "Düğüm için en düşük ideal yüksekliği sağlayın",
   "Visual_Cycles": "Görüntülenen döngüler",
   "Visual_DuplicateNodes": "Yinelenen düğümler",
   "Visual_Duplicate": "Çoğalt",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Kendine bağlantıların ağırlığını yoksay",
   "Visual_TooltipDisplayName": "Ad",
   "Visual_Description_Force_Display": "Tüm etiketleri yine de görüntüle",
-  "Sankey_Short_Description": "Serinin genişliğinin akışın miktarına orantılı olduğu akış şeması",
-  "Sankey_Long_Description": "Sankey ile bir bakışta kaynakları, hedefleri ve bunlar arasındaki adımları ve nesnelerin bunlar arasındaki akışını görebilirsiniz. Ayrıca bağlantıya veya akışa tıklayarak grafikle etkileşimde bulunabilir ve ilgili veriler hakkında daha da ilginç içgörüler elde etmek için Power BI'ın çapraz vurgulama/filtreleme özelliğini kullanabilirsiniz.\nDoğal olarak en yaygın şekilde enerji sektöründe kullanılır. Ancak tüm sektörlerde ilginç kullanım örnekleri vardır. Kullanıcıların bir başlangıcı ve bir bitişi veya pek çok ara aşamayla dinamik ilişkisi olan; örneğin bir kullanıcının bir web sitesine nasıl geldiği ve sitede nasıl gezindiği veya bir üretim birimindeki bir malzeme, iş süreçlerinde denetim veya para aktarımları gibi bilgileri tamamen farklı bir bakış açısından görselleştirmesini ve ilginç içgörülerin öne çıkmasını sağlar.\nBu, açık kaynaklı bir görseldir. Kodu GitHub'dan alabilirsiniz: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Yazı Tipi Ailesi",
+  "Visual_TooltipDisplayInput": "Giriş",
+  "Visual_TooltipDisplayOutput": "Çıkış",
+  "Visual_NodeWidth": "Genişlik"
 }
