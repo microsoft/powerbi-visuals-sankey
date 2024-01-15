@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "ป้ายชื่อลิงก์ข้อมูล",
   "Visual_Links": "การเชื่อมโยง",
   "Visual_ScaleSettings": "เปิดใช้งานมาตราส่วนลอการิทึม",
+  "Visual_SankeyScaleSettings": "การตั้งค่ามาตราส่วน",
+  "Visual_MinOptimalHeight": "แสดงความสูงที่เหมาะสมต่ำสุดของโหนด",
   "Visual_Enable": "เปิดใช้งาน",
   "Visual_SankeySettings": "การตั้งค่า Sankey",
   "Visual_NodePositions": "ตำแหน่งโหนด",
   "Visual_ViewportSize": "ขนาดกรอบการมองเห็น",
   "Visual_Display_Units": "หน่วยแสดงผล",
-  "Visual_SankeyScaleSettings": "การตั้งค่ามาตราส่วน",
-  "Visual_MinOptimalHeight": "แสดงความสูงที่เหมาะสมต่ำสุดของโหนด",
   "Visual_Cycles": "แสดงรอบ",
   "Visual_DuplicateNodes": "โหนดที่ซ้ำกัน",
   "Visual_Duplicate": "รายการซ้ำ",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "ละเว้นน้ำหนักของลิงก์ตนเอง",
   "Visual_TooltipDisplayName": "ชื่อ",
   "Visual_Description_Force_Display": "แสดงป้ายชื่อทั้งหมด",
-  "Sankey_Short_Description": "Flow Diagram ที่ความกว้างของชุดข้อมูลเป็นสัดส่วนกับปริมาณของขั้นตอน",
-  "Sankey_Long_Description": "ด้วย Sankey คุณสามารถค้นหาแหล่งข้อมูล ปลายทาง ขั้นตอนระหว่างนั้น และวิธีที่สิ่งต่างๆ ทำงานผ่านขั้นตอนทั้งหมดได้อย่างชัดเจนในเพียงพริบตาเดียว คุณยังสามารถโต้ตอบกับ Sankey ได้โดยคลิกที่ลิงก์หรือโฟลว์ และใช้ประโยชน์ฟีเจอร์การเน้น/การกรองของ Power BI เพื่อรับข้อมูลเชิงลึกที่น่าสนใจเพิ่มเติมในข้อมูลที่เกี่ยวข้องได้\nซึ่งเหมาะในการใช้โดยทั่วไปในอุตสาหกรรมพลังงาน แต่ก็พบกรณีการใช้ที่น่าสนใจในทุกอุตสาหกรรม ทั้งยังกระตุ้นให้ทุกคนแสดงภาพข้อมูลที่มีการเริ่มต้นและสิ้นสุด หรือความสัมพันธ์แบบไดนามิกที่มีตัวกลางจำนวนมาก สำหรับตัวอย่างวิธีที่ผู้ใช้เข้าถึงและนำทางไปในเว็บไซต์ หรือเนื้อหาในหน่วยการผลิต การควบคุม หรือกระบวนการโอนเงินทางธุรกิจในมุมมองที่แตกต่างกันโดยสิ้นเชิง และนำข้อมูลเชิงลึกที่น่าสนใจไปยังแนวหน้า\nซึ่งเป็นการแสดงผลด้วยภาพแบบโอเพนซอร์ส (Open Source) รับรหัสจาก GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "ตระกูลแบบอักษร",
+  "Visual_TooltipDisplayInput": "Input",
+  "Visual_TooltipDisplayOutput": "ผลลัพธ์",
+  "Visual_NodeWidth": "ความกว้าง"
 }

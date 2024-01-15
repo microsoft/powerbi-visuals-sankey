@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Label tautan data",
   "Visual_Links": "Tautan",
   "Visual_ScaleSettings": "Aktifkan skala logaritma",
+  "Visual_SankeyScaleSettings": "Pengaturan skala",
+  "Visual_MinOptimalHeight": "Sediakan tinggi optimal node minimal",
   "Visual_Enable": "Aktifkan",
   "Visual_SankeySettings": "Pengaturan Sankey",
   "Visual_NodePositions": "Posisi node",
   "Visual_ViewportSize": "Ukuran viewport",
   "Visual_Display_Units": "Unit tampilan",
-  "Visual_SankeyScaleSettings": "Pengaturan skala",
-  "Visual_MinOptimalHeight": "Sediakan tinggi optimal node minimal",
   "Visual_Cycles": "Tampilan siklus",
   "Visual_DuplicateNodes": "Gandakan node",
   "Visual_Duplicate": "Duplikat",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Abaikan bobot tautan mandiri",
   "Visual_TooltipDisplayName": "Nama",
   "Visual_Description_Force_Display": "Tetap tampilkan semua label",
-  "Sankey_Short_Description": "Diagram alur dengan lebar seri yang sebanding dengan jumlah alur",
-  "Sankey_Long_Description": "Dengan Sankey, Anda dapat menemukan sumber, tujuan dan langkah-langkah serta alurnya hanya dengan melihat secara sekilas. Anda juga dapat berinteraksi dengan mengklik tautan atau alur tersebut dan memanfaatkan fitur penyorotan/pemfilteran silang dari Power BI untuk mendapatkan wawasan yang lebih menarik dari data terkait.\nIni digunakan secara luas dalam industri energi. Namun ditemukan kasus penggunaan menarik di semua industri. Semua orang terinspirasi untuk memvisualisasikan informasi yang memiliki awal dan akhir atau hubungan dinamis dengan banyak perantara, misalnya bagaimana pengguna masuk dan menavigasi situs web, atau material dalam unit produksi, kontrol atau transfer uang dalam proses bisnis dengan perspektif yang benar-benar berbeda dan membawa wawasan menarik ke permukaan.\nIni adalah visual sumber terbuka. Dapatkan kodenya dari GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Kelompok Font",
+  "Visual_TooltipDisplayInput": "Input",
+  "Visual_TooltipDisplayOutput": "Output",
+  "Visual_NodeWidth": "Lebar"
 }

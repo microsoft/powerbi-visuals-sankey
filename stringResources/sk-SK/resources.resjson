@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Označenia prepojení na údaje",
   "Visual_Links": "Prepojenia",
   "Visual_ScaleSettings": "Povoliť logaritmickú mierku",
+  "Visual_SankeyScaleSettings": "Nastavenia mierky",
+  "Visual_MinOptimalHeight": "Zadajte minimálnu optimálnu výšku uzla",
   "Visual_Enable": "Zapnúť",
   "Visual_SankeySettings": "Nastavenia diagramu Sankey",
   "Visual_NodePositions": "Pozície uzlov",
   "Visual_ViewportSize": "Veľkosti zobrazenia",
   "Visual_Display_Units": "Zobrazované jednotky",
-  "Visual_SankeyScaleSettings": "Nastavenia mierky",
-  "Visual_MinOptimalHeight": "Zadajte minimálnu optimálnu výšku uzla",
   "Visual_Cycles": "Zobrazené cykly",
   "Visual_DuplicateNodes": "Duplikovať uzly",
   "Visual_Duplicate": "Duplikovať",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Ignorovať váhu prepojení odkazujúcich na seba",
   "Visual_TooltipDisplayName": "Názov",
   "Visual_Description_Force_Display": "Napriek tomu zobraziť všetky označenia",
-  "Sankey_Short_Description": "Diagram toku údajov, kde je šírka radu úmerná množstvu údajov v toku",
-  "Sankey_Long_Description": "S vizuálom Sankey prehľadne nájdete zdroje, ciele a súvisiace kroky a jedným krátkym pohľadom zistíte, ako to všetko nadväzuje a postupuje. S vizuálom môžete interaktívne pracovať kliknutím na čiaru alebo samotný postup. Pomocou funkcie krížového zvýrazňovania a filtrovania v službe Power BI získate zo súvisiacich údajov ešte zaujímavejšie poznatky.\nTento vizuál má široké uplatnenie v energetickom priemysle. Zaujímavé prípady jeho použitia ale nájdeme vo všetkých odvetviach. Každému umožňuje vizualizovať informácie, ktoré majú začiatok a koniec alebo dynamický vzťah s mnohými sprostredkovateľmi. Prináša úplne iný pohľad napríklad na to, ako používateľ prešiel na webovú lokalitu a navigoval na nej alebo ako použil materiál vo výrobnej jednotke, ako aj nový pohľad na kontrolné mechanizmy alebo prevody peňazí v obchodných procesoch, a prináša do popredia zaujímavé poznatky.\nTento vizuál je typu open source. Kód získate na stránke GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Skupina písem",
+  "Visual_TooltipDisplayInput": "Vstup",
+  "Visual_TooltipDisplayOutput": "Výstup",
+  "Visual_NodeWidth": "Šírka"
 }

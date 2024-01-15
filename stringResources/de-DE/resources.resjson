@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Datenlinkbezeichnungen",
   "Visual_Links": "Links",
   "Visual_ScaleSettings": "Logarithmische Skalierung aktivieren",
+  "Visual_SankeyScaleSettings": "Skalierungseinstellungen",
+  "Visual_MinOptimalHeight": "Optimale Mindesthöhe von Knoten angeben",
   "Visual_Enable": "Aktivieren",
   "Visual_SankeySettings": "Sankey-Einstellungen",
   "Visual_NodePositions": "Knotenpositionen",
   "Visual_ViewportSize": "Viewportgrößen",
   "Visual_Display_Units": "Anzeigeeinheiten",
-  "Visual_SankeyScaleSettings": "Skalierungseinstellungen",
-  "Visual_MinOptimalHeight": "Optimale Mindesthöhe von Knoten angeben",
   "Visual_Cycles": "Angezeigte Zyklen",
   "Visual_DuplicateNodes": "Doppelte Knoten",
   "Visual_Duplicate": "Doppelt",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Gewichtung seiteninterner Links ignorieren",
   "Visual_TooltipDisplayName": "Name",
   "Visual_Description_Force_Display": "Dennoch alle Bezeichnungen anzeigen",
-  "Sankey_Short_Description": "Flussdiagramm, bei dem die Breite der Datenreihe proportional zur Menge des Datenflusses ist.",
-  "Sankey_Long_Description": "Mit Sankey können Sie alle Quellen, Ziele, Zwischenschritte sowie den Datenfluss zwischen all diesen Elementen schnell auf einen Blick anzeigen. Sie können auch mit dem Diagramm interagieren, indem Sie auf den Link oder den Datenfluss selbst klicken und das Feature für übergreifende Hervorhebungen oder die Filterfunktion von Power BI verwenden, um aus verwandten Daten weitere interessante Erkenntnisse zu gewinnen.\nPassenderweise werden solche Diagramme häufig in der Energiebranche verwendet, sie führen aber auch in anderen Branchen zu hochinteressanten Anwendungsfällen. Visualisieren Sie Informationen, die über einen Anfang und ein Ende verfügen oder eine dynamische Beziehung mit vielen Zwischenstufen darstellen. Sie können beispielsweise zeigen, wie Benutzer auf eine Website gelangen und darin navigieren, Sie können ein bestimmtes Material in einer Fertigungsstätte visualisieren oder Steuerungsübergaben oder Finanztransaktionen in Geschäftsprozessen sichtbar machen. Dabei können Sie völlig unterschiedliche Perspektiven aufzeigen und interessante Erkenntnisse in den Vordergrund rücken.\nDies ist ein Open Source-Visual. Rufen Sie den Code aus GitHub ab: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Schriftfamilie",
+  "Visual_TooltipDisplayInput": "Eingabe",
+  "Visual_TooltipDisplayOutput": "Ausgabe",
+  "Visual_NodeWidth": "Breite"
 }

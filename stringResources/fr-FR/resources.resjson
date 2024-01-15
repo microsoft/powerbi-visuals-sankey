@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Étiquettes de liaisons de données",
   "Visual_Links": "Liens",
   "Visual_ScaleSettings": "Activer l’échelle logarithmique",
+  "Visual_SankeyScaleSettings": "Paramètres de mise à l'échelle",
+  "Visual_MinOptimalHeight": "Fournir la hauteur optimale minimum du nœud",
   "Visual_Enable": "Activer",
   "Visual_SankeySettings": "Paramètres Sankey",
   "Visual_NodePositions": "Positions de nœud",
   "Visual_ViewportSize": "Tailles de fenêtre d'affichage",
   "Visual_Display_Units": "Unités d'affichage",
-  "Visual_SankeyScaleSettings": "Paramètres de mise à l'échelle",
-  "Visual_MinOptimalHeight": "Fournir la hauteur optimale minimum du nœud",
   "Visual_Cycles": "Affichage des cycles",
   "Visual_DuplicateNodes": "Doubler les nœuds",
   "Visual_Duplicate": "Dupliqué",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Ignorer l'importance des liens propres",
   "Visual_TooltipDisplayName": "Nom",
   "Visual_Description_Force_Display": "Afficher quand même toutes les étiquettes",
-  "Sankey_Short_Description": "Diagramme de flux où la largeur de la série est proportionnelle à la quantité du flux",
-  "Sankey_Long_Description": "Sankey vous permet de trouver clairement les sources, les destinations, les étapes entre celles-ci et les flux de données d'un simple coup d'œil. Pour interagir avec ce visuel, vous pouvez également cliquer sur un lien ou sur un flux et tirer parti de la fonctionnalité de mise en surbrillance/filtrage croisé de Power BI pour révéler des insights encore plus intéressants dans les données associées.\nCe visuel est de ce fait couramment utilisé dans le secteur de l'énergie, mais il permet de dégager des cas d'utilisation intéressants dans tous les secteurs d'activité. Il donne à tous la possibilité de visualiser des informations qui ont un début et une fin ou une relation dynamique avec de nombreux intermédiaires, comme l'arrivée d'un utilisateur sur un site et son mode de navigation, les matériaux impliqués dans une unité de fabrication ou encore les transferts d'argent dans les processus métier, et met en avant des insights intéressants.\nCe visuel est open source. Obtenez le code sur GitHub ici : https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Famille de polices",
+  "Visual_TooltipDisplayInput": "Entrée",
+  "Visual_TooltipDisplayOutput": "Sortie",
+  "Visual_NodeWidth": "Largeur"
 }

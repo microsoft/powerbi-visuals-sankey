@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Datakoblingsetiketter",
   "Visual_Links": "Koblinger",
   "Visual_ScaleSettings": "Aktiver logaritmisk skala",
+  "Visual_SankeyScaleSettings": "Skaleringsinnstillinger",
+  "Visual_MinOptimalHeight": "Oppgi min. optimal høyde på noden",
   "Visual_Enable": "Aktiver",
   "Visual_SankeySettings": "Sankey-innstillinger",
   "Visual_NodePositions": "Nodestillinger",
   "Visual_ViewportSize": "Størrelser på visningsport",
   "Visual_Display_Units": "Vis enheter",
-  "Visual_SankeyScaleSettings": "Skaleringsinnstillinger",
-  "Visual_MinOptimalHeight": "Oppgi min. optimal høyde på noden",
   "Visual_Cycles": "Sykluser viser",
   "Visual_DuplicateNodes": "Duplikatnoder",
   "Visual_Duplicate": "Dupliser",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Ignorer vekten av selv",
   "Visual_TooltipDisplayName": "Navn",
   "Visual_Description_Force_Display": "Vis alle etiketter likevel",
-  "Sankey_Short_Description": "Flytdiagram der bredden på serien er proporsjonal med mengden i flyten",
-  "Sankey_Long_Description": "Med Sankey kan du visualisere kildene, målene, trinnene mellom dem og hvordan ting flyter mellom dem, i en rask visning. Du kan også samhandle med det ved å klikke på koblingen eller selve flyten og bruke Power BIs funksjonalitet for kryssutheving/filtrering til å få enda mer interessante innsikter i relaterte data.\nDe brukes mye i kraftbransjen. Det finnes imidlertid mange interessante bruksområder for dette innenfor alle bransjer. Sankey inspirerer til å visualisere informasjon som har en start og en slutt, eller dynamiske relasjoner med mange mellomledd. Man kan for eksempel vise hvordan brukeren kom til og navigerte på et nettsted, vise materialets gang i en produksjonsenhet eller kontroll- eller pengeoverføringer innenfor forretningsprosesser, for å få nye perspektiver og hente frem interessante innsikter.\nDette er et visualobjekt med åpen kildekode. Hent koden fra GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Skriftserie",
+  "Visual_TooltipDisplayInput": "Inndata",
+  "Visual_TooltipDisplayOutput": "Utdata",
+  "Visual_NodeWidth": "Bredde"
 }

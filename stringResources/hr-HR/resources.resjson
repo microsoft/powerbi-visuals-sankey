@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Oznake podatkovnih veza",
   "Visual_Links": "Veze",
   "Visual_ScaleSettings": "Omogući logaritamsku skalu",
+  "Visual_SankeyScaleSettings": "Postavke skaliranja",
+  "Visual_MinOptimalHeight": "Navedite minimalnu optimalnu visinu čvora",
   "Visual_Enable": "Omogući",
   "Visual_SankeySettings": "Postavke za Sankeyjev dijagram",
   "Visual_NodePositions": "Položaji čvora",
   "Visual_ViewportSize": "Veličina motrišta",
   "Visual_Display_Units": "Jedinice za prikaz",
-  "Visual_SankeyScaleSettings": "Postavke skaliranja",
-  "Visual_MinOptimalHeight": "Navedite minimalnu optimalnu visinu čvora",
   "Visual_Cycles": "Prikaz ciklusa",
   "Visual_DuplicateNodes": "Dupliciranje čvorova",
   "Visual_Duplicate": "Dupliciraj",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Zanemari debljinu samostalnih veza",
   "Visual_TooltipDisplayName": "Naziv",
   "Visual_Description_Force_Display": "Ipak prikaži sve oznake",
-  "Sankey_Short_Description": "Dijagram toka u kojem je širina niza proporcionalna količini toka",
-  "Sankey_Long_Description": "Uz Sankey jednim pogledom možete jasno utvrditi izvore, odredišta i međukorake te načine na koje ih osoblje koristi kao tok. Možete i ostvariti interakciju s njim klikom na vezu ili sam tok te iskoristiti mogućnosti značajke unakrsnog isticanja/filtriranja servisa Power BI da biste dobili još zanimljivije uvide u povezane podatke.\nZato je u širokoj upotrebi u energetici. No postoje zanimljivi primjeri upotrebe u svim gospodarskim granama. Sve korisnike potiče da vizualiziraju podatke koji imaju početak i kraj ili dinamičan odnos s brojnim posrednicima, npr. podatke o načinu na koji je korisnik došao na neko web-mjesto ili podatke o materijalu u proizvodnoj jedinici, podatke o kontroli ili prijenosima novca u poslovnim procesima, na posve drukčiji način i stavljanje zanimljivih uvida u prvi plan.\nTo je vizual otvorenog koda. Kod preuzmite sa servisa GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Obitelj fontova",
+  "Visual_TooltipDisplayInput": "Ulaz",
+  "Visual_TooltipDisplayOutput": "Izlazna vrijednost",
+  "Visual_NodeWidth": "Širina"
 }
