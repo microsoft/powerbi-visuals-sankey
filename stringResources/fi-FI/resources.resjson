@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Tietolinkkien otsikot",
   "Visual_Links": "Linkit",
   "Visual_ScaleSettings": "Ota käyttöön logaritminen asteikko",
+  "Visual_SankeyScaleSettings": "Skaalausasetukset",
+  "Visual_MinOptimalHeight": "Anna solmun pienin paras mahdollinen korkeus",
   "Visual_Enable": "Ota käyttöön",
   "Visual_SankeySettings": "Sankey-asetukset",
   "Visual_NodePositions": "Solmujen sijainnit",
   "Visual_ViewportSize": "Näyttöikkunoiden koot",
   "Visual_Display_Units": "Yksiköt",
-  "Visual_SankeyScaleSettings": "Skaalausasetukset",
-  "Visual_MinOptimalHeight": "Anna solmun pienin paras mahdollinen korkeus",
   "Visual_Cycles": "Jaksojen näyttäminen",
   "Visual_DuplicateNodes": "Solmujen kaksoiskappaleet",
   "Visual_Duplicate": "Kaksoiskappale",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Ohita itseensä linkittävien linkkien painotus",
   "Visual_TooltipDisplayName": "Nimi",
   "Visual_Description_Force_Display": "Näytä kaikki otsikot joka tapauksessa",
-  "Sankey_Short_Description": "Vuokaavio, jossa sarjan leveys on suhteessa vuon laatuun",
-  "Sankey_Long_Description": "Sankeyn avulla voit selvästi yhdellä nopealla silmäyksellä löytää lähteet, kohteet ja askeleet niiden välissä sekä sen, miten asiat kulkevat niiden välillä. Voit myös käsitellä sitä joko napsauttamalla linkkiä tai itse työnkulkua ja hyödyntämällä Power BI:n ristiinkorostuksen/suodatuksen ominaisuutta, jotta saat entistäkin enemmän mielenkiintoisia merkityksellisiä tietoja liittyvistä tiedoista.\nOsuvasti niitä käytetään laajalti energia-alalla. Mielenkiintoisia käyttötapauksia on kuitenkin kaikilla aloilla. Sen avulla kuka tahansa voi visualisoida tietoja, joilla on alku ja loppu tai dynaaminen suhde, jossa on useita välikohteita, kuten se, miten käyttäjä päätyi ja siirtyi sivustoon, materiaali valmistusyksikössä tai rahansiirrot liiketoimintaprosessissa, käyttäen kokonaan eri perspektiiviä ja tuoden mielenkiintoisia merkityksellisiä tietoja näkyvin.\nTämä on avoimen lähteen visualisointi. Hanki koodi GitHubista: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Fonttiperhe",
+  "Visual_TooltipDisplayInput": "Syöte",
+  "Visual_TooltipDisplayOutput": "Tulos",
+  "Visual_NodeWidth": "Leveys"
 }

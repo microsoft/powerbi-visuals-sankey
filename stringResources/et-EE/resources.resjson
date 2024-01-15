@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Andmelingi sildid",
   "Visual_Links": "Lingid",
   "Visual_ScaleSettings": "Luba logaritmiline skaala",
+  "Visual_SankeyScaleSettings": "Mõõtkava sätted",
+  "Visual_MinOptimalHeight": "Esita sõlme minimaalne optimaalne kõrgus",
   "Visual_Enable": "Luba",
   "Visual_SankeySettings": "Sankey sätted",
   "Visual_NodePositions": "Sõlme asukohad",
   "Visual_ViewportSize": "Vaateavade suurused",
   "Visual_Display_Units": "Kuva ühikud",
-  "Visual_SankeyScaleSettings": "Mõõtkava sätted",
-  "Visual_MinOptimalHeight": "Esita sõlme minimaalne optimaalne kõrgus",
   "Visual_Cycles": "Tsüklite kuvamine",
   "Visual_DuplicateNodes": "Duplikaatsõlmed",
   "Visual_Duplicate": "Duplikaat",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Ignoreeri siselinkide kaalu",
   "Visual_TooltipDisplayName": "Nimi",
   "Visual_Description_Force_Display": "Kuva siiski kõik sildid",
-  "Sankey_Short_Description": "Voodiagramm, kus sarja laius on proportsionaalne voo kogusega",
-  "Sankey_Long_Description": "Sankey diagrammiga leiate selgelt allikad, sihtkohad ja vaheetapid ning selle, kuidas asjad neist kõigist üle voogavad, vaid ühe kiire pilguga. Saate sellega suhelda, kui klõpsate kas linki või voogu ennast ja kasutate ära Power BI ristesiletõstmise/filtreerimise funktsiooni, mis pakub seotud andmete kohta veelgi enam huvitavaid ülevaateid.\nNeid kasutatakse laialdaselt energiatööstuses, kuid sellele leidub huvitavaid kasutusjuhtumeid kõigis tööstusharudes. See paneb kõiki visualiseerima teavet, millel on algus ja lõpp või dünaamiline seos paljude vahendajatega, täiesti teise vaatenurga alt ning toob huvitavad ülevaated esiplaanile. Näiteks, kuidas kasutaja jõudis ja navigeeris veebisaidil, materjal tootmisüksuses, kontroll või rahaülekanded äriprotsessides.\nSee on avatud lähtekoodiga visuaal. Hankige kood GitHubist: https://github.com/Microsoft/powerbi-visuals-sankey."
+  "Visual_FontFamily": "Fondipere",
+  "Visual_TooltipDisplayInput": "Input",
+  "Visual_TooltipDisplayOutput": "Väljund",
+  "Visual_NodeWidth": "Laius"
 }

@@ -1,6 +1,6 @@
 {
   "Visual_DataPointsLabels": "Popisky dat",
-  "Visual_Show": "Zobrazení",
+  "Visual_Show": "Zobrazit",
   "Visual_LabelsFill": "Barva",
   "Visual_Fill": "Vyplnit",
   "Visual_TextSize": "Velikost textu",
@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Popisky datových odkazů",
   "Visual_Links": "Odkazy",
   "Visual_ScaleSettings": "Povolit logaritmické měřítko",
+  "Visual_SankeyScaleSettings": "Nastavení měřítka",
+  "Visual_MinOptimalHeight": "Zadejte minimální optimální výšku uzlu",
   "Visual_Enable": "Povolit",
   "Visual_SankeySettings": "Nastavení Sankey",
   "Visual_NodePositions": "Pozice uzlů",
   "Visual_ViewportSize": "Velikosti oblastí zobrazení",
   "Visual_Display_Units": "Zobrazené jednotky",
-  "Visual_SankeyScaleSettings": "Nastavení měřítka",
-  "Visual_MinOptimalHeight": "Zadejte minimální optimální výšku uzlu",
   "Visual_Cycles": "Zobrazení cyklů",
   "Visual_DuplicateNodes": "Duplicitní uzly",
   "Visual_Duplicate": "Duplikovat",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Ignorovat váhu propojení na sebe sama",
   "Visual_TooltipDisplayName": "Název",
   "Visual_Description_Force_Display": "Přesto zobrazit všechny popisky",
-  "Sankey_Short_Description": "Diagram toku, u kterého je šířka řad úměrná hodnotě toku",
-  "Sankey_Long_Description": "Díky Sankey snadno jedním pohledem najdete zdroje, cíle a kroky mezi a zjistíte, jak mezi nimi položky protékají. Můžete s nimi také pracovat, buď kliknutím na odkaz, nebo na samotný tok. Když využijete funkcí křížového zvýraznění a filtrování Power BI, získáte ještě více zajímavých poznatků ohledně souvisejících dat.\nPříhodně se často používají v energetickém odvětví, ale najdou si zajímavé případy užití napříč všemi obory. Dávají uživatelům energii k vizualizování informací, které mají počátek a konec nebo dynamickou relaci s více prostředníky, například informace o tom, jak se uživatel dostal na webové stránky a jak je procházel, informace o materiálu ve výrobní jednotce nebo informace o kontrole finančních transakcí v obchodních procesech. Tyto informace uvidíte z úplně jiné perspektivy, která vynese na povrch zajímavé poznatky.\nTento vizuál je typu open source. Kód můžete získat z Githubu: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Rodina písem",
+  "Visual_TooltipDisplayInput": "Vstup",
+  "Visual_TooltipDisplayOutput": "Výstup",
+  "Visual_NodeWidth": "Šířka"
 }

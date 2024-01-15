@@ -1,6 +1,6 @@
 {
   "Visual_DataPointsLabels": "Rótulos de dados",
-  "Visual_Show": "Exibir",
+  "Visual_Show": "Mostrar",
   "Visual_LabelsFill": "Cor",
   "Visual_Fill": "Preencher",
   "Visual_TextSize": "Tamanho do texto",
@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Rótulos de link de dados",
   "Visual_Links": "Links",
   "Visual_ScaleSettings": "Habilitar a escala logarítmica",
+  "Visual_SankeyScaleSettings": "Configurações de dimensionamento",
+  "Visual_MinOptimalHeight": "Fornecer a altura mínima ideal do nó",
   "Visual_Enable": "Habilitar",
   "Visual_SankeySettings": "Configurações de Sankey",
   "Visual_NodePositions": "Posições de nós",
   "Visual_ViewportSize": "Tamanhos do visor",
   "Visual_Display_Units": "Exibir unidades",
-  "Visual_SankeyScaleSettings": "Configurações de dimensionamento",
-  "Visual_MinOptimalHeight": "Fornecer a altura mínima ideal do nó",
   "Visual_Cycles": "Ciclos exibidos",
   "Visual_DuplicateNodes": "Nós duplicados",
   "Visual_Duplicate": "Duplicar",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Ignorar peso de autolinks",
   "Visual_TooltipDisplayName": "Nome",
   "Visual_Description_Force_Display": "Exibir todos os rótulos mesmo assim",
-  "Sankey_Short_Description": "Diagrama de fluxo no qual a largura da série é proporcional à quantidade do fluxo",
-  "Sankey_Long_Description": "Com o Sankey, você pode claramente encontrar as origens, os destinos e as etapas entre eles, além de descobrir com uma olhada como a coisas fluem em todos eles. Você também pode interagir com ele clicando no link ou no fluxo propriamente dito e aproveitar o recurso de filtragem/realce cruzado do Power BI para obter insights ainda mais interessantes em dados relacionados.\nComo é adequado, eles são usados amplamente no setor de energia, mas encontra casos de uso interessantes em todos os setores. Ele energia todos para visualizar as informações que têm um início e um final ou relação dinâmica com muitos intermediários, por exemplo, como o usuário foi parar e navegou em um site da Web, ou um material em uma unidade de produção, controle ou transferências financeiras em processos empresariais em uma perspectiva completamente diferente e trazer insights interessantes à tona.\nEsse é um visual de software livre. Obtenha o código do GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Família de Fontes",
+  "Visual_TooltipDisplayInput": "Entrada",
+  "Visual_TooltipDisplayOutput": "Saída",
+  "Visual_NodeWidth": "Largura"
 }
