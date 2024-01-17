@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Etiquetas de ligação de dados",
   "Visual_Links": "Ligações",
   "Visual_ScaleSettings": "Ativar escala logarítmica",
+  "Visual_SankeyScaleSettings": "Definições de dimensionamento",
+  "Visual_MinOptimalHeight": "Fornecer a altura mínima ideal do nó",
   "Visual_Enable": "Ativar",
   "Visual_SankeySettings": "Definições de Sankey",
   "Visual_NodePositions": "Posições do nó",
   "Visual_ViewportSize": "Tamanhos da janela viewport",
   "Visual_Display_Units": "Mostrar unidades",
-  "Visual_SankeyScaleSettings": "Definições de dimensionamento",
-  "Visual_MinOptimalHeight": "Fornecer a altura mínima ideal do nó",
   "Visual_Cycles": "Ciclos em apresentação",
   "Visual_DuplicateNodes": "Nós duplicados",
   "Visual_Duplicate": "Duplicar",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Ignorar peso das ligações automáticas",
   "Visual_TooltipDisplayName": "Nome",
   "Visual_Description_Force_Display": "Mostrar todas as etiquetas mesmo assim",
-  "Sankey_Short_Description": "Diagrama de fluxo em que a largura da série é proporcional à quantidade do fluxo",
-  "Sankey_Long_Description": "Com o Sankey, pode claramente encontrar as origens, os destinos, os passos e a forma como os elementos fluem entre os mesmos, tudo de forma rápida. Também pode interagir com os mesmos ao clicar na ligação ou no fluxo propriamente dito e tirar partido da funcionalidade de realce/filtragem cruzados do Power BI para obter informações ainda mais interessantes em dados relacionados.\nAdequadamente, são utilizados bastante na indústria energética, mas têm casos interessantes de utilização em todos os setores. Motiva todos os utilizadores a visualizar informações que têm um início e um fim ou uma relação dinâmica com muitos intermediadores, por exemplo, como o utilizador chegou a um site e navegou no mesmo ou um material numa unidade de fabrico, transferências de dinheiro ou controlos em processos comerciais numa perspetiva completamente diferente, trazendo informações interessantes para uma posição de destaque.\nEste é um visual de código aberto. Obtenha o código do GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Família de Tipos de Letra",
+  "Visual_TooltipDisplayInput": "Entrada",
+  "Visual_TooltipDisplayOutput": "Saída",
+  "Visual_NodeWidth": "Largura"
 }

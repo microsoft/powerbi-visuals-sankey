@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "תוויות קישור נתונים",
   "Visual_Links": "קישורים",
   "Visual_ScaleSettings": "אפשר סרגל לוגריתמי",
+  "Visual_SankeyScaleSettings": "הגדרות קנה מידה",
+  "Visual_MinOptimalHeight": "ספק גובה אופטימלי מינימלי של הצומת",
   "Visual_Enable": "הפוך לזמין",
   "Visual_SankeySettings": "הגדרות תרשים Sankey",
   "Visual_NodePositions": "מיקומי צמתים",
   "Visual_ViewportSize": "גודלי אשנב",
   "Visual_Display_Units": "יחידות תצוגה",
-  "Visual_SankeyScaleSettings": "הגדרות קנה מידה",
-  "Visual_MinOptimalHeight": "ספק גובה אופטימלי מינימלי של הצומת",
   "Visual_Cycles": "הצגת מחזורים",
   "Visual_DuplicateNodes": "צמתים כפולים",
   "Visual_Duplicate": "‏‏שכפל",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "התעלם מהמשקל של קישורים עצמיים",
   "Visual_TooltipDisplayName": "שם",
   "Visual_Description_Force_Display": "הצג את כל התוויות בכל זאת",
-  "Sankey_Short_Description": "דיאגרמת זרם שבה רוחב הסדרות יחסי לכמות הזרם",
-  "Sankey_Long_Description": "העזר החזותי Sankey מאפשר לך לאתר בבירור את המקורות, היעדים ואת השלבים שביניהם ואת אופן הזרימה של הנתונים, וכל זאת במבט מהיר אחד. באפשרותך גם לקיים עמם אינטראקציה על-ידי לחיצה על הקישור או הזרם עצמו ולנצל את תכונת ההדגשה הצולבת/הסינון של PowerBI כדי לקבל תובנות מעניינות אפילו יותר בנתונים הקשורים.\nהם משמשים לרוב בענף האנרגיה אולם ניתן למצוא מקרי שימוש מעניינים בכל הענפים. הם מעודדים כל אחד להציג באופן חזותי מידע שכולל התחלה וסוף או קשר גומלין דינמי עם מתווכים רבים, לדוגמה כיצד המשתמש הגיע לאתר אינטרנט וניווט בו, או חומר ביחידת ייצור, בקרה או העברות כספים בתהליכים עסקיים בנקודת מבט שונה לחלוטין ומספק תובנות מעניינות לקו הקדמי.\nזהו עזר חזותי בקוד פתוח. הורד את הקוד מ- GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "משפחת גופנים",
+  "Visual_TooltipDisplayInput": "קלט",
+  "Visual_TooltipDisplayOutput": "פלט",
+  "Visual_NodeWidth": "רוחב"
 }

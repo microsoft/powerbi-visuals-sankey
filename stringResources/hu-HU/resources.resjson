@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Adathivatkozási címkék",
   "Visual_Links": "Hivatkozások",
   "Visual_ScaleSettings": "Logaritmikus skála engedélyezése",
+  "Visual_SankeyScaleSettings": "Méretbeállítások",
+  "Visual_MinOptimalHeight": "Adja meg a csomópont minimálisan optimális magasságát",
   "Visual_Enable": "Engedélyezés",
   "Visual_SankeySettings": "Sankey-beállítások",
   "Visual_NodePositions": "Csomópont-pozíciók",
   "Visual_ViewportSize": "Nézőpontméretek",
   "Visual_Display_Units": "Megjelenítési egységek",
-  "Visual_SankeyScaleSettings": "Méretbeállítások",
-  "Visual_MinOptimalHeight": "Adja meg a csomópont minimálisan optimális magasságát",
   "Visual_Cycles": "Ciklusok megjelenítése",
   "Visual_DuplicateNodes": "Ismétlődő csomópontokk",
   "Visual_Duplicate": "Másolat készítése",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Önhivatkozások vastagságának figyelmen kívül hagyása",
   "Visual_TooltipDisplayName": "Név",
   "Visual_Description_Force_Display": "Ennek ellenére az összes felirat megjelenítése",
-  "Sankey_Short_Description": "Folyamatábra, amelyben a sorozat szélessége arányos a folyamat mennyiségével",
-  "Sankey_Long_Description": "A Sankey diagrammal egyetlen pillantásra egyértelműen átláthatók a források, a célok és a köztes lépések, valamint hogy a folyamat hogyan áramlik ezek közt. A diagram emellett a hivatkozásokra vagy magára a folyamatra kattintva ki is bontható, és a Power BI keresztkiemelési/szűrési funkciójának köszönhetően még érdekesebb megállapítások nyerhetők ki a kapcsolódó adatokból.\nEzt a diagramtípust emiatt igen széles körben használják az energiaiparban, de valamennyi iparágban alkalmazható különféle érdekes esetek ábrázolására. Olyan információk megjelenítésére használható, amelyeknek van eleje és vége, vagy amelyek dinamikus kapcsolatokkal rendelkeznek számos köztes elemmel, például hogy a felhasználó honnan hová lépett a webhelyen, hogy egy anyag merre halad a gyártósoron, vagy hogy milyen ellenőrzések és pénzmozgások vannak egy üzleti folyamatban. Ez a diagramtípus egy teljesen eltérő perspektívát képes bemutatni, és érdekes megállapításokat hoz előtérbe.\nEz egy nyílt forráskódú vizualizáció. A kód letölthető a GitHubról: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Betűcsalád",
+  "Visual_TooltipDisplayInput": "Bemenet",
+  "Visual_TooltipDisplayOutput": "Kimenet",
+  "Visual_NodeWidth": "Szélesség"
 }

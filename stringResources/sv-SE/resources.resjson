@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Datalänk-etiketter",
   "Visual_Links": "Länkar",
   "Visual_ScaleSettings": "Aktivera logaritmisk skalning",
+  "Visual_SankeyScaleSettings": "Skalningsinställningar",
+  "Visual_MinOptimalHeight": "Ange nodens minsta optimala höjd",
   "Visual_Enable": "Aktivera",
   "Visual_SankeySettings": "Sankey-inställningar",
   "Visual_NodePositions": "Nodpositioner",
   "Visual_ViewportSize": "Visningsområdets storlekar",
   "Visual_Display_Units": "Visningsenheter",
-  "Visual_SankeyScaleSettings": "Skalningsinställningar",
-  "Visual_MinOptimalHeight": "Ange nodens minsta optimala höjd",
   "Visual_Cycles": "Cyklerna visar",
   "Visual_DuplicateNodes": "Dubblettnoder",
   "Visual_Duplicate": "Duplicera",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Ignorera självlänkars vikt",
   "Visual_TooltipDisplayName": "Namn",
   "Visual_Description_Force_Display": "Visa alla etiketter ändå",
-  "Sankey_Short_Description": "Flödesschema där bredden på serien är proportionell mot flödets mängd",
-  "Sankey_Long_Description": "Med Sankey kan du tydligt hitta källor, mål och stegen däremellan samt hur allt flödar mellan dem vid en snabb överblick. Du kan även interagera med det antingen genom att klicka på länken eller med själva flödet och dra nytta av funktionerna för korsmarkering/filtrering i Power BI för att få ut ännu fler intressant insikter i relaterade data.\nPassande nog används de flitigt inom energisektorn. Men det finns intressanta användningsfall för alla branscher. Det ger alla energin att visualisera information som har en start och ett slut eller dynamiska relationer med många mellanhänder, till exempel hur användaren kom till och navigerade runt på en webbplats eller ett material inom en tillverkningsenhet, kontroll eller pengaöverföringar inom affärsprocesser. Allt kan ges ett nytt perspektiv och få fram spännande insikter.\nDet här är ett visuellt objekt med öppen källkod. Hämta koden från GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Teckensnittsfamilj",
+  "Visual_TooltipDisplayInput": "Indata",
+  "Visual_TooltipDisplayOutput": "Utdata",
+  "Visual_NodeWidth": "Bredd"
 }
