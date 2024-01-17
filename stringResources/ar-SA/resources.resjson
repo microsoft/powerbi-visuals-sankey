@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "تسميات ارتباط البيانات",
   "Visual_Links": "ارتباطات",
   "Visual_ScaleSettings": "تمكين المقياس اللوغاريتمي",
+  "Visual_SankeyScaleSettings": "إعدادات المقياس",
+  "Visual_MinOptimalHeight": "توفير أدنى ارتفاع مثالي لعقدة",
   "Visual_Enable": "تمكين",
   "Visual_SankeySettings": "إعدادات Sankey",
   "Visual_NodePositions": "مواضع العقدة",
   "Visual_ViewportSize": "حجم منفذ العرض",
   "Visual_Display_Units": "وحدات العرض",
-  "Visual_SankeyScaleSettings": "إعدادات المقياس",
-  "Visual_MinOptimalHeight": "توفير أدنى ارتفاع مثالي لعقدة",
   "Visual_Cycles": "عرض دورات",
   "Visual_DuplicateNodes": "عُقد مكررة",
   "Visual_Duplicate": "‏‏تكرار",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "تجاهل وزن الارتباطات الذاتية",
   "Visual_TooltipDisplayName": "الاسم",
   "Visual_Description_Force_Display": "عرض كل التسميات على أية حال",
-  "Sankey_Short_Description": "مخطط تدفق حيث يكون به عرض السلاسل متناسبًا مع كمية التدفق",
-  "Sankey_Long_Description": "باستخدام Sankey، يمكنك بوضوح العثور على المصادر والجهات والخطوات بينها وكيفية تدفق الأشياء عبرها جميعًا بنظرة واحدة سريعة. يمكنك أيضًا التفاعل معه إما بالنقر فوق الارتباط أو التدفق نفسه والاستفادة من ميزة التمييز/التصفية المتقاطعة المتوفرة في Power BI للحصول على رؤى أكثر متعة في البيانات ذات الصلة.\nيتم استخدامها على نطاق واسع بشكل ملائم في صناعة الطاقة. إلا أنه توجد حالات استخدام ممتعة لها عبر كل الصناعات. إنه يدفع الجميع لتصور المعلومات ذات البدء والنهاية أو علاقة ديناميكية مع عدد كبير من الوسطاء، على سبيل المثال، كيفية وصول المستخدم إلى موقع ويب والتنقل به أو مادة في وحدة تصنيع أو وحدة تحكم أو عمليات نقل الأموال بعمليات الأعمال بمنظور مختلف تمامًا وعرض رؤى ممتعة.\nفيما يلي مرئيات مفتوحة المصدر. احصل على التعليمات البرمجية من GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "عائلة الخطوط",
+  "Visual_TooltipDisplayInput": "الإدخال",
+  "Visual_TooltipDisplayOutput": "الناتج",
+  "Visual_NodeWidth": "العرض"
 }

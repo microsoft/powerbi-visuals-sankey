@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Etiquetes d'enllaços de dades",
   "Visual_Links": "Enllaços",
   "Visual_ScaleSettings": "Permet l'escala logarítmica",
+  "Visual_SankeyScaleSettings": "Configuració de l'escala",
+  "Visual_MinOptimalHeight": "Proporcioneu l'alçada mínima òptima del node.",
   "Visual_Enable": "Habilita",
   "Visual_SankeySettings": "Configuració Sankey",
   "Visual_NodePositions": "Posicions de node",
   "Visual_ViewportSize": "Mides de la finestreta",
   "Visual_Display_Units": "Unitats de visualització",
-  "Visual_SankeyScaleSettings": "Configuració de l'escala",
-  "Visual_MinOptimalHeight": "Proporcioneu l'alçada mínima òptima del node.",
   "Visual_Cycles": "Cicles que es mostren",
   "Visual_DuplicateNodes": "Nodes duplicats",
   "Visual_Duplicate": "Duplica",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Ignora el pes dels enllaços propis",
   "Visual_TooltipDisplayName": "Nom",
   "Visual_Description_Force_Display": "Mostra totes les etiquetes igualment",
-  "Sankey_Short_Description": "Diagrama de flux en què l'amplada de la sèrie és proporcional a la quantitat del flux.",
-  "Sankey_Long_Description": "El Sankey permet identificar clarament i d’una ullada els orígens, les destinacions i els passos intermedis, així com el flux dels elements durant el procés. També podeu interactuar-hi, bé fent clic a l’enllaç o al flux, i aprofitar la característica de marcatge creuat o filtratge del Power BI per obtenir conclusions encara més interessants sobre les dades relacionades.\nÉs molt útil al sector energètic, i s’hi fa servir amb freqüència, però podem trobar casos d’ús molt interessants en qualsevol àmbit. Permet visualitzar informació amb un inici i un final, o bé relacions dinàmiques amb molts intermediaris, per exemple, com un usuari arriba a un lloc web i hi navega, el material d’una unitat de fabricació, o el control i les transferències dels diners en processos empresarials. Tot això amb una perspectiva totalment diferent i amb les conclusions més interessants en primer pla.\nAquest element visual és de codi obert. Podeu obtenir el codi al GitHub, a https://github.com/Microsoft/powerbi-visuals-sankey."
+  "Visual_FontFamily": "Família de tipus de lletra",
+  "Visual_TooltipDisplayInput": "Entrada",
+  "Visual_TooltipDisplayOutput": "Sortida",
+  "Visual_NodeWidth": "Amplada"
 }

@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Oznake veza ka podacima",
   "Visual_Links": "Veze",
   "Visual_ScaleSettings": "Omogući logaritamsku skalu",
+  "Visual_SankeyScaleSettings": "Postavke razmere",
+  "Visual_MinOptimalHeight": "Unesite minimalnu optimalnu visinu čvora",
   "Visual_Enable": "Omogući",
   "Visual_SankeySettings": "Sankey postavke",
   "Visual_NodePositions": "Položaji čvorova",
   "Visual_ViewportSize": "Veličine prikaza",
   "Visual_Display_Units": "Merne jedinice",
-  "Visual_SankeyScaleSettings": "Postavke razmere",
-  "Visual_MinOptimalHeight": "Unesite minimalnu optimalnu visinu čvora",
   "Visual_Cycles": "Prikazani ciklusi",
   "Visual_DuplicateNodes": "Duplikati čvorova",
   "Visual_Duplicate": "Dupliraj",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Zanemari stepen važnosti veza koje upućuju na same sebe",
   "Visual_TooltipDisplayName": "Ime",
   "Visual_Description_Force_Display": "Ipak prikaži sve oznake",
-  "Sankey_Short_Description": "Dijagram toka gde je širina grupe proporcionalna količini toka",
-  "Sankey_Long_Description": "Uz Sankey možete za tren oka jasno da pronađete izvore odredišta i korake između njih, kao i način toka stvari u svima njima. Takođe možete da vršite interakciju sa njim tako što ćete kliknuti na vezu ili na tok i iskoristiti funkciju unakrsnog isticanja/filtriranja usluge Power BI da biste dobili još zanimljivije uvide u srodne podatke.\nni se prikladno u velikom meri koriste u industriji energetike. Ali i sve ostale industrije pronalaze zanimljive slučajeve za njegovo korišćenje. On svima daje energiju za vizuelizaciju informacije koje imaju početak i kraj ili dinamički odnos sa mnogo posrednika, na primer, kako je korisnik stigao na veb sajt i kretao se do njega, odnosno materijal u proizvodnoj jedinici, kontrola ili transferi novca u poslovnim procesima u potpuno različitoj perspektivi i on donosi zanimljive uvide u prednji plan.\nOvo je open source vizuelni element. Preuzmite kôd iz usluge GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Porodica fontova",
+  "Visual_TooltipDisplayInput": "Unos",
+  "Visual_TooltipDisplayOutput": "Izlaz",
+  "Visual_NodeWidth": "Širina"
 }
