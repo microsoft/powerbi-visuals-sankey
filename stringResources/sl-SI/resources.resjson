@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Povezava oznake podatkov",
   "Visual_Links": "Povezave",
   "Visual_ScaleSettings": "Omogoči Logaritmično merilo",
+  "Visual_SankeyScaleSettings": "Nastavitve merila",
+  "Visual_MinOptimalHeight": "Zagotovi najmanjšo optimalno višino vozlišča",
   "Visual_Enable": "Omogoči",
   "Visual_SankeySettings": "Nastavitve diagrama Sankey",
   "Visual_NodePositions": "Vozlišče pozicije",
   "Visual_ViewportSize": "Viewport velikosti",
   "Visual_Display_Units": "Enote prikaza",
-  "Visual_SankeyScaleSettings": "Nastavitve merila",
-  "Visual_MinOptimalHeight": "Zagotovi najmanjšo optimalno višino vozlišča",
   "Visual_Cycles": "Prikaz ciklov",
   "Visual_DuplicateNodes": "Podvojena vozlišča",
   "Visual_Duplicate": "Podvoji",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Prezri debelino samopovezav",
   "Visual_TooltipDisplayName": "Ime",
   "Visual_Description_Force_Display": "Vseeno prikaži vse oznake",
-  "Sankey_Short_Description": "Diagram poteka, kjer je širina niza sorazmerna s količino podatkovnega toka",
-  "Sankey_Long_Description": "Z grafikonom Sankey lahko hitro poiščete vire, cilje, vmesne korake in postopke. Z grafikonom se lahko tudi povežete tako, da kliknete povezavo ali tok in uporabite funkcijo označevanja/filtriranja v storitvi Power BI, da pridobite še zanimivejše vpoglede v povezane podatke.\nTeh grafikonov se pogosto poslužujejo v energetski industriji. Njihova uporaba pa je razširjena tudi v drugih panogah. Grafikon omogoča upodobitev podatkov, ki vključujejo začetek in cilj ali dinamične odnose, tako, da prikaže različne kategorije – na primer, kako je uporabnik našel določeno spletno mesto in po njem krmaril, upodobitev podatkov o materialu v proizvodni enoti ali denarnih prenosov v poslovnih procesih – s povsem druge perspektive in z upodobitvijo zanimivih vpogledov.\nTo je odprtokodna ponazoritev. Kodo lahko pridobite na spletnem mestu storitve GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Družina pisav",
+  "Visual_TooltipDisplayInput": "Vhod",
+  "Visual_TooltipDisplayOutput": "Rezultat",
+  "Visual_NodeWidth": "Širina"
 }

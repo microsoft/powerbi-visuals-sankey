@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Label pautan data",
   "Visual_Links": "Pautan",
   "Visual_ScaleSettings": "Dayakan skala logaritma",
+  "Visual_SankeyScaleSettings": "Seting skala",
+  "Visual_MinOptimalHeight": "Berikan tinggi optimum minimum bagi nod",
   "Visual_Enable": "Dayakan",
   "Visual_SankeySettings": "Tetapan Sankey",
   "Visual_NodePositions": "Kedudukan nod",
   "Visual_ViewportSize": "Saiz port pandangan",
   "Visual_Display_Units": "Paparkan unit",
-  "Visual_SankeyScaleSettings": "Seting skala",
-  "Visual_MinOptimalHeight": "Berikan tinggi optimum minimum bagi nod",
   "Visual_Cycles": "Kitaran dipaparkan",
   "Visual_DuplicateNodes": "Nod pendua",
   "Visual_Duplicate": "Pendua",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Abaikan berat swapautan",
   "Visual_TooltipDisplayName": "Nama",
   "Visual_Description_Force_Display": "Paparkan juga semua label",
-  "Sankey_Short_Description": "Rajah alir di mana lebar siri adalah berkadar dengan kuantiti aliran",
-  "Sankey_Long_Description": "Dengan Sankey, anda dapat mencari sumber, destinasi dan langkah yang jelas di antara dan bagaimana barangan mengalir di sekelilingnya dengan pantas. Anda juga boleh berinteraksi dengannya sama ada dengan mengklik pautan atau aliran itu sendiri dan memanfaatkan ciri penonjolan/penapisan silang Power BI untuk mendapatkan gambaran yang lebih menarik dalam data yang berkaitan.\nPengesanannya digunakan secara meluas dalam industri tenaga. Tetapi ia mendapati kes penggunaan yang menarik di semua industri. Ia memberi tenaga kepada semua orang untuk memvisualisasikan maklumat yang mempunyai permulaan dan hubungan akhir atau dinamik dengan banyak pengantara, kerana bagaimana pengguna mendarat dan dilayari di laman web, atau bahan dalam unit pembuatan, kawalan atau pemindahan wang dalam proses perniagaan dalam perspektif yang sama sekali berbeza dan membawa pandangan yang menarik ke hadapan.\nIni adalah visual sumber terbuka. Dapatkan kod dari GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Keluarga Fon",
+  "Visual_TooltipDisplayInput": "Input",
+  "Visual_TooltipDisplayOutput": "Output",
+  "Visual_NodeWidth": "Lebar"
 }

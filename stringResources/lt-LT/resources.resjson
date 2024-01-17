@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Duomenų saito žymos",
   "Visual_Links": "Saitai",
   "Visual_ScaleSettings": "Įjungti logaritminį mastelį",
+  "Visual_SankeyScaleSettings": "Mastelio keitimo parametrai",
+  "Visual_MinOptimalHeight": "Pateikti mažiausią optimalų mazgo aukštį",
   "Visual_Enable": "Įjungti",
   "Visual_SankeySettings": "„Sankey“ parametrai",
   "Visual_NodePositions": "Mazgų padėtys",
   "Visual_ViewportSize": "Peržiūros sričių dydžiai",
   "Visual_Display_Units": "Rodomi vienetai",
-  "Visual_SankeyScaleSettings": "Mastelio keitimo parametrai",
-  "Visual_MinOptimalHeight": "Pateikti mažiausią optimalų mazgo aukštį",
   "Visual_Cycles": "Rodomi ciklai",
   "Visual_DuplicateNodes": "Mazgų dublikatai",
   "Visual_Duplicate": "Dublikatas",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Nepaisyti vidinių saitų svertinės vertės",
   "Visual_TooltipDisplayName": "Pavadinimas",
   "Visual_Description_Force_Display": "Vis tiek rodyti visas žymas",
-  "Sankey_Short_Description": "Srauto diagrama, kurioje sekos plotis yra proporcingas srauto kiekiui",
-  "Sankey_Long_Description": "Trumpai žvilgtelėję į „Sankey“, galite aiškiai rasti šaltinius, paskirties vietas ir veiksmus tarp jų bei visų jų srautą. Taip pat galite šį vaizdinį elementą interaktyviai naudoti, spustelėdami saitą arba patį srautą ir išnaudoti „Power BI“ kryžminio paryškinimo / filtravimo funkciją bei taip gauti dar įdomesnių įžvalgų susijusiuose duomenyse.\nTodėl jie plačiai naudojami energijos pramonėje. Tačiau įdomių šio elemento naudojimo atvejų galima rasti visose pramonės šakose. Jis visiems suteikia galimybę naudojant visiškai skirtingą perspektyvą vizualizuoti informaciją, turinčią pradžią ir pabaigą arba dinaminį ryšį su daug tarpininkų, pvz., kaip vartotojas pateko į žiniatinklio svetainę ir joje naršė, kaip medžiaga judėjo gamybos vienete, stebėti kontrolės ar pinigų perdavimą atliekant verslo procesus, taip atskleidžiant įdomių įžvalgų.\nTai yra atvirojo kodo vaizdinis elementas. Šį kodą galite gauti iš „GitHub“: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Šriftų šeima",
+  "Visual_TooltipDisplayInput": "Įvestis",
+  "Visual_TooltipDisplayOutput": "Išvestis",
+  "Visual_NodeWidth": "Plotis"
 }
