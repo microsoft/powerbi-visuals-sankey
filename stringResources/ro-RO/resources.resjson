@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Etichete linkuri de date",
   "Visual_Links": "Linkuri",
   "Visual_ScaleSettings": "Activare scară logaritmică",
+  "Visual_SankeyScaleSettings": "Setări de scară",
+  "Visual_MinOptimalHeight": "Oferiți înălțimea minimă optimă a nodului",
   "Visual_Enable": "Activare",
   "Visual_SankeySettings": "Setări pentru Sankey",
   "Visual_NodePositions": "Poziții nod",
   "Visual_ViewportSize": "Dimensiuni poartă de vizualizare",
   "Visual_Display_Units": "Afișare unități",
-  "Visual_SankeyScaleSettings": "Setări de scară",
-  "Visual_MinOptimalHeight": "Oferiți înălțimea minimă optimă a nodului",
   "Visual_Cycles": "Ciclurile care se afișează",
   "Visual_DuplicateNodes": "Noduri duplicate",
   "Visual_Duplicate": "Dublură",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Ignorați ponderea legăturilor automate",
   "Visual_TooltipDisplayName": "Nume",
   "Visual_Description_Force_Display": "Afișați toate etichetele oricum",
-  "Sankey_Short_Description": "Diagramă flux în care lățimea seriei este proporțională cu cantitatea fluxului",
-  "Sankey_Long_Description": "Cu Sankey, puteți găsi în mod clar și dintr-o privire sursele, destinațiile și pașii intermediari, precum și modul în care sunt transmise elementele între acestea. De asemenea, puteți să interacționați cu acesta făcând clic pe link sau pe fluxul propriu-zis și să valorificați caracteristica de evidențiere/filtrare încrucișată din Power BI, pentru a obține și mai multe detalii interesante despre datele asociate.\nAceste diagrame sunt utilizate pe scară largă în industria energetică. Însă există cazuri de utilizări interesante în toate industriile. Îi stimulează pe toți să vizualizeze informațiile care au un început și un sfârșit sau relații dinamice cu mai mulți intermediari, de exemplu, să afle modul în care a ajuns și a navigat un utilizator pe un site web sau un material într-o unitate de producție, pentru a vedea controlul sau transferurile de fonduri din procesele de afaceri dintr-o perspectivă complet diferită și să dezvăluie detalii interesante.\nAcesta este un element vizual open source. Obțineți codul de la GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Familie de fonturi",
+  "Visual_TooltipDisplayInput": "Intrare",
+  "Visual_TooltipDisplayOutput": "Ieșire",
+  "Visual_NodeWidth": "Lățime"
 }

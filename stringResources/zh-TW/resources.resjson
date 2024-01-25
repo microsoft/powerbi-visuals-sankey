@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "資料連結標籤",
   "Visual_Links": "連結",
   "Visual_ScaleSettings": "啟用對數刻度",
+  "Visual_SankeyScaleSettings": "調整設定",
+  "Visual_MinOptimalHeight": "提供節點的最小最佳高度",
   "Visual_Enable": "啟用",
   "Visual_SankeySettings": "Sankey 設定",
   "Visual_NodePositions": "節點位置",
   "Visual_ViewportSize": "檢視區大小",
   "Visual_Display_Units": "顯示單位",
-  "Visual_SankeyScaleSettings": "調整設定",
-  "Visual_MinOptimalHeight": "提供節點的最小最佳高度",
   "Visual_Cycles": "循環顯示",
   "Visual_DuplicateNodes": "重複的節點",
   "Visual_Duplicate": "重複",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "忽略自我連結的粗細",
   "Visual_TooltipDisplayName": "名稱",
   "Visual_Description_Force_Display": "一律顯示所有標籤",
-  "Sankey_Short_Description": "線條寬度與流量成正比的流量圖",
-  "Sankey_Long_Description": "使用 Sankey，您只要看一眼就能清楚找出來源、目的地、兩者之間的距離，及事物在其中流動的方式。您也可以透過按一下連結或流程本身，來與之互動，並利用 Power BI 的交叉醒目提示/篩選功能來取得相關資料中更有趣的見解。\n這種圖表很適合用於能源產業，但在各產業也都有有趣的使用案例。這讓每個人都有動力從完全不同的角度，以視覺呈現具有開始與結束的資訊，或有多個中間點的動態關係，例如使用者在網站中如何登陸及瀏覽，或製造單位中的原料、商務程序中的控制權或金錢移轉，為前端帶來有趣的見解。\n這是開放原始碼視覺效果。從 GitHub 取得程式碼: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "字型系列",
+  "Visual_TooltipDisplayInput": "輸入",
+  "Visual_TooltipDisplayOutput": "輸出",
+  "Visual_NodeWidth": "寬度"
 }
