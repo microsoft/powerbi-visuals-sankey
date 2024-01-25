@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Etykiety linków danych",
   "Visual_Links": "Łącza",
   "Visual_ScaleSettings": "Włącz skalę logarytmiczną",
+  "Visual_SankeyScaleSettings": "Ustawienia skalowania",
+  "Visual_MinOptimalHeight": "Podaj minimalną optymalną wysokość węzła",
   "Visual_Enable": "Włącz",
   "Visual_SankeySettings": "Ustawienia wykresu Sankeya",
   "Visual_NodePositions": "Pozycje węzłów",
   "Visual_ViewportSize": "Rozmiary okienek ekranów",
   "Visual_Display_Units": "Jednostki wyświetlania",
-  "Visual_SankeyScaleSettings": "Ustawienia skalowania",
-  "Visual_MinOptimalHeight": "Podaj minimalną optymalną wysokość węzła",
   "Visual_Cycles": "Wyświetlanie cykli",
   "Visual_DuplicateNodes": "Duplikuj węzły",
   "Visual_Duplicate": "Duplikuj",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Ignoruj wagę linków własnych",
   "Visual_TooltipDisplayName": "Nazwa",
   "Visual_Description_Force_Display": "Wyświetl wszystkie etykiety mimo wszystko",
-  "Sankey_Short_Description": "Diagram przepływu, w którym szerokość serii jest proporcjonalna do ilości przepływu",
-  "Sankey_Long_Description": "Za pomocą wizualizacji Sankey można szybko i wyraźnie zidentyfikować źródła, miejsca docelowe i kroki pośrednie oraz przepływ elementów między tymi składnikami. Można również przeprowadzać interakcję z tą wizualizacją, klikając link lub sam przepływ, i za pomocą funkcji filtrowania/wyróżniania krzyżowego usługi Power BI uzyskiwać bardziej interesujący wgląd w powiązane dane.\nWizualizacje te są używane powszechnie w przemyśle paliwowo-energetycznym. Ale można je w interesujący sposób wykorzystywać we wszystkich branżach. Rozwiązanie to pomaga wszystkim użytkownikom wizualizować informacje z początkową, końcową lub dynamiczną relacją z wieloma elementami pośrednimi. Może to dotyczyć zagadnień, takich jak sposób przechodzenia użytkownika do witryny internetowej i poruszania się po niej, obsługa materiału w jednostce produkcyjnej, kontrola lub przepływy pieniężne w procesach biznesowych — wizualizacja pokazuje je z całkowicie innej perspektywy i uwidacznia interesujące dane wejściowe.\nJest to wizualizacja typu open source. Pobierz kod z usługi GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Rodzina czcionek",
+  "Visual_TooltipDisplayInput": "Dane wejściowe",
+  "Visual_TooltipDisplayOutput": "Dane wyjściowe",
+  "Visual_NodeWidth": "Szerokość"
 }

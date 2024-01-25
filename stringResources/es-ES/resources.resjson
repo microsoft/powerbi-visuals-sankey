@@ -14,13 +14,13 @@
   "Visual_DataPointsLinkLabels": "Etiquetas de vínculos de datos",
   "Visual_Links": "Vínculos",
   "Visual_ScaleSettings": "Habilitar escala logarítmica",
+  "Visual_SankeyScaleSettings": "Configuración de escala",
+  "Visual_MinOptimalHeight": "Proporcione la altura mínima óptima del nodo.",
   "Visual_Enable": "Habilitar",
   "Visual_SankeySettings": "Configuración de Sankey",
   "Visual_NodePositions": "Posiciones de nodo",
   "Visual_ViewportSize": "Tamaño de ventanilla",
   "Visual_Display_Units": "Mostrar unidades",
-  "Visual_SankeyScaleSettings": "Configuración de escala",
-  "Visual_MinOptimalHeight": "Proporcione la altura mínima óptima del nodo.",
   "Visual_Cycles": "Ciclos que se muestran",
   "Visual_DuplicateNodes": "Nodos duplicados",
   "Visual_Duplicate": "Duplicado",
@@ -28,6 +28,8 @@
   "Visual_SelflinkWeight": "Omitir el tamaño de los autovínculos",
   "Visual_TooltipDisplayName": "Nombre",
   "Visual_Description_Force_Display": "Mostrar todas las etiquetas igualmente",
-  "Sankey_Short_Description": "Diagrama de flujo donde el ancho de las series es proporcional a la cantidad del flujo.",
-  "Sankey_Long_Description": "Con Sankey, puede identificar claramente los orígenes, los destinos y los pasos intermedios de flujos a simple vista. También puede interactuar si hace clic en el vínculo o en el flujo en sí, así como usar la característica de filtrado o resaltado cruzado de Power BI para obtener información incluso más interesante en datos relacionados.\nSe usa ampliamente en el sector energético. Pero también ofrece casos de uso interesantes en todos los sectores. Permite a todos los usuarios visualizar información que tenga un inicio y un final, o bien una relación dinámica con un gran número de intermediarios (por ejemplo, cómo llegó el usuario a un sitio web y navegó por este; un material en una unidad de fabricación; y controlar o realizar transferencias de dinero en procesos empresariales) con una perspectiva completamente distinta y descubrir información interesante.\nEste es un objeto visual de código abierto. Descargue el código desde GitHub: https://github.com/Microsoft/powerbi-visuals-sankey"
+  "Visual_FontFamily": "Familia de fuentes",
+  "Visual_TooltipDisplayInput": "Entrada",
+  "Visual_TooltipDisplayOutput": "Salida",
+  "Visual_NodeWidth": "Ancho"
 }
