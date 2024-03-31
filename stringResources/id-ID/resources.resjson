@@ -1,4 +1,6 @@
 {
+  "Visual_Short_Description": "Flow diagram where the width of the series is proportional to the quantity of the flow",
+  "Visual_Long_Description": "With Sankey, you can clearly find the sources, destinations and steps in between and how the stuff flow across them all in one quick glance. You can also interact with it either by clicking the link or the flow itself and leverage the cross highlighting/filtering feature of Power BI to get even more interesting insights in related data.\nFittingly they are used widely in the energy industry. But it finds interesting use cases across all industries. It energies everyone to visualize information that has a start and an end or dynamic relationship with many intermediaries, for example how the user landed and navigated in a web site, or a material in a manufacturing unit, control of money transfers in business processes in a completely different perspective and bring interesting insights to the forefront.\nThis is an open source visual. Get the code from GitHub: https://github.com/Microsoft/powerbi-visuals-sankey",
   "Visual_DataPointsLabels": "Label data",
   "Visual_Show": "Tampilkan",
   "Visual_LabelsFill": "Warna",
@@ -17,7 +19,7 @@
   "Visual_SankeyScaleSettings": "Pengaturan skala",
   "Visual_MinOptimalHeight": "Sediakan tinggi optimal node minimal",
   "Visual_Enable": "Aktifkan",
-  "Visual_SankeySettings": "Pengaturan Sankey",
+  "Visual_SankeySettings": "Sankey settings",
   "Visual_NodePositions": "Posisi node",
   "Visual_ViewportSize": "Ukuran viewport",
   "Visual_Display_Units": "Unit tampilan",
