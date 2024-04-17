@@ -93,7 +93,7 @@ export class SankeyDiagramBehavior{
         this.behaviorOptions.nodes.on("contextmenu", (event: PointerEvent, node: SankeyDiagramNode) => {
             if (event) {
                 this.selectionManager.showContextMenu(
-                    node,
+                    node.selectionId,
                     {
                         x: event.clientX,
                         y: event.clientY
@@ -139,7 +139,7 @@ export class SankeyDiagramBehavior{
         this.behaviorOptions.links.on("contextmenu", (event: PointerEvent, link: SankeyDiagramLink) => {
             if (event) {
                 this.selectionManager.showContextMenu(
-                    link,
+                    link.selectionId,
                     {
                         x: event.clientX,
                         y: event.clientY

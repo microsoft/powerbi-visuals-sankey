@@ -1,3 +1,9 @@
+## 3.4.2.0
+* Fix context menu for links and nodes
+
+## 3.4.1.0
+* Fix npm vulnerabilities
+
 ## 3.4.0.0
 * Change forward cycles links processing
 
