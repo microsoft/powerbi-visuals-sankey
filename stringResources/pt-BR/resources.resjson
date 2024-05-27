@@ -1,4 +1,6 @@
 {
+  "Visual_Short_Description": "Diagrama de fluxo no qual a largura da série é proporcional à quantidade do fluxo",
+  "Visual_Long_Description": "Com o Sankey, é possível encontrar claramente as origens, os destinos e as etapas entre eles, além de descobrir rapidamente como a coisas fluem em todos eles. Também é possível interagir com ele clicando no link ou no próprio fluxo e aproveitar o recurso de filtragem/realce cruzado do Power BI para obter insights ainda mais interessantes em dados relacionados.\nEles são usados amplamente no setor de energia, mas há casos de uso interessantes em todos os setores. Ele permite que todos vejam as informações com um início e um final ou a relação dinâmica com muitos intermediários, por exemplo, como o usuário foi parar e navegou em um site da Web ou um material em uma unidade de produção, controle de transferências financeiras em processos empresariais em uma perspectiva completamente diferente e trazer insights interessantes à tona.\nEsse é um visual de código aberto. Obtenha o código do GitHub: https://github.com/Microsoft/powerbi-visuals-sankey",
   "Visual_DataPointsLabels": "Rótulos de dados",
   "Visual_Show": "Exibir",
   "Visual_LabelsFill": "Cor",
@@ -17,7 +19,7 @@
   "Visual_SankeyScaleSettings": "Configurações de dimensionamento",
   "Visual_MinOptimalHeight": "Fornecer a altura mínima ideal do nó",
   "Visual_Enable": "Habilitar",
-  "Visual_SankeySettings": "Configurações de Sankey",
+  "Visual_SankeySettings": "Configurações do Sankey",
   "Visual_NodePositions": "Posições de nós",
   "Visual_ViewportSize": "Tamanhos do visor",
   "Visual_Display_Units": "Exibir unidades",
