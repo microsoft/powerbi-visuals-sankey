@@ -1,4 +1,6 @@
 {
+  "Visual_Short_Description": "Flytdiagram der bredden på serien er proporsjonal med mengden i flyten",
+  "Visual_Long_Description": "Med Sankey kan du visualisere kildene, målene, trinnene mellom dem og hvordan ting flyter mellom dem, i en rask visning. Du kan også samhandle med det ved å klikke på koblingen eller selve flyten og bruke Power BIs funksjonalitet for kryssutheving iltrering til å få enda mer interessante innsikter i relaterte data.\nDe brukes mye i kraftbransjen. Det finnes imidlertid mange interessante bruksområder for dette innenfor alle bransjer. Sankey inspirerer til å visualisere informasjon som har en start og en slutt, eller dynamiske relasjoner med mange mellomledd. Man kan for eksempel vise hvordan brukeren kom til og navigerte på et nettsted, vise materialets gang i en produksjonsenhet eller kontrollere pengeoverføringer innenfor forretningsprosesser, for å få nye perspektiver og hente frem interessante innsikter.\nDette er et visualobjekt med åpen kildekode. Hent koden fra GitHub: https://github.com/Microsoft/powerbi-visuals-sankey",
   "Visual_DataPointsLabels": "Dataetiketter",
   "Visual_Show": "Vis",
   "Visual_LabelsFill": "Farge",
