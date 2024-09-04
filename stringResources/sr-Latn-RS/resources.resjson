@@ -1,4 +1,6 @@
 {
+  "Visual_Short_Description": "Dijagram toka gde je širina grupe proporcionalna količini toka",
+  "Visual_Long_Description": "Uz Sankey možete za tren oka jasno da pronađete izvore, odredišta i korake između njih, kao i način toka stvari u svima njima. Takođe možete da vršite interakciju sa njima tako što ćete kliknuti na vezu ili na tok i iskoristiti funkciju unakrsnog isticanja/filtriranja usluge Power BI da biste dobili još zanimljivije uvide u srodne podatke.\nOni se prikladno u velikoj meri koriste u industriji energetike. Međutim, i sve ostale industrije pronalaze zanimljive slučajeve za njihovo korišćenje. Sankey svima omogućava vizuelizaciju informacija koje imaju početak i kraj ili dinamički odnos sa mnogo posrednika, na primer kako je korisnik stigao na veb sajt i kretao se do njega odnosno materijal u proizvodnoj jedinici, kontrola nad transferima novca u poslovnim procesima u potpuno različitoj perspektivi i donosi zanimljive uvide u prednji plan.\nOvo je vizuelni element otvorenog koda. Preuzmite kôd iz usluge GitHub: https://github.com/Microsoft/powerbi-visuals-sankey",
   "Visual_DataPointsLabels": "Oznake podataka",
   "Visual_Show": "Prikaži",
   "Visual_LabelsFill": "Boja",
