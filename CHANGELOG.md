@@ -1,3 +1,6 @@
+## 3.4.3.0
+* Fix weight with zero values
+
 ## 3.4.2.0
 * Fix context menu for links and nodes
 

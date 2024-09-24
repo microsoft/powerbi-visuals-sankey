@@ -43,6 +43,7 @@ type UpdateSelection<T> = d3Selection<any, T, any, any>;
 // powerbi
 import DataView = powerbi.DataView;
 import IViewport = powerbi.IViewport;
+import PrimitiveValue = powerbi.PrimitiveValue;
 import DataViewObjects = powerbi.DataViewObjects;
 import VisualObjectInstance = powerbi.VisualObjectInstance;
 import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifier;
@@ -156,7 +157,7 @@ export class SankeyDiagram implements IVisual {
     private static DefaultFormatOfWeight: string = "g";
 
     private static DefaultWeightValue: number = 0;
-    private static MinWeightValue: number = 1;
+    private static MinWeightValue: number = 0;
 
     private static TooltipDisplayName: string = "Name";
 
@@ -461,7 +462,7 @@ export class SankeyDiagram implements IVisual {
         dataView.matrix.rows.root.children.forEach(parent => {
             const foundSource: SankeyDiagramNode = nodes.find(found => found.label.name === parent.value)
             parent.children.forEach(child => {
-                let linkLabel = undefined;
+                let linkLabel: PrimitiveValue = undefined;
                 let weight: number = SankeyDiagram.DefaultWeightValue;
 
                 let foundDestination: SankeyDiagramNode = nodes.find(found => found.label.name === child.value)
@@ -509,7 +510,7 @@ export class SankeyDiagram implements IVisual {
                 );
 
                 const link: SankeyDiagramLink = {
-                    label: linkLabel && linkLabel.toString(),
+                    label: linkLabel?.toString(),
                     source: foundSource,
                     destination: foundDestination,
                     weight: weight,
