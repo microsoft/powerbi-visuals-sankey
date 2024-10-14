@@ -1,4 +1,6 @@
 {
+  "Visual_Short_Description": "系列的宽度与流的数量成比例的流程图",
+  "Visual_Long_Description": "使用 Sankey，可以明确找到源、目标及它们之间的步骤，且它们之间的内容流动一目了然。还可以单击链接或流本身与其交互，并利用 Power BI 的交叉突出显示/筛选功能获取相关数据的更多有趣见解。\n虽广泛适用于能源行业，但在所有行业都有有趣用例。每个人都可以完全不同的视角直观呈现与许多中介有开始和结束或动态关系的信息(例如，用户的网站登录和导航方式、制造单元中的材料或业务流程中的资金转移控制)，并发现有趣的见解。\n这是一个开放源代码视觉对象。从 GitHub (https://github.com/Microsoft/powerbi-visuals-sankey)获取代码",
   "Visual_DataPointsLabels": "数据标签",
   "Visual_Show": "显示",
   "Visual_LabelsFill": "颜色",
