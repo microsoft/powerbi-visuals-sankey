@@ -1,4 +1,6 @@
 {
+  "Visual_Short_Description": "Diagram poteka, kjer je širina niza sorazmerna s količino podatkovnega toka",
+  "Visual_Long_Description": "Z grafikonom Sankey lahko hitro poiščete vire, cilje, vmesne korake in postopke. Z grafikonom se lahko tudi povežete tako, da kliknete povezavo ali tok in uporabite funkcijo označevanja/filtriranja v storitvi Power BI, da pridobite še zanimivejše vpoglede v povezane podatke.\nTe grafikone pogosto uporabljajo v energetski industriji. Njihova uporaba pa je razširjena tudi v drugih panogah. Grafikon omogoča upodobitev podatkov, ki vključujejo začetek in cilj ali dinamične odnose, tako da prikaže različne kategorije, na primer, kako je uporabnik našel določeno spletno mesto in se pomikal po njem, upodobitev podatkov o materialu v proizvodni enoti ali denarna nakazila v poslovnih procesih – s povsem druge perspektive in z upodobitvijo zanimivih vpogledov.\nTo je odprtokodna ponazoritev. Kodo lahko pridobite na spletnem mestu storitve GitHub: https://github.com/Microsoft/powerbi-visuals-sankey",
   "Visual_DataPointsLabels": "Oznake podatkov",
   "Visual_Show": "Pokaži",
   "Visual_LabelsFill": "Barva",

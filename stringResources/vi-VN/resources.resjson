@@ -1,4 +1,6 @@
 {
+  "Visual_Short_Description": "Sơ đồ dòng trong đó chiều rộng của chuỗi tỷ lệ chất số lượng dòng",
+  "Visual_Long_Description": "Với Sankey, bạn có thể tìm thấy ngay nguồn, điểm đến và các bước liên quan cũng như cách nội dung di chuyển giữa các thành phần này một cách nhanh chóng. Bạn cũng có thể tương tác với từng thành phần bằng cách bấm vào liên kết hoặc chính luồng đó và tận dụng tính năng lọc/đánh dấu chéo của Power BI để tải thông tin chi tiết thú vị hơn trong dữ liệu có liên quan.\nCác thành phần này được sử dụng rộng rãi trong ngành công nghiệp năng lượng. Tuy nhiên, bạn cũng có thể thấy nhiều trường hợp sử dụng hiệu quả trong tất cả các ngành. Ứng dụng này khuyến khích mọi người minh họa thông tin có khởi đầu cũng như kết thúc hoặc có mối quan hệ động với nhiều yếu tố trung gian, chẳng hạn như cách người dùng truy cập và điều hướng trong một trang web hay nguyên liệu trong thiết bị sản xuất, kiểm soát việc chuyển tiền trong quá trình kinh doanh theo cách thức hoàn toàn khác đồng thời đưa sẵn các thông tin chi tiết thú vị.\nĐây mà hình ảnh nguồn mở. Tải mã từ GitHub: https://github.com/Microsoft/powerbi-visuals-sankey",
   "Visual_DataPointsLabels": "Các nhãn dữ liệu",
   "Visual_Show": "Hiện",
   "Visual_LabelsFill": "Màu",

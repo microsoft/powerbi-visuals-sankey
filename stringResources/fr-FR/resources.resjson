@@ -1,4 +1,6 @@
 {
+  "Visual_Short_Description": "Diagramme de flux où la largeur de la série est proportionnelle à la quantité du flux",
+  "Visual_Long_Description": "Sankey vous permet de trouver clairement les sources, les destinations, les étapes entre celles-ci et les flux de données d'un simple coup d'œil. Pour interagir avec ce visuel, vous pouvez également cliquer sur un lien ou sur un flux et tirer parti de la fonctionnalité de mise en surbrillance/filtrage croisé de Power BI pour révéler des insights encore plus intéressants dans les données associées.\nCe visuel est de ce fait couramment utilisé dans le secteur de l'énergie, mais il permet de dégager des cas d'utilisation intéressants dans tous les secteurs d'activité. Il donne à tous la possibilité de visualiser des informations qui ont un début et une fin ou une relation dynamique avec de nombreux intermédiaires, comme l'arrivée d'un utilisateur sur un site et son mode de navigation, les matériaux impliqués dans une unité de fabrication ou encore les transferts d'argent dans les processus métier, et met en avant des insights intéressants.\nCe visuel est open source. Obtenez le code sur GitHub ici : https://github.com/Microsoft/powerbi-visuals-sankey",
   "Visual_DataPointsLabels": "Étiquettes de données",
   "Visual_Show": "Afficher",
   "Visual_LabelsFill": "Couleur",
