@@ -26,6 +26,9 @@
 
 import ISelectionId = powerbi.visuals.ISelectionId;
 
+import { interfaces } from "powerbi-visuals-utils-formattingutils";
+import TextProperties = interfaces.TextProperties;
+
 import {
     SankeyDiagramSettings
 } from "./settings";
@@ -83,7 +86,7 @@ export interface SankeyDiagramNode extends
 export interface SankeyDiagramLink extends
     TooltipEnabledDataPoint{
 
-    label: string;
+    label: SankeyDiagramLabel;
     source: SankeyDiagramNode;
     destination: SankeyDiagramNode;
     weight: number;
@@ -139,4 +142,8 @@ export interface SankeyDiagramNodePositionSetting {
     name: string;
     y?: string;
     x?: string;
+}
+
+export interface TextPropertiesExtended extends TextProperties {
+    textDecoration?: string;
 }

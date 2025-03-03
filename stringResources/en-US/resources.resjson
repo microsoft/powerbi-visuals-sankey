@@ -33,5 +33,7 @@
 	"Visual_FontFamily": "Font Family",
 	"Visual_TooltipDisplayInput": "Input",
 	"Visual_TooltipDisplayOutput": "Output",
-	"Visual_NodeWidth": "Width"
+	"Visual_NodeWidth": "Width",
+	"Visual_Values": "Values",
+	"Visual_Font": "Font",
 }
