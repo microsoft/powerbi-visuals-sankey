@@ -198,6 +198,7 @@ export class LinkLabelsSettings extends BaseFontSettingsCard {
         super(cardName, LinkLabelsSettings.DefaultFontSize);
 
         this.displayNameKey = "Visual_DataPointsLinkLabels";
+        this.show.value = false;
     }
 }
 
