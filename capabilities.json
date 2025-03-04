@@ -275,6 +275,16 @@
             ]
         }
     },
+    "tooltips": {
+        "supportedTypes": {
+            "default": true,
+            "canvas": true
+        },
+        "roles": [
+            "tooltips"
+        ],
+        "supportEnhancedTooltips": true
+    },
     "supportsKeyboardFocus": true,
     "supportsSynchronizingFilterState": true,
     "privileges": []
