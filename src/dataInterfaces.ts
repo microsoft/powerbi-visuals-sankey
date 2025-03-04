@@ -132,12 +132,6 @@ export interface SankeyDiagramRoleNames {
     values: string;
 }
 
-export interface SankeyDiagramDataPoint {
-    source: any;
-    destination: any;
-    weight: number;
-}
-
 export interface SankeyDiagramNodePositionSetting {
     name: string;
     y?: string;

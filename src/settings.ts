@@ -37,11 +37,9 @@ import FormattingSettingsSimpleCard = formattingSettings.SimpleCard;
 import FormattingSettingsCompositeCard = formattingSettings.CompositeCard;
 import FormattingSettingsSlice = formattingSettings.Slice;
 import FormattingSettingsModel = formattingSettings.Model;
-import FormattingSettingsGroup = formattingSettings.Group;
 
 import ISelectionId = powerbiVisualsApi.visuals.ISelectionId;
 import IEnumMember = powerbi.IEnumMember;
-import { formattingService } from "powerbi-visuals-utils-formattingutils";
 
 export enum CyclesDrawType {
     Duplicate,
@@ -183,8 +181,6 @@ export class DataLabelsSettings extends BaseFontSettingsCard {
         displayNameKey: "Visual_Display_Units",
         value: 0
     });
-
-    public topLevelSlice: formattingSettings.ToggleSwitch = this.show;
 
     constructor() {
         const cardName: string = "labels";
