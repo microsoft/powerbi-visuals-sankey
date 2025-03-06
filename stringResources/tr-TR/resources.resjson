@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Veri etiketleri",
   "Visual_Show": "Göster",
-  "Visual_LabelsFill": "Renk",
+  "Visual_Color": "Renk",
   "Visual_Fill": "Doldur",
   "Visual_TextSize": "Metin Boyutu",
   "Visual_Force_Display": "Görüntülemeye zorla",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Ağırlık",
   "Visual_DataPointsLinkLabels": "Veri bağlantısı etiketleri",
   "Visual_Links": "Bağlantılar",
-  "Visual_ScaleSettings": "Logaritmik ölçeği etkinleştir",
-  "Visual_SankeyScaleSettings": "Ölçek ayarları",
+  "Visual_LogarithmicScale": "Logaritmik ölçeği etkinleştir",
+  "Visual_ScaleSettings": "Ölçek ayarları",
   "Visual_MinOptimalHeight": "Düğüm için en düşük ideal yüksekliği sağlayın",
   "Visual_Enable": "Etkinleştir",
   "Visual_SankeySettings": "Sankey ayarları",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Çoğalt",
   "Visual_DrawBackwardLink": "Geriye dönük bağlantı çiz",
   "Visual_SelflinkWeight": "Kendine bağlantıların ağırlığını yoksay",
-  "Visual_TooltipDisplayName": "Ad",
+  "Visual_Name": "Ad",
   "Visual_Description_Force_Display": "Tüm etiketleri yine de görüntüle",
   "Visual_FontFamily": "Yazı Tipi Ailesi",
-  "Visual_TooltipDisplayInput": "Giriş",
-  "Visual_TooltipDisplayOutput": "Çıkış",
-  "Visual_NodeWidth": "Genişlik"
+  "Visual_Input": "Giriş",
+  "Visual_Output": "Çıkış",
+  "Visual_Width": "Genişlik"
 }

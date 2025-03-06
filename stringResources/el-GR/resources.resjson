@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Ετικέτες δεδομένων",
   "Visual_Show": "Εμφάνιση",
-  "Visual_LabelsFill": "Χρώμα",
+  "Visual_Color": "Χρώμα",
   "Visual_Fill": "Συμπλήρωση",
   "Visual_TextSize": "Μέγεθος κειμένου",
   "Visual_Force_Display": "Επιβολή εμφάνισης",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Βάρος",
   "Visual_DataPointsLinkLabels": "Ετικέτες σύνδεσης δεδομένων",
   "Visual_Links": "Συνδέσεις",
-  "Visual_ScaleSettings": "Ενεργοποίηση λογαριθμικής κλίμακας",
-  "Visual_SankeyScaleSettings": "Ρυθμίσεις κλίμακας",
+  "Visual_LogarithmicScale": "Ενεργοποίηση λογαριθμικής κλίμακας",
+  "Visual_ScaleSettings": "Ρυθμίσεις κλίμακας",
   "Visual_MinOptimalHeight": "Παράχετε το ελάχιστο βέλτιστο ύψος του κόμβου",
   "Visual_Enable": "Ενεργοποίηση",
   "Visual_SankeySettings": "Ρυθμίσεις Sankey",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Αναπαραγωγή",
   "Visual_DrawBackwardLink": "Δημιουργία αντίστροφης σύνδεσης",
   "Visual_SelflinkWeight": "Παράβλεψη βαρύτητας συνδέσεων προς την ίδια σελίδα",
-  "Visual_TooltipDisplayName": "Όνομα",
+  "Visual_Name": "Όνομα",
   "Visual_Description_Force_Display": "Εμφάνιση όλων των ετικετών ούτως ή άλλως",
   "Visual_FontFamily": "Οικογένεια γραμματοσειρών",
-  "Visual_TooltipDisplayInput": "Είσοδος",
-  "Visual_TooltipDisplayOutput": "Έξοδος",
-  "Visual_NodeWidth": "Πλάτος"
+  "Visual_Input": "Είσοδος",
+  "Visual_Output": "Έξοδος",
+  "Visual_Width": "Πλάτος"
 }

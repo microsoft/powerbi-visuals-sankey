@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Деректер белгілері",
   "Visual_Show": "Көрсету",
-  "Visual_LabelsFill": "Түс",
+  "Visual_Color": "Түс",
   "Visual_Fill": "Толтыру",
   "Visual_TextSize": "Мәтін өлшемі",
   "Visual_Force_Display": "Мәжбүрлі түрде көрсету",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Салмақ",
   "Visual_DataPointsLinkLabels": "Деректерді беру арнасының белгілері",
   "Visual_Links": "Сілтемелер",
-  "Visual_ScaleSettings": "Логарифмдік шкаланы қосу",
-  "Visual_SankeyScaleSettings": "Масштаб параметрлері",
+  "Visual_LogarithmicScale": "Логарифмдік шкаланы қосу",
+  "Visual_ScaleSettings": "Масштаб параметрлері",
   "Visual_MinOptimalHeight": "Түйіннің минимал оңтайлы биіктігін беру",
   "Visual_Enable": "Қосу",
   "Visual_SankeySettings": "Sankey параметрлері",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Көшірмелеу",
   "Visual_DrawBackwardLink": "Сілтемені артқа қарай тарту",
   "Visual_SelflinkWeight": "Өз сілтемелерінің салмағын елемеу",
-  "Visual_TooltipDisplayName": "Аты",
+  "Visual_Name": "Аты",
   "Visual_Description_Force_Display": "Бәрібір барлық белгілерді көрсету",
   "Visual_FontFamily": "Қаріптер тобы",
-  "Visual_TooltipDisplayInput": "Енгізу",
-  "Visual_TooltipDisplayOutput": "Нәтиже",
-  "Visual_NodeWidth": "Ені"
+  "Visual_Input": "Енгізу",
+  "Visual_Output": "Нәтиже",
+  "Visual_Width": "Ені"
 }

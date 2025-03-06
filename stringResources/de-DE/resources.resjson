@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Datenbeschriftungen",
   "Visual_Show": "Anzeigen",
-  "Visual_LabelsFill": "Farbe",
+  "Visual_Color": "Farbe",
   "Visual_Fill": "Ausfüllen",
   "Visual_TextSize": "Textgröße",
   "Visual_Force_Display": "Anzeige erzwingen",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Gewichtung",
   "Visual_DataPointsLinkLabels": "Datenlinkbezeichnungen",
   "Visual_Links": "Links",
-  "Visual_ScaleSettings": "Logarithmische Skalierung aktivieren",
-  "Visual_SankeyScaleSettings": "Skalierungseinstellungen",
+  "Visual_LogarithmicScale": "Logarithmische Skalierung aktivieren",
+  "Visual_ScaleSettings": "Skalierungseinstellungen",
   "Visual_MinOptimalHeight": "Optimale Mindesthöhe von Knoten angeben",
   "Visual_Enable": "Aktivieren",
   "Visual_SankeySettings": "Sankey-Einstellungen",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Doppelt",
   "Visual_DrawBackwardLink": "Backwardlink erstellen",
   "Visual_SelflinkWeight": "Gewichtung seiteninterner Links ignorieren",
-  "Visual_TooltipDisplayName": "Name",
+  "Visual_Name": "Name",
   "Visual_Description_Force_Display": "Dennoch alle Bezeichnungen anzeigen",
   "Visual_FontFamily": "Schriftfamilie",
-  "Visual_TooltipDisplayInput": "Eingabe",
-  "Visual_TooltipDisplayOutput": "Ausgabe",
-  "Visual_NodeWidth": "Breite"
+  "Visual_Input": "Eingabe",
+  "Visual_Output": "Ausgabe",
+  "Visual_Width": "Breite"
 }

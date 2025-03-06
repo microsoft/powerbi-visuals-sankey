@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Oznake podataka",
   "Visual_Show": "Prikaži",
-  "Visual_LabelsFill": "Boja",
+  "Visual_Color": "Boja",
   "Visual_Fill": "Popuni",
   "Visual_TextSize": "Veličina teksta",
   "Visual_Force_Display": "Nametanje prikaza",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Težina",
   "Visual_DataPointsLinkLabels": "Oznake veza ka podacima",
   "Visual_Links": "Veze",
-  "Visual_ScaleSettings": "Omogući logaritamsku skalu",
-  "Visual_SankeyScaleSettings": "Postavke razmere",
+  "Visual_LogarithmicScale": "Omogući logaritamsku skalu",
+  "Visual_ScaleSettings": "Postavke razmere",
   "Visual_MinOptimalHeight": "Unesite minimalnu optimalnu visinu čvora",
   "Visual_Enable": "Omogući",
   "Visual_SankeySettings": "Sankey postavke",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Dupliraj",
   "Visual_DrawBackwardLink": "Nacrtaj vezu unazad",
   "Visual_SelflinkWeight": "Zanemari stepen važnosti veza koje upućuju na same sebe",
-  "Visual_TooltipDisplayName": "Ime",
+  "Visual_Name": "Ime",
   "Visual_Description_Force_Display": "Ipak prikaži sve oznake",
   "Visual_FontFamily": "Porodica fontova",
-  "Visual_TooltipDisplayInput": "Unos",
-  "Visual_TooltipDisplayOutput": "Izlaz",
-  "Visual_NodeWidth": "Širina"
+  "Visual_Input": "Unos",
+  "Visual_Output": "Izlaz",
+  "Visual_Width": "Širina"
 }

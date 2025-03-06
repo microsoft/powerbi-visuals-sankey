@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Datamærkater",
   "Visual_Show": "Vis",
-  "Visual_LabelsFill": "Farve",
+  "Visual_Color": "Farve",
   "Visual_Fill": "Udfyldning",
   "Visual_TextSize": "Tekststørrelse",
   "Visual_Force_Display": "Gennemtving visning",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Vægt",
   "Visual_DataPointsLinkLabels": "Datalinketiketter",
   "Visual_Links": "Links",
-  "Visual_ScaleSettings": "Aktivér logaritmisk skala",
-  "Visual_SankeyScaleSettings": "Skalaindstillinger",
+  "Visual_LogarithmicScale": "Aktivér logaritmisk skala",
+  "Visual_ScaleSettings": "Skalaindstillinger",
   "Visual_MinOptimalHeight": "Angiv min optimale nodehøjde",
   "Visual_Enable": "Aktivér",
   "Visual_SankeySettings": "Sankey-indstillinger",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Dupliker",
   "Visual_DrawBackwardLink": "Tegn bagudrettet kæde",
   "Visual_SelflinkWeight": "Ignorer vægten af self-links",
-  "Visual_TooltipDisplayName": "Navn",
+  "Visual_Name": "Navn",
   "Visual_Description_Force_Display": "Vis alle etiketter alligevel",
   "Visual_FontFamily": "Skrifttypefamilie",
-  "Visual_TooltipDisplayInput": "Input",
-  "Visual_TooltipDisplayOutput": "Output",
-  "Visual_NodeWidth": "Bredde"
+  "Visual_Input": "Input",
+  "Visual_Output": "Output",
+  "Visual_Width": "Bredde"
 }

@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "資料標籤",
   "Visual_Show": "顯示",
-  "Visual_LabelsFill": "色彩",
+  "Visual_Color": "色彩",
   "Visual_Fill": "填滿",
   "Visual_TextSize": "文字大小",
   "Visual_Force_Display": "強制顯示",
@@ -13,8 +13,8 @@
   "Visual_Weight": "權數",
   "Visual_DataPointsLinkLabels": "資料連結標籤",
   "Visual_Links": "連結",
-  "Visual_ScaleSettings": "啟用對數刻度",
-  "Visual_SankeyScaleSettings": "調整設定",
+  "Visual_LogarithmicScale": "啟用對數刻度",
+  "Visual_ScaleSettings": "調整設定",
   "Visual_MinOptimalHeight": "提供節點的最小最佳高度",
   "Visual_Enable": "啟用",
   "Visual_SankeySettings": "Sankey 設定",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "重複",
   "Visual_DrawBackwardLink": "繪製反向連結",
   "Visual_SelflinkWeight": "忽略自我連結的粗細",
-  "Visual_TooltipDisplayName": "名稱",
+  "Visual_Name": "名稱",
   "Visual_Description_Force_Display": "一律顯示所有標籤",
   "Visual_FontFamily": "字型系列",
-  "Visual_TooltipDisplayInput": "輸入",
-  "Visual_TooltipDisplayOutput": "輸出",
-  "Visual_NodeWidth": "寬度"
+  "Visual_Input": "輸入",
+  "Visual_Output": "輸出",
+  "Visual_Width": "寬度"
 }

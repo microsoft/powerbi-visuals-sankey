@@ -133,7 +133,7 @@ export class BaseFontSettingsCard extends FormattingSettingsCompositeCard {
 
     public fill = new formattingSettings.ColorPicker({
         name: "fill",
-        displayNameKey: "Visual_LabelsFill",
+        displayNameKey: "Visual_Color",
         value: { value: "#000000" },
     });
 
@@ -217,7 +217,7 @@ export class NodesSettings extends FormattingSettingsSimpleCard {
     public nodeWidth = new formattingSettings.NumUpDown({
         name: "nodesWidth",
         displayName: "Width",
-        displayNameKey: "Visual_NodeWidth",
+        displayNameKey: "Visual_Width",
         value: NodeWidthDefaultOptions.DefaultWidth,
         options: {
             minValue: {
@@ -244,13 +244,13 @@ export class ScaleSettings extends FormattingSettingsSimpleCard {
     public lnScale = new formattingSettings.ToggleSwitch({
         name: "lnScale",
         displayName: "Enable logarithmic scale",
-        displayNameKey: "Visual_ScaleSettings",
+        displayNameKey: "Visual_LogarithmicScale",
         value: false
     });
 
     public name: string = "scaleSettings";
     public displayName: string = "Scale settings";
-    public displayNameKey: string = "Visual_SankeyScaleSettings";
+    public displayNameKey: string = "Visual_ScaleSettings";
     public slices: FormattingSettingsSlice[] = [this.provideMinHeight, this.lnScale];
 }
 

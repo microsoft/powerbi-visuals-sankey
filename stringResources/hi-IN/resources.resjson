@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "डेटा लेबल",
   "Visual_Show": "दिखाएँ",
-  "Visual_LabelsFill": "रंग",
+  "Visual_Color": "रंग",
   "Visual_Fill": "भरण",
   "Visual_TextSize": "पाठ आकार",
   "Visual_Force_Display": "बाध्य प्रदर्शन",
@@ -13,8 +13,8 @@
   "Visual_Weight": "भार",
   "Visual_DataPointsLinkLabels": "डेटा लिंक लेबल",
   "Visual_Links": "लिंक",
-  "Visual_ScaleSettings": "लघुगणक स्केल सक्षम करें",
-  "Visual_SankeyScaleSettings": "स्केल की सेटिंग",
+  "Visual_LogarithmicScale": "लघुगणक स्केल सक्षम करें",
+  "Visual_ScaleSettings": "स्केल की सेटिंग",
   "Visual_MinOptimalHeight": "नोड का न्यूनतम सर्वोत्कृष्ट ऊँचाई प्रदान करें",
   "Visual_Enable": "सक्षम करें",
   "Visual_SankeySettings": "Sankey सेटिंग्स",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "डुप्लिकेट",
   "Visual_DrawBackwardLink": "पीछे का लिंक बनाएँ",
   "Visual_SelflinkWeight": "सेल्फ लिंक्स के महत्व को नज़रअंदाज़ करें",
-  "Visual_TooltipDisplayName": "नाम",
+  "Visual_Name": "नाम",
   "Visual_Description_Force_Display": "किसी भी तरह सभी लेबल प्रदर्शित करें",
   "Visual_FontFamily": "फ़ॉन्ट फ़ेमिली",
-  "Visual_TooltipDisplayInput": "इनपुट",
-  "Visual_TooltipDisplayOutput": "आउटपुट",
-  "Visual_NodeWidth": "चौड़ाई"
+  "Visual_Input": "इनपुट",
+  "Visual_Output": "आउटपुट",
+  "Visual_Width": "चौड़ाई"
 }

@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Etichete de date",
   "Visual_Show": "Afişare",
-  "Visual_LabelsFill": "Culoare",
+  "Visual_Color": "Culoare",
   "Visual_Fill": "Completare",
   "Visual_TextSize": "Dimensiune text",
   "Visual_Force_Display": "Impunere afișare",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Pondere",
   "Visual_DataPointsLinkLabels": "Etichete linkuri de date",
   "Visual_Links": "Linkuri",
-  "Visual_ScaleSettings": "Activare scară logaritmică",
-  "Visual_SankeyScaleSettings": "Setări de scară",
+  "Visual_LogarithmicScale": "Activare scară logaritmică",
+  "Visual_ScaleSettings": "Setări de scară",
   "Visual_MinOptimalHeight": "Oferiți înălțimea minimă optimă a nodului",
   "Visual_Enable": "Activare",
   "Visual_SankeySettings": "Setări pentru Sankey",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Dublură",
   "Visual_DrawBackwardLink": "Creați un link invers",
   "Visual_SelflinkWeight": "Ignorați ponderea legăturilor automate",
-  "Visual_TooltipDisplayName": "Nume",
+  "Visual_Name": "Nume",
   "Visual_Description_Force_Display": "Afișați toate etichetele oricum",
   "Visual_FontFamily": "Familie de fonturi",
-  "Visual_TooltipDisplayInput": "Intrare",
-  "Visual_TooltipDisplayOutput": "Ieșire",
-  "Visual_NodeWidth": "Lățime"
+  "Visual_Input": "Intrare",
+  "Visual_Output": "Ieșire",
+  "Visual_Width": "Lățime"
 }

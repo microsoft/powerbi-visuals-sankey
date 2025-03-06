@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "תוויות נתונים",
   "Visual_Show": "‏‏הצג",
-  "Visual_LabelsFill": "צבע",
+  "Visual_Color": "צבע",
   "Visual_Fill": "מילוי",
   "Visual_TextSize": "גודל טקסט",
   "Visual_Force_Display": "הכרח תצוגה",
@@ -13,8 +13,8 @@
   "Visual_Weight": "משקל",
   "Visual_DataPointsLinkLabels": "תוויות קישור נתונים",
   "Visual_Links": "קישורים",
-  "Visual_ScaleSettings": "אפשר סרגל לוגריתמי",
-  "Visual_SankeyScaleSettings": "הגדרות קנה מידה",
+  "Visual_LogarithmicScale": "אפשר סרגל לוגריתמי",
+  "Visual_ScaleSettings": "הגדרות קנה מידה",
   "Visual_MinOptimalHeight": "ספק גובה אופטימלי מינימלי של הצומת",
   "Visual_Enable": "הפוך לזמין",
   "Visual_SankeySettings": "הגדרות תרשים Sankey",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "‏‏שכפל",
   "Visual_DrawBackwardLink": "יצירת קישור לאחור",
   "Visual_SelflinkWeight": "התעלם מהמשקל של קישורים עצמיים",
-  "Visual_TooltipDisplayName": "שם",
+  "Visual_Name": "שם",
   "Visual_Description_Force_Display": "הצג את כל התוויות בכל זאת",
   "Visual_FontFamily": "משפחת גופנים",
-  "Visual_TooltipDisplayInput": "קלט",
-  "Visual_TooltipDisplayOutput": "פלט",
-  "Visual_NodeWidth": "רוחב"
+  "Visual_Input": "קלט",
+  "Visual_Output": "פלט",
+  "Visual_Width": "רוחב"
 }

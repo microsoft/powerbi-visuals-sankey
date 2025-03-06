@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Andmesildid",
   "Visual_Show": "Kuva",
-  "Visual_LabelsFill": "Värv",
+  "Visual_Color": "Värv",
   "Visual_Fill": "Täida",
   "Visual_TextSize": "Teksti suurus",
   "Visual_Force_Display": "Sundkuvamine",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Kaal",
   "Visual_DataPointsLinkLabels": "Andmelingi sildid",
   "Visual_Links": "Lingid",
-  "Visual_ScaleSettings": "Luba logaritmiline skaala",
-  "Visual_SankeyScaleSettings": "Mõõtkava sätted",
+  "Visual_LogarithmicScale": "Luba logaritmiline skaala",
+  "Visual_ScaleSettings": "Mõõtkava sätted",
   "Visual_MinOptimalHeight": "Esita sõlme minimaalne optimaalne kõrgus",
   "Visual_Enable": "Luba",
   "Visual_SankeySettings": "Sankey sätted",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Duplikaat",
   "Visual_DrawBackwardLink": "Tahapoole saatmise link",
   "Visual_SelflinkWeight": "Ignoreeri siselinkide kaalu",
-  "Visual_TooltipDisplayName": "Nimi",
+  "Visual_Name": "Nimi",
   "Visual_Description_Force_Display": "Kuva siiski kõik sildid",
   "Visual_FontFamily": "Fondipere",
-  "Visual_TooltipDisplayInput": "Sisend",
-  "Visual_TooltipDisplayOutput": "Väljund",
-  "Visual_NodeWidth": "Laius"
+  "Visual_Input": "Sisend",
+  "Visual_Output": "Väljund",
+  "Visual_Width": "Laius"
 }

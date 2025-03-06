@@ -971,18 +971,18 @@ export class SankeyDiagram implements IVisual {
 
         const tooltips: VisualTooltipDataItem[] = [
             {
-                displayName: localizationManager.getDisplayName("Visual_TooltipDisplayName"),
+                displayName: localizationManager.getDisplayName("Visual_Name"),
                 value: nodeName
             }
         ];
 
         if (valueDisplayName) {
             tooltips.push({
-                displayName: localizationManager.getDisplayName("Visual_TooltipDisplayInput"),
+                displayName: localizationManager.getDisplayName("Visual_Input"),
                 value: formattedNodeInputWeight
             },
             {
-                displayName: localizationManager.getDisplayName("Visual_TooltipDisplayOutput"),
+                displayName: localizationManager.getDisplayName("Visual_Output"),
                 value: formattedNodeOutputWeight
             });
         }

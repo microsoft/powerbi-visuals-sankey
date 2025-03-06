@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Adatfeliratok",
   "Visual_Show": "Megjelenítés",
-  "Visual_LabelsFill": "Szín",
+  "Visual_Color": "Szín",
   "Visual_Fill": "Kitöltés",
   "Visual_TextSize": "Szöveg mérete",
   "Visual_Force_Display": "Megjelenítés kényszerítése",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Súlyozás",
   "Visual_DataPointsLinkLabels": "Adathivatkozási címkék",
   "Visual_Links": "Hivatkozások",
-  "Visual_ScaleSettings": "Logaritmikus skála engedélyezése",
-  "Visual_SankeyScaleSettings": "Méretbeállítások",
+  "Visual_LogarithmicScale": "Logaritmikus skála engedélyezése",
+  "Visual_ScaleSettings": "Méretbeállítások",
   "Visual_MinOptimalHeight": "Adja meg a csomópont minimálisan optimális magasságát",
   "Visual_Enable": "Engedélyezés",
   "Visual_SankeySettings": "Sankey-beállítások",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Másolat készítése",
   "Visual_DrawBackwardLink": "Visszamutató hivatkozás létrehozása",
   "Visual_SelflinkWeight": "Önhivatkozások vastagságának figyelmen kívül hagyása",
-  "Visual_TooltipDisplayName": "Név",
+  "Visual_Name": "Név",
   "Visual_Description_Force_Display": "Ennek ellenére az összes felirat megjelenítése",
   "Visual_FontFamily": "Betűcsalád",
-  "Visual_TooltipDisplayInput": "Bemenet",
-  "Visual_TooltipDisplayOutput": "Kimenet",
-  "Visual_NodeWidth": "Szélesség"
+  "Visual_Input": "Bemenet",
+  "Visual_Output": "Kimenet",
+  "Visual_Width": "Szélesség"
 }

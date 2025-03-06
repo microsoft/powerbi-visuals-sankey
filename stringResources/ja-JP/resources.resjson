@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "データ ラベル",
   "Visual_Show": "表示",
-  "Visual_LabelsFill": "色",
+  "Visual_Color": "色",
   "Visual_Fill": "フィル",
   "Visual_TextSize": "テキスト サイズ",
   "Visual_Force_Display": "強制的に表示",
@@ -13,8 +13,8 @@
   "Visual_Weight": "重量",
   "Visual_DataPointsLinkLabels": "データ リンクのラベル",
   "Visual_Links": "リンク",
-  "Visual_ScaleSettings": "対数スケールを有効にする",
-  "Visual_SankeyScaleSettings": "スケールの設定",
+  "Visual_LogarithmicScale": "対数スケールを有効にする",
+  "Visual_ScaleSettings": "スケールの設定",
   "Visual_MinOptimalHeight": "ノードの最適な最小の高さを指定する",
   "Visual_Enable": "有効",
   "Visual_SankeySettings": "Sankey の設定",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "複製",
   "Visual_DrawBackwardLink": "後方リンクを描画",
   "Visual_SelflinkWeight": "自己リンクの重みを無視",
-  "Visual_TooltipDisplayName": "名前",
+  "Visual_Name": "名前",
   "Visual_Description_Force_Display": "すべてのラベルを常に表示します",
   "Visual_FontFamily": "フォント ファミリ",
-  "Visual_TooltipDisplayInput": "入力",
-  "Visual_TooltipDisplayOutput": "出力",
-  "Visual_NodeWidth": "幅"
+  "Visual_Input": "入力",
+  "Visual_Output": "出力",
+  "Visual_Width": "幅"
 }

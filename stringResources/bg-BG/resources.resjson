@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Етикети на данни",
   "Visual_Show": "Показване",
-  "Visual_LabelsFill": "Цвят",
+  "Visual_Color": "Цвят",
   "Visual_Fill": "Запълни",
   "Visual_TextSize": "Размер на текста",
   "Visual_Force_Display": "Принудително показване",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Тегло",
   "Visual_DataPointsLinkLabels": "Етикети на връзката за данни",
   "Visual_Links": "Връзки",
-  "Visual_ScaleSettings": "Разрешаване на логаритмичен мащаб",
-  "Visual_SankeyScaleSettings": "Настройки на мащаба",
+  "Visual_LogarithmicScale": "Разрешаване на логаритмичен мащаб",
+  "Visual_ScaleSettings": "Настройки на мащаба",
   "Visual_MinOptimalHeight": "Предоставяне на минимална оптимална височина на възела",
   "Visual_Enable": "Активиране",
   "Visual_SankeySettings": "Настройки на Sankey",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Дублиране",
   "Visual_DrawBackwardLink": "Създаване на препращаща връзка",
   "Visual_SelflinkWeight": "Игнориране на тегло на връзки към себе си",
-  "Visual_TooltipDisplayName": "Име",
+  "Visual_Name": "Име",
   "Visual_Description_Force_Display": "Въпреки това показване на всички етикети",
   "Visual_FontFamily": "Семейство шрифтове",
-  "Visual_TooltipDisplayInput": "Въвеждане",
-  "Visual_TooltipDisplayOutput": "Резултат",
-  "Visual_NodeWidth": "Широчина"
+  "Visual_Input": "Въвеждане",
+  "Visual_Output": "Резултат",
+  "Visual_Width": "Широчина"
 }

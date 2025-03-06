@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Arvopisteiden otsikot",
   "Visual_Show": "Näytä",
-  "Visual_LabelsFill": "Väri",
+  "Visual_Color": "Väri",
   "Visual_Fill": "Täyttö",
   "Visual_TextSize": "Tekstin koko",
   "Visual_Force_Display": "Pakota näyttö",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Paino",
   "Visual_DataPointsLinkLabels": "Tietolinkkien otsikot",
   "Visual_Links": "Linkit",
-  "Visual_ScaleSettings": "Ota käyttöön logaritminen asteikko",
-  "Visual_SankeyScaleSettings": "Skaalausasetukset",
+  "Visual_LogarithmicScale": "Ota käyttöön logaritminen asteikko",
+  "Visual_ScaleSettings": "Skaalausasetukset",
   "Visual_MinOptimalHeight": "Anna solmun pienin paras mahdollinen korkeus",
   "Visual_Enable": "Ota käyttöön",
   "Visual_SankeySettings": "Sankey-asetukset",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Kaksoiskappale",
   "Visual_DrawBackwardLink": "Hanki taaksepäinlinkki",
   "Visual_SelflinkWeight": "Ohita itseensä linkittävien linkkien painotus",
-  "Visual_TooltipDisplayName": "Nimi",
+  "Visual_Name": "Nimi",
   "Visual_Description_Force_Display": "Näytä kaikki otsikot joka tapauksessa",
   "Visual_FontFamily": "Fonttiperhe",
-  "Visual_TooltipDisplayInput": "Syöte",
-  "Visual_TooltipDisplayOutput": "Tulos",
-  "Visual_NodeWidth": "Leveys"
+  "Visual_Input": "Syöte",
+  "Visual_Output": "Tulos",
+  "Visual_Width": "Leveys"
 }
