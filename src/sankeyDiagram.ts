@@ -375,7 +375,7 @@ export class SankeyDiagram implements IVisual {
             node.objects);
         const nodeStrokeColor = this.colorHelper.getHighContrastColor("foreground", nodeFillColor);
 
-        const name: string = node.value.toString();
+        const name: string = node.value?.toString() || null;
 
         const label: SankeyDiagramLabel = SankeyDiagram.createLabel(settings.labels, name);
 
