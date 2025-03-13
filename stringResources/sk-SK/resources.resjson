@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Označenia údajov",
   "Visual_Show": "Zobraziť",
-  "Visual_LabelsFill": "Farba",
+  "Visual_Color": "Farba",
   "Visual_Fill": "Vyplniť",
   "Visual_TextSize": "Veľkosť textu",
   "Visual_Force_Display": "Vynútiť zobrazenie",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Hmotnosť",
   "Visual_DataPointsLinkLabels": "Označenia prepojení na údaje",
   "Visual_Links": "Prepojenia",
-  "Visual_ScaleSettings": "Povoliť logaritmickú mierku",
-  "Visual_SankeyScaleSettings": "Nastavenia mierky",
+  "Visual_LogarithmicScale": "Povoliť logaritmickú mierku",
+  "Visual_ScaleSettings": "Nastavenia mierky",
   "Visual_MinOptimalHeight": "Zadajte minimálnu optimálnu výšku uzla",
   "Visual_Enable": "Zapnúť",
   "Visual_SankeySettings": "Nastavenia diagramu Sankey",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Duplikovať",
   "Visual_DrawBackwardLink": "Vytvoriť spätné prepojenie",
   "Visual_SelflinkWeight": "Ignorovať váhu prepojení odkazujúcich na seba",
-  "Visual_TooltipDisplayName": "Názov",
+  "Visual_Name": "Názov",
   "Visual_Description_Force_Display": "Napriek tomu zobraziť všetky označenia",
   "Visual_FontFamily": "Skupina písem",
-  "Visual_TooltipDisplayInput": "Vstup",
-  "Visual_TooltipDisplayOutput": "Výstup",
-  "Visual_NodeWidth": "Šírka"
+  "Visual_Input": "Vstup",
+  "Visual_Output": "Výstup",
+  "Visual_Width": "Šírka"
 }

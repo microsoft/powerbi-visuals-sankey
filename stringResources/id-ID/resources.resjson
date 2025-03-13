@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Label data",
   "Visual_Show": "Tampilkan",
-  "Visual_LabelsFill": "Warna",
+  "Visual_Color": "Warna",
   "Visual_Fill": "Isi",
   "Visual_TextSize": "Ukuran Teks",
   "Visual_Force_Display": "Tampilan penjualan",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Berat",
   "Visual_DataPointsLinkLabels": "Label tautan data",
   "Visual_Links": "Tautan",
-  "Visual_ScaleSettings": "Aktifkan skala logaritma",
-  "Visual_SankeyScaleSettings": "Pengaturan skala",
+  "Visual_LogarithmicScale": "Aktifkan skala logaritma",
+  "Visual_ScaleSettings": "Pengaturan skala",
   "Visual_MinOptimalHeight": "Sediakan tinggi optimal node minimal",
   "Visual_Enable": "Aktifkan",
   "Visual_SankeySettings": "Pengaturan Sankey",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Duplikat",
   "Visual_DrawBackwardLink": "Buat tautan balik",
   "Visual_SelflinkWeight": "Abaikan bobot tautan mandiri",
-  "Visual_TooltipDisplayName": "Nama",
+  "Visual_Name": "Nama",
   "Visual_Description_Force_Display": "Tetap tampilkan semua label",
   "Visual_FontFamily": "Kelompok Font",
-  "Visual_TooltipDisplayInput": "Input",
-  "Visual_TooltipDisplayOutput": "Output",
-  "Visual_NodeWidth": "Lebar"
+  "Visual_Input": "Input",
+  "Visual_Output": "Output",
+  "Visual_Width": "Lebar"
 }

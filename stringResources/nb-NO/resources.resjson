@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Dataetiketter",
   "Visual_Show": "Vis",
-  "Visual_LabelsFill": "Farge",
+  "Visual_Color": "Farge",
   "Visual_Fill": "Fyll",
   "Visual_TextSize": "Tekststørrelse",
   "Visual_Force_Display": "Fremtving visning",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Vekt",
   "Visual_DataPointsLinkLabels": "Datakoblingsetiketter",
   "Visual_Links": "Koblinger",
-  "Visual_ScaleSettings": "Aktiver logaritmisk skala",
-  "Visual_SankeyScaleSettings": "Skaleringsinnstillinger",
+  "Visual_LogarithmicScale": "Aktiver logaritmisk skala",
+  "Visual_ScaleSettings": "Skaleringsinnstillinger",
   "Visual_MinOptimalHeight": "Oppgi min. optimal høyde på noden",
   "Visual_Enable": "Aktiver",
   "Visual_SankeySettings": "Sankey-innstillinger",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Dupliser",
   "Visual_DrawBackwardLink": "Opprett tilbakekobling",
   "Visual_SelflinkWeight": "Ignorer vekten av selv",
-  "Visual_TooltipDisplayName": "Navn",
+  "Visual_Name": "Navn",
   "Visual_Description_Force_Display": "Vis alle etiketter likevel",
   "Visual_FontFamily": "Skriftserie",
-  "Visual_TooltipDisplayInput": "Inndata",
-  "Visual_TooltipDisplayOutput": "Utdata",
-  "Visual_NodeWidth": "Bredde"
+  "Visual_Input": "Inndata",
+  "Visual_Output": "Utdata",
+  "Visual_Width": "Bredde"
 }

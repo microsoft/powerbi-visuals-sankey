@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Duomenų žymos",
   "Visual_Show": "Rodyti",
-  "Visual_LabelsFill": "Spalva",
+  "Visual_Color": "Spalva",
   "Visual_Fill": "Užpildyti",
   "Visual_TextSize": "Teksto dydis",
   "Visual_Force_Display": "Priverstinis rodymas",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Svoris",
   "Visual_DataPointsLinkLabels": "Duomenų saito žymos",
   "Visual_Links": "Saitai",
-  "Visual_ScaleSettings": "Įjungti logaritminį mastelį",
-  "Visual_SankeyScaleSettings": "Mastelio keitimo parametrai",
+  "Visual_LogarithmicScale": "Įjungti logaritminį mastelį",
+  "Visual_ScaleSettings": "Mastelio keitimo parametrai",
   "Visual_MinOptimalHeight": "Pateikti mažiausią optimalų mazgo aukštį",
   "Visual_Enable": "Įjungti",
   "Visual_SankeySettings": "„Sankey“ parametrai",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Dublikatas",
   "Visual_DrawBackwardLink": "Kurti atgalinį saitą",
   "Visual_SelflinkWeight": "Nepaisyti vidinių saitų svertinės vertės",
-  "Visual_TooltipDisplayName": "Pavadinimas",
+  "Visual_Name": "Pavadinimas",
   "Visual_Description_Force_Display": "Vis tiek rodyti visas žymas",
   "Visual_FontFamily": "Šriftų šeima",
-  "Visual_TooltipDisplayInput": "Įvestis",
-  "Visual_TooltipDisplayOutput": "Išvestis",
-  "Visual_NodeWidth": "Plotis"
+  "Visual_Input": "Įvestis",
+  "Visual_Output": "Išvestis",
+  "Visual_Width": "Plotis"
 }

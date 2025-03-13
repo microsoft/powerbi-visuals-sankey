@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Popisky dat",
   "Visual_Show": "Zobrazení",
-  "Visual_LabelsFill": "Barva",
+  "Visual_Color": "Barva",
   "Visual_Fill": "Vyplnit",
   "Visual_TextSize": "Velikost textu",
   "Visual_Force_Display": "Vynutit zobrazení",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Váha",
   "Visual_DataPointsLinkLabels": "Popisky datových odkazů",
   "Visual_Links": "Odkazy",
-  "Visual_ScaleSettings": "Povolit logaritmické měřítko",
-  "Visual_SankeyScaleSettings": "Nastavení měřítka",
+  "Visual_LogarithmicScale": "Povolit logaritmické měřítko",
+  "Visual_ScaleSettings": "Nastavení měřítka",
   "Visual_MinOptimalHeight": "Zadejte minimální optimální výšku uzlu",
   "Visual_Enable": "Povolit",
   "Visual_SankeySettings": "Nastavení Sankey",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Duplikovat",
   "Visual_DrawBackwardLink": "Nakreslit propojení zpět",
   "Visual_SelflinkWeight": "Ignorovat váhu propojení na sebe sama",
-  "Visual_TooltipDisplayName": "Název",
+  "Visual_Name": "Název",
   "Visual_Description_Force_Display": "Přesto zobrazit všechny popisky",
   "Visual_FontFamily": "Rodina písem",
-  "Visual_TooltipDisplayInput": "Vstup",
-  "Visual_TooltipDisplayOutput": "Výstup",
-  "Visual_NodeWidth": "Šířka"
+  "Visual_Input": "Vstup",
+  "Visual_Output": "Výstup",
+  "Visual_Width": "Šířka"
 }

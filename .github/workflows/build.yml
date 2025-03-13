@@ -11,10 +11,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [18.x, 20.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -23,6 +23,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm audit
+      continue-on-error: true
+    - run: npm outdated
       continue-on-error: true
     - run: npm ci
     - run: npm run eslint --if-present

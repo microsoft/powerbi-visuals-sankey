@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Etykiety danych",
   "Visual_Show": "Pokaż",
-  "Visual_LabelsFill": "Kolor",
+  "Visual_Color": "Kolor",
   "Visual_Fill": "Wypełnienie",
   "Visual_TextSize": "Rozmiar tekstu",
   "Visual_Force_Display": "Wymuś wyświetlanie",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Waga",
   "Visual_DataPointsLinkLabels": "Etykiety linków danych",
   "Visual_Links": "Łącza",
-  "Visual_ScaleSettings": "Włącz skalę logarytmiczną",
-  "Visual_SankeyScaleSettings": "Ustawienia skalowania",
+  "Visual_LogarithmicScale": "Włącz skalę logarytmiczną",
+  "Visual_ScaleSettings": "Ustawienia skalowania",
   "Visual_MinOptimalHeight": "Podaj minimalną optymalną wysokość węzła",
   "Visual_Enable": "Włącz",
   "Visual_SankeySettings": "Ustawienia wykresu Sankeya",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Duplikuj",
   "Visual_DrawBackwardLink": "Utwórz link zwrotny",
   "Visual_SelflinkWeight": "Ignoruj wagę linków własnych",
-  "Visual_TooltipDisplayName": "Nazwa",
+  "Visual_Name": "Nazwa",
   "Visual_Description_Force_Display": "Wyświetl wszystkie etykiety mimo wszystko",
   "Visual_FontFamily": "Rodzina czcionek",
-  "Visual_TooltipDisplayInput": "Dane wejściowe",
-  "Visual_TooltipDisplayOutput": "Dane wyjściowe",
-  "Visual_NodeWidth": "Szerokość"
+  "Visual_Input": "Dane wejściowe",
+  "Visual_Output": "Dane wyjściowe",
+  "Visual_Width": "Szerokość"
 }

@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Datuen etiketak",
   "Visual_Show": "Erakutsi",
-  "Visual_LabelsFill": "Kolorea",
+  "Visual_Color": "Kolorea",
   "Visual_Fill": "Bete",
   "Visual_TextSize": "Testu-tamaina",
   "Visual_Force_Display": "Behartu bistaratzera",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Pisua",
   "Visual_DataPointsLinkLabels": "Datu-esteken etiketak",
   "Visual_Links": "Estekak",
-  "Visual_ScaleSettings": "Gaitu eskala logaritmikoa",
-  "Visual_SankeyScaleSettings": "Eskalaren ezarpenak",
+  "Visual_LogarithmicScale": "Gaitu eskala logaritmikoa",
+  "Visual_ScaleSettings": "Eskalaren ezarpenak",
   "Visual_MinOptimalHeight": "Adierazi nodoaren gutxieneko altuera optimoa",
   "Visual_Enable": "Gaitu",
   "Visual_SankeySettings": "Sankey ezarpenak",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Bikoiztu",
   "Visual_DrawBackwardLink": "Marraztu atzerako esteka",
   "Visual_SelflinkWeight": "Egin ez ikusi nork bere buruarekiko estekei",
-  "Visual_TooltipDisplayName": "Izena",
+  "Visual_Name": "Izena",
   "Visual_Description_Force_Display": "Bistaratu etiketa guztiak, halere",
   "Visual_FontFamily": "Letra-tipoaren familia",
-  "Visual_TooltipDisplayInput": "Sarrera",
-  "Visual_TooltipDisplayOutput": "Irteera",
-  "Visual_NodeWidth": "Zabalera"
+  "Visual_Input": "Sarrera",
+  "Visual_Output": "Irteera",
+  "Visual_Width": "Zabalera"
 }

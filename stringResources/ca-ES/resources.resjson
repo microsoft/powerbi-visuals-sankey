@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Etiquetes de dades",
   "Visual_Show": "Mostra",
-  "Visual_LabelsFill": "Color",
+  "Visual_Color": "Color",
   "Visual_Fill": "Emplena",
   "Visual_TextSize": "Mida del text",
   "Visual_Force_Display": "Força la visualització",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Pes",
   "Visual_DataPointsLinkLabels": "Etiquetes d'enllaços de dades",
   "Visual_Links": "Enllaços",
-  "Visual_ScaleSettings": "Permet l'escala logarítmica",
-  "Visual_SankeyScaleSettings": "Configuració de l'escala",
+  "Visual_LogarithmicScale": "Permet l'escala logarítmica",
+  "Visual_ScaleSettings": "Configuració de l'escala",
   "Visual_MinOptimalHeight": "Proporcioneu l'alçada mínima òptima del node.",
   "Visual_Enable": "Habilita",
   "Visual_SankeySettings": "Configuració Sankey",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Duplica",
   "Visual_DrawBackwardLink": "Defineix un enllaç de retrocés",
   "Visual_SelflinkWeight": "Ignora el pes dels enllaços propis",
-  "Visual_TooltipDisplayName": "Nom",
+  "Visual_Name": "Nom",
   "Visual_Description_Force_Display": "Mostra totes les etiquetes igualment",
   "Visual_FontFamily": "Família de tipus de lletra",
-  "Visual_TooltipDisplayInput": "Entrada",
-  "Visual_TooltipDisplayOutput": "Sortida",
-  "Visual_NodeWidth": "Amplada"
+  "Visual_Input": "Entrada",
+  "Visual_Output": "Sortida",
+  "Visual_Width": "Amplada"
 }

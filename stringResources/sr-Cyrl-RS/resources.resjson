@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Ознаке података",
   "Visual_Show": "Прикажи",
-  "Visual_LabelsFill": "Боја",
+  "Visual_Color": "Боја",
   "Visual_Fill": "Попуни",
   "Visual_TextSize": "Величина текста",
   "Visual_Force_Display": "Наметање приказа",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Степен важности",
   "Visual_DataPointsLinkLabels": "Ознаке веза ка подацима",
   "Visual_Links": "Везе",
-  "Visual_ScaleSettings": "Омогући логаритамску скалу",
-  "Visual_SankeyScaleSettings": "Поставке размере",
+  "Visual_LogarithmicScale": "Омогући логаритамску скалу",
+  "Visual_ScaleSettings": "Поставке размере",
   "Visual_MinOptimalHeight": "Унесите минималну оптималну висину чвора",
   "Visual_Enable": "Омогући",
   "Visual_SankeySettings": "Sankey поставке",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Дуплирај",
   "Visual_DrawBackwardLink": "Нацртај везу уназад",
   "Visual_SelflinkWeight": "Занемари степен важности веза које упућују на саме себе",
-  "Visual_TooltipDisplayName": "Име",
+  "Visual_Name": "Име",
   "Visual_Description_Force_Display": "Ипак прикажи све ознаке",
   "Visual_FontFamily": "Породица фонтова",
-  "Visual_TooltipDisplayInput": "Унос",
-  "Visual_TooltipDisplayOutput": "Излаз",
-  "Visual_NodeWidth": "Ширина"
+  "Visual_Input": "Унос",
+  "Visual_Output": "Излаз",
+  "Visual_Width": "Ширина"
 }

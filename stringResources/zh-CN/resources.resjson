@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "数据标签",
   "Visual_Show": "显示",
-  "Visual_LabelsFill": "颜色",
+  "Visual_Color": "颜色",
   "Visual_Fill": "填充",
   "Visual_TextSize": "文本大小",
   "Visual_Force_Display": "强制显示",
@@ -13,8 +13,8 @@
   "Visual_Weight": "称重",
   "Visual_DataPointsLinkLabels": "数据链接标签",
   "Visual_Links": "链接",
-  "Visual_ScaleSettings": "启用对数刻度",
-  "Visual_SankeyScaleSettings": "缩放设置",
+  "Visual_LogarithmicScale": "启用对数刻度",
+  "Visual_ScaleSettings": "缩放设置",
   "Visual_MinOptimalHeight": "提供节点的最佳高度下限",
   "Visual_Enable": "启用",
   "Visual_SankeySettings": "Sankey 设置",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "复制",
   "Visual_DrawBackwardLink": "绘制反向链接",
   "Visual_SelflinkWeight": "忽略自链接的权重",
-  "Visual_TooltipDisplayName": "名称",
+  "Visual_Name": "名称",
   "Visual_Description_Force_Display": "仍显示所有标签",
   "Visual_FontFamily": "字体系列",
-  "Visual_TooltipDisplayInput": "输入",
-  "Visual_TooltipDisplayOutput": "输出",
-  "Visual_NodeWidth": "宽度"
+  "Visual_Input": "输入",
+  "Visual_Output": "输出",
+  "Visual_Width": "宽度"
 }

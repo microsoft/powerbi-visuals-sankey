@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Datu etiķetes",
   "Visual_Show": "Rādīt",
-  "Visual_LabelsFill": "Krāsa",
+  "Visual_Color": "Krāsa",
   "Visual_Fill": "Aizpildīt",
   "Visual_TextSize": "Teksta lielums",
   "Visual_Force_Display": "Uzspiest rādīšanu",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Svarīgums",
   "Visual_DataPointsLinkLabels": "Datu saišu etiķetes",
   "Visual_Links": "Saites",
-  "Visual_ScaleSettings": "Iespējot logaritmisko skalu",
-  "Visual_SankeyScaleSettings": "Mēroga iestatījumi",
+  "Visual_LogarithmicScale": "Iespējot logaritmisko skalu",
+  "Visual_ScaleSettings": "Mēroga iestatījumi",
   "Visual_MinOptimalHeight": "Nodrošināt min. optimālo mezgla augstumu",
   "Visual_Enable": "Iespējot",
   "Visual_SankeySettings": "Sankey diagrammas iestatījumi",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Dublikāts",
   "Visual_DrawBackwardLink": "Zīmēt atpakaļsaiti",
   "Visual_SelflinkWeight": "Ignorēt iekšējo saišu svarīgumu",
-  "Visual_TooltipDisplayName": "Nosaukums",
+  "Visual_Name": "Nosaukums",
   "Visual_Description_Force_Display": "Vienalga rādīt visas etiķetes",
   "Visual_FontFamily": "Fontu saime",
-  "Visual_TooltipDisplayInput": "Ievade",
-  "Visual_TooltipDisplayOutput": "Izvade",
-  "Visual_NodeWidth": "Platums"
+  "Visual_Input": "Ievade",
+  "Visual_Output": "Izvade",
+  "Visual_Width": "Platums"
 }

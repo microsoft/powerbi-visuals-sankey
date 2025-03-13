@@ -38,7 +38,6 @@ import { rgb as d3Rgb } from "d3-color";
 import { interpolateNumber as d3InterpolateNumber } from "d3-interpolate";
 
 type Selection<T> = d3Selection<any, T, any, any>;
-type UpdateSelection<T> = d3Selection<any, T, any, any>;
 
 // powerbi
 import DataView = powerbi.DataView;
@@ -92,11 +91,11 @@ import { ColorHelper } from "powerbi-visuals-utils-colorutils";
 
 import {
     SankeyDiagramSettings,
-    DataLabelsSettings,
     CyclesDrawType,
     ViewportSize,
     SankeyDiagramScaleSettings,
-    FontSizeDefaultOptions
+    BaseFontSettingsCard,
+    FontSettingsOptions,
 } from "./settings";
 import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
 
@@ -110,7 +109,8 @@ import {
     SankeyDiagramNodePositionSetting,
     SankeyDiagramNodeStatus,
     SankeyDiagramRoleNames,
-    SankeyLinkDirrections
+    SankeyLinkDirrections,
+    TextPropertiesExtended
 } from "./dataInterfaces";
 
 import * as sankeyDiagramUtils from "./utils";
@@ -230,6 +230,7 @@ export class SankeyDiagram implements IVisual {
 
     private root: Selection<any>;
     private clearCatcher: Selection<any>;
+    private defs: Selection<any>;
     private main: Selection<any>;
     private nodes: Selection<SankeyDiagramNode>;
     private links: Selection<SankeyDiagramLink>;
@@ -257,14 +258,19 @@ export class SankeyDiagram implements IVisual {
     public sankeyDiagramSettings: SankeyDiagramSettings;
     private formattingSettingsService: FormattingSettingsService;
 
-    private get textProperties(): TextProperties {
+    public static getTextProperties(fontSettings: BaseFontSettingsCard): TextPropertiesExtended {
         return {
-            fontFamily: this.dataView
-                ? this.dataView.settings.labels.fontFamily.value
-                : DataLabelsSettings.DefaultFontFamily,
-            fontSize: fromPoint(this.dataView
-                ? this.dataView.settings.labels.fontSize.value
-                : FontSizeDefaultOptions.DefaultFontSize)
+            fontFamily: fontSettings.fontFamily.value ?? FontSettingsOptions.DefaultFontFamily,
+            fontSize: fromPoint(fontSettings.fontSize.value ?? FontSettingsOptions.DefaultFontSize),
+            fontWeight: fontSettings.bold.value
+                ? FontSettingsOptions.BoldValue
+                : FontSettingsOptions.DefaultNormalValue,
+            fontStyle: fontSettings.italic.value
+                ? FontSettingsOptions.ItalicValue
+                : FontSettingsOptions.DefaultNormalValue,
+            textDecoration: fontSettings.underline.value
+                ? FontSettingsOptions.UnderlineValue
+                : FontSettingsOptions.DefaultNoneValue
         };
     }
 
@@ -284,6 +290,7 @@ export class SankeyDiagram implements IVisual {
         this.selectionManager = this.visualHost.createSelectionManager();
         this.behavior = new SankeyDiagramBehavior(this.selectionManager);
         this.clearCatcher = appendClearCatcher(this.root);
+        this.defs = this.root.append("defs");
 
         this.colorPalette = this.visualHost.colorPalette;
         this.colorHelper = new ColorHelper(this.colorPalette);
@@ -318,7 +325,7 @@ export class SankeyDiagram implements IVisual {
             && visualUpdateOptions.dataViews
             && visualUpdateOptions.dataViews[0];
 
-        this.sankeyDiagramSettings = this.parseSettings(dataView, visualUpdateOptions.dataViews);
+        this.sankeyDiagramSettings = this.parseSettings(dataView);
 
         const sankeyDiagramDataView: SankeyDiagramDataView = this.converter(dataView);
 
@@ -332,9 +339,6 @@ export class SankeyDiagram implements IVisual {
     }
 
     public getFormattingModel(): powerbi.visuals.FormattingModel {
-        // nodeComplexSettings are persist properties that we do not want to show in the propery pane
-        this.sankeyDiagramSettings.removeNodeComplexSettingsFromPane();
-
         return this.formattingSettingsService.buildFormattingModel(this.sankeyDiagramSettings);
     }
 
@@ -368,24 +372,12 @@ export class SankeyDiagram implements IVisual {
         const nodeFillColor = this.getColor(
             SankeyDiagram.NodesPropertyIdentifier,
             this.colorPalette.getColor(<string>node.value).value,
-            <any>node.objects);
+            node.objects);
         const nodeStrokeColor = this.colorHelper.getHighContrastColor("foreground", nodeFillColor);
 
-        const name = <any>node.value;
+        const name: string = node.value?.toString() || null;
 
-        const textProperties: TextProperties = {
-            text: name,
-            fontFamily: this.textProperties.fontFamily,
-            fontSize: this.textProperties.fontSize
-        };
-        const label: SankeyDiagramLabel = {
-            internalName: name,
-            name: name,
-            formattedName: name,//valueFormatterForCategories.format((<string>labelsDictionary[item].toString()).replace(SankeyDiagram.DuplicatedNamePostfix, "")),
-            width: textMeasurementService.measureSvgTextWidth(textProperties),
-            height: textMeasurementService.estimateSvgTextHeight(textProperties),
-            color: settings.labels.fill.value.value
-        };
+        const label: SankeyDiagramLabel = SankeyDiagram.createLabel(settings.labels, name);
 
         return {
             label: label,
@@ -462,7 +454,7 @@ export class SankeyDiagram implements IVisual {
         dataView.matrix.rows.root.children.forEach(parent => {
             const foundSource: SankeyDiagramNode = nodes.find(found => found.label.name === parent.value)
             parent.children.forEach(child => {
-                let linkLabel: PrimitiveValue = undefined;
+                let linkLabeltext: PrimitiveValue = undefined;
                 let weight: number = SankeyDiagram.DefaultWeightValue;
 
                 let foundDestination: SankeyDiagramNode = nodes.find(found => found.label.name === child.value)
@@ -477,7 +469,7 @@ export class SankeyDiagram implements IVisual {
                     nodes.push(foundDestination);
                 }
                 if (sourceLabelIndex != -1) {
-                    linkLabel = (child.values[sourceLabelIndex] && child.values[sourceLabelIndex].value) ?
+                    linkLabeltext = (child.values[sourceLabelIndex] && child.values[sourceLabelIndex].value) ?
                         child.values[sourceLabelIndex].value || SankeyDiagram.DefaultWeightValue : SankeyDiagram.MinWeightValue;
                 }
                 // If weights are present, populate the weights array
@@ -509,8 +501,10 @@ export class SankeyDiagram implements IVisual {
                     valueFieldName
                 );
 
+                const linkLabel: SankeyDiagramLabel = SankeyDiagram.createLabel(settings.linkLabels, linkLabeltext?.toString());
+
                 const link: SankeyDiagramLink = {
-                    label: linkLabel?.toString(),
+                    label: linkLabel,
                     source: foundSource,
                     destination: foundDestination,
                     weight: weight,
@@ -594,6 +588,27 @@ export class SankeyDiagram implements IVisual {
         this.checkNodePositionSettings(nodes, settings);
         this.restoreNodePositions(nodes, settings);
         return sankeyDiagramDataView;
+    }
+
+    private static createLabel(settings: BaseFontSettingsCard, text: string): SankeyDiagramLabel {
+        const labelTextProperties: TextPropertiesExtended = SankeyDiagram.getTextProperties(settings);
+
+        const textProperties: TextProperties = {
+            text,
+            fontFamily: labelTextProperties.fontFamily,
+            fontSize: labelTextProperties.fontSize
+        };
+
+        const label: SankeyDiagramLabel = {
+            internalName: text,
+            name: text,
+            formattedName: text,
+            width: textMeasurementService.measureSvgTextWidth(textProperties),
+            height: textMeasurementService.estimateSvgTextHeight(textProperties),
+            color: settings.fill.value.value
+        }
+
+        return label;
     }
 
     private static swapNodes(link: SankeyDiagramLink) {
@@ -722,7 +737,6 @@ export class SankeyDiagram implements IVisual {
                 });
 
                 outputLinks.forEach((link: SankeyDiagramLink) => {
-                    link.direction === SankeyLinkDirrections.Backward;
                     SankeyDiagram.swapNodes(link);
                 });
 
@@ -957,18 +971,18 @@ export class SankeyDiagram implements IVisual {
 
         const tooltips: VisualTooltipDataItem[] = [
             {
-                displayName: localizationManager.getDisplayName("Visual_TooltipDisplayName"),
+                displayName: localizationManager.getDisplayName("Visual_Name"),
                 value: nodeName
             }
         ];
 
         if (valueDisplayName) {
             tooltips.push({
-                displayName: localizationManager.getDisplayName("Visual_TooltipDisplayInput"),
+                displayName: localizationManager.getDisplayName("Visual_Input"),
                 value: formattedNodeInputWeight
             },
             {
-                displayName: localizationManager.getDisplayName("Visual_TooltipDisplayOutput"),
+                displayName: localizationManager.getDisplayName("Visual_Output"),
                 value: formattedNodeOutputWeight
             });
         }
@@ -976,8 +990,8 @@ export class SankeyDiagram implements IVisual {
         return tooltips;
     }
 
-    private parseSettings(dataView: DataView, dataViews: DataView[]): SankeyDiagramSettings {
-        const settings: SankeyDiagramSettings = this.formattingSettingsService.populateFormattingSettingsModel(SankeyDiagramSettings, dataViews);
+    private parseSettings(dataView: DataView): SankeyDiagramSettings {
+        const settings: SankeyDiagramSettings = this.formattingSettingsService.populateFormattingSettingsModel(SankeyDiagramSettings, dataView);
 
         // detect sorting chosen
         const foundSortedColumn = dataView.metadata.columns.find(col => col.sort !== undefined);
@@ -990,8 +1004,10 @@ export class SankeyDiagram implements IVisual {
         settings.linkLabels.fill.value.value = this.colorHelper.getHighContrastColor("foreground", settings.linkLabels.fill.value.value);
         // node positions
         try {
-            settings._nodePositions = <SankeyDiagramNodePositionSetting[]>JSON.parse(settings.nodeComplexSettings.nodePositions.value);
+            const nodePositionsValue = settings.nodeComplexSettings.nodePositions.value;
+            settings._nodePositions = JSON.parse(nodePositionsValue) as SankeyDiagramNodePositionSetting[];
         }
+        // eslint-disable-next-line
         catch (exception) {
             settings._nodePositions = [];
             settings.nodeComplexSettings.nodePositions.value = "[]";
@@ -999,8 +1015,10 @@ export class SankeyDiagram implements IVisual {
 
         // viewport size
         try {
-            settings._viewportSize = <ViewportSize>JSON.parse(settings.nodeComplexSettings.viewportSize.value);
+            const viewportSizeValue = settings.nodeComplexSettings.viewportSize.value
+            settings._viewportSize = <ViewportSize>JSON.parse(viewportSizeValue);
         }
+        // eslint-disable-next-line
         catch (exception) {
             settings._nodePositions = settings._nodePositions || [];
             settings.nodeComplexSettings.viewportSize.value = "{}";
@@ -1041,7 +1059,7 @@ export class SankeyDiagram implements IVisual {
         const minRangeOfScale: number = sankeyDiagramDataView.settings.scale.provideMinHeight.value ? SankeyDiagram.DefaultMinRangeOfScale : SankeyDiagram.MinRangeOfScale;
 
         while (minHeight <= SankeyDiagram.MinHeightOfNode && scaleStepCount < SankeyDiagram.ScaleStepLimit) {
-            let weightScale: ScaleContinuousNumeric<number, number, any>;
+            let weightScale: ScaleContinuousNumeric<number, number>;
 
             if (sankeyDiagramDataView.settings.scale.lnScale.value) {
                 weightScale = d3ScaleLog()
@@ -1137,11 +1155,13 @@ export class SankeyDiagram implements IVisual {
     }
 
     private computeBordersOfTheNode(sankeyDiagramDataView: SankeyDiagramDataView): void {
+        const nodeLabelTextProperties = SankeyDiagram.getTextProperties(sankeyDiagramDataView.settings.labels);
+
         sankeyDiagramDataView.nodes.forEach((node: SankeyDiagramNode) => {
             const textHeight: number = textMeasurementService.estimateSvgTextHeight({
                 text: node.label.formattedName,
-                fontFamily: this.textProperties.fontFamily,
-                fontSize: this.textProperties.fontSize
+                fontFamily: nodeLabelTextProperties.fontFamily,
+                fontSize: nodeLabelTextProperties.fontSize
             });
 
             node.left = node.x + this.getLabelPositionByAxisX(node);
@@ -1501,47 +1521,27 @@ export class SankeyDiagram implements IVisual {
     }
 
     private renderNodes(sankeyDiagramDataView: SankeyDiagramDataView): Selection<SankeyDiagramNode> {
-        const nodeElements: Selection<SankeyDiagramNode> = this.main
-            .select(SankeyDiagram.NodesSelector.selectorName)
-            .selectAll(SankeyDiagram.NodeSelector.selectorName);
-
-        const nodesSelectionData = nodeElements
+        const nodeElements: Selection<SankeyDiagramNode> = this.nodes
+            .selectAll(SankeyDiagram.NodeSelector.selectorName)
             .data(
                 sankeyDiagramDataView.nodes
                     .filter((node: SankeyDiagramNode) => {
                         return node.height > SankeyDiagram.MinSize;
                     })
-            );
-
-        nodesSelectionData
-            .exit()
-            .remove();
-
-        const nodesEnterSelection: Selection<SankeyDiagramNode> = nodesSelectionData
-            .enter()
-            .append("g");
-
-        nodesEnterSelection
-            .append("rect")
-            .classed(SankeyDiagram.NodeRectSelector.className, true);
-
-        nodesEnterSelection
-            .append("text")
-            .classed(SankeyDiagram.NodeLabelSelector.className, true);
-
-        const nodesSelectionMerged = nodesEnterSelection.merge(nodeElements);
-
-        nodesSelectionMerged
+            )
+            .join("g")
             .attr("transform", (node: SankeyDiagramNode) => {
                 return translate(node.x, node.y);
             })
             .classed(SankeyDiagram.NodeSelector.className, true);
 
-
+        //add rectangles
         let nodeTabIndex: number = 0;
-
-        nodesSelectionMerged
-            .select(SankeyDiagram.NodeRectSelector.selectorName)
+        nodeElements
+            .selectAll(SankeyDiagram.NodeRectSelector.selectorName)
+            .data(data => [data])
+            .join("rect")
+            .classed(SankeyDiagram.NodeRectSelector.className, true)
             .style("fill", (node: SankeyDiagramNode) => node.fillColor)
             .style(
                 "stroke", (node: SankeyDiagramNode) => this.colorHelper.isHighContrast ? node.strokeColor :
@@ -1558,14 +1558,23 @@ export class SankeyDiagram implements IVisual {
             .attr("height", (node: SankeyDiagramNode) => node.height < SankeyDiagram.MinHeightOfNode ? SankeyDiagram.MinHeightOfNode : node.height)
             .attr("width", (node: SankeyDiagramNode) => node.width);
 
-        nodesSelectionMerged
-            .select(SankeyDiagram.NodeLabelSelector.selectorName)
+        // add labels
+        const nodeLabelTextProperties: TextPropertiesExtended = SankeyDiagram.getTextProperties(sankeyDiagramDataView.settings.labels);
+
+        nodeElements
+            .selectAll(SankeyDiagram.NodeLabelSelector.selectorName)
+            .data(data => [data])
+            .join("text")
+            .classed(SankeyDiagram.NodeLabelSelector.className, true)
             .attr("x", (node: SankeyDiagramNode) => node.left - node.x)
             .attr("y", (node: SankeyDiagramNode) => node.top - node.y)
             .attr("dy", SankeyDiagram.DefaultDy)
             .style("fill", (node: SankeyDiagramNode) => node.label.color)
-            .style("font-family", this.textProperties.fontFamily)
-            .style("font-size", this.textProperties.fontSize)
+            .style("font-family", nodeLabelTextProperties.fontFamily)
+            .style("font-size", nodeLabelTextProperties.fontSize)
+            .style("font-weight", nodeLabelTextProperties.fontWeight)
+            .style("text-decoration", nodeLabelTextProperties.textDecoration)
+            .style("font-style", nodeLabelTextProperties.fontStyle)
             .style("display", (node: SankeyDiagramNode) => {
                 const labelPositionByAxisX: number = this.getCurrentPositionOfLabelByAxisX(node);
 
@@ -1592,8 +1601,8 @@ export class SankeyDiagram implements IVisual {
                 if (node.label.width > node.label.maxWidth) {
                     return textMeasurementService.getTailoredTextOrDefault({
                         text: node.label.formattedName,
-                        fontFamily: this.textProperties.fontFamily,
-                        fontSize: this.textProperties.fontSize
+                        fontFamily: nodeLabelTextProperties.fontFamily,
+                        fontSize: nodeLabelTextProperties.fontSize
                     }, node.label.maxWidth);
                 }
 
@@ -1628,7 +1637,7 @@ export class SankeyDiagram implements IVisual {
                 x: node.x.toFixed(2), y: node.y.toFixed(2), name: node.label.name
             };
             // Update each link related with this node
-            self.main.select(SankeyDiagram.LinksSelector.selectorName)
+            self.links
                 .selectAll(SankeyDiagram.LinkSelector.selectorName)
                 .filter((currentLink: SankeyDiagramLink) => {
                     return currentLink.source === node || currentLink.destination === node;
@@ -1650,7 +1659,7 @@ export class SankeyDiagram implements IVisual {
                     }
                 );  
             // Update each link label related with this node
-            self.root.select("defs")
+            self.defs
                 .selectAll(SankeyDiagram.LinkLabelPathsSelector.selectorName)
                 .filter(function (currentLink: SankeyDiagramLink) {
                     return currentLink.source === node || currentLink.destination === node;
@@ -1673,8 +1682,8 @@ export class SankeyDiagram implements IVisual {
         }
 
         const drag = d3Drag().on("start", dragstarted).on("drag", dragged).on("end", dragend);
-        nodesSelectionMerged.call(drag);
-        return nodesSelectionMerged;
+        nodeElements.call(drag);
+        return nodeElements;
     }
 
     private saveViewportSize(): void {
@@ -1750,50 +1759,23 @@ export class SankeyDiagram implements IVisual {
     }
 
     private renderLinks(sankeyDiagramDataView: SankeyDiagramDataView): Selection<SankeyDiagramLink> {
-        const linksElements: Selection<SankeyDiagramLink> = this.main
-            .select(SankeyDiagram.LinksSelector.selectorName)
-            .selectAll(SankeyDiagram.LinkSelector.selectorName);
+        const linksElements: Selection<SankeyDiagramLink> = this.links
+            .selectAll(SankeyDiagram.LinkSelector.selectorName)
+            .data(
+                sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
+                    return link.height > SankeyDiagram.MinSize;
+                }).sort((a: SankeyDiagramLink, b: SankeyDiagramLink) => {
+                    if (a.source.x !== b.source.x){
+                        return a.source.x - b.source.x;
+                    }
+                    if (a.direction !== b.direction){
+                        return a.direction - b.direction;
+                    }
 
-        const linksSelectionData: UpdateSelection<SankeyDiagramLink> =
-            linksElements
-                .data(
-                    sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
-                        return link.height > SankeyDiagram.MinSize;
-                    }).sort((a: SankeyDiagramLink, b: SankeyDiagramLink) => {
-                        // sort links to set tabindex according to their source nodes
-                        if (a.source.x < b.source.x){
-                            return -1;
-                        }
-                        if (a.source.x > b.source.x) {
-                            return 1;
-                        }
-                        if (a.source.x === b.source.x){
-                            // in this case self links and backward links will be on front side
-                            if (a.direction > b.direction){
-                                return 1;
-                            }
-                            if (a.source.y + a.shiftByAxisYSource < b.source.y + b.shiftByAxisYSource) {
-                                return -1;
-                            }
-                            if (a.source.y + a.shiftByAxisYSource > b.source.y + b.shiftByAxisYSource) {
-                                return 1;
-                            }
-                            return 0;
-                        }
-                    })
-                );
-
-        linksSelectionData
-            .exit()
-            .remove();
-
-        const linksElementsEnter = linksSelectionData
-            .enter()
-            .append("path");
-
-        const linksElementsMerged = linksElementsEnter.merge(linksElements);
-
-        linksElementsMerged
+                    return (a.source.y + a.shiftByAxisYSource) - (b.source.y + b.shiftByAxisYSource);
+                })
+            )
+            .join("path")
             .classed(SankeyDiagram.LinkSelector.className, true)
             .classed(SankeyDiagram.BackwardLinkSelector.className, (link: SankeyDiagramLink) => link.direction === SankeyLinkDirrections.Backward)
             .classed(SankeyDiagram.SelftLinkSelector.className, (link: SankeyDiagramLink) => link.direction === SankeyLinkDirrections.SelfLink);
@@ -1802,7 +1784,7 @@ export class SankeyDiagram implements IVisual {
         const minHeight: number = d3Min(sankeyDiagramDataView.links.map(l => l.height));
         let linkTabIndex: number = sankeyDiagramDataView.nodes.length;
 
-        linksElementsMerged
+        linksElements
             .attr(
                 "d", (link: SankeyDiagramLink) => {
                     if (link.direction === SankeyLinkDirrections.Forward) {
@@ -1831,7 +1813,7 @@ export class SankeyDiagram implements IVisual {
             .style("stroke", (link: SankeyDiagramLink) => link.strokeColor)
             .style("fill", (link: SankeyDiagramLink) => link.fillColor);
 
-        return linksElementsMerged;
+        return linksElements;
     }
 
     public static createLinkId(link: SankeyDiagramLink, addLinkLabelPath: boolean = false): string {
@@ -1848,39 +1830,11 @@ export class SankeyDiagram implements IVisual {
             return link.height > SankeyDiagram.MinSize && link.direction !== SankeyLinkDirrections.SelfLink;
         });
 
-        // add defs element to svg
-        const svgDefs: Selection<any> = this.root
-            .selectAll("defs");
-
-        const svgDefsSelectionData: UpdateSelection<number> = svgDefs.data([1]);
-        const svgDefsSelectionEnter = svgDefsSelectionData
-            .enter()
-            .append("defs");
-
-        svgDefsSelectionData
-            .exit()
-            .remove();
-
-        const svgDefsSelectionMerged = svgDefsSelectionEnter.merge(svgDefs);
-
-        const singleDefsElement: Selection<any> = d3Select(svgDefsSelectionMerged.node());
-
         // add text path for lables
-        const linkLabelPaths: Selection<any> = singleDefsElement.selectAll(SankeyDiagram.LinkLabelPathsSelector.selectorName);
-
-        const linkLabelPathsSelectionData: UpdateSelection<SankeyDiagramLink> = linkLabelPaths.data(linkArrowData);
-
-        linkLabelPathsSelectionData
-            .exit()
-            .remove();
-
-        const linkLabelPathsSelectionEnter = linkLabelPathsSelectionData
-            .enter()
-            .append("path");
-
-        const linkLabelPathsSelectionMerged = linkLabelPathsSelectionEnter.merge(linkLabelPaths);
-
-        linkLabelPathsSelectionMerged
+        this.defs
+            .selectAll(SankeyDiagram.LinkLabelPathsSelector.selectorName)
+            .data(linkArrowData)
+            .join("path")
             .classed(SankeyDiagram.LinkLabelPathsSelector.className, true)
             .attr(
                 "d", (link: SankeyDiagramLink) => {
@@ -1894,53 +1848,33 @@ export class SankeyDiagram implements IVisual {
                     return SankeyDiagram.createLinkId(link, true);
                 }
             );
-
+    
         // add text by using paths from defs
-        const linkLabelTexts: Selection<any> = this.main
-            .select(SankeyDiagram.LinksSelector.selectorName)
-            .selectAll(SankeyDiagram.LinkLabelTextsSelector.selectorName);
-
-        const linkLabelTextSelectionData: UpdateSelection<SankeyDiagramLink> = linkLabelTexts
-            .data(linkTextData);
-
-        linkLabelTextSelectionData
-            .exit()
-            .remove();
-
-        const linkLabelTextSelectionEnter = linkLabelTextSelectionData
-            .enter()
-            .append("text");
-
-        const linkLabelTextSelectionMerged = linkLabelTextSelectionEnter.merge(linkLabelTexts);
-
-        linkLabelTextSelectionMerged
+        const linkLabelTexts: Selection<SankeyDiagramLink> = this.links
+            .selectAll(SankeyDiagram.LinkLabelTextsSelector.selectorName)
+            .data(linkTextData)
+            .join("text")
             .attr("text-anchor", "middle")
             .classed(SankeyDiagram.LinkLabelTextsSelector.className, true);
 
-        const textPathSelection: UpdateSelection<SankeyDiagramLink> = linkLabelTextSelectionMerged
-            .selectAll("textPath");
+        const linkLabelsTextProperties: TextPropertiesExtended = SankeyDiagram.getTextProperties(sankeyDiagramDataView.settings.linkLabels);
 
-        const textPathSelectionData = textPathSelection.data(data => [data]);
-
-        textPathSelectionData
-            .exit()
-            .remove();
-
-        const textPathSelectionEnter = textPathSelectionData
-            .enter()
-            .append("textPath");
-
-        const textPathSelectionMerged = textPathSelectionEnter.merge(textPathSelection);
-
-        textPathSelectionMerged
+        linkLabelTexts
+            .selectAll("textPath")
+            .data(data => [data])
+            .join("textPath")
             .attr("startOffset", "50%")
             .attr(
                 "href", (link: SankeyDiagramLink) => {
                     return `#${SankeyDiagram.createLinkId(link, true)}`;
                 })
-            .style("font-size", this.dataView.settings.linkLabels.fontSize.value)
-            .style("fill", this.dataView.settings.linkLabels.fill.value.value)
-            .text((link: SankeyDiagramLink) => (link.label && (link.label.length > 0)) ? link.label :
+            .style("font-family", linkLabelsTextProperties.fontFamily)
+            .style("font-size", linkLabelsTextProperties.fontSize)
+            .style("font-weight", linkLabelsTextProperties.fontWeight)
+            .style("font-style", linkLabelsTextProperties.fontStyle)
+            .style("text-decoration", linkLabelsTextProperties.textDecoration)
+            .style("fill", (link: SankeyDiagramLink) => link.label.color)
+            .text((link: SankeyDiagramLink) => (link.label.formattedName && (link.label.formattedName.length > 0)) ? link.label.formattedName :
                 `${link.source.label.name || ""}-${link.destination.label.name || ""}:${(link.tooltipInfo[2] || { value: "" }).value}`
             );
     }

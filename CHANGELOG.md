@@ -1,3 +1,18 @@
+## 3.4.4.0
+
+### New features
+* Nodes and links data labels have extended font formatting settings
+* Visual supports report page tooltips
+
+### Development
+* Migrated to the new eslint version
+* Updated workflow files
+
+### Other
+* Used join d3 pattern istead enter-append-exit
+* API 5.11.0
+* Packages update
+
 ## 3.4.3.0
 * Fix weight with zero values
 

@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Метки данных",
   "Visual_Show": "Показать",
-  "Visual_LabelsFill": "Цвет",
+  "Visual_Color": "Цвет",
   "Visual_Fill": "Заливка",
   "Visual_TextSize": "Размер текста",
   "Visual_Force_Display": "Принудительное отображение",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Вес",
   "Visual_DataPointsLinkLabels": "Метки связей данных",
   "Visual_Links": "Ссылки",
-  "Visual_ScaleSettings": "Включить логарифмическую шкалу",
-  "Visual_SankeyScaleSettings": "Настройки масштаба",
+  "Visual_LogarithmicScale": "Включить логарифмическую шкалу",
+  "Visual_ScaleSettings": "Настройки масштаба",
   "Visual_MinOptimalHeight": "Укажите минимальную оптимальную высоту узла",
   "Visual_Enable": "Включить",
   "Visual_SankeySettings": "Параметры Sankey",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Дублировать",
   "Visual_DrawBackwardLink": "Отрисовка обратной ссылки",
   "Visual_SelflinkWeight": "Игнорировать толщину линии ссылок на себя",
-  "Visual_TooltipDisplayName": "Имя",
+  "Visual_Name": "Имя",
   "Visual_Description_Force_Display": "Показывать все метки",
   "Visual_FontFamily": "Семейство шрифтов",
-  "Visual_TooltipDisplayInput": "Входные данные",
-  "Visual_TooltipDisplayOutput": "Выходные данные",
-  "Visual_NodeWidth": "Ширина"
+  "Visual_Input": "Входные данные",
+  "Visual_Output": "Выходные данные",
+  "Visual_Width": "Ширина"
 }

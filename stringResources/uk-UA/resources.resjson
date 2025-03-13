@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Мітки даних",
   "Visual_Show": "Відображення",
-  "Visual_LabelsFill": "Колір",
+  "Visual_Color": "Колір",
   "Visual_Fill": "Заповнити",
   "Visual_TextSize": "Розмір тексту",
   "Visual_Force_Display": "Відображати примусово",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Значимість",
   "Visual_DataPointsLinkLabels": "Підписи зв’язку з даними",
   "Visual_Links": "Посилання",
-  "Visual_ScaleSettings": "Увімкнути логарифмічну шкалу",
-  "Visual_SankeyScaleSettings": "Параметри масштабу",
+  "Visual_LogarithmicScale": "Увімкнути логарифмічну шкалу",
+  "Visual_ScaleSettings": "Параметри масштабу",
   "Visual_MinOptimalHeight": "Укажіть оптимальну мінімальну висоту вузла",
   "Visual_Enable": "Увімкнути",
   "Visual_SankeySettings": "Параметри Sankey",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Дублювати",
   "Visual_DrawBackwardLink": "Накреслити зворотний зв’язок",
   "Visual_SelflinkWeight": "Ігнорувати значимість рефлексивних зв’язків",
-  "Visual_TooltipDisplayName": "Ім’я",
+  "Visual_Name": "Ім’я",
   "Visual_Description_Force_Display": "У будь-якому разі відображати всі підписи",
   "Visual_FontFamily": "Сімейство шрифтів",
-  "Visual_TooltipDisplayInput": "Ввід",
-  "Visual_TooltipDisplayOutput": "Результат",
-  "Visual_NodeWidth": "Ширина"
+  "Visual_Input": "Ввід",
+  "Visual_Output": "Результат",
+  "Visual_Width": "Ширина"
 }

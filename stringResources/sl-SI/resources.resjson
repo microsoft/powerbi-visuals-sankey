@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "Oznake podatkov",
   "Visual_Show": "Pokaži",
-  "Visual_LabelsFill": "Barva",
+  "Visual_Color": "Barva",
   "Visual_Fill": "Zapolni",
   "Visual_TextSize": "Velikost besedila",
   "Visual_Force_Display": "Vsili prikaz",
@@ -13,8 +13,8 @@
   "Visual_Weight": "Teža",
   "Visual_DataPointsLinkLabels": "Povezava oznake podatkov",
   "Visual_Links": "Povezave",
-  "Visual_ScaleSettings": "Omogoči Logaritmično merilo",
-  "Visual_SankeyScaleSettings": "Nastavitve merila",
+  "Visual_LogarithmicScale": "Omogoči Logaritmično merilo",
+  "Visual_ScaleSettings": "Nastavitve merila",
   "Visual_MinOptimalHeight": "Zagotovi najmanjšo optimalno višino vozlišča",
   "Visual_Enable": "Omogoči",
   "Visual_SankeySettings": "Nastavitve diagrama Sankey",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "Podvoji",
   "Visual_DrawBackwardLink": "Povezava z drugega spletnega mesta do risbe",
   "Visual_SelflinkWeight": "Prezri debelino samopovezav",
-  "Visual_TooltipDisplayName": "Ime",
+  "Visual_Name": "Ime",
   "Visual_Description_Force_Display": "Vseeno prikaži vse oznake",
   "Visual_FontFamily": "Družina pisav",
-  "Visual_TooltipDisplayInput": "Vnos",
-  "Visual_TooltipDisplayOutput": "Rezultat",
-  "Visual_NodeWidth": "Širina"
+  "Visual_Input": "Vnos",
+  "Visual_Output": "Rezultat",
+  "Visual_Width": "Širina"
 }

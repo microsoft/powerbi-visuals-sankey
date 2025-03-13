@@ -28,7 +28,7 @@ import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
 
 // powerbi
 import DataView = powerbi.DataView;
-import FormattingSettingsCard = formattingSettings.Card;
+import FormattingSettingsCard = formattingSettings.Cards;
 
 // powerbi.extensibility.visual.test
 import { SankeyDiagramData } from "./visualData";
@@ -738,7 +738,7 @@ describe("SankeyDiagram", () => {
         it("nodeComplexSettings properties must be hidden", done => {
             visualBuilder.updateRenderTimeout(dataView, () => {
                 visualBuilder.instance.getFormattingModel();
-                expect(visualBuilder.instance.sankeyDiagramSettings.cards.some((card: FormattingSettingsCard) => card.displayName === "Node Complex Settings")).toBeFalse();
+                expect(visualBuilder.instance.sankeyDiagramSettings.nodeComplexSettings.visible).toBeFalse();
                 done();
             });
         });
@@ -747,25 +747,24 @@ describe("SankeyDiagram", () => {
             visualBuilder.updateRenderTimeout(dataView, () => {
                 // defaults
                 const someColor: string = "#000000";
-                const fontSize: number = 12;
+                const nodeLabelsFontSize: number = 12;
+                const linkLabelsFontSize: number = 9;
                 const unit: number = 0;
 
                 visualBuilder.instance.getFormattingModel();
 
                 let labels: DataLabelsSettings = visualBuilder.instance.sankeyDiagramSettings.labels;
 
-                expect(labels.slices.length).toBe(6);
                 expect(labels.show.value).toBeTruthy();
-                expect(labels.fontSize.value).toBe(fontSize);
+                expect(labels.fontSize.value).toBe(nodeLabelsFontSize);
                 expect(labels.forceDisplay.value).toBeFalsy();
                 expect(labels.unit.value).toBe(unit);
                 expect(labels.fill.value.value).toBe(someColor);
 
                 let linkLabels: LinkLabelsSettings = visualBuilder.instance.sankeyDiagramSettings.linkLabels;
 
-                expect(linkLabels.slices.length).toBe(3);
                 expect(linkLabels.show.value).toBeFalsy();
-                expect(linkLabels.fontSize.value).toBe(fontSize);
+                expect(linkLabels.fontSize.value).toBe(linkLabelsFontSize);
                 expect(linkLabels.fill.value.value).toBe(someColor);
 
                 let scaleSettings = visualBuilder.instance.sankeyDiagramSettings.scale;
@@ -774,7 +773,7 @@ describe("SankeyDiagram", () => {
                 expect(scaleSettings.provideMinHeight.value).toBeTruthy();
                 expect(scaleSettings.lnScale.value).toBeFalsy();
 
-                expect(visualBuilder.instance.sankeyDiagramSettings.cards.length).toBe(6);
+                expect(visualBuilder.instance.sankeyDiagramSettings.cards.length).toBe(7);
                 done();
             });
         });

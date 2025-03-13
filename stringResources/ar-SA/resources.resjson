@@ -1,7 +1,7 @@
 {
   "Visual_DataPointsLabels": "بطاقات البيانات",
   "Visual_Show": "‏‏إظهار",
-  "Visual_LabelsFill": "اللون",
+  "Visual_Color": "اللون",
   "Visual_Fill": "تعبئة",
   "Visual_TextSize": "حجم النص",
   "Visual_Force_Display": "فرض العرض",
@@ -13,8 +13,8 @@
   "Visual_Weight": "الوزن",
   "Visual_DataPointsLinkLabels": "تسميات ارتباط البيانات",
   "Visual_Links": "ارتباطات",
-  "Visual_ScaleSettings": "تمكين المقياس اللوغاريتمي",
-  "Visual_SankeyScaleSettings": "إعدادات المقياس",
+  "Visual_LogarithmicScale": "تمكين المقياس اللوغاريتمي",
+  "Visual_ScaleSettings": "إعدادات المقياس",
   "Visual_MinOptimalHeight": "توفير أدنى ارتفاع مثالي لعقدة",
   "Visual_Enable": "تمكين",
   "Visual_SankeySettings": "إعدادات Sankey",
@@ -26,10 +26,10 @@
   "Visual_Duplicate": "‏‏تكرار",
   "Visual_DrawBackwardLink": "رسم ارتباط خلفي",
   "Visual_SelflinkWeight": "تجاهل وزن الارتباطات الذاتية",
-  "Visual_TooltipDisplayName": "الاسم",
+  "Visual_Name": "الاسم",
   "Visual_Description_Force_Display": "عرض كل التسميات على أية حال",
   "Visual_FontFamily": "عائلة الخطوط",
-  "Visual_TooltipDisplayInput": "الإدخال",
-  "Visual_TooltipDisplayOutput": "الإخراج",
-  "Visual_NodeWidth": "العرض"
+  "Visual_Input": "الإدخال",
+  "Visual_Output": "الإخراج",
+  "Visual_Width": "العرض"
 }
