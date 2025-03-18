@@ -369,13 +369,12 @@ export class SankeyDiagram implements IVisual {
     }
 
     private createNewNode(node: DataViewMatrixNode, settings: SankeyDiagramSettings): SankeyDiagramNode {
+        const name: string = node.levelValues?.[0]?.value?.toString() ?? null;
         const nodeFillColor = this.getColor(
             SankeyDiagram.NodesPropertyIdentifier,
-            this.colorPalette.getColor(<string>node.value).value,
+            this.colorPalette.getColor(name).value,
             node.objects);
         const nodeStrokeColor = this.colorHelper.getHighContrastColor("foreground", nodeFillColor);
-
-        const name: string = node.value?.toString() || null;
 
         const label: SankeyDiagramLabel = SankeyDiagram.createLabel(settings.labels, name);
 
@@ -452,12 +451,14 @@ export class SankeyDiagram implements IVisual {
         });
 
         dataView.matrix.rows.root.children.forEach(parent => {
-            const foundSource: SankeyDiagramNode = nodes.find(found => found.label.name === parent.value)
+            const parentName: string = parent.levelValues?.[0]?.value?.toString() ?? null;
+            const foundSource: SankeyDiagramNode = nodes.find(found => found.label.name === parentName)
             parent.children.forEach(child => {
                 let linkLabeltext: PrimitiveValue = undefined;
                 let weight: number = SankeyDiagram.DefaultWeightValue;
+                const childName: string = child.levelValues?.[0]?.value?.toString() ?? null;
 
-                let foundDestination: SankeyDiagramNode = nodes.find(found => found.label.name === child.value)
+                let foundDestination: SankeyDiagramNode = nodes.find(found => found.label.name === childName);
                 const selfLinkFound: boolean = foundDestination === foundSource;
 
                 if (!foundDestination) {
