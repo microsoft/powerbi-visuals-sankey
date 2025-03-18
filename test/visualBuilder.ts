@@ -79,4 +79,8 @@ export class VisualBuilder extends VisualBuilderBase<VisualClass> {
     public get linkElements(): NodeListOf<HTMLElement> {
         return this.linksElement.querySelectorAll("path.link");
     }
+
+    public get resetButton(): SVGElement {
+        return this.mainElement.querySelector("g.resetButton");
+    }
 }
