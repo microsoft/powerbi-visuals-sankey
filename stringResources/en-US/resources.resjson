@@ -35,4 +35,6 @@
 	"Visual_Width": "Width",
 	"Visual_Values": "Values",
 	"Visual_Font": "Font",
+	"Visual_LinksOrder": "Links order",
+	"Visual_AutoLinksReorder": "Auto links reorder"
 }

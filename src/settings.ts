@@ -254,23 +254,48 @@ export class ScaleSettings extends FormattingSettingsSimpleCard {
     public slices: FormattingSettingsSlice[] = [this.provideMinHeight, this.lnScale];
 }
 
-export class NodeComplexSettings extends FormattingSettingsSimpleCard {
+export class LinksOrder extends FormattingSettingsSimpleCard {
+    public name: string = "linkOrderGroup";
+    public displayNameKey: string = "Visual_LinksOrder";
+
+    public shouldReorder= new formattingSettings.ToggleSwitch({
+        name: "linksReorder",
+        displayNameKey: "Visual_AutoLinksReorder",
+        value: false,
+    });
+
+    slices: formattingSettings.Slice[] = [this.shouldReorder];
+}
+
+class PersistPropertiesGroup extends FormattingSettingsSimpleCard {
+    public name: string = "persistProperties";
+    public displayNameKey: string = "Visual_NodePositions";
+    public collapsible: boolean = false;
+    public visible: boolean = true;
     public nodePositions = new formattingSettings.ReadOnlyText({
         name: "nodePositions",
         displayNameKey: "Visual_NodePositions",
-        value: ""
+        value: "",
+        visible: false,
     }); 
 
     public viewportSize = new formattingSettings.ReadOnlyText({
         name: "viewportSize",
         displayNameKey: "Visual_ViewportSize",
-        value: ""
+        value: "",
+        visible: false,
     });
 
-    public visible: boolean = false;
+    public slices: FormattingSettingsSlice[] = [this.nodePositions, this.viewportSize]
+}
+
+export class NodeComplexSettings extends FormattingSettingsCompositeCard {
+    public persistProperties: PersistPropertiesGroup = new PersistPropertiesGroup();
+    public links: LinksOrder = new LinksOrder();
+
     public name: string = "nodeComplexSettings";
-    public displayNameKey: string = "Visual_SankeySettings";
-    public slices: FormattingSettingsSlice[] = [this.nodePositions, this.viewportSize];
+    public displayNameKey: string = "Visual_Sorting";
+    public groups: FormattingSettingsCards[] = [this.persistProperties, this.links];
 }
 
 export class CyclesLinkSettings extends FormattingSettingsSimpleCard {

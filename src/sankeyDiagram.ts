@@ -762,7 +762,7 @@ export class SankeyDiagram implements IVisual {
 
             // if check failed then reset positions
             if (!check) {
-                settings.nodeComplexSettings.nodePositions.value = "{}";
+                settings.nodeComplexSettings.persistProperties.nodePositions.value = "{}";
                 settings._nodePositions = [];
             }
         });
@@ -1005,24 +1005,24 @@ export class SankeyDiagram implements IVisual {
         settings.linkLabels.fill.value.value = this.colorHelper.getHighContrastColor("foreground", settings.linkLabels.fill.value.value);
         // node positions
         try {
-            const nodePositionsValue = settings.nodeComplexSettings.nodePositions.value;
+            const nodePositionsValue = settings.nodeComplexSettings.persistProperties.nodePositions.value;
             settings._nodePositions = JSON.parse(nodePositionsValue) as SankeyDiagramNodePositionSetting[];
         }
         // eslint-disable-next-line
         catch (exception) {
             settings._nodePositions = [];
-            settings.nodeComplexSettings.nodePositions.value = "[]";
+            settings.nodeComplexSettings.persistProperties.nodePositions.value = "[]";
         }
 
         // viewport size
         try {
-            const viewportSizeValue = settings.nodeComplexSettings.viewportSize.value
+            const viewportSizeValue = settings.nodeComplexSettings.persistProperties.viewportSize.value
             settings._viewportSize = <ViewportSize>JSON.parse(viewportSizeValue);
         }
         // eslint-disable-next-line
         catch (exception) {
             settings._nodePositions = settings._nodePositions || [];
-            settings.nodeComplexSettings.viewportSize.value = "{}";
+            settings.nodeComplexSettings.persistProperties.viewportSize.value = "{}";
         }
         return settings;
     }
@@ -1123,13 +1123,18 @@ export class SankeyDiagram implements IVisual {
             sankeyDiagramDataView.settings.cyclesLinks.selfLinksWeight.value && sankeyDiagramDataView.settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.Backward
         );
 
-        this.computeYPosition(
-            sankeyDiagramDataView.nodes,
-            sankeyDiagramDataView.settings._scale.y,
-            sankeyDiagramDataView.settings.cyclesLinks.selfLinksWeight.value && sankeyDiagramDataView.settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.Backward
-        );
+        const shouldReorder = sankeyDiagramDataView.settings.nodeComplexSettings.links.shouldReorder.value;
+        const yScale = sankeyDiagramDataView.settings._scale.y;
+        const shouldUseSelfLinkWeight = sankeyDiagramDataView.settings.cyclesLinks.selfLinksWeight.value && 
+            sankeyDiagramDataView.settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.Backward;
 
-        this.applySavedPositions(sankeyDiagramDataView);
+        if (shouldReorder) {
+            this.applySavedPositions(sankeyDiagramDataView);
+            this.computeYPosition(sankeyDiagramDataView.nodes, yScale, shouldUseSelfLinkWeight);
+        } else {
+            this.computeYPosition(sankeyDiagramDataView.nodes, yScale, shouldUseSelfLinkWeight);
+            this.applySavedPositions(sankeyDiagramDataView);
+        }
 
         this.computeBordersOfTheNode(sankeyDiagramDataView);
         SankeyDiagram.computeIntersections(sankeyDiagramDataView);
@@ -1468,29 +1473,25 @@ export class SankeyDiagram implements IVisual {
                     fixedLinkHeight = node.width;
                 }
 
-                if (link.source.x < node.x || link.destination.x < node.x) {
-                    if (link.direction !== SankeyLinkDirrections.Backward) {
-                        shiftByAxisY = shiftByAxisYOfLeftLink;
+                const nodeIsSource: boolean = link.source.x === node.x;
+                const isBackward = link.direction === SankeyLinkDirrections.Backward;
+                const isSelfLink = link.direction === SankeyLinkDirrections.SelfLink;
+
+                if (isSelfLink) {
+                    shiftByAxisYOfRightLink += fixedLinkHeight;
+                    shiftByAxisYOfLeftLink += fixedLinkHeight;
+                } else if (nodeIsSource) {
+                    shiftByAxisY = isBackward ? shiftByAxisYOfLeftLink : shiftByAxisYOfRightLink;
+                    if (isBackward) {
                         shiftByAxisYOfLeftLink += fixedLinkHeight;
-                    }
-                    else {
-                        shiftByAxisY = shiftByAxisYOfRightLink;
+                    } else {
                         shiftByAxisYOfRightLink += fixedLinkHeight;
                     }
-                }
-                else {
-                    if (link.source.x > node.x || link.destination.x > node.x) {
-                        if (link.direction !== SankeyLinkDirrections.Backward) {
-                            shiftByAxisY = shiftByAxisYOfRightLink;
-                            shiftByAxisYOfRightLink += fixedLinkHeight;
-                        }
-                        else {
-                            shiftByAxisY = shiftByAxisYOfLeftLink;
-                            shiftByAxisYOfLeftLink += fixedLinkHeight;
-                        }
-                    }
-                    if (link.source === link.destination) {
+                } else {
+                    shiftByAxisY = isBackward ? shiftByAxisYOfRightLink : shiftByAxisYOfLeftLink;
+                    if (isBackward) {
                         shiftByAxisYOfRightLink += fixedLinkHeight;
+                    } else {
                         shiftByAxisYOfLeftLink += fixedLinkHeight;
                     }
                 }
