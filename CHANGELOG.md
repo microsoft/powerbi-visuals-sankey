@@ -1,3 +1,12 @@
+## 3.4.5.0
+
+### New features
+* Added a reset button that returns nodes to their original positions
+* Added a toggle that enables automatic sorting of links
+
+### Other
+* Used levelValues instead of deprecated values
+
 ## 3.4.4.0
 
 ### New features
