@@ -68,10 +68,10 @@ export const buttonPositionOptions: IEnumMemberWithDisplayNameKey[] = [
     {value : ButtonPosition.BottomRight, displayName: "Bottom right", displayNameKey: "Visual_BottomRight"}
 ];
 
-export const duplicateNodesOptions : IEnumMember[] = [
-    {value : CyclesDrawType.Duplicate, displayName : "Duplicate"},
-    {value : CyclesDrawType.Backward, displayName : "Draw backward link"},
-    {value : CyclesDrawType.DuplicateOptimized, displayName : "Duplicate optimized"}
+export const duplicateNodesOptions : IEnumMemberWithDisplayNameKey[] = [
+    {value : CyclesDrawType.Duplicate, displayName: "Duplicate", displayNameKey: "Visual_Duplicate"},
+    {value : CyclesDrawType.Backward, displayName: "Draw backward link", displayNameKey: "Visual_DrawBackwardLink"},
+    {value : CyclesDrawType.DuplicateOptimized, displayName: "Duplicate optimized", displayNameKey: "Visual_DuplicateOptimized"}
 ];
 
 export class FontSettingsOptions {
@@ -419,5 +419,6 @@ export class SankeyDiagramSettings extends FormattingSettingsModel {
 
     setLocalizedOptions(localizationManager: ILocalizationManager): void {
         this.setLocalizedDisplayName(buttonPositionOptions, localizationManager);
+        this.setLocalizedDisplayName(duplicateNodesOptions, localizationManager);
     }
 }
