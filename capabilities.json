@@ -252,6 +252,16 @@
                     "type": {
                         "bool": true
                     }
+                },
+                "showResetButon": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "position": {
+                    "type": {
+                        "enumeration": []
+                    }
                 }
             }
         },

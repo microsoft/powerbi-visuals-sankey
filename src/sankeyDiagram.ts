@@ -96,10 +96,12 @@ import {
     SankeyDiagramScaleSettings,
     BaseFontSettingsCard,
     FontSettingsOptions,
+    ButtonSettings,
 } from "./settings";
 import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
 
 import {
+    ButtonPosition,
     SankeyDiagramColumn,
     SankeyDiagramCycleDictionary,
     SankeyDiagramDataView,
@@ -134,6 +136,9 @@ export class SankeyDiagram implements IVisual {
     private static SelftLinkSelector: ClassAndSelector = createClassAndSelector("linkSelf");
     private static LinkLabelPathsSelector: ClassAndSelector = createClassAndSelector("linkLabelPaths");
     private static LinkLabelTextsSelector: ClassAndSelector = createClassAndSelector("linkLabelTexts");
+    private static resetButton: ClassAndSelector = createClassAndSelector("resetButton");
+    private static ResetButtonRect: ClassAndSelector = createClassAndSelector("resetButtonRect");
+    private static ResetButtonText: ClassAndSelector = createClassAndSelector("resetButtonText");
 
     private static DefaultColourOfLink: string = "#4F4F4F";
 
@@ -234,6 +239,7 @@ export class SankeyDiagram implements IVisual {
     private main: Selection<any>;
     private nodes: Selection<SankeyDiagramNode>;
     private links: Selection<SankeyDiagramLink>;
+    private resetButton: Selection<any>;
 
     private colorPalette: IColorPalette;
     private colorHelper: ColorHelper;
@@ -288,12 +294,14 @@ export class SankeyDiagram implements IVisual {
             .classed(SankeyDiagram.ClassName, true);
 
         this.selectionManager = this.visualHost.createSelectionManager();
-        this.behavior = new SankeyDiagramBehavior(this.selectionManager);
+        this.behavior = new SankeyDiagramBehavior(this.selectionManager, this.visualHost);
         this.clearCatcher = appendClearCatcher(this.root);
         this.defs = this.root.append("defs");
 
         this.colorPalette = this.visualHost.colorPalette;
         this.colorHelper = new ColorHelper(this.colorPalette);
+
+        this.resetButton = this.createResetButton(this.root, this.colorHelper);
 
         this.tooltipServiceWrapper = createTooltipServiceWrapper(
             this.visualHost.tooltipService,
@@ -316,16 +324,43 @@ export class SankeyDiagram implements IVisual {
             .attr("aria-multiselectable", "true");
     }
 
+    private createResetButton(root: Selection<any>, colorHelper: ColorHelper): Selection<any> {
+        const button = root.append("g")
+            .classed(SankeyDiagram.resetButton.className, true)
+            .style("visibility", "hidden");
+
+        button
+            .append("rect")
+            .classed(SankeyDiagram.ResetButtonRect.className, true)
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("rx", 5)
+            .attr("width", ButtonSettings.DefaultWidth)
+            .attr("height", ButtonSettings.DefaultHeight)
+            .style("fill", colorHelper.getHighContrastColor("background", ButtonSettings.DefaultFill))
+            .style("stroke", colorHelper.getHighContrastColor("foreground", ButtonSettings.DefaultStroke));
+
+        button
+            .append("text")
+            .classed(SankeyDiagram.ResetButtonText.className, true)
+            .attr("x", 5)
+            .attr("y", 11)
+            .text(ButtonSettings.DefaultText)
+            .style("fill", colorHelper.getHighContrastColor("foreground", ButtonSettings.DefaultTextFill));
+
+        return button;
+    }
+
     public update(visualUpdateOptions: VisualUpdateOptions): void {
         this.visualHost.eventService.renderingStarted(visualUpdateOptions);
-
-        this.updateViewport(visualUpdateOptions.viewport);
 
         const dataView: DataView = visualUpdateOptions
             && visualUpdateOptions.dataViews
             && visualUpdateOptions.dataViews[0];
 
         this.sankeyDiagramSettings = this.parseSettings(dataView);
+
+        this.updateViewport(visualUpdateOptions.viewport, this.sankeyDiagramSettings);
 
         const sankeyDiagramDataView: SankeyDiagramDataView = this.converter(dataView);
 
@@ -339,19 +374,35 @@ export class SankeyDiagram implements IVisual {
     }
 
     public getFormattingModel(): powerbi.visuals.FormattingModel {
+        this.sankeyDiagramSettings.setLocalizedOptions(this.localizationManager);
         return this.formattingSettingsService.buildFormattingModel(this.sankeyDiagramSettings);
     }
 
-    private updateViewport(viewport: IViewport): void {
+    private updateViewport(viewport: IViewport, settings: SankeyDiagramSettings): void {
         const height: number = SankeyDiagram.getPositiveNumber(viewport.height);
         const width: number = SankeyDiagram.getPositiveNumber(viewport.width);
 
+        const viewportShiftY: number = settings.nodeComplexSettings.button.show.value ? (ButtonSettings.DefaultHeight + this.margin.top) : 0;
+        let mainShiftY: number = 0;
+
+        const buttonPosition: ButtonPosition = settings.nodeComplexSettings.button.position.value.value as ButtonPosition;
+
+        if (settings.nodeComplexSettings.button.show.value){
+            switch (buttonPosition){
+                case ButtonPosition.Top:
+                case ButtonPosition.TopRight:
+                case ButtonPosition.TopCenter:
+                    mainShiftY += ButtonSettings.DefaultHeight + this.margin.top;
+                    break;
+            }
+        }
+
         this.viewport = {
-            height: SankeyDiagram.getPositiveNumber(height - this.margin.top - this.margin.bottom),
+            height: SankeyDiagram.getPositiveNumber(height - this.margin.top - this.margin.bottom - viewportShiftY),
             width: SankeyDiagram.getPositiveNumber(width - this.margin.left - this.margin.right)
         };
 
-        this.updateElements(height, width);
+        this.updateElements(height, width, mainShiftY, settings.nodeComplexSettings.button);
     }
 
     public static getPositiveNumber(value: number): number {
@@ -360,12 +411,43 @@ export class SankeyDiagram implements IVisual {
             : value;
     }
 
-    private updateElements(height: number, width: number): void {
+    private updateElements(height: number, width: number, mainShiftY: number, buttonSettings: ButtonSettings): void {
         this.root
             .attr("height", height)
             .attr("width", width);
 
-        this.main.attr("transform", translate(this.margin.left, this.margin.top));
+        this.main.attr("transform", translate(this.margin.left, this.margin.top + mainShiftY));
+
+        const buttonPosition: ButtonPosition = buttonSettings.position.value.value as ButtonPosition;
+        const shiftX: number = this.getHorizontalPositionShift(buttonPosition, this.viewport, this.margin);
+        const shiftY: number = this.getVerticalPositionShift(buttonPosition, this.viewport, this.margin);
+
+        this.resetButton.style("visibility", buttonSettings.show.value ? "visible" : "hidden");
+        this.resetButton.attr("transform", translate(this.margin.left + shiftX, this.margin.top + shiftY));
+    }
+
+    private getVerticalPositionShift(buttonPosition: ButtonPosition, viewport: IViewport, margin: IMargin): number {
+        switch (buttonPosition){
+            case ButtonPosition.Bottom:
+            case ButtonPosition.BottomRight:
+            case ButtonPosition.BottomCenter:
+                return viewport.height + margin.bottom;
+            default:
+                return 0;
+        }
+    }
+
+    private getHorizontalPositionShift(buttonPosition: ButtonPosition, viewport: IViewport, margin: IMargin): number {
+        switch (buttonPosition){
+            case ButtonPosition.TopRight:
+            case ButtonPosition.BottomRight:
+                return viewport.width - ButtonSettings.DefaultWidth - margin.left;
+            case ButtonPosition.TopCenter:
+            case ButtonPosition.BottomCenter:
+                return (viewport.width - ButtonSettings.DefaultWidth) / 2;
+            default:
+                return 0;
+        }
     }
 
     private createNewNode(node: DataViewMatrixNode, settings: SankeyDiagramSettings): SankeyDiagramNode {
@@ -2208,7 +2290,8 @@ export class SankeyDiagram implements IVisual {
         const behaviorOptions: SankeyDiagramBehaviorOptions = {
             nodes: nodesSelection,
             links: linksSelection,
-            clearCatcher: this.clearCatcher
+            clearCatcher: this.clearCatcher,
+            resetButton: this.resetButton
         };
 
         this.behavior.bindEvents(behaviorOptions);

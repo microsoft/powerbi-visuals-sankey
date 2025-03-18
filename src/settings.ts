@@ -24,9 +24,12 @@
 *  THE SOFTWARE.
 */
 import powerbiVisualsApi from "powerbi-visuals-api";
+import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
+
 import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
 import { ColorHelper } from "powerbi-visuals-utils-colorutils";
 import {
+    ButtonPosition,
     SankeyDiagramLink,
     SankeyDiagramNode,
     SankeyDiagramNodePositionSetting
@@ -51,6 +54,19 @@ export interface ViewportSize {
     height?: string;
     width?: string;
 }
+
+interface IEnumMemberWithDisplayNameKey extends IEnumMember{
+    displayNameKey: string;
+}
+
+export const buttonPositionOptions: IEnumMemberWithDisplayNameKey[] = [
+    {value : ButtonPosition.Top, displayName: "Top", displayNameKey: "Visual_Top"},
+    {value : ButtonPosition.TopCenter, displayName: "Top center", displayNameKey: "Visual_TopCenter"},
+    {value : ButtonPosition.TopRight, displayName: "Top right", displayNameKey: "Visual_TopRight"},
+    {value : ButtonPosition.Bottom, displayName: "Bottom", displayNameKey: "Visual_Bottom"},
+    {value : ButtonPosition.BottomCenter, displayName: "Bottom center", displayNameKey: "Visual_BottomCenter"},
+    {value : ButtonPosition.BottomRight, displayName: "Bottom right", displayNameKey: "Visual_BottomRight"}
+];
 
 export const duplicateNodesOptions : IEnumMember[] = [
     {value : CyclesDrawType.Duplicate, displayName : "Duplicate"},
@@ -289,13 +305,42 @@ class PersistPropertiesGroup extends FormattingSettingsSimpleCard {
     public slices: FormattingSettingsSlice[] = [this.nodePositions, this.viewportSize]
 }
 
+export class ButtonSettings extends FormattingSettingsSimpleCard {
+    public static DefaultFill: string = "#DCDCDC";
+    public static DefaultStroke: string = "#A9A9A9";
+    public static DefaultTextFill: string = "#333";
+    public static DefaultText: string = "Reset";
+    public static DefaultWidth: number = 40;
+    public static DefaultHeight: number = 15;
+
+    public name: string = "button";
+    public displayNameKey: string = "Visual_ResetButton";
+    public descriptionKey: string = "Visual_ResetButonDescription";
+    public show = new formattingSettings.ToggleSwitch({
+        name: "showResetButon",
+        displayNameKey: "Visual_ShowResetButton",
+        value: false
+    });
+
+    public position = new formattingSettings.ItemDropdown({
+        name: "position",
+        displayNameKey: "Visual_Position",
+        items: buttonPositionOptions,
+        value: buttonPositionOptions[5]
+    });
+
+    topLevelSlice: formattingSettings.ToggleSwitch = this.show;
+    slices: formattingSettings.Slice[] = [this.position];
+}
+
 export class NodeComplexSettings extends FormattingSettingsCompositeCard {
     public persistProperties: PersistPropertiesGroup = new PersistPropertiesGroup();
     public links: LinksOrder = new LinksOrder();
+    public button: ButtonSettings = new ButtonSettings();
 
     public name: string = "nodeComplexSettings";
     public displayNameKey: string = "Visual_Sorting";
-    public groups: FormattingSettingsCards[] = [this.persistProperties, this.links];
+    public groups: FormattingSettingsCards[] = [this.persistProperties, this.links, this.button];
 }
 
 export class CyclesLinkSettings extends FormattingSettingsSimpleCard {
@@ -364,5 +409,15 @@ export class SankeyDiagramSettings extends FormattingSettingsModel {
                 }));
             });
         }
+    }
+
+    public setLocalizedDisplayName(options: IEnumMemberWithDisplayNameKey[], localizationManager: ILocalizationManager): void {
+        options.forEach(option => {
+            option.displayName = localizationManager.getDisplayName(option.displayNameKey)
+        });
+    }
+
+    setLocalizedOptions(localizationManager: ILocalizationManager): void {
+        this.setLocalizedDisplayName(buttonPositionOptions, localizationManager);
     }
 }

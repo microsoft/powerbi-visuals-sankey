@@ -33,16 +33,21 @@ import {
 
 import * as sankeyDiagramUtils from "./utils";
 
+import { ViewportSize } from "./settings";
+
 // d3
 type Selection<T> = d3Selection<any, T, any, any>;
 
 import ISelectionManager = powerbi.extensibility.ISelectionManager;
 import ISelectionId = powerbi.visuals.ISelectionId;
+import VisualObjectInstance = powerbi.VisualObjectInstance;
+import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 
 export interface SankeyDiagramBehaviorOptions {
     nodes: Selection<SankeyDiagramNode>;
     links: Selection<SankeyDiagramLink>;
     clearCatcher: Selection<any>;
+    resetButton: Selection<any>;
 }
 
 const EnterCode: string = "Enter";
@@ -51,9 +56,11 @@ const SpaceCode: string = "Space";
 export class SankeyDiagramBehavior{
     private behaviorOptions: SankeyDiagramBehaviorOptions;
     private selectionManager: ISelectionManager;
+    private visualHost: IVisualHost;
 
-    constructor(selectionManager: ISelectionManager) {
+    constructor(selectionManager: ISelectionManager, visualHost: IVisualHost) {
         this.selectionManager = selectionManager;
+        this.visualHost = visualHost;
     }
 
     public bindEvents(
@@ -66,6 +73,7 @@ export class SankeyDiagramBehavior{
         this.bindClickEventToLinks();
         this.bindKeyboardEventToLinks();
         this.bindClickEventToClearCatcher();
+        this.bindClickEventToResetButton();
     }
 
     private bindClickEventToNodes(): void {
@@ -174,6 +182,48 @@ export class SankeyDiagramBehavior{
         this.behaviorOptions.clearCatcher.on("click", () => {
             this.selectionManager.clear();
             this.renderSelection();
+        });
+    }
+
+    private bindClickEventToResetButton(): void {
+        this.behaviorOptions.resetButton.on("click", () => {
+            this.resetNodePositions();
+            this.resetViewportSize();
+        })
+    }
+
+    private resetViewportSize(): void {
+        const instance: VisualObjectInstance = {
+            objectName: "nodeComplexSettings",
+            selector: undefined,
+            properties: {
+                viewportSize: JSON.stringify(<ViewportSize>{
+                    height: "",
+                    width: ""
+                })
+            }
+        };
+
+        this.visualHost.persistProperties({
+            remove: [
+                instance
+            ]
+        });
+    }
+
+    private resetNodePositions(): void {
+        const instance: VisualObjectInstance = {
+            objectName: "nodeComplexSettings",
+            selector: undefined,
+            properties: {
+                nodePositions: JSON.stringify("")
+            }
+        };
+
+        this.visualHost.persistProperties({
+            remove: [
+                instance
+            ]
         });
     }
 
