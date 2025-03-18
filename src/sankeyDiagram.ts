@@ -750,22 +750,19 @@ export class SankeyDiagram implements IVisual {
 
     private checkNodePositionSettings(nodes: SankeyDiagramNode[], settings: SankeyDiagramSettings) {
         const nodePositions: SankeyDiagramNodePositionSetting[] = settings._nodePositions;
+        const nodesSet = new Set(nodes.map((node: SankeyDiagramNode) => node.label.name));
+        let check: boolean = nodePositions.length === nodesSet.size;
 
-        nodePositions.forEach((position: SankeyDiagramNodePositionSetting) => {
-            const check: boolean = nodes.some((node: SankeyDiagramNode) => {
-                if (node.label.name === position.name) {
-                    return true;
-                }
-
-                return false;
-            });
-
-            // if check failed then reset positions
-            if (!check) {
-                settings.nodeComplexSettings.persistProperties.nodePositions.value = "{}";
-                settings._nodePositions = [];
-            }
-        });
+        if (check) {
+            check = nodePositions.every(position =>
+                nodes.some((node: SankeyDiagramNode) => node.label.name === position.name)
+            );
+        }
+        // if check failed then reset positions
+        if (!check) {
+            settings.nodeComplexSettings.persistProperties.nodePositions.value = "{}";
+            settings._nodePositions = [];
+        }
     }
 
     private restoreNodePositions(nodes: SankeyDiagramNode[], settings: SankeyDiagramSettings) {
