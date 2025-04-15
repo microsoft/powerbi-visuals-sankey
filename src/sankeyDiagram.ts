@@ -393,7 +393,8 @@ export class SankeyDiagram implements IVisual {
             tooltipInfo: [],
             settings: null,
             linkSelectableIds: [],
-            selectionId: null
+            selectionId: null,
+            selected: false
         }
     }
 
@@ -518,7 +519,8 @@ export class SankeyDiagram implements IVisual {
                         .withMatrixNode(parent, dataView.matrix.rows.levels)
                         .withMatrixNode(child, dataView.matrix.rows.levels)
                         .createSelectionId(),
-                    direction: SankeyLinkDirrections.Forward
+                    direction: SankeyLinkDirrections.Forward,
+                    selected: false
                 }
 
                 // preventing double copying of selectableDataPoints and links to a node with selflink 
@@ -1516,8 +1518,6 @@ export class SankeyDiagram implements IVisual {
         this.renderTooltip(nodesSelection);
 
         this.bindSelectionHandler(nodesSelection, linksSelection);
-
-        this.updateSelectionState(nodesSelection, linksSelection);
     }
 
     private renderNodes(sankeyDiagramDataView: SankeyDiagramDataView): Selection<SankeyDiagramNode> {
@@ -2184,19 +2184,6 @@ export class SankeyDiagram implements IVisual {
         );
     }
 
-    private updateSelectionState(
-        nodesSelection: Selection<SankeyDiagramNode>,
-        linksSelection: Selection<SankeyDiagramLink>): void {
-
-        sankeyDiagramUtils.updateNodesFillOpacity(
-            nodesSelection,
-            this.selectionManager);
-
-        sankeyDiagramUtils.updateLinksFillOpacity(
-            linksSelection,
-            this.selectionManager);
-    }
-
     private bindSelectionHandler(
         nodesSelection: Selection<SankeyDiagramNode>,
         linksSelection: Selection<SankeyDiagramLink>): void {
@@ -2213,5 +2200,6 @@ export class SankeyDiagram implements IVisual {
         };
 
         this.behavior.bindEvents(behaviorOptions);
+        this.behavior.renderSelection();
     }
 }

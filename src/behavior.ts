@@ -27,6 +27,7 @@
 import { Selection as d3Selection } from "d3-selection";
 
 import {
+    ISelectableDataPoint,
     SankeyDiagramLink,
     SankeyDiagramNode
 } from "./dataInterfaces";
@@ -54,6 +55,29 @@ export class SankeyDiagramBehavior{
 
     constructor(selectionManager: ISelectionManager) {
         this.selectionManager = selectionManager;
+        this.selectionManager.registerOnSelectCallback(this.onSelectCallback.bind(this));
+    }
+
+    private onSelectCallback(selectionIds?: ISelectionId[]){
+        this.applySelectionStateToData(selectionIds);
+        this.renderSelection();
+    }
+
+    private applySelectionStateToData(selectionIds?: ISelectionId[]): void {
+        const selectedIds: ISelectionId[] = selectionIds || <ISelectionId[]>this.selectionManager.getSelectionIds();
+        this.setSelectedToDataPoints(this.behaviorOptions.nodes.data(), selectedIds);
+        this.setSelectedToDataPoints(this.behaviorOptions.links.data(), selectedIds);
+    }
+
+    private setSelectedToDataPoints(dataPoints: ISelectableDataPoint[], ids: ISelectionId[]): void{
+        dataPoints.forEach((dataPoint: SankeyDiagramNode | SankeyDiagramLink) => {
+            dataPoint.selected = false;
+            ids.forEach((selectedId: ISelectionId) => {
+                if (selectedId.equals(<ISelectionId>dataPoint.selectionId)) {
+                    dataPoint.selected = true;
+                }
+            });
+        });
     }
 
     public bindEvents(
@@ -66,6 +90,21 @@ export class SankeyDiagramBehavior{
         this.bindClickEventToLinks();
         this.bindKeyboardEventToLinks();
         this.bindClickEventToClearCatcher();
+
+        this.applySelectionStateToData();
+    }
+
+    private bindContextMenuEvent(elements: Selection<any>): void {
+        elements.on("contextmenu", (event: PointerEvent, dataPoint: ISelectableDataPoint | undefined) => {
+            this.selectionManager.showContextMenu(dataPoint ? dataPoint.selectionId : {},
+                {
+                    x: event.clientX,
+                    y: event.clientY
+                }
+            );
+            event.preventDefault();
+            event.stopPropagation();
+        });
     }
 
     private bindClickEventToNodes(): void {
@@ -86,21 +125,10 @@ export class SankeyDiagramBehavior{
                     this.selectionManager.select(node.linkSelectableIds, false);
                 }
             }
-
-            this.renderSelection();
+            this.onSelectCallback();
         });
 
-        this.behaviorOptions.nodes.on("contextmenu", (event: PointerEvent, node: SankeyDiagramNode) => {
-            if (event) {
-                this.selectionManager.showContextMenu(
-                    node.selectionId,
-                    {
-                        x: event.clientX,
-                        y: event.clientY
-                    });
-                event.preventDefault();
-            }
-        });
+        this.bindContextMenuEvent(this.behaviorOptions.nodes);
     }
 
     private bindKeyboardEventToNodes(): void {
@@ -125,28 +153,19 @@ export class SankeyDiagramBehavior{
                     this.selectionManager.select(node.linkSelectableIds, false);
                 }
             }
+            this.onSelectCallback();
 
-            this.renderSelection();
         });
     }
 
     private bindClickEventToLinks(): void {
         this.behaviorOptions.links.on("click", (event: PointerEvent, link: SankeyDiagramLink) => {
             this.selectionManager.select(link.selectionId, event.ctrlKey || event.metaKey || event.shiftKey);
-            this.renderSelection();
+            this.onSelectCallback();
+
         });
 
-        this.behaviorOptions.links.on("contextmenu", (event: PointerEvent, link: SankeyDiagramLink) => {
-            if (event) {
-                this.selectionManager.showContextMenu(
-                    link.selectionId,
-                    {
-                        x: event.clientX,
-                        y: event.clientY
-                    });
-                event.preventDefault();
-            }
-        });
+        this.bindContextMenuEvent(this.behaviorOptions.links);
     }
 
     private bindKeyboardEventToLinks(): void {
@@ -155,26 +174,18 @@ export class SankeyDiagramBehavior{
                 return;
             }
             this.selectionManager.select(link.selectionId, event.ctrlKey || event.metaKey || event.shiftKey);
-            this.renderSelection();
+            this.onSelectCallback();
+
         });
     }
 
     private bindClickEventToClearCatcher(): void {
-        this.behaviorOptions.clearCatcher.on("contextmenu", (event: PointerEvent) => {
-            if (event) {
-                this.selectionManager.showContextMenu(
-                    null,
-                    {
-                        x: event.clientX,
-                        y: event.clientY
-                    });
-                event.preventDefault();
-            }
-        });
         this.behaviorOptions.clearCatcher.on("click", () => {
             this.selectionManager.clear();
-            this.renderSelection();
+            this.onSelectCallback();
         });
+
+        this.bindContextMenuEvent(this.behaviorOptions.clearCatcher);
     }
 
     public renderSelection(): void {
