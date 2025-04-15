@@ -113,8 +113,6 @@ import {
     TextPropertiesExtended
 } from "./dataInterfaces";
 
-import * as sankeyDiagramUtils from "./utils";
-
 import {
     SankeyDiagramBehaviorOptions,
     SankeyDiagramBehavior
