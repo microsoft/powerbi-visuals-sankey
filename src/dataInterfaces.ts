@@ -61,14 +61,19 @@ export interface SankeyDiagramRect {
     bottom?: number;
 }
 
+export interface ISelectableDataPoint {
+    selectionId: ISelectionId;
+    selected: boolean;
+}
+
 export interface SankeyDiagramNode extends
     TooltipEnabledDataPoint,
-    SankeyDiagramRect{
+    SankeyDiagramRect,
+    ISelectableDataPoint{
 
     label: SankeyDiagramLabel;
     inputWeight: number;
     outputWeight: number;
-    selectionId: ISelectionId;
     backwardWeight?: number;
     selfLinkWeight?: number;
     links: SankeyDiagramLink[];
@@ -84,7 +89,8 @@ export interface SankeyDiagramNode extends
 }
 
 export interface SankeyDiagramLink extends
-    TooltipEnabledDataPoint{
+    TooltipEnabledDataPoint,
+    ISelectableDataPoint{
 
     label: SankeyDiagramLabel;
     source: SankeyDiagramNode;
@@ -96,7 +102,6 @@ export interface SankeyDiagramLink extends
     fillColor: string;
     strokeColor: string;
     direction: SankeyLinkDirrections;
-    selectionId: ISelectionId;
 }
 
 export interface SankeyDiagramColumn {
