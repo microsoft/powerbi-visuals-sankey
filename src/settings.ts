@@ -24,9 +24,8 @@
 *  THE SOFTWARE.
 */
 import powerbiVisualsApi from "powerbi-visuals-api";
-import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 
-import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
+import { formattingSettings, formattingSettingsInterfaces } from "powerbi-visuals-utils-formattingmodel";
 import { ColorHelper } from "powerbi-visuals-utils-colorutils";
 import {
     ButtonPosition,
@@ -40,9 +39,9 @@ import FormattingSettingsSimpleCard = formattingSettings.SimpleCard;
 import FormattingSettingsCompositeCard = formattingSettings.CompositeCard;
 import FormattingSettingsSlice = formattingSettings.Slice;
 import FormattingSettingsModel = formattingSettings.Model;
+import ILocalizedItemMember = formattingSettingsInterfaces.ILocalizedItemMember;
 
 import ISelectionId = powerbiVisualsApi.visuals.ISelectionId;
-import IEnumMember = powerbi.IEnumMember;
 
 export enum CyclesDrawType {
     Duplicate,
@@ -55,23 +54,37 @@ export interface ViewportSize {
     width?: string;
 }
 
-interface IEnumMemberWithDisplayNameKey extends IEnumMember{
-    displayNameKey: string;
+interface IButtonSettings {
+    fill: string;
+    stroke: string;
+    textFill: string;
+    text: string;
+    width: number;
+    height: number;
 }
 
-export const buttonPositionOptions: IEnumMemberWithDisplayNameKey[] = [
-    {value : ButtonPosition.Top, displayName: "Top", displayNameKey: "Visual_Top"},
-    {value : ButtonPosition.TopCenter, displayName: "Top center", displayNameKey: "Visual_TopCenter"},
-    {value : ButtonPosition.TopRight, displayName: "Top right", displayNameKey: "Visual_TopRight"},
-    {value : ButtonPosition.Bottom, displayName: "Bottom", displayNameKey: "Visual_Bottom"},
-    {value : ButtonPosition.BottomCenter, displayName: "Bottom center", displayNameKey: "Visual_BottomCenter"},
-    {value : ButtonPosition.BottomRight, displayName: "Bottom right", displayNameKey: "Visual_BottomRight"}
+export const buttonDefaults: IButtonSettings = {
+    fill: "#DCDCDC",
+    stroke: "#A9A9A9",
+    textFill: "#333",
+    text: "Reset",
+    width: 40,
+    height: 15
+};
+
+export const buttonPositionOptions: ILocalizedItemMember[] = [
+    {value : ButtonPosition.Top, displayNameKey: "Visual_Top"},
+    {value : ButtonPosition.TopCenter, displayNameKey: "Visual_TopCenter"},
+    {value : ButtonPosition.TopRight, displayNameKey: "Visual_TopRight"},
+    {value : ButtonPosition.Bottom, displayNameKey: "Visual_Bottom"},
+    {value : ButtonPosition.BottomCenter, displayNameKey: "Visual_BottomCenter"},
+    {value : ButtonPosition.BottomRight, displayNameKey: "Visual_BottomRight"}
 ];
 
-export const duplicateNodesOptions : IEnumMemberWithDisplayNameKey[] = [
-    {value : CyclesDrawType.Duplicate, displayName: "Duplicate", displayNameKey: "Visual_Duplicate"},
-    {value : CyclesDrawType.Backward, displayName: "Draw backward link", displayNameKey: "Visual_DrawBackwardLink"},
-    {value : CyclesDrawType.DuplicateOptimized, displayName: "Duplicate optimized", displayNameKey: "Visual_DuplicateOptimized"}
+export const duplicateNodesOptions : ILocalizedItemMember[] = [
+    {value : CyclesDrawType.Duplicate, displayNameKey: "Visual_Duplicate"},
+    {value : CyclesDrawType.Backward, displayNameKey: "Visual_DrawBackwardLink"},
+    {value : CyclesDrawType.DuplicateOptimized, displayNameKey: "Visual_DuplicateOptimized"}
 ];
 
 export class FontSettingsOptions {
@@ -306,13 +319,6 @@ class PersistPropertiesGroup extends FormattingSettingsSimpleCard {
 }
 
 export class ButtonSettings extends FormattingSettingsSimpleCard {
-    public static DefaultFill: string = "#DCDCDC";
-    public static DefaultStroke: string = "#A9A9A9";
-    public static DefaultTextFill: string = "#333";
-    public static DefaultText: string = "Reset";
-    public static DefaultWidth: number = 40;
-    public static DefaultHeight: number = 15;
-
     public name: string = "button";
     public displayNameKey: string = "Visual_ResetButton";
     public descriptionKey: string = "Visual_ResetButonDescription";
@@ -409,16 +415,5 @@ export class SankeyDiagramSettings extends FormattingSettingsModel {
                 }));
             });
         }
-    }
-
-    public setLocalizedDisplayName(options: IEnumMemberWithDisplayNameKey[], localizationManager: ILocalizationManager): void {
-        options.forEach(option => {
-            option.displayName = localizationManager.getDisplayName(option.displayNameKey)
-        });
-    }
-
-    setLocalizedOptions(localizationManager: ILocalizationManager): void {
-        this.setLocalizedDisplayName(buttonPositionOptions, localizationManager);
-        this.setLocalizedDisplayName(duplicateNodesOptions, localizationManager);
     }
 }

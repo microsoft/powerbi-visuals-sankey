@@ -97,6 +97,7 @@ import {
     BaseFontSettingsCard,
     FontSettingsOptions,
     ButtonSettings,
+    buttonDefaults,
 } from "./settings";
 import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
 
@@ -335,18 +336,18 @@ export class SankeyDiagram implements IVisual {
             .attr("x", 0)
             .attr("y", 0)
             .attr("rx", 5)
-            .attr("width", ButtonSettings.DefaultWidth)
-            .attr("height", ButtonSettings.DefaultHeight)
-            .style("fill", colorHelper.getHighContrastColor("background", ButtonSettings.DefaultFill))
-            .style("stroke", colorHelper.getHighContrastColor("foreground", ButtonSettings.DefaultStroke));
+            .attr("width", buttonDefaults.width)
+            .attr("height", buttonDefaults.height)
+            .style("fill", colorHelper.getHighContrastColor("background", buttonDefaults.fill))
+            .style("stroke", colorHelper.getHighContrastColor("foreground", buttonDefaults.stroke));
 
         button
             .append("text")
             .classed(SankeyDiagram.ResetButtonText.className, true)
             .attr("x", 5)
             .attr("y", 11)
-            .text(ButtonSettings.DefaultText)
-            .style("fill", colorHelper.getHighContrastColor("foreground", ButtonSettings.DefaultTextFill));
+            .text(buttonDefaults.text)
+            .style("fill", colorHelper.getHighContrastColor("foreground", buttonDefaults.textFill));
 
         return button;
     }
@@ -374,7 +375,6 @@ export class SankeyDiagram implements IVisual {
     }
 
     public getFormattingModel(): powerbi.visuals.FormattingModel {
-        this.sankeyDiagramSettings.setLocalizedOptions(this.localizationManager);
         return this.formattingSettingsService.buildFormattingModel(this.sankeyDiagramSettings);
     }
 
@@ -382,7 +382,7 @@ export class SankeyDiagram implements IVisual {
         const height: number = SankeyDiagram.getPositiveNumber(viewport.height);
         const width: number = SankeyDiagram.getPositiveNumber(viewport.width);
 
-        const viewportShiftY: number = settings.nodeComplexSettings.button.show.value ? (ButtonSettings.DefaultHeight + this.margin.top) : 0;
+        const viewportShiftY: number = settings.nodeComplexSettings.button.show.value ? (buttonDefaults.height + this.margin.top) : 0;
         let mainShiftY: number = 0;
 
         const buttonPosition: ButtonPosition = settings.nodeComplexSettings.button.position.value.value as ButtonPosition;
@@ -392,7 +392,7 @@ export class SankeyDiagram implements IVisual {
                 case ButtonPosition.Top:
                 case ButtonPosition.TopRight:
                 case ButtonPosition.TopCenter:
-                    mainShiftY += ButtonSettings.DefaultHeight + this.margin.top;
+                    mainShiftY += buttonDefaults.height + this.margin.top;
                     break;
             }
         }
@@ -441,10 +441,10 @@ export class SankeyDiagram implements IVisual {
         switch (buttonPosition){
             case ButtonPosition.TopRight:
             case ButtonPosition.BottomRight:
-                return viewport.width - ButtonSettings.DefaultWidth - margin.left;
+                return viewport.width - buttonDefaults.width - margin.left;
             case ButtonPosition.TopCenter:
             case ButtonPosition.BottomCenter:
-                return (viewport.width - ButtonSettings.DefaultWidth) / 2;
+                return (viewport.width - buttonDefaults.width) / 2;
             default:
                 return 0;
         }
