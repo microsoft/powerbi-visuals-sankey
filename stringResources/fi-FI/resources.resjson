@@ -1,4 +1,6 @@
 {
+  "Visual_Short_Description": "Vuokaavio, jossa sarjan leveys on suhteessa vuon laatuun",
+  "Visual_Long_Description": "Sankeyn avulla voit selvästi yhdellä nopealla silmäyksellä löytää lähteet, kohteet ja askeleet niiden välissä sekä sen, miten asiat kulkevat niiden välillä. Voit myös käsitellä sitä joko napsauttamalla linkkiä tai itse työnkulkua ja hyödyntämällä Power BI:n ristiinkorostuksen ti suodatuksen ominaisuutta, jotta saat entistäkin enemmän mielenkiintoisia merkityksellisiä tietoja liittyvistä tiedoista.\nOsuvasti niitä käytetään laajalti energia-alalla. Mielenkiintoisia käyttötapauksia on kuitenkin kaikilla aloilla. Sen avulla kuka tahansa voi visualisoida tietoja, joilla on alku ja loppu tai dynaaminen suhde, jossa on useita välikohteita, kuten se, miten käyttäjä päätyi ja siirtyi sivustoon, materiaali valmistusyksikössä tai rahansiirtojen hallinta liiketoimintaprosessissa, käyttäen kokonaan eri perspektiiviä ja tuoden mielenkiintoisia merkityksellisiä tietoja näkyvin.\nTämä on avoimeen lähdekoodiin perustuva visualisointi. Hanki koodi GitHubista: https://github.com/Microsoft/powerbi-visuals-sankey",
   "Visual_DataPointsLabels": "Arvopisteiden otsikot",
   "Visual_Show": "Näytä",
   "Visual_Color": "Väri",
@@ -23,7 +25,6 @@
   "Visual_Display_Units": "Yksiköt",
   "Visual_Cycles": "Jaksojen näyttäminen",
   "Visual_DuplicateNodes": "Solmujen kaksoiskappaleet",
-  "Visual_Duplicate": "Kaksoiskappale",
   "Visual_DrawBackwardLink": "Hanki taaksepäinlinkki",
   "Visual_SelflinkWeight": "Ohita itseensä linkittävien linkkien painotus",
   "Visual_Name": "Nimi",
@@ -31,5 +32,7 @@
   "Visual_FontFamily": "Fonttiperhe",
   "Visual_Input": "Syöte",
   "Visual_Output": "Tulos",
-  "Visual_Width": "Leveys"
+  "Visual_Width": "Leveys",
+  "Visual_Values": "Arvot",
+  "Visual_Font": "Fontti"
 }

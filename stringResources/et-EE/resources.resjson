@@ -1,4 +1,6 @@
 {
+  "Visual_Short_Description": "Voodiagramm, kus sarja laius on proportsionaalne voo kogusega",
+  "Visual_Long_Description": "Sankey diagrammiga leiate selgelt allikad, sihtkohad ja vaheetapid ning selle, kuidas asjad neist kõigist üle voogavad, vaid ühe kiire pilguga. Saate sellega suhelda, kui klõpsate kas linki või voogu ennast ja kasutate ära Power BI ristesiletõstmise/filtreerimise funktsiooni, mis pakub seotud andmete kohta veelgi enam huvitavaid ülevaateid.\nNeid kasutatakse laialdaselt energiatööstuses, kuid sellele leidub huvitavaid kasutusjuhtumeid kõigis tööstusharudes. See paneb kõiki visualiseerima teavet, millel on algus ja lõpp või dünaamiline seos paljude vahendajatega, täiesti teise vaatenurga alt ning toob huvitavad ülevaated esiplaanile. Näiteks, kuidas kasutaja jõudis ja navigeeris veebisaidil, materjal tootmisüksuses, rahaülekannete kontroll äriprotsessides.\nSee on avatud lähtekoodiga visuaal. Hankige kood GitHubist: https://github.com/Microsoft/powerbi-visuals-sankey.",
   "Visual_DataPointsLabels": "Andmesildid",
   "Visual_Show": "Kuva",
   "Visual_Color": "Värv",
@@ -23,7 +25,6 @@
   "Visual_Display_Units": "Kuva ühikud",
   "Visual_Cycles": "Tsüklite kuvamine",
   "Visual_DuplicateNodes": "Duplikaatsõlmed",
-  "Visual_Duplicate": "Duplikaat",
   "Visual_DrawBackwardLink": "Tahapoole saatmise link",
   "Visual_SelflinkWeight": "Ignoreeri siselinkide kaalu",
   "Visual_Name": "Nimi",
@@ -31,5 +32,7 @@
   "Visual_FontFamily": "Fondipere",
   "Visual_Input": "Sisend",
   "Visual_Output": "Väljund",
-  "Visual_Width": "Laius"
+  "Visual_Width": "Laius",
+  "Visual_Values": "Väärtused",
+  "Visual_Font": "Font"
 }

@@ -1,9 +1,11 @@
 {
+  "Visual_Short_Description": "Diagrama de fluxo em que a largura da série é proporcional à quantidade do fluxo",
+  "Visual_Long_Description": "Com o Sankey, pode claramente encontrar as origens, os destinos, os passos e a forma como os elementos fluem entre os mesmos, tudo de forma rápida. Também pode interagir com os mesmos ao clicar na ligação ou no fluxo propriamente dito e tirar partido da funcionalidade de realce/filtragem cruzados do Power BI para obter informações ainda mais interessantes em dados relacionados.\nAdequadamente, são utilizados bastante na indústria energética, mas têm casos interessantes de utilização em todos os setores. Motiva todos os utilizadores a visualizar informações que têm um início e um fim ou uma relação dinâmica com muitos intermediadores, por exemplo, como o utilizador chegou a um site e navegou no mesmo ou um material numa unidade de fabrico, transferências de dinheiro ou controlos em processos comerciais numa perspetiva completamente diferente, trazendo informações interessantes para uma posição de destaque.\nEste é um visual de open source. Obtenha o código do GitHub: https://github.com/Microsoft/powerbi-visuals-sankey",
   "Visual_DataPointsLabels": "Etiquetas de dados",
   "Visual_Show": "Mostrar",
   "Visual_Color": "Cor",
   "Visual_Fill": "Preenchimento",
-  "Visual_TextSize": "Tamanho do Texto",
+  "Visual_TextSize": "Tamanho do texto",
   "Visual_Force_Display": "Forçar apresentação",
   "Visual_Nodes": "Nós",
   "Visual_Source": "Origem",
@@ -23,13 +25,14 @@
   "Visual_Display_Units": "Mostrar unidades",
   "Visual_Cycles": "Ciclos em apresentação",
   "Visual_DuplicateNodes": "Nós duplicados",
-  "Visual_Duplicate": "Duplicar",
   "Visual_DrawBackwardLink": "Desenhar ligação para trás",
   "Visual_SelflinkWeight": "Ignorar peso das ligações automáticas",
   "Visual_Name": "Nome",
   "Visual_Description_Force_Display": "Mostrar todas as etiquetas mesmo assim",
-  "Visual_FontFamily": "Família de Tipos de Letra",
+  "Visual_FontFamily": "Família de tipos de letra",
   "Visual_Input": "Entrada",
   "Visual_Output": "Saída",
-  "Visual_Width": "Largura"
+  "Visual_Width": "Largura",
+  "Visual_Values": "Valores",
+  "Visual_Font": "Tipo de Letra"
 }

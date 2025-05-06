@@ -1,4 +1,6 @@
 {
+  "Visual_Short_Description": "דיאגרמת זרם שבה רוחב הסדרות יחסי לכמות הזרם",
+  "Visual_Long_Description": "העזר החזותי Sankey מאפשר לך לאתר בבירור את המקורות, את היעדים ואת השלבים שביניהם ואת אופן הזרימה של הנתונים, וכל זאת במבט מהיר אחד. באפשרותך גם לקיים איתו אינטראקציה על-ידי לחיצה על הקישור או הזרם עצמו ולנצל את תכונת ההדגשה הצולבת/הסינון של PowerBI כדי לקבל תובנות מעניינות אפילו יותר לגבי נתונים קשורים.\nהם משמשים לרוב בענף האנרגיה, אך ניתן למצוא מקרי שימוש מעניינים בכל הענפים. הוא מעודד כל אחד להציג באופן חזותי מידע שכולל התחלה וסוף או קשר גומלין דינמי עם מתווכים רבים, לדוגמה כיצד המשתמש הגיע לאתר אינטרנט וניווט בו, או חומר ביחידת ייצור, בקרה על העברות כספים בתהליכים עסקיים בנקודת מבט שונה לחלוטין ומספק תובנות מעניינות לקו הקדמי.\nזהו עזר חזותי בקוד פתוח. הורד את הקוד מ- GitHub: https://github.com/Microsoft/powerbi-visuals-sankey",
   "Visual_DataPointsLabels": "תוויות נתונים",
   "Visual_Show": "‏‏הצג",
   "Visual_Color": "צבע",
@@ -17,13 +19,12 @@
   "Visual_ScaleSettings": "הגדרות קנה מידה",
   "Visual_MinOptimalHeight": "ספק גובה אופטימלי מינימלי של הצומת",
   "Visual_Enable": "הפוך לזמין",
-  "Visual_SankeySettings": "הגדרות תרשים Sankey",
+  "Visual_SankeySettings": "הגדרות Sankey",
   "Visual_NodePositions": "מיקומי צמתים",
   "Visual_ViewportSize": "גודלי אשנב",
   "Visual_Display_Units": "יחידות תצוגה",
   "Visual_Cycles": "הצגת מחזורים",
   "Visual_DuplicateNodes": "צמתים כפולים",
-  "Visual_Duplicate": "‏‏שכפל",
   "Visual_DrawBackwardLink": "יצירת קישור לאחור",
   "Visual_SelflinkWeight": "התעלם מהמשקל של קישורים עצמיים",
   "Visual_Name": "שם",
@@ -31,5 +32,7 @@
   "Visual_FontFamily": "משפחת גופנים",
   "Visual_Input": "קלט",
   "Visual_Output": "פלט",
-  "Visual_Width": "רוחב"
+  "Visual_Width": "רוחב",
+  "Visual_Values": "ערכים",
+  "Visual_Font": "גופן"
 }

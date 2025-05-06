@@ -1,4 +1,6 @@
 {
+  "Visual_Short_Description": "Srauto diagrama, kurioje sekos plotis yra proporcingas srauto kiekiui",
+  "Visual_Long_Description": "Naudodami „Sankey“ akimirksniu galite aiškiai rasti šaltinius, paskirties vietas ir veiksmus tarp jų bei elementų srautus juose. Jį taip pat galite interaktyviai naudoti spustelėdami saitą arba patį srautą ir išnaudoti „Power BI“ kryžminio paryškinimo / filtravimo funkciją, kad gautumėte dar įdomesnių įžvalgų susijusiuose duomenyse.\nTodėl jie plačiai naudojami energijos pramonėje. Nors įdomių šio elemento naudojimo atvejų galima rasti bet kurioje pramonės šakoje. Juo naudodamasis kiekvienas gali vizualizuoti informaciją, turinčią pradžią ir pabaigą arba dinaminį ryšį su daug tarpininkų, pavyzdžiui, kaip vartotojas pateko į žiniatinklio svetainę ir joje naršė, kaip medžiaga judėjo gamybos vienete, kontroliuoti verslo procesų piniginius pervedimus, taip atskleidžiant įdomių įžvalgų.\nTai yra atvirojo kodo vaizdinis elementas. Šį kodą galite gauti iš „GitHub“: https://github.com/Microsoft/powerbi-visuals-sankey",
   "Visual_DataPointsLabels": "Duomenų žymos",
   "Visual_Show": "Rodyti",
   "Visual_Color": "Spalva",
@@ -23,7 +25,6 @@
   "Visual_Display_Units": "Rodomi vienetai",
   "Visual_Cycles": "Rodomi ciklai",
   "Visual_DuplicateNodes": "Mazgų dublikatai",
-  "Visual_Duplicate": "Dublikatas",
   "Visual_DrawBackwardLink": "Kurti atgalinį saitą",
   "Visual_SelflinkWeight": "Nepaisyti vidinių saitų svertinės vertės",
   "Visual_Name": "Pavadinimas",
@@ -31,5 +32,7 @@
   "Visual_FontFamily": "Šriftų šeima",
   "Visual_Input": "Įvestis",
   "Visual_Output": "Išvestis",
-  "Visual_Width": "Plotis"
+  "Visual_Width": "Plotis",
+  "Visual_Values": "Reikšmės",
+  "Visual_Font": "Šriftas"
 }

@@ -1,9 +1,11 @@
 {
+  "Visual_Short_Description": "Serinin genişliğinin akışın miktarına orantılı olduğu akış şeması",
+  "Visual_Long_Description": "Sankey ile bir bakışta kaynakları, hedefleri ve bunlar arasındaki adımları ve nesnelerin bunlar arasındaki akışını görebilirsiniz. Ayrıca bağlantıya veya akışa tıklayarak grafikle etkileşimde bulunabilir ve ilgili veriler hakkında daha da ilginç içgörüler elde etmek için Power BI'ın çapraz vurgulama/filtreleme özelliğini kullanabilirsiniz.\nDoğal olarak en yaygın şekilde enerji sektöründe kullanılır. Ancak tüm sektörlerde ilginç kullanım örnekleri vardır. Kullanıcıların bir başlangıcı ve bir bitişi veya pek çok ara aşamayla dinamik ilişkisi olan; örneğin bir kullanıcının bir web sitesine nasıl geldiği ve sitede nasıl gezindiği veya bir üretim birimindeki bir malzeme, iş süreçlerinde para aktarımı denetimi gibi bilgileri tamamen farklı bir bakış açısından görselleştirmesini ve ilginç içgörülerin öne çıkmasını sağlar.\nBu, açık kaynaklı bir görseldir. Kodu GitHub'dan alabilirsiniz: https://github.com/Microsoft/powerbi-visuals-sankey",
   "Visual_DataPointsLabels": "Veri etiketleri",
   "Visual_Show": "Göster",
   "Visual_Color": "Renk",
   "Visual_Fill": "Doldur",
-  "Visual_TextSize": "Metin Boyutu",
+  "Visual_TextSize": "Metin boyutu",
   "Visual_Force_Display": "Görüntülemeye zorla",
   "Visual_Nodes": "Düğümler",
   "Visual_Source": "Kaynak",
@@ -23,13 +25,14 @@
   "Visual_Display_Units": "Görüntüleme birimleri",
   "Visual_Cycles": "Görüntülenen döngüler",
   "Visual_DuplicateNodes": "Yinelenen düğümler",
-  "Visual_Duplicate": "Çoğalt",
   "Visual_DrawBackwardLink": "Geriye dönük bağlantı çiz",
   "Visual_SelflinkWeight": "Kendine bağlantıların ağırlığını yoksay",
   "Visual_Name": "Ad",
   "Visual_Description_Force_Display": "Tüm etiketleri yine de görüntüle",
-  "Visual_FontFamily": "Yazı Tipi Ailesi",
+  "Visual_FontFamily": "Yazı tipi ailesi",
   "Visual_Input": "Giriş",
   "Visual_Output": "Çıkış",
-  "Visual_Width": "Genişlik"
+  "Visual_Width": "Genişlik",
+  "Visual_Values": "Değerler",
+  "Visual_Font": "Yazı Tipi"
 }
