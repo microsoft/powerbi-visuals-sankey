@@ -44,6 +44,15 @@ export enum SankeyLinkDirrections {
     SelfLink
 }
 
+export enum ButtonPosition {
+    Top = 0,
+    TopCenter = 1,
+    TopRight = 2,
+    Bottom = 3,
+    BottomCenter = 4,
+    BottomRight = 5,
+}
+
 export interface SankeyDiagramLabel {
     internalName: string;
     name: string;

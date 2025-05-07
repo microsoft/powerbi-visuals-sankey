@@ -62,7 +62,6 @@ import {
 } from "./helpers/helpers";
 
 import { DataLabelsSettings, LinkLabelsSettings, SankeyDiagramSettings } from "../src/settings";
-import { isNullOrEmpty } from "powerbi-visuals-utils-formattingutils/lib/src/stringExtensions";
 
 
 interface SankeyDiagramTestsNode {
@@ -644,6 +643,46 @@ describe("SankeyDiagram", () => {
             });
         });
 
+        describe("reset button", () => {
+            it("must be displayed correctly", done => {
+                let dataView: DataView = defaultDataViewBuilder.getDataView();
+                dataView.metadata.objects = {
+                    nodeComplexSettings: {
+                        showResetButon: true
+                    }
+                };
+                visualBuilder.updateRenderTimeout([dataView], () => {
+                    const resetButton = visualBuilder.resetButton;
+                    const visibility: string = resetButton.style.visibility;
+                    expect(visibility).toBe("visible");
+                    done();
+                });
+            });
+
+            it("must reset saved positions", done => {
+                let dataView: DataView = defaultDataViewBuilder.getDataView();
+                const nodePositions = `[{"name":"Brazil","x":"477","y":"348"},{"name":"USA_SK_SELFLINK","x":"0","y":"137"},{"name":"Mexico_SK_SELFLINK","x":"0","y":"297"},{"name":"Canada_SK_SELFLINK","x":"0","y":"402"},{"name":"Canada","x":"479","y":"0"},{"name":"England","x":"479","y":"26"},{"name":"Portugal","x":"479","y":"163"},{"name":"France","x":"479","y":"302"},{"name":"Spain","x":"479","y":"406"},{"name":"Mexico","x":"959","y":"0"},{"name":"USA","x":"959","y":"105"},{"name":"Angola","x":"959","y":"267"},{"name":"Senegal","x":"959","y":"320"},{"name":"Morocco","x":"959","y":"437"}]`;
+                dataView.metadata.objects = {
+                    nodeComplexSettings: {
+                        viewportSize: `{"height":"480","width":"980"}`,
+                        nodePositions: nodePositions,
+                        showResetButon: true
+                    }
+                };
+
+                visualBuilder.updateRenderTimeout([dataView], () => {
+                    let nodePositionSettings = visualBuilder.instance.sankeyDiagramSettings.nodeComplexSettings.persistProperties.nodePositions.value;
+                    expect(nodePositionSettings).toBe(nodePositions);
+
+                    spyOn(visualBuilder.visualHost, 'persistProperties').and.callThrough();
+                    const resetButton = visualBuilder.resetButton;
+                    clickElement(resetButton);
+
+                    expect(visualBuilder.visualHost.persistProperties).toHaveBeenCalled();
+                    done();
+                })
+            });
+        });
 
     });
 
@@ -737,10 +776,15 @@ describe("SankeyDiagram", () => {
 
 
     describe("Settings tests:", () => {
-        it("nodeComplexSettings properties must be hidden", done => {
+        beforeEach(() => {
+            dataView = defaultDataViewBuilder.getDataView();
+        });
+
+        it("nodeComplexSettings persist properties properties must be hidden", done => {
             visualBuilder.updateRenderTimeout(dataView, () => {
                 visualBuilder.instance.getFormattingModel();
-                expect(visualBuilder.instance.sankeyDiagramSettings.nodeComplexSettings.visible).toBeFalse();
+                expect(visualBuilder.instance.sankeyDiagramSettings.nodeComplexSettings.persistProperties.nodePositions.visible).toBeFalse();
+                expect(visualBuilder.instance.sankeyDiagramSettings.nodeComplexSettings.persistProperties.viewportSize.visible).toBeFalse();
                 done();
             });
         });

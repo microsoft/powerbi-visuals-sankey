@@ -24,9 +24,11 @@
 *  THE SOFTWARE.
 */
 import powerbiVisualsApi from "powerbi-visuals-api";
-import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
+
+import { formattingSettings, formattingSettingsInterfaces } from "powerbi-visuals-utils-formattingmodel";
 import { ColorHelper } from "powerbi-visuals-utils-colorutils";
 import {
+    ButtonPosition,
     SankeyDiagramLink,
     SankeyDiagramNode,
     SankeyDiagramNodePositionSetting
@@ -37,9 +39,9 @@ import FormattingSettingsSimpleCard = formattingSettings.SimpleCard;
 import FormattingSettingsCompositeCard = formattingSettings.CompositeCard;
 import FormattingSettingsSlice = formattingSettings.Slice;
 import FormattingSettingsModel = formattingSettings.Model;
+import ILocalizedItemMember = formattingSettingsInterfaces.ILocalizedItemMember;
 
 import ISelectionId = powerbiVisualsApi.visuals.ISelectionId;
-import IEnumMember = powerbi.IEnumMember;
 
 export enum CyclesDrawType {
     Duplicate,
@@ -52,10 +54,37 @@ export interface ViewportSize {
     width?: string;
 }
 
-export const duplicateNodesOptions : IEnumMember[] = [
-    {value : CyclesDrawType.Duplicate, displayName : "Duplicate"},
-    {value : CyclesDrawType.Backward, displayName : "Draw backward link"},
-    {value : CyclesDrawType.DuplicateOptimized, displayName : "Duplicate optimized"}
+interface IButtonSettings {
+    fill: string;
+    stroke: string;
+    textFill: string;
+    text: string;
+    width: number;
+    height: number;
+}
+
+export const buttonDefaults: IButtonSettings = {
+    fill: "#DCDCDC",
+    stroke: "#A9A9A9",
+    textFill: "#333",
+    text: "Reset",
+    width: 40,
+    height: 15
+};
+
+export const buttonPositionOptions: ILocalizedItemMember[] = [
+    {value : ButtonPosition.Top, displayNameKey: "Visual_Top"},
+    {value : ButtonPosition.TopCenter, displayNameKey: "Visual_TopCenter"},
+    {value : ButtonPosition.TopRight, displayNameKey: "Visual_TopRight"},
+    {value : ButtonPosition.Bottom, displayNameKey: "Visual_Bottom"},
+    {value : ButtonPosition.BottomCenter, displayNameKey: "Visual_BottomCenter"},
+    {value : ButtonPosition.BottomRight, displayNameKey: "Visual_BottomRight"}
+];
+
+export const duplicateNodesOptions : ILocalizedItemMember[] = [
+    {value : CyclesDrawType.Duplicate, displayNameKey: "Visual_Duplicate"},
+    {value : CyclesDrawType.Backward, displayNameKey: "Visual_DrawBackwardLink"},
+    {value : CyclesDrawType.DuplicateOptimized, displayNameKey: "Visual_DuplicateOptimized"}
 ];
 
 export class FontSettingsOptions {
@@ -254,23 +283,70 @@ export class ScaleSettings extends FormattingSettingsSimpleCard {
     public slices: FormattingSettingsSlice[] = [this.provideMinHeight, this.lnScale];
 }
 
-export class NodeComplexSettings extends FormattingSettingsSimpleCard {
+export class LinksOrder extends FormattingSettingsSimpleCard {
+    public name: string = "linkOrderGroup";
+    public displayNameKey: string = "Visual_LinksOrder";
+
+    public shouldReorder= new formattingSettings.ToggleSwitch({
+        name: "linksReorder",
+        displayNameKey: "Visual_AutoLinksReorder",
+        value: false,
+    });
+
+    slices: formattingSettings.Slice[] = [this.shouldReorder];
+}
+
+class PersistPropertiesGroup extends FormattingSettingsSimpleCard {
+    public name: string = "persistProperties";
+    public displayNameKey: string = "Visual_NodePositions";
+    public collapsible: boolean = false;
+    public visible: boolean = true;
     public nodePositions = new formattingSettings.ReadOnlyText({
         name: "nodePositions",
         displayNameKey: "Visual_NodePositions",
-        value: ""
+        value: "",
+        visible: false,
     }); 
 
     public viewportSize = new formattingSettings.ReadOnlyText({
         name: "viewportSize",
         displayNameKey: "Visual_ViewportSize",
-        value: ""
+        value: "",
+        visible: false,
     });
 
-    public visible: boolean = false;
+    public slices: FormattingSettingsSlice[] = [this.nodePositions, this.viewportSize]
+}
+
+export class ButtonSettings extends FormattingSettingsSimpleCard {
+    public name: string = "button";
+    public displayNameKey: string = "Visual_ResetButton";
+    public descriptionKey: string = "Visual_ResetButonDescription";
+    public show = new formattingSettings.ToggleSwitch({
+        name: "showResetButon",
+        displayNameKey: "Visual_ShowResetButton",
+        value: false
+    });
+
+    public position = new formattingSettings.ItemDropdown({
+        name: "position",
+        displayNameKey: "Visual_Position",
+        items: buttonPositionOptions,
+        value: buttonPositionOptions[5]
+    });
+
+    topLevelSlice: formattingSettings.ToggleSwitch = this.show;
+    slices: formattingSettings.Slice[] = [this.position];
+}
+
+export class NodeComplexSettings extends FormattingSettingsCompositeCard {
+    public persistProperties: PersistPropertiesGroup = new PersistPropertiesGroup();
+    public links: LinksOrder = new LinksOrder();
+    public button: ButtonSettings = new ButtonSettings();
+
     public name: string = "nodeComplexSettings";
-    public displayNameKey: string = "Visual_SankeySettings";
-    public slices: FormattingSettingsSlice[] = [this.nodePositions, this.viewportSize];
+    public displayNameKey: string = "Visual_Sorting";
+    public groups: FormattingSettingsCards[] = [this.persistProperties, this.links, this.button];
 }
 
 export class CyclesLinkSettings extends FormattingSettingsSimpleCard {
