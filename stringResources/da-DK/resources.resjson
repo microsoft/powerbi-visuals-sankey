@@ -1,4 +1,6 @@
 {
+  "Visual_Short_Description": "Rutediagram, hvor bredden på serien er proportional med mængden af strømmen",
+  "Visual_Long_Description": "Med Sankey finder du klart og overskueligt kilderne, destinationerne og de mellemliggende trin, og hvordan tingene overføres på tværs af dem alle. Du kan også interagere med det ved enten at klikke på linket eller selve flowet og benytte den tværgående fremhævnings/filtreringsfunktionen i Power BI til at få endnu mere interessant indsigt i relaterede data.\nDen er velegnet til energisektoren, hvor den finder udbredt brug. Men den finder også spændende anvendelse til forskellige formål i mange andre brancher. Den inspirerer alle til at visualisere data, der har en start og slutning eller dynamiske relationer med mange mellemled, for eksempel hvordan brugeren landede og navigerede på et websted eller et materiale i en produktionsenhed, styring af pengeoverførsler i forretningsgange i et helt anderledes perspektiv og placerer helt anderledes indsigt i forgrunden.\nDette er en visualisering med åben kildekode. Koden kan hentes fra GitHub: https://github.com/Microsoft/powerbi-visuals-sankey",
   "Visual_DataPointsLabels": "Datamærkater",
   "Visual_Show": "Vis",
   "Visual_Color": "Farve",
@@ -23,7 +25,6 @@
   "Visual_Display_Units": "Vis enheder",
   "Visual_Cycles": "Cyklusvisning",
   "Visual_DuplicateNodes": "Identiske noder",
-  "Visual_Duplicate": "Dupliker",
   "Visual_DrawBackwardLink": "Tegn bagudrettet kæde",
   "Visual_SelflinkWeight": "Ignorer vægten af self-links",
   "Visual_Name": "Navn",
@@ -31,5 +32,7 @@
   "Visual_FontFamily": "Skrifttypefamilie",
   "Visual_Input": "Input",
   "Visual_Output": "Output",
-  "Visual_Width": "Bredde"
+  "Visual_Width": "Bredde",
+  "Visual_Values": "Værdier",
+  "Visual_Font": "Skrifttype"
 }

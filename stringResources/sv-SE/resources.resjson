@@ -1,4 +1,6 @@
 {
+  "Visual_Short_Description": "Flödesschema där bredden på serien är proportionell mot flödets mängd",
+  "Visual_Long_Description": "Med Sankey kan du i en snabb överblick tydligt hitta källor, mål och steg däremellan samt hur allt flödar mellan dem. Du kan även interagera med allt detta antingen genom att klicka på länken eller själva flödet och dra nytta av funktionerna för korsmarkering/filtrering i Power BI för att få ut ännu fler intressanta insikter från relaterade data.\nPassande nog används de flitigt inom energisektorn. Men det finns intressanta användningsfall för alla branscher. Det gör det enklare för alla att visualisera information som har en start och ett slut eller dynamiska relationer i många steg, t.ex. hur användaren navigerat till och runt på en webbplats, hanteringen av ett material inom en tillverkningsenhet eller kontroll av pengaöverföringar inom affärsprocesser. Allt kan ges ett nytt perspektiv med spännande insikter.\nDet här är ett visuellt objekt med öppen källkod. Hämta koden från GitHub: https://github.com/Microsoft/powerbi-visuals-sankey",
   "Visual_DataPointsLabels": "Dataetiketter",
   "Visual_Show": "Visa",
   "Visual_Color": "Färg",
@@ -23,7 +25,6 @@
   "Visual_Display_Units": "Visningsenheter",
   "Visual_Cycles": "Cyklerna visar",
   "Visual_DuplicateNodes": "Dubblettnoder",
-  "Visual_Duplicate": "Duplicera",
   "Visual_DrawBackwardLink": "Rita bakåtlänk",
   "Visual_SelflinkWeight": "Ignorera självlänkars vikt",
   "Visual_Name": "Namn",
@@ -31,5 +32,7 @@
   "Visual_FontFamily": "Teckensnittsfamilj",
   "Visual_Input": "Indata",
   "Visual_Output": "Utdata",
-  "Visual_Width": "Bredd"
+  "Visual_Width": "Bredd",
+  "Visual_Values": "Värden",
+  "Visual_Font": "Teckensnitt"
 }

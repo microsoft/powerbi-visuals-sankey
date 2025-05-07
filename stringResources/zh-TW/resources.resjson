@@ -1,4 +1,6 @@
 {
+  "Visual_Short_Description": "線條寬度與流量成正比的流量圖",
+  "Visual_Long_Description": "Sankey 讓您一眼就能找出來源、目的地與兩者之間的步驟，以及彼此之間的流向。您也可以按一下連結或流程本身與之互動，以及利用 Power BI 的交叉醒目提示/篩選功能，從相關資料中獲取對您更有幫助的見解。\n此圖表十分適合應用在能源產業，但在各產業中也能找到許多令人關注的使用案例。這意味著所有人對於具有開始與結尾，或和許多中繼資料具有關聯性的資訊，都能以圖表加以呈現，好比使用者如何登陸網站、如何瀏覽網站，或是製造工廠中的原料、不同觀點下各種商務流程中的匯款控制等等，都能激盪出不同於以往的創新見解。\n這是開放原始碼視覺效果。您可以從 GitHub 取得程式碼: https://github.com/Microsoft/powerbi-visuals-sankey",
   "Visual_DataPointsLabels": "資料標籤",
   "Visual_Show": "顯示",
   "Visual_Color": "色彩",
@@ -23,13 +25,14 @@
   "Visual_Display_Units": "顯示單位",
   "Visual_Cycles": "循環顯示",
   "Visual_DuplicateNodes": "重複的節點",
-  "Visual_Duplicate": "重複",
   "Visual_DrawBackwardLink": "繪製反向連結",
   "Visual_SelflinkWeight": "忽略自我連結的粗細",
   "Visual_Name": "名稱",
   "Visual_Description_Force_Display": "一律顯示所有標籤",
-  "Visual_FontFamily": "字型系列",
+  "Visual_FontFamily": "字型家族",
   "Visual_Input": "輸入",
   "Visual_Output": "輸出",
-  "Visual_Width": "寬度"
+  "Visual_Width": "寬度",
+  "Visual_Values": "值",
+  "Visual_Font": "字型"
 }

@@ -1,9 +1,11 @@
 {
+  "Visual_Short_Description": "Folyamatábra, amelyben a sorozat szélessége arányos a folyamat mennyiségével",
+  "Visual_Long_Description": "A Sankey diagrammal egyetlen pillantásra egyértelműen átláthatók a források, a célok és a köztes lépések, valamint hogy a folyamat hogyan áramlik ezek közt. A diagram emellett a hivatkozásokra vagy magára a folyamatra kattintva ki is bontható, és a Power BI keresztkiemelési/szűrési funkciójának köszönhetően még érdekesebb megállapítások nyerhetők ki a kapcsolódó adatokból.\nEzt a diagramtípust emiatt igen széles körben használják az energiaiparban, de valamennyi iparágban alkalmazható különféle érdekes esetek ábrázolására. Olyan információk megjelenítésére használható, amelyeknek van eleje és vége, vagy amelyek dinamikus kapcsolatokkal rendelkeznek számos köztes elemmel, például hogy a felhasználó honnan hová lépett a webhelyen, hogy egy anyag merre halad a gyártósoron, vagy hogy milyen pénzmozgás-ellenőrzések vannak egy üzleti folyamatban. Ez a diagramtípus egy teljesen eltérő perspektívát képes bemutatni, és érdekes megállapításokat hoz előtérbe.\nEz egy nyílt forráskódú vizualizáció. A kód letölthető a GitHubról: https://github.com/Microsoft/powerbi-visuals-sankey",
   "Visual_DataPointsLabels": "Adatfeliratok",
   "Visual_Show": "Megjelenítés",
   "Visual_Color": "Szín",
   "Visual_Fill": "Kitöltés",
-  "Visual_TextSize": "Szöveg mérete",
+  "Visual_TextSize": "Szövegméret",
   "Visual_Force_Display": "Megjelenítés kényszerítése",
   "Visual_Nodes": "Csomópontok",
   "Visual_Source": "Forrás",
@@ -23,7 +25,6 @@
   "Visual_Display_Units": "Megjelenítési egységek",
   "Visual_Cycles": "Ciklusok megjelenítése",
   "Visual_DuplicateNodes": "Ismétlődő csomópontokk",
-  "Visual_Duplicate": "Másolat készítése",
   "Visual_DrawBackwardLink": "Visszamutató hivatkozás létrehozása",
   "Visual_SelflinkWeight": "Önhivatkozások vastagságának figyelmen kívül hagyása",
   "Visual_Name": "Név",
@@ -31,5 +32,7 @@
   "Visual_FontFamily": "Betűcsalád",
   "Visual_Input": "Bemenet",
   "Visual_Output": "Kimenet",
-  "Visual_Width": "Szélesség"
+  "Visual_Width": "Szélesség",
+  "Visual_Values": "Értékek",
+  "Visual_Font": "Betűtípus"
 }

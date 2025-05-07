@@ -1,4 +1,6 @@
 {
+  "Visual_Short_Description": "Diagrama de flujo donde el ancho de las series es proporcional a la cantidad del flujo.",
+  "Visual_Long_Description": "Con Sankey, puede identificar claramente los orígenes, los destinos y los pasos intermedios de flujos a simple vista. También puede interactuar si hace clic en el vínculo o en el flujo en sí, así como usar la característica de filtrado o resaltado cruzado de Power BI para obtener información incluso más interesante en datos relacionados.\nSe usa ampliamente en el sector energético. Pero también ofrece casos de uso interesantes en todos los sectores. Permite a todos los usuarios visualizar información que tenga un inicio y un final, o bien una relación dinámica con un gran número de intermediarios (por ejemplo, cómo llegó el usuario a un sitio web y navegó por este; un material en una unidad de fabricación; y controlar o realizar transferencias de dinero en procesos empresariales) con una perspectiva completamente distinta y descubrir información interesante.\nEste es un objeto visual de código abierto. Descargue el código desde GitHub en https://github.com/Microsoft/powerbi-visuals-sankey.",
   "Visual_DataPointsLabels": "Etiquetas de datos",
   "Visual_Show": "Mostrar",
   "Visual_Color": "Color",
@@ -23,7 +25,6 @@
   "Visual_Display_Units": "Mostrar unidades",
   "Visual_Cycles": "Ciclos que se muestran",
   "Visual_DuplicateNodes": "Nodos duplicados",
-  "Visual_Duplicate": "Duplicado",
   "Visual_DrawBackwardLink": "Definir vínculo de terceros",
   "Visual_SelflinkWeight": "Omitir el tamaño de los autovínculos",
   "Visual_Name": "Nombre",
@@ -31,5 +32,7 @@
   "Visual_FontFamily": "Familia de fuentes",
   "Visual_Input": "Entrada",
   "Visual_Output": "Salida",
-  "Visual_Width": "Ancho"
+  "Visual_Width": "Ancho",
+  "Visual_Values": "Valores",
+  "Visual_Font": "Fuente"
 }
