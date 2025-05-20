@@ -24,24 +24,29 @@
 *  THE SOFTWARE.
 */
 import powerbiVisualsApi from "powerbi-visuals-api";
-import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
+
+import { formattingSettings, formattingSettingsInterfaces } from "powerbi-visuals-utils-formattingmodel";
 import { ColorHelper } from "powerbi-visuals-utils-colorutils";
 import {
+    ButtonPosition,
     SankeyDiagramLink,
     SankeyDiagramNode,
     SankeyDiagramNodePositionSetting
 } from "./dataInterfaces";
 
-import FormattingSettingsCard = formattingSettings.Card;
+import FormattingSettingsCards = formattingSettings.Cards;
+import FormattingSettingsSimpleCard = formattingSettings.SimpleCard;
+import FormattingSettingsCompositeCard = formattingSettings.CompositeCard;
 import FormattingSettingsSlice = formattingSettings.Slice;
 import FormattingSettingsModel = formattingSettings.Model;
+import ILocalizedItemMember = formattingSettingsInterfaces.ILocalizedItemMember;
 
 import ISelectionId = powerbiVisualsApi.visuals.ISelectionId;
-import IEnumMember = powerbi.IEnumMember;
 
 export enum CyclesDrawType {
     Duplicate,
-    Backward
+    Backward,
+    DuplicateOptimized
 }
 
 export interface ViewportSize {
@@ -49,15 +54,56 @@ export interface ViewportSize {
     width?: string;
 }
 
-export const duplicateNodesOptions : IEnumMember[] = [
-    {value : 0, displayName : "Duplicate"},
-    {value : 1, displayName : "Draw backward link"}
+interface IButtonSettings {
+    fill: string;
+    stroke: string;
+    textFill: string;
+    text: string;
+    width: number;
+    height: number;
+}
+
+export const buttonDefaults: IButtonSettings = {
+    fill: "#DCDCDC",
+    stroke: "#A9A9A9",
+    textFill: "#333",
+    text: "Reset",
+    width: 40,
+    height: 15
+};
+
+export const buttonPositionOptions: ILocalizedItemMember[] = [
+    {value : ButtonPosition.Top, displayNameKey: "Visual_Top"},
+    {value : ButtonPosition.TopCenter, displayNameKey: "Visual_TopCenter"},
+    {value : ButtonPosition.TopRight, displayNameKey: "Visual_TopRight"},
+    {value : ButtonPosition.Bottom, displayNameKey: "Visual_Bottom"},
+    {value : ButtonPosition.BottomCenter, displayNameKey: "Visual_BottomCenter"},
+    {value : ButtonPosition.BottomRight, displayNameKey: "Visual_BottomRight"}
 ];
 
-export class FontSizeDefaultOptions {
+export const duplicateNodesOptions : ILocalizedItemMember[] = [
+    {value : CyclesDrawType.Duplicate, displayNameKey: "Visual_Duplicate"},
+    {value : CyclesDrawType.Backward, displayNameKey: "Visual_DrawBackwardLink"},
+    {value : CyclesDrawType.DuplicateOptimized, displayNameKey: "Visual_DuplicateOptimized"}
+];
+
+export class FontSettingsOptions {
     public static DefaultFontSize: number = 12;
     public static MinFontSize: number = 8;
     public static MaxFontSize: number = 60;
+    public static DefaultFontFamily: string = "Arial";
+    public static DefaultNormalValue: string = "normal";
+    public static BoldValue: string = "bold";
+    public static ItalicValue: string = "italic";
+    public static UnderlineValue: string = "underline";
+    public static DefaultNoneValue: string = "none";
+    public static DefaultFillValue: string = "#000000";
+}
+
+export class NodeWidthDefaultOptions {
+    public static DefaultWidth: number = 10;
+    public static MinWidth: number = 10;
+    public static MaxWidth: number = 30;
 }
 
 export class SankeyDiagramScaleSettings {
@@ -70,46 +116,85 @@ export class SankeyComplexSettings {
     public viewportSize: string = "{}";
 }
 
-export class DataLabelsSettings extends FormattingSettingsCard {
-    public static DefaultFontFamily: string = "Arial";
+export class BaseFontSettingsCard extends FormattingSettingsCompositeCard {
     public show = new formattingSettings.ToggleSwitch({
         name: "show",
         displayNameKey: "Visual_Show",
         value: true,
-        topLevelToggle: true
-    });
-
-    public fill = new formattingSettings.ColorPicker({
-        name: "fill",
-        displayName: "Color",
-        displayNameKey: "Visual_LabelsFill",
-        value: { value: "#000000" }
     });
 
     public fontFamily = new formattingSettings.FontPicker({
         name: "fontFamily",
-        displayName: "Font Family",
-        displayNameKey: "Visual_FontFamily",
-        value: DataLabelsSettings.DefaultFontFamily
+        value: "Arial, sans-serif"
     });
 
     public fontSize = new formattingSettings.NumUpDown({
         name: "fontSize",
         displayName: "Text Size",
         displayNameKey: "Visual_TextSize",
-        value: FontSizeDefaultOptions.DefaultFontSize,
+        value: FontSettingsOptions.DefaultFontSize,
         options: {
             minValue: {
                 type: powerbiVisualsApi.visuals.ValidatorType.Min,
-                value: FontSizeDefaultOptions.MinFontSize,
+                value: FontSettingsOptions.MinFontSize,
             },
             maxValue: {
                 type: powerbiVisualsApi.visuals.ValidatorType.Max,
-                value: FontSizeDefaultOptions.MaxFontSize,
+                value: FontSettingsOptions.MaxFontSize,
             }
         }
     });
 
+    public bold = new formattingSettings.ToggleSwitch({
+        name: "fontBold",
+        value: false,
+    });
+
+    public italic = new formattingSettings.ToggleSwitch({
+        name: "fontItalic",
+        value: false,
+    });
+
+    public underline = new formattingSettings.ToggleSwitch({
+        name: "fontUnderline",
+        value: false,
+    });
+
+    public fill = new formattingSettings.ColorPicker({
+        name: "fill",
+        displayNameKey: "Visual_Color",
+        value: { value: "#000000" },
+    });
+
+    private fontControl = new formattingSettings.FontControl({
+        name: "font",
+        displayName: "Font",
+        displayNameKey: "Visual_Font",
+        fontFamily: this.fontFamily,
+        fontSize: this.fontSize,
+        bold: this.bold,
+        underline: this.underline,
+        italic: this.italic,
+    });
+
+    protected fontGroup = new formattingSettings.Group({
+        name: "fontGroup",
+        displayNameKey: "Visual_Values",
+        slices: [this.fontControl, this.fill],
+    });
+
+    constructor(cardName: string, defaultFontSize?: number){
+        super();
+        this.name = cardName;
+        this.fontGroup.name = `${cardName}Values`;
+        this.fontSize.value = defaultFontSize ?? FontSettingsOptions.DefaultFontSize;
+        this.topLevelSlice = this.show;
+    }
+
+    public groups: FormattingSettingsSlice[] = [ this.fontGroup ];
+}
+
+export class DataLabelsSettings extends BaseFontSettingsCard {
     public forceDisplay = new formattingSettings.ToggleSwitch({
         name: "forceDisplay",
         displayName: "Force display",
@@ -126,65 +211,58 @@ export class DataLabelsSettings extends FormattingSettingsCard {
         value: 0
     });
 
-    public name: string = "labels";
-    public displayName: string = "Data labels";
-    public displayNameKey: string = "Visual_DataPointsLabels";
-    public slices: FormattingSettingsSlice[] = [this.show, this.fill, this.fontFamily, this.fontSize, this.forceDisplay, this.unit];
+    constructor() {
+        const cardName: string = "labels";
+        super(cardName);
+
+        this.displayNameKey = "Visual_DataPointsLabels";
+        this.fontGroup.slices?.push(this.unit, this.forceDisplay);
+    }
 }
 
-export class LinkLabelsSettings extends FormattingSettingsCard {
-    public show = new formattingSettings.ToggleSwitch({
-        name: "show",
-        displayNameKey: "Visual_Show",
-        value: false,
-        topLevelToggle: true
-    });
+export class LinkLabelsSettings extends BaseFontSettingsCard {
+    public static DefaultFontSize: number = 9;
+    constructor() {
+        const cardName: string = "linkLabels";
+        super(cardName, LinkLabelsSettings.DefaultFontSize);
 
-    public fill = new formattingSettings.ColorPicker({
-        name: "fill",
-        displayName: "Color",
-        displayNameKey: "Visual_LabelsFill",
-        value: { value: "#000000" }
-    });
-
-    public fontSize = new formattingSettings.NumUpDown({
-        name: "fontSize",
-        displayName: "Text Size",
-        displayNameKey: "Visual_TextSize",
-        value: FontSizeDefaultOptions.DefaultFontSize,
-        options: {
-            minValue: {
-                type: powerbiVisualsApi.visuals.ValidatorType.Min,
-                value: FontSizeDefaultOptions.MinFontSize,
-            },
-            maxValue: {
-                type: powerbiVisualsApi.visuals.ValidatorType.Max,
-                value: FontSizeDefaultOptions.MaxFontSize,
-            }
-        }
-    });
-
-    public name: string = "linkLabels";
-    public displayName: string = "Data link labels";
-    public displayNameKey: string = "Visual_DataPointsLinkLabels";
-    public slices: FormattingSettingsSlice[] = [this.show, this.fill, this.fontSize];
+        this.displayNameKey = "Visual_DataPointsLinkLabels";
+        this.show.value = false;
+    }
 }
 
-export class LinksSettings extends FormattingSettingsCard {
+export class LinksSettings extends FormattingSettingsSimpleCard {
     public name: string = "links";
     public displayName: string = "Links";
     public displayNameKey: string = "Visual_Links";
     public slices: FormattingSettingsSlice[] = [];
 }
 
-export class NodesSettings extends FormattingSettingsCard {
+export class NodesSettings extends FormattingSettingsSimpleCard {
     public name: string = "nodes";
     public displayName: string = "Nodes";
     public displayNameKey: string = "Visual_Nodes";
-    public slices: FormattingSettingsSlice[] = [];
+
+    public nodeWidth = new formattingSettings.NumUpDown({
+        name: "nodesWidth",
+        displayName: "Width",
+        displayNameKey: "Visual_Width",
+        value: NodeWidthDefaultOptions.DefaultWidth,
+        options: {
+            minValue: {
+                type: powerbiVisualsApi.visuals.ValidatorType.Min,
+                value: NodeWidthDefaultOptions.MinWidth,
+            },
+            maxValue: {
+                type: powerbiVisualsApi.visuals.ValidatorType.Max,
+                value: NodeWidthDefaultOptions.MaxWidth
+            }
+        }
+    });
+    public slices: FormattingSettingsSlice[] = [this.nodeWidth];
 }
 
-export class ScaleSettings extends FormattingSettingsCard {
+export class ScaleSettings extends FormattingSettingsSimpleCard {
     public provideMinHeight = new formattingSettings.ToggleSwitch({
         name: "provideMinHeight",
         displayName: "Provide min optimal height of node",
@@ -195,35 +273,83 @@ export class ScaleSettings extends FormattingSettingsCard {
     public lnScale = new formattingSettings.ToggleSwitch({
         name: "lnScale",
         displayName: "Enable logarithmic scale",
-        displayNameKey: "Visual_ScaleSettings",
+        displayNameKey: "Visual_LogarithmicScale",
         value: false
     });
 
     public name: string = "scaleSettings";
     public displayName: string = "Scale settings";
-    public displayNameKey: string = "Visual_SankeyScaleSettings";
+    public displayNameKey: string = "Visual_ScaleSettings";
     public slices: FormattingSettingsSlice[] = [this.provideMinHeight, this.lnScale];
 }
 
-export class NodeComplexSettings extends FormattingSettingsCard {
+export class LinksOrder extends FormattingSettingsSimpleCard {
+    public name: string = "linkOrderGroup";
+    public displayNameKey: string = "Visual_LinksOrder";
+
+    public shouldReorder= new formattingSettings.ToggleSwitch({
+        name: "linksReorder",
+        displayNameKey: "Visual_AutoLinksReorder",
+        value: false,
+    });
+
+    slices: formattingSettings.Slice[] = [this.shouldReorder];
+}
+
+class PersistPropertiesGroup extends FormattingSettingsSimpleCard {
+    public name: string = "persistProperties";
+    public displayNameKey: string = "Visual_NodePositions";
+    public collapsible: boolean = false;
+    public visible: boolean = true;
     public nodePositions = new formattingSettings.ReadOnlyText({
         name: "nodePositions",
         displayNameKey: "Visual_NodePositions",
-        value: ""
+        value: "",
+        visible: false,
     }); 
 
     public viewportSize = new formattingSettings.ReadOnlyText({
         name: "viewportSize",
         displayNameKey: "Visual_ViewportSize",
-        value: ""
+        value: "",
+        visible: false,
     });
 
-    public name: string = "nodeComplexSettings";
-    public displayNameKey: string = "Visual_SankeySettings";
-    public slices: FormattingSettingsSlice[] = [this.nodePositions, this.viewportSize];
+    public slices: FormattingSettingsSlice[] = [this.nodePositions, this.viewportSize]
 }
 
-export class CyclesLinkSettings extends FormattingSettingsCard {
+export class ButtonSettings extends FormattingSettingsSimpleCard {
+    public name: string = "button";
+    public displayNameKey: string = "Visual_ResetButton";
+    public descriptionKey: string = "Visual_ResetButonDescription";
+    public show = new formattingSettings.ToggleSwitch({
+        name: "showResetButon",
+        displayNameKey: "Visual_ShowResetButton",
+        value: false
+    });
+
+    public position = new formattingSettings.ItemDropdown({
+        name: "position",
+        displayNameKey: "Visual_Position",
+        items: buttonPositionOptions,
+        value: buttonPositionOptions[5]
+    });
+
+    topLevelSlice: formattingSettings.ToggleSwitch = this.show;
+    slices: formattingSettings.Slice[] = [this.position];
+}
+
+export class NodeComplexSettings extends FormattingSettingsCompositeCard {
+    public persistProperties: PersistPropertiesGroup = new PersistPropertiesGroup();
+    public links: LinksOrder = new LinksOrder();
+    public button: ButtonSettings = new ButtonSettings();
+
+    public name: string = "nodeComplexSettings";
+    public displayNameKey: string = "Visual_Sorting";
+    public groups: FormattingSettingsCards[] = [this.persistProperties, this.links, this.button];
+}
+
+export class CyclesLinkSettings extends FormattingSettingsSimpleCard {
     public drawCycles = new formattingSettings.ItemDropdown({
         name: "drawCycles",
         displayName: "Duplicate nodes",
@@ -254,14 +380,14 @@ export class SankeyDiagramSettings extends FormattingSettingsModel {
     public labels: DataLabelsSettings = new DataLabelsSettings();
     public linkLabels: LinkLabelsSettings = new LinkLabelsSettings();
     public linksColorSelector: LinksSettings = new LinksSettings();
-    public nodesColorSelector: NodesSettings = new NodesSettings();
+    public nodesSettings: NodesSettings = new NodesSettings();
     public scale: ScaleSettings = new ScaleSettings();
     public cyclesLinks: CyclesLinkSettings = new CyclesLinkSettings();
     public nodeComplexSettings: NodeComplexSettings = new NodeComplexSettings();
-    public cards: FormattingSettingsCard[] = [this.labels, this.linkLabels, this.linksColorSelector, this.nodesColorSelector, this.scale, this.cyclesLinks, this.nodeComplexSettings];
+    public cards: FormattingSettingsCards[] = [this.labels, this.linkLabels, this.linksColorSelector, this.nodesSettings, this.scale, this.cyclesLinks, this.nodeComplexSettings];
 
     populateNodesColorSelector(nodes: SankeyDiagramNode[]) {
-        const slices = this.nodesColorSelector.slices;
+        const slices = this.nodesSettings.slices;
         if (nodes) {
             nodes.forEach(node => {
                 if(slices.some((nodeColorSelector: FormattingSettingsSlice) => nodeColorSelector.displayName === node.label.formattedName)){
@@ -271,7 +397,7 @@ export class SankeyDiagramSettings extends FormattingSettingsModel {
                     name: "fill",
                     displayName: node.label.formattedName,
                     value: { value: node.fillColor },
-                    selector: ColorHelper.normalizeSelector((<ISelectionId>node.identity).getSelector())
+                    selector: ColorHelper.normalizeSelector((<ISelectionId>node.selectionId).getSelector())
                 }));
             });
         }
@@ -285,13 +411,9 @@ export class SankeyDiagramSettings extends FormattingSettingsModel {
                     name: "fill",
                     displayName: link.source.label.formattedName + " - " + link.destination.label.formattedName,
                     value: { value: link.fillColor },
-                    selector: ColorHelper.normalizeSelector((<ISelectionId>link.identity).getSelector())
+                    selector: ColorHelper.normalizeSelector((<ISelectionId>link.selectionId).getSelector())
                 }));
             });
         }
-    }
-
-    removeNodeComplexSettingsFromPane(){
-        this.cards = [this.labels, this.linkLabels, this.linksColorSelector, this.nodesColorSelector, this.scale, this.cyclesLinks];
     }
 }

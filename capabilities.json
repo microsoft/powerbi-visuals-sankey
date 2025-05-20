@@ -115,6 +115,21 @@
                         }
                     }
                 },
+                "fontBold": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontItalic": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontUnderline": {
+                    "type": {
+                        "bool": true
+                    }
+                },
                 "forceDisplay": {
                     "type": {
                         "bool": true
@@ -126,7 +141,7 @@
                              "labelDisplayUnits": true
                          }
                     }
-                 }
+                }
             }
         },
         "linkLabels": {
@@ -145,11 +160,33 @@
                         }
                     }
                 },
+                "fontFamily": {
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
                 "fontSize": {
                     "type": {
                         "formatting": {
                             "fontSize": true
                         }
+                    }
+                },
+                "fontBold": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontItalic": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontUnderline": {
+                    "type": {
+                        "bool": true
                     }
                 }
             }
@@ -169,6 +206,11 @@
         },
         "nodes": {
             "properties": {
+                "nodesWidth":{
+                    "type": {
+                        "numeric": true
+                    }
+                },
                 "fill": {
                     "type": {
                         "fill": {
@@ -205,6 +247,21 @@
                     "type": {
                         "text": true
                     }
+                },
+                "linksReorder":{
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "showResetButon": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "position": {
+                    "type": {
+                        "enumeration": []
+                    }
                 }
             }
         },
@@ -232,6 +289,16 @@
                 }
             ]
         }
+    },
+    "tooltips": {
+        "supportedTypes": {
+            "default": true,
+            "canvas": true
+        },
+        "roles": [
+            "tooltips"
+        ],
+        "supportEnhancedTooltips": true
     },
     "supportsKeyboardFocus": true,
     "supportsSynchronizingFilterState": true,

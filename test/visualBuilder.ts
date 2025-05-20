@@ -65,6 +65,10 @@ export class VisualBuilder extends VisualBuilderBase<VisualClass> {
         return this.nodesElement.querySelectorAll("g.node");
     }
 
+    public get nodeRectElements(): NodeListOf<HTMLElement> {
+        return this.nodesElement.querySelectorAll("rect.nodeRect");
+    }
+
     // g.links element containing all the links 
     public get linksElement(): HTMLElement {
         return this.mainElement
@@ -74,5 +78,9 @@ export class VisualBuilder extends VisualBuilderBase<VisualClass> {
     // all links objects displayed in the visual
     public get linkElements(): NodeListOf<HTMLElement> {
         return this.linksElement.querySelectorAll("path.link");
+    }
+
+    public get resetButton(): SVGElement {
+        return this.mainElement.querySelector("g.resetButton");
     }
 }

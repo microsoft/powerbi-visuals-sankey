@@ -24,9 +24,11 @@
 *  THE SOFTWARE.
 */
 
-// powerbi.extensibility.utils.interactivity
-import { interactivitySelectionService } from "powerbi-visuals-utils-interactivityutils";
-import SelectableDataPoint = interactivitySelectionService.SelectableDataPoint;
+import ISelectionId = powerbi.visuals.ISelectionId;
+
+import { interfaces } from "powerbi-visuals-utils-formattingutils";
+import TextProperties = interfaces.TextProperties;
+
 import {
     SankeyDiagramSettings
 } from "./settings";
@@ -40,6 +42,15 @@ export enum SankeyLinkDirrections {
     Forward,
     Backward,
     SelfLink
+}
+
+export enum ButtonPosition {
+    Top = 0,
+    TopCenter = 1,
+    TopRight = 2,
+    Bottom = 3,
+    BottomCenter = 4,
+    BottomRight = 5,
 }
 
 export interface SankeyDiagramLabel {
@@ -59,16 +70,21 @@ export interface SankeyDiagramRect {
     bottom?: number;
 }
 
+export interface ISelectableDataPoint {
+    selectionId: ISelectionId;
+    selected: boolean;
+}
+
 export interface SankeyDiagramNode extends
     TooltipEnabledDataPoint,
     SankeyDiagramRect,
-    SelectableDataPoint {
+    ISelectableDataPoint{
 
     label: SankeyDiagramLabel;
     inputWeight: number;
     outputWeight: number;
     backwardWeight?: number;
-    selftLinkWeight?: number;
+    selfLinkWeight?: number;
     links: SankeyDiagramLink[];
     x?: number;
     y?: number;
@@ -76,22 +92,22 @@ export interface SankeyDiagramNode extends
     height?: number;
     fillColor?: string;
     strokeColor?: string;
-    selectableDataPoints?: SelectableDataPoint[];
     cloneLink?: SankeyDiagramNode;
     settings?: SankeyDiagramNodePositionSetting;
+    linkSelectableIds?: ISelectionId[];
 }
 
 export interface SankeyDiagramLink extends
     TooltipEnabledDataPoint,
-    SelectableDataPoint {
+    ISelectableDataPoint{
 
-    label: string;
+    label: SankeyDiagramLabel;
     source: SankeyDiagramNode;
     destination: SankeyDiagramNode;
     weight: number;
     height?: number;
-    dySource?: number;
-    dyDestination?: number;
+    shiftByAxisYSource?: number;
+    shiftByAxisYDestination?: number;
     fillColor: string;
     strokeColor: string;
     direction: SankeyLinkDirrections;
@@ -130,14 +146,12 @@ export interface SankeyDiagramRoleNames {
     values: string;
 }
 
-export interface SankeyDiagramDataPoint {
-    source: any;
-    destination: any;
-    weight: number;
-}
-
 export interface SankeyDiagramNodePositionSetting {
     name: string;
     y?: string;
     x?: string;
+}
+
+export interface TextPropertiesExtended extends TextProperties {
+    textDecoration?: string;
 }

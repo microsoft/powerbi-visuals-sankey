@@ -28,7 +28,7 @@ import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
 
 // powerbi
 import DataView = powerbi.DataView;
-import FormattingSettingsCard = formattingSettings.Card;
+import FormattingSettingsCard = formattingSettings.Cards;
 
 // powerbi.extensibility.visual.test
 import { SankeyDiagramData } from "./visualData";
@@ -154,6 +154,8 @@ describe("SankeyDiagram", () => {
                     },
                     inputWeight: 0,
                     outputWeight: 0,
+                    selectionId: null,
+                    selected: false,
                     links: [],
                     x: xValue,
                     y: 0,
@@ -161,9 +163,7 @@ describe("SankeyDiagram", () => {
                     height: 0,
                     colour: "",
                     selectionIds: [],
-                    tooltipData: [],
-                    identity: null,
-                    selected: false
+                    tooltipData: []
                 };
             });
         }
@@ -201,6 +201,8 @@ describe("SankeyDiagram", () => {
                     },
                     inputWeight: testNode.inputWeight,
                     outputWeight: testNode.outputWeight,
+                    selectionId: null,
+                    selected: false,
                     links: [],
                     x: testNode.x,
                     y: 0,
@@ -208,9 +210,7 @@ describe("SankeyDiagram", () => {
                     height: 0,
                     colour: "",
                     selectionIds: [],
-                    tooltipData: [],
-                    identity: null,
-                    selected: false
+                    tooltipData: []
                 };
             });
         }
@@ -455,9 +455,10 @@ describe("SankeyDiagram", () => {
                         expect(link.classList).toContain(selectionClass);
                         // selected link is the only one that is selected
                         expect([...visualBuilder.linkElements].filter(link => link.classList.value.includes(selectionClass)).length).toBe(1);
+                        
+                        // deselection does not work without passing 'true' as second argument
+                        clickElement(link, true);
 
-
-                        clickElement(link);
                         renderTimeout(() => {
                             // no links selected
                             expect([...visualBuilder.linkElements].filter(link => link.classList.value.includes(selectionClass)).length).toBe(0);
@@ -642,6 +643,46 @@ describe("SankeyDiagram", () => {
             });
         });
 
+        describe("reset button", () => {
+            it("must be displayed correctly", done => {
+                let dataView: DataView = defaultDataViewBuilder.getDataView();
+                dataView.metadata.objects = {
+                    nodeComplexSettings: {
+                        showResetButon: true
+                    }
+                };
+                visualBuilder.updateRenderTimeout([dataView], () => {
+                    const resetButton = visualBuilder.resetButton;
+                    const visibility: string = resetButton.style.visibility;
+                    expect(visibility).toBe("visible");
+                    done();
+                });
+            });
+
+            it("must reset saved positions", done => {
+                let dataView: DataView = defaultDataViewBuilder.getDataView();
+                const nodePositions = `[{"name":"Brazil","x":"477","y":"348"},{"name":"USA_SK_SELFLINK","x":"0","y":"137"},{"name":"Mexico_SK_SELFLINK","x":"0","y":"297"},{"name":"Canada_SK_SELFLINK","x":"0","y":"402"},{"name":"Canada","x":"479","y":"0"},{"name":"England","x":"479","y":"26"},{"name":"Portugal","x":"479","y":"163"},{"name":"France","x":"479","y":"302"},{"name":"Spain","x":"479","y":"406"},{"name":"Mexico","x":"959","y":"0"},{"name":"USA","x":"959","y":"105"},{"name":"Angola","x":"959","y":"267"},{"name":"Senegal","x":"959","y":"320"},{"name":"Morocco","x":"959","y":"437"}]`;
+                dataView.metadata.objects = {
+                    nodeComplexSettings: {
+                        viewportSize: `{"height":"480","width":"980"}`,
+                        nodePositions: nodePositions,
+                        showResetButon: true
+                    }
+                };
+
+                visualBuilder.updateRenderTimeout([dataView], () => {
+                    let nodePositionSettings = visualBuilder.instance.sankeyDiagramSettings.nodeComplexSettings.persistProperties.nodePositions.value;
+                    expect(nodePositionSettings).toBe(nodePositions);
+
+                    spyOn(visualBuilder.visualHost, 'persistProperties').and.callThrough();
+                    const resetButton = visualBuilder.resetButton;
+                    clickElement(resetButton);
+
+                    expect(visualBuilder.visualHost.persistProperties).toHaveBeenCalled();
+                    done();
+                })
+            });
+        });
 
     });
 
@@ -661,8 +702,8 @@ describe("SankeyDiagram", () => {
             link.destination = destination;
             link.direction = 0;
 
-            expect(VisualClass.createLink(link)).toBe("_Source-0-_Destination");
-            expect(VisualClass.createLink(link, true)).toBe("linkLabelPaths_Source-0-_Destination");
+            expect(VisualClass.createLinkId(link)).toBe("_Source-0-_Destination");
+            expect(VisualClass.createLinkId(link, true)).toBe("linkLabelPaths_Source-0-_Destination");
         });
     });
 
@@ -735,10 +776,15 @@ describe("SankeyDiagram", () => {
 
 
     describe("Settings tests:", () => {
-        it("nodeComplexSettings properties must be hidden", done => {
+        beforeEach(() => {
+            dataView = defaultDataViewBuilder.getDataView();
+        });
+
+        it("nodeComplexSettings persist properties properties must be hidden", done => {
             visualBuilder.updateRenderTimeout(dataView, () => {
                 visualBuilder.instance.getFormattingModel();
-                expect(visualBuilder.instance.sankeyDiagramSettings.cards.some((card: FormattingSettingsCard) => card.displayName === "Node Complex Settings")).toBeFalse();
+                expect(visualBuilder.instance.sankeyDiagramSettings.nodeComplexSettings.persistProperties.nodePositions.visible).toBeFalse();
+                expect(visualBuilder.instance.sankeyDiagramSettings.nodeComplexSettings.persistProperties.viewportSize.visible).toBeFalse();
                 done();
             });
         });
@@ -747,25 +793,24 @@ describe("SankeyDiagram", () => {
             visualBuilder.updateRenderTimeout(dataView, () => {
                 // defaults
                 const someColor: string = "#000000";
-                const fontSize: number = 12;
+                const nodeLabelsFontSize: number = 12;
+                const linkLabelsFontSize: number = 9;
                 const unit: number = 0;
 
                 visualBuilder.instance.getFormattingModel();
 
                 let labels: DataLabelsSettings = visualBuilder.instance.sankeyDiagramSettings.labels;
 
-                expect(labels.slices.length).toBe(6);
                 expect(labels.show.value).toBeTruthy();
-                expect(labels.fontSize.value).toBe(fontSize);
+                expect(labels.fontSize.value).toBe(nodeLabelsFontSize);
                 expect(labels.forceDisplay.value).toBeFalsy();
                 expect(labels.unit.value).toBe(unit);
                 expect(labels.fill.value.value).toBe(someColor);
 
                 let linkLabels: LinkLabelsSettings = visualBuilder.instance.sankeyDiagramSettings.linkLabels;
 
-                expect(linkLabels.slices.length).toBe(3);
                 expect(linkLabels.show.value).toBeFalsy();
-                expect(linkLabels.fontSize.value).toBe(fontSize);
+                expect(linkLabels.fontSize.value).toBe(linkLabelsFontSize);
                 expect(linkLabels.fill.value.value).toBe(someColor);
 
                 let scaleSettings = visualBuilder.instance.sankeyDiagramSettings.scale;
@@ -774,7 +819,7 @@ describe("SankeyDiagram", () => {
                 expect(scaleSettings.provideMinHeight.value).toBeTruthy();
                 expect(scaleSettings.lnScale.value).toBeFalsy();
 
-                expect(visualBuilder.instance.sankeyDiagramSettings.cards.length).toBe(6);
+                expect(visualBuilder.instance.sankeyDiagramSettings.cards.length).toBe(7);
                 done();
             });
         });
@@ -800,6 +845,222 @@ describe("SankeyDiagram", () => {
             };
 
             objectsChecker(jsonData);
+        });
+    });
+
+    describe("Keyboard Navigation tests:", () => {
+        it("links should have attributes tabindex>0, role=option, aria-label is not null, and aria-selected=false", (done: DoneFn) => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                let links = visualBuilder.linkElements;
+                links.forEach((el: Element) => {
+                    expect(el.getAttribute("role")).toBe("option");
+                    expect(el.getAttribute("tabindex")).toBeGreaterThanOrEqual(1);
+                    expect(el.getAttribute("aria-selected")).toBe("false");
+                    expect(el.getAttribute("aria-label")).not.toBeNull();
+                });
+                done();
+            });
+        });
+
+        it("nodes should have attributes tabindex>0, role=option, aria-label is not null, and aria-selected=false", (done: DoneFn) => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                let nodeRects = visualBuilder.nodeRectElements;
+                nodeRects.forEach((el: Element) => {
+                    expect(el.getAttribute("role")).toBe("option");
+                    expect(el.getAttribute("tabindex")).toBeGreaterThanOrEqual(1);
+                    expect(el.getAttribute("aria-selected")).toBe("false");
+                    expect(el.getAttribute("aria-label")).not.toBeNull();
+                });
+                done();
+            });
+        });
+
+        it("enter toggles the correct slice", (done: DoneFn) => {
+            const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
+            visualBuilder.updateRenderTimeout(
+                dataView, () => {
+                        const links: HTMLElement[] = [...visualBuilder.linkElements];
+
+                        links[0].dispatchEvent(enterEvent);
+                        expect(links[0].getAttribute("aria-selected")).toBe("true");
+
+                        const otherLinks: HTMLElement[] = links.slice(1);
+                        otherLinks.forEach((link: HTMLElement) => {
+                            expect(link.getAttribute("aria-selected")).toBe("false");
+                        })
+
+                        links[1].dispatchEvent(enterEvent);
+                        expect(links[1].getAttribute("aria-selected")).toBe("true");
+
+                        links.splice(1,1);
+                        links.forEach((link: HTMLElement) => {
+                            expect(link.getAttribute("aria-selected")).toBe("false");
+                        });
+                        done();
+                    },
+                2,
+            );
+        });
+        
+        it("space toggles the correct slice", (done: DoneFn) => {
+            const spaceEvent = new KeyboardEvent("keydown", { code: "Space", bubbles: true });
+            visualBuilder.updateRenderTimeout(
+                dataView,
+                    () => {
+                        const links: HTMLElement[] = [...visualBuilder.linkElements];
+
+                        links[0].dispatchEvent(spaceEvent);
+                        expect(links[0].getAttribute("aria-selected")).toBe("true");
+                        
+                        const otherLinks: HTMLElement[] = links.slice(1);
+                        otherLinks.forEach((link: HTMLElement) => {
+                            expect(link.getAttribute("aria-selected")).toBe("false");
+                        });
+
+                        links[1].dispatchEvent(spaceEvent);
+                        expect(links[1].getAttribute("aria-selected")).toBe("true");
+
+                        links.splice(1, 1);
+                        links.forEach((element: HTMLElement) => {
+                            expect(element.getAttribute("aria-selected")).toBe("false");
+                        });
+                        done();
+                    },
+                2,
+            );
+        });
+        
+        it("tab between slices works", (done: DoneFn) => {
+            const tabEvent = new KeyboardEvent("keydown", { code: "Tab", bubbles: true });
+            const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
+            visualBuilder.updateRenderTimeout(
+                dataView,
+                    () => {
+                        const links: HTMLElement[] = [...visualBuilder.linkElements];
+
+                        links[0].dispatchEvent(enterEvent);
+                        expect(links[0].getAttribute("aria-selected")).toBe("true");
+
+                        const otherLinks: HTMLElement[] = links.slice(1);
+                        otherLinks.forEach((link: HTMLElement) => {
+                            expect(link.getAttribute("aria-selected")).toBe("false");
+                        });
+
+                        visualBuilder.element.dispatchEvent(tabEvent);
+
+                        links[1].dispatchEvent(enterEvent);
+                        expect(links[1].getAttribute("aria-selected")).toBe("true");
+
+                        links.splice(1, 1);
+                        links.forEach((link: HTMLElement) => {
+                            expect(link.getAttribute("aria-selected")).toBe("false");
+                        });
+                        done();
+                    },
+                2,
+            );
+        });
+    });
+
+    describe("Focus elements tests:", () => {
+        it("focused links should have :focus-visible style", (done: DoneFn) => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                const links: HTMLElement[] = [...visualBuilder.linkElements];
+
+                links[0].focus();
+                expect(links[0].matches(':focus-visible')).toBeTrue();
+
+                const otherLinks: HTMLElement[] = links.slice(1);
+                otherLinks.forEach((link: HTMLElement) => {
+                    expect(link.matches(':focus-visible')).toBeFalse();
+                });
+                done();
+            });
+        });
+
+        it("focused links should have styled stroke and outline", (done: DoneFn) => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                // defaults
+                const focusedStrokeWidth: string = "2px";
+                const focusedStrokeOpacity: string = "1";
+                const focusedOutline: string = "rgb(0, 0, 0) none 0px";
+                const strokeWidth: string = "1px";
+                const strokeOpacity: string = "0.6";
+                const outline: string = "rgb(0, 0, 0) none 0px";
+
+                const links: HTMLElement[] = [...visualBuilder.linkElements];
+
+                links[0].focus();
+
+                let linkComputedStyle: CSSStyleDeclaration = getComputedStyle(links[0]);
+                let linkStrokeWidth: string = linkComputedStyle.getPropertyValue("stroke-width");
+                let linkStrokeOpacity: string = linkComputedStyle.getPropertyValue("stroke-opacity");
+                let linkOutline: string = linkComputedStyle.getPropertyValue("outline");
+
+                expect(linkStrokeWidth).toBe(focusedStrokeWidth);
+                expect(linkStrokeOpacity).toBe(focusedStrokeOpacity);
+                expect(linkOutline).toBe(focusedOutline);
+
+                const otherLinks: HTMLElement[] = links.slice(1);
+                otherLinks.forEach((link: HTMLElement) => {
+                    linkComputedStyle = getComputedStyle(link);
+                    linkStrokeWidth = linkComputedStyle.getPropertyValue("stroke-width");
+                    linkStrokeOpacity = linkComputedStyle.getPropertyValue("stroke-opacity");
+                    linkOutline = linkComputedStyle.getPropertyValue("outline");
+
+                    expect(linkStrokeWidth).toBe(strokeWidth);
+                    expect(linkStrokeOpacity).toBe(strokeOpacity);
+                    expect(linkOutline).toBe(outline);
+                    expect(linkStrokeWidth < focusedStrokeWidth).toBeTrue();
+                });
+                done();
+            });
+        });
+
+        it("nodes should have :focus-visible style", (done: DoneFn) => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                const nodeRects: HTMLElement[] = [...visualBuilder.nodeRectElements];
+
+                nodeRects[0].focus();
+                expect(nodeRects[0].matches(':focus-visible')).toBeTrue();
+
+                const otherNodeRects: HTMLElement[] = nodeRects.slice(1);
+                otherNodeRects.forEach((nodeRect: HTMLElement) => {
+                    expect(nodeRect.matches(':focus-visible')).toBeFalse();
+                });
+                done();
+            });
+        });
+
+        it("focused nodes should have styled stroke and outline", (done: DoneFn) => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                // defaults
+                const focusedStrokeWidth: string = "4px";
+                const focusedOutline: string = "rgb(0, 0, 0) none 0px";
+                const strokeWidth: string = "1px";
+                const outline: string = "rgb(0, 0, 0) none 0px";
+
+                const nodeRects: HTMLElement[] = [...visualBuilder.nodeRectElements];
+
+                nodeRects[0].focus();
+
+                let nodeComputedStyle: CSSStyleDeclaration = getComputedStyle(nodeRects[0]);
+                let nodeStrokeWidth: string = nodeComputedStyle.getPropertyValue("stroke-width");
+                let nodeOutline: string = nodeComputedStyle.getPropertyValue("outline");
+                expect(nodeStrokeWidth).toBe(focusedStrokeWidth);
+                expect(nodeOutline).toBe(focusedOutline);
+
+                const otherNodeRects: HTMLElement[] = nodeRects.slice(1);
+                otherNodeRects.forEach((nodeRect: HTMLElement) => {
+                    nodeComputedStyle = getComputedStyle(nodeRect);
+                    nodeStrokeWidth = nodeComputedStyle.getPropertyValue("stroke-width");
+                    nodeOutline = nodeComputedStyle.getPropertyValue("outline");
+                    expect(nodeStrokeWidth).toBe(strokeWidth);
+                    expect(nodeOutline).toBe(outline);
+                    expect(nodeStrokeWidth < focusedStrokeWidth).toBeTrue();
+                });
+                done();
+            });
         });
     });
 

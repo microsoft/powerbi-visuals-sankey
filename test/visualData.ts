@@ -98,7 +98,7 @@ export class SankeyDiagramData extends TestDataViewBuilder {
     }
 
     public getDataViewWithoutValues(): DataView {
-        const data: DataTable = new DataTable([["Source", "Destination"], ...[this.valuesSourceDestination]]);
+        const data: DataTable = new DataTable([["Source", "Destination"], ...this.valuesSourceDestination]);
 
         const matrixBuilder = SankeyDiagramData.createMatrixDataViewBuilder(data);
 

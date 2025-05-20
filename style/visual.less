@@ -35,13 +35,42 @@
 
     font-family: helvetica, arial, sans-serif;
     font-size: @sankeyDiagramFontSize;
+    cursor: default;
+
+    .resetButton {
+        cursor: pointer;
+
+        &:hover {
+            .resetButtonRect {
+                stroke-opacity: 1;
+                fill-opacity: 0.7;
+                stroke-width: 2;
+            }
+        }
+
+        .resetButtonRect {
+            stroke-width: 1;
+        }
+    }
 
     .nodes {
         .node {
+            cursor: pointer;
+
             .nodeRect {
                 stroke-width: 1px;
                 fill-opacity: 0.9;
                 shape-rendering: crispEdges;
+
+                &:focus {
+                    outline: none;
+                }
+
+                &:focus-visible {
+                    outline: none;
+                    stroke-width: 4px;
+                    stroke-opacity: 1;
+                }
             }
 
             .nodeLabel {
@@ -56,17 +85,28 @@
 
     .links {
         .link {
+            cursor: pointer;
             fill: none;
-            stroke-opacity: 0.2;
+            stroke-opacity: 0.6;
             fill-opacity: 0.2;
             stroke-width: 1;
+            
+            &:focus {
+                outline: none;
+            }
+    
+            &:focus-visible {
+                outline: none;
+                stroke-width: 2px;
+                stroke-opacity: 1;
+            }
         }
 
         .link:hover,
         .link.selected {
-            stroke-opacity: 0.7;
+            stroke-opacity: 1;
             fill-opacity: 0.7;
-            stroke-width: 1;
+            stroke-width: 2;
         }
     }
 }

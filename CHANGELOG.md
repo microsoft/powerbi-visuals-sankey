@@ -1,3 +1,68 @@
+## 3.4.5.0
+
+### New features
+* Added a reset button that returns nodes to their original positions
+* Added a toggle that enables automatic sorting of links
+
+### Other
+* Used levelValues instead of deprecated values
+
+## 3.4.4.0
+
+### New features
+* Nodes and links data labels have extended font formatting settings
+* Visual supports report page tooltips
+
+### Development
+* Migrated to the new eslint version
+* Updated workflow files
+
+### Other
+* Used join d3 pattern istead enter-append-exit
+* API 5.11.0
+* Packages update
+
+## 3.4.3.0
+* Fix weight with zero values
+
+## 3.4.2.0
+* Fix context menu for links and nodes
+
+## 3.4.1.0
+* Fix npm vulnerabilities
+
+## 3.4.0.0
+* Change forward cycles links processing
+
+## 3.3.1.0
+* Localization update
+
+## 3.3.0.0
+* Use selection manager instead of interactivity utils
+* Change links style
+
+## 3.2.2.0
+* Add weight option on the formatting pane
+* Add input/output tooltip values for node
+* Fix styles for keyboard navigation
+* Change backward links positions
+* Update outdated packages
+
+## 3.2.1.0
+* Fix a bug with selection cycle nodes
+* Change the way the cycle links are processed
+* Update outdated packages
+
+## 3.2.0.0
+* Add keyboard support
+
+## 3.1.3.0
+* Fix a bug with displaying japanese characters in link labels
+* Update outdated packages
+
+## 3.1.2
+* Add typescript to dependencies
+
 ## 3.1.1
 * Update outdated packages
 
