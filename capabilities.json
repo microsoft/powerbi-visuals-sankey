@@ -193,6 +193,24 @@
         },
         "links": {
             "properties": {
+                "matchNodeColors": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "setIndividualColors": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "matchSourceOrDestination": {
+                    "type": {
+                        "enumeration": [
+                            { "value": "source", "displayName": "Source" },
+                            { "value": "destination", "displayName": "Destination" }
+                        ]
+                    }
+                },
                 "fill": {
                     "type": {
                         "fill": {
@@ -201,14 +219,33 @@
                             }
                         }
                     }
+                },
+                "showLinkOutine": {
+                    "type": {
+                        "bool": true
+                    }
                 }
             }
         },
         "nodes": {
             "properties": {
-                "nodesWidth":{
+                "defaultColor": {
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "nodesWidth": {
                     "type": {
                         "numeric": true
+                    }
+                },
+                "showAll": {
+                    "type": {
+                        "bool": true
                     }
                 },
                 "fill": {

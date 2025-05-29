@@ -452,7 +452,7 @@ export class SankeyDiagram implements IVisual {
         const name: string = node.levelValues?.[0]?.value?.toString() ?? null;
         const nodeFillColor = this.getColor(
             SankeyDiagram.NodesPropertyIdentifier,
-            this.colorPalette.getColor(name).value,
+            settings.nodesSettings.defaultColor.value.value ?? this.colorPalette.getColor(name).value,
             node.objects);
         const nodeStrokeColor = this.colorHelper.getHighContrastColor("foreground", nodeFillColor);
 
@@ -560,11 +560,24 @@ export class SankeyDiagram implements IVisual {
                         Number(child.values[weightIndex].value) || SankeyDiagram.DefaultWeightValue : SankeyDiagram.MinWeightValue;
                     weightValues.push(weight);
                 }
-                const linkFillColor = this.getColor(
+
+                const linkColorIndex: number = valueSources.indexOf(valueSources.filter((column: powerbi.DataViewMetadataColumn) => {
+                    return column.roles.LinkColor;
+                }).pop());
+
+                let linkColorValue: string | undefined = undefined;
+                if (linkColorIndex !== -1) {
+                    linkColorValue = (child.values[linkColorIndex] && child.values[linkColorIndex].value)
+                        ? child.values[linkColorIndex].value?.toString()
+                        : undefined;
+                }
+                const linkFillColor = linkColorValue ?? this.getColor(
                     SankeyDiagram.LinksPropertyIdentifier,
                     SankeyDiagram.DefaultColourOfLink,
                     child.objects);
-                const linkStrokeColor = this.colorHelper.isHighContrast ? this.colorHelper.getHighContrastColor("foreground", linkFillColor) : linkFillColor;
+                let linkStrokeColor = this.colorHelper.isHighContrast ? this.colorHelper.getHighContrastColor("foreground", linkFillColor) : linkFillColor;
+                // remove outline if setting is disabled
+                linkStrokeColor = settings.linksSelector.outline.draw.value ? linkStrokeColor : null;
 
                 const valuesFormatterForLinkTooltipInfo = valueFormatter.create({
                     format: formatOfWeight,

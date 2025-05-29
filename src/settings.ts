@@ -33,6 +33,7 @@ import {
     SankeyDiagramNode,
     SankeyDiagramNodePositionSetting
 } from "./dataInterfaces";
+import { dataViewWildcard } from "powerbi-visuals-utils-dataviewutils";
 
 import FormattingSettingsCards = formattingSettings.Cards;
 import FormattingSettingsSimpleCard = formattingSettings.SimpleCard;
@@ -231,11 +232,61 @@ export class LinkLabelsSettings extends BaseFontSettingsCard {
     }
 }
 
-export class LinksSettings extends FormattingSettingsSimpleCard {
+export class LinkColorSettings extends FormattingSettingsSimpleCard {
+    public name: string = "linkColors";
+    public displayName: string = "Fill";
+    public displayNameKey: string = "Visual_LinkColors";
+    public matchNodeColors = new formattingSettings.ToggleSwitch({
+        name: "matchNodeColors",
+        displayName: "Match Node Colors",
+        displayNameKey: "Visual_LinkMatchNodeColors",
+        value: true
+    });
+    public matchSourceOrDestination = new formattingSettings.ItemDropdown({
+        name: "matchSourceOrDestination",
+        displayName: "Match Color To",
+        displayNameKey: "Visual_MatchColorTo",
+        items: [
+            { value: "source", displayName: "Source" },
+            { value: "destination", displayName: "Destination" }
+        ],
+        value: { value: "source", displayNameKey: "Visual_MatchColorTo_Source" }
+    });
+    public setIndividualColors = new formattingSettings.ToggleSwitch({
+        name: "setIndividualColors",
+        displayName: "Set Individual Colors",
+        displayNameKey: "Visual_SetIndividualColors",
+        value: false
+    });
+    public slices: FormattingSettingsSlice[] = [
+        this.matchNodeColors,
+        this.matchSourceOrDestination,
+        this.setIndividualColors
+    ];
+}
+
+export class LinkOutlineSettings extends FormattingSettingsSimpleCard {
+    public name: string = "linkOutline";
+    public displayName: string = "Outline";
+    public displayNameKey: string = "Visual_LinkOutline";
+    public draw = new formattingSettings.ToggleSwitch({
+        name: "showLinkOutine",
+        displayNameKey: "Visual_ShowLinkOutline",
+        value: true
+    });
+    public topLevelSlice: formattingSettings.ToggleSwitch = this.draw;
+    public slices: FormattingSettingsSlice[] = [];
+}
+
+export class LinksSettings extends FormattingSettingsCompositeCard {
+    public persistProperties: PersistPropertiesGroup = new PersistPropertiesGroup();
+    public colors: LinkColorSettings = new LinkColorSettings();
+    public outline: LinkOutlineSettings = new LinkOutlineSettings();
+
     public name: string = "links";
     public displayName: string = "Links";
     public displayNameKey: string = "Visual_Links";
-    public slices: FormattingSettingsSlice[] = [];
+    public groups: FormattingSettingsCards[] = [this.colors, this.outline];
 }
 
 export class NodesSettings extends FormattingSettingsSimpleCard {
@@ -259,7 +310,19 @@ export class NodesSettings extends FormattingSettingsSimpleCard {
             }
         }
     });
-    public slices: FormattingSettingsSlice[] = [this.nodeWidth];
+    public defaultColor = new formattingSettings.ColorPicker({
+        name: "defaultColor",
+        displayName: "Default color",
+        displayNameKey: "Visual_NodeDefaultColor",
+        value: { value: undefined }
+    });
+    public showAll = new formattingSettings.ToggleSwitch({
+        name: "showAll",
+        displayName: "Show all",
+        displayNameKey: "Visual_NodesShowAll",
+        value: false
+    });
+    public slices: FormattingSettingsSlice[] = [this.nodeWidth, this.defaultColor, this.showAll];
 }
 
 export class ScaleSettings extends FormattingSettingsSimpleCard {
@@ -379,16 +442,17 @@ export class SankeyDiagramSettings extends FormattingSettingsModel {
 
     public labels: DataLabelsSettings = new DataLabelsSettings();
     public linkLabels: LinkLabelsSettings = new LinkLabelsSettings();
-    public linksColorSelector: LinksSettings = new LinksSettings();
+    public linksSelector: LinksSettings = new LinksSettings();
+    private linksColorSelector: LinkColorSettings = this.linksSelector.colors
     public nodesSettings: NodesSettings = new NodesSettings();
     public scale: ScaleSettings = new ScaleSettings();
     public cyclesLinks: CyclesLinkSettings = new CyclesLinkSettings();
     public nodeComplexSettings: NodeComplexSettings = new NodeComplexSettings();
-    public cards: FormattingSettingsCards[] = [this.labels, this.linkLabels, this.linksColorSelector, this.nodesSettings, this.scale, this.cyclesLinks, this.nodeComplexSettings];
+    public cards: FormattingSettingsCards[] = [this.labels, this.linkLabels, this.linksSelector, this.nodesSettings, this.scale, this.cyclesLinks, this.nodeComplexSettings];
 
     populateNodesColorSelector(nodes: SankeyDiagramNode[]) {
         const slices = this.nodesSettings.slices;
-        if (nodes) {
+        if (nodes && this.nodesSettings.showAll.value) {
             nodes.forEach(node => {
                 if(slices.some((nodeColorSelector: FormattingSettingsSlice) => nodeColorSelector.displayName === node.label.formattedName)){
                     return;
@@ -404,16 +468,51 @@ export class SankeyDiagramSettings extends FormattingSettingsModel {
     }
 
     populateLinksColorSelector(links: SankeyDiagramLink[]) {
+        // Reset slices to only the base controls
+        this.linksColorSelector.slices = [
+            this.linksColorSelector.matchNodeColors,
+            this.linksColorSelector.matchSourceOrDestination,
+            this.linksColorSelector.setIndividualColors
+        ];
         const slices = this.linksColorSelector.slices;
-        if (links) {
-            links.forEach(link => {
-                slices.push(new formattingSettings.ColorPicker({
-                    name: "fill",
-                    displayName: link.source.label.formattedName + " - " + link.destination.label.formattedName,
-                    value: { value: link.fillColor },
-                    selector: ColorHelper.normalizeSelector((<ISelectionId>link.selectionId).getSelector())
-                }));
-            });
+        this.linksColorSelector.matchSourceOrDestination.visible = false;
+
+        if (this.linksColorSelector.matchNodeColors.value) {
+            // Assign colors based on source or destination
+            this.linksColorSelector.setIndividualColors.visible = false;
+            this.linksColorSelector.matchSourceOrDestination.visible = true;
+            if (links) {
+                links.forEach(link => {
+                    if (this.linksColorSelector.matchSourceOrDestination.value.value === "source") {
+                        link.fillColor = link.source.fillColor;
+                    } else if (this.linksColorSelector.matchSourceOrDestination.value.value === "destination") {
+                        link.fillColor = link.destination.fillColor;
+                    }
+                });
+            }
+        } else if (this.linksColorSelector.setIndividualColors.value) {
+            // Show individual color pickers for each link
+            if (links) {
+                links.forEach(link => {
+                    slices.push(new formattingSettings.ColorPicker({
+                        name: "fill",
+                        displayName: link.source.label.formattedName + " - " + link.destination.label.formattedName,
+                        value: { value: link.fillColor },
+                        selector: ColorHelper.normalizeSelector((<ISelectionId>link.selectionId).getSelector())
+                    }));
+                });
+            }
+        } else {
+            // Show a single color picker for all links
+            slices.push(new formattingSettings.ColorPicker({
+                name: "fill",
+                displayName: "Link Color",
+                displayNameKey: "Visual_LinkColor",
+                type: powerbi.visuals.FormattingComponent.ColorPicker,
+                selector: dataViewWildcard.createDataViewWildcardSelector(dataViewWildcard.DataViewWildcardMatchingOption.InstancesAndTotals),
+                value: { value: links && links[0] ? links[0].fillColor : "#000000" },
+                instanceKind: powerbi.VisualEnumerationInstanceKinds.ConstantOrRule
+            }));
         }
     }
 }
