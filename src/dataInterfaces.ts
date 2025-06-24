@@ -137,7 +137,6 @@ export interface SankeyDiagramDataView {
     nodes: SankeyDiagramNode[];
     links: SankeyDiagramLink[];
     columns: SankeyDiagramColumn[];
-    settings: SankeyDiagramSettings;
 }
 
 export interface SankeyDiagramRoleNames {
