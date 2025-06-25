@@ -140,6 +140,7 @@ export class SankeyDiagram implements IVisual {
     private static resetButton: ClassAndSelector = createClassAndSelector("resetButton");
     private static ResetButtonRect: ClassAndSelector = createClassAndSelector("resetButtonRect");
     private static ResetButtonText: ClassAndSelector = createClassAndSelector("resetButtonText");
+    private static StrokeNotVisibleClass: ClassAndSelector = createClassAndSelector("strokeNotVisible");
 
     private static LinksPropertyIdentifier: DataViewObjectPropertyIdentifier = {
         objectName: "links",
@@ -1995,7 +1996,8 @@ export class SankeyDiagram implements IVisual {
             .attr("aria-selected", "false")
             .attr('aria-label', (link: SankeyDiagramLink) => `${link.source.label.name} to ${link.destination.label.name} weighted at ${link.weight}`)
             .style("stroke", (link: SankeyDiagramLink) => link.strokeColor)
-            .style("fill", (link: SankeyDiagramLink) => link.fillColor);
+            .style("fill", (link: SankeyDiagramLink) => link.fillColor)
+            .classed(SankeyDiagram.StrokeNotVisibleClass.className, !this.sankeyDiagramSettings.linksSettings.outline.draw.value && !this.colorHelper.isHighContrast);
 
         return linksElements;
     }
