@@ -40,6 +40,8 @@ import FormattingSettingsSimpleCard = formattingSettings.SimpleCard;
 import FormattingSettingsCompositeCard = formattingSettings.CompositeCard;
 import FormattingSettingsSlice = formattingSettings.Slice;
 import FormattingSettingsModel = formattingSettings.Model;
+import Container = formattingSettings.Container;
+import ContainerItem = formattingSettings.ContainerItem;
 import ILocalizedItemMember = formattingSettingsInterfaces.ILocalizedItemMember;
 
 import ISelectionId = powerbiVisualsApi.visuals.ISelectionId;
@@ -48,6 +50,11 @@ export enum CyclesDrawType {
     Duplicate,
     Backward,
     DuplicateOptimized
+}
+
+export enum LinkMatchType{
+    Source = "source",
+    Destination = "destination"
 }
 
 export interface ViewportSize {
@@ -74,19 +81,24 @@ export const buttonDefaults: IButtonSettings = {
 };
 
 export const buttonPositionOptions: ILocalizedItemMember[] = [
-    {value : ButtonPosition.Top, displayNameKey: "Visual_Top"},
-    {value : ButtonPosition.TopCenter, displayNameKey: "Visual_TopCenter"},
-    {value : ButtonPosition.TopRight, displayNameKey: "Visual_TopRight"},
-    {value : ButtonPosition.Bottom, displayNameKey: "Visual_Bottom"},
-    {value : ButtonPosition.BottomCenter, displayNameKey: "Visual_BottomCenter"},
-    {value : ButtonPosition.BottomRight, displayNameKey: "Visual_BottomRight"}
+    { value: ButtonPosition.Top, displayNameKey: "Visual_Top" },
+    { value: ButtonPosition.TopCenter, displayNameKey: "Visual_TopCenter" },
+    { value: ButtonPosition.TopRight, displayNameKey: "Visual_TopRight" },
+    { value: ButtonPosition.Bottom, displayNameKey: "Visual_Bottom" },
+    { value: ButtonPosition.BottomCenter, displayNameKey: "Visual_BottomCenter" },
+    { value: ButtonPosition.BottomRight, displayNameKey: "Visual_BottomRight" }
 ];
 
-export const duplicateNodesOptions : ILocalizedItemMember[] = [
-    {value : CyclesDrawType.Duplicate, displayNameKey: "Visual_Duplicate"},
-    {value : CyclesDrawType.Backward, displayNameKey: "Visual_DrawBackwardLink"},
-    {value : CyclesDrawType.DuplicateOptimized, displayNameKey: "Visual_DuplicateOptimized"}
+export const duplicateNodesOptions: ILocalizedItemMember[] = [
+    { value: CyclesDrawType.Duplicate, displayNameKey: "Visual_Duplicate" },
+    { value: CyclesDrawType.Backward, displayNameKey: "Visual_DrawBackwardLink" },
+    { value: CyclesDrawType.DuplicateOptimized, displayNameKey: "Visual_DuplicateOptimized" }
 ];
+
+export const matchSourceOrDestinationOptions: ILocalizedItemMember[] = [
+    { value: LinkMatchType.Source, displayNameKey: "Visual_Source" },
+    { value: LinkMatchType.Destination, displayNameKey: "Visual_Destination" }
+]
 
 export class FontSettingsOptions {
     public static DefaultFontSize: number = 12;
@@ -184,7 +196,7 @@ export class BaseFontSettingsCard extends FormattingSettingsCompositeCard {
         slices: [this.fontControl, this.fill],
     });
 
-    constructor(cardName: string, defaultFontSize?: number){
+    constructor(cardName: string, defaultFontSize?: number) {
         super();
         this.name = cardName;
         this.fontGroup.name = `${cardName}Values`;
@@ -192,7 +204,7 @@ export class BaseFontSettingsCard extends FormattingSettingsCompositeCard {
         this.topLevelSlice = this.show;
     }
 
-    public groups: FormattingSettingsSlice[] = [ this.fontGroup ];
+    public groups: FormattingSettingsSlice[] = [this.fontGroup];
 }
 
 export class DataLabelsSettings extends BaseFontSettingsCard {
@@ -232,37 +244,59 @@ export class LinkLabelsSettings extends BaseFontSettingsCard {
     }
 }
 
+export class LinkColorContainerItem extends ContainerItem {
+    public slices: formattingSettings.Slice[] = [];
+    public fill?: formattingSettings.ColorPicker;
+    public static DefaultColourOfLink: string = "#4F4F4F";
+
+    constructor(link?: SankeyDiagramLink) {
+        super();
+        this.displayName = link ? `${link.source.label.formattedName} - ${link.destination.label.formattedName}` : "All";
+        this.displayNameKey = link ? undefined : "Visual_All";
+        this.fill = new formattingSettings.ColorPicker({
+            name: "fill",
+            displayName: "Color",
+            displayNameKey: "Visual_Color",
+            value: { value: link ? link.fillColor : LinkColorContainerItem.DefaultColourOfLink },
+            selector: link ? ColorHelper.normalizeSelector(link.selectionId.getSelector()) : dataViewWildcard.createDataViewWildcardSelector(dataViewWildcard.DataViewWildcardMatchingOption.InstancesAndTotals),
+            instanceKind: link ? undefined : powerbi.VisualEnumerationInstanceKinds.ConstantOrRule,
+            altConstantSelector: link ? undefined : null
+        });
+
+        this.slices = [this.fill];
+    }
+}
+
 export class LinkColorSettings extends FormattingSettingsSimpleCard {
     public name: string = "linkColors";
-    public displayName: string = "Fill";
-    public displayNameKey: string = "Visual_LinkColors";
+    public displayNameKey: string = "Visual_Color";
+
     public matchNodeColors = new formattingSettings.ToggleSwitch({
         name: "matchNodeColors",
         displayName: "Match Node Colors",
         displayNameKey: "Visual_LinkMatchNodeColors",
-        value: true
+        value: false
     });
+
     public matchSourceOrDestination = new formattingSettings.ItemDropdown({
         name: "matchSourceOrDestination",
         displayName: "Match Color To",
         displayNameKey: "Visual_MatchColorTo",
-        items: [
-            { value: "source", displayName: "Source" },
-            { value: "destination", displayName: "Destination" }
-        ],
-        value: { value: "source", displayNameKey: "Visual_MatchColorTo_Source" }
+        items: matchSourceOrDestinationOptions,
+        value: matchSourceOrDestinationOptions[0],
+        visible: false
     });
-    public setIndividualColors = new formattingSettings.ToggleSwitch({
-        name: "setIndividualColors",
-        displayName: "Set Individual Colors",
-        displayNameKey: "Visual_SetIndividualColors",
-        value: false
-    });
+
     public slices: FormattingSettingsSlice[] = [
         this.matchNodeColors,
-        this.matchSourceOrDestination,
-        this.setIndividualColors
+        this.matchSourceOrDestination
     ];
+
+    public defaultContainerItem: LinkColorContainerItem = new LinkColorContainerItem();
+    public container?: formattingSettings.Container = new formattingSettings.Container({
+        displayNameKey: "Visual_ApplySettingsTo",
+        containerItems: [this.defaultContainerItem]
+    });
 }
 
 export class LinkOutlineSettings extends FormattingSettingsSimpleCard {
@@ -287,6 +321,29 @@ export class LinksSettings extends FormattingSettingsCompositeCard {
     public displayName: string = "Links";
     public displayNameKey: string = "Visual_Links";
     public groups: FormattingSettingsCards[] = [this.colors, this.outline];
+    onPreProcess(): void {
+        // this.colors.container.visible = this.colors.matchNodeColors.value;
+        this.colors.matchSourceOrDestination.visible = this.colors.matchNodeColors.value;
+    }
+}
+
+class NodesContainerItem extends ContainerItem {
+    public slices: formattingSettings.Slice[] = [];
+    public fill?: formattingSettings.ColorPicker;
+
+    constructor(node?: SankeyDiagramNode) {
+        super();
+        this.displayName = node ? node.label.formattedName : "All";
+        this.displayNameKey = node ? undefined : "Visual_All";
+        this.fill = new formattingSettings.ColorPicker({
+            name: "fill",
+            displayNameKey: "Visual_Color",
+            value: { value: node ? node.fillColor : undefined },
+            selector: node ? ColorHelper.normalizeSelector(node.selectionId.getSelector()) : undefined
+        });
+
+        this.slices = [this.fill];
+    }
 }
 
 export class NodesSettings extends FormattingSettingsSimpleCard {
@@ -294,6 +351,11 @@ export class NodesSettings extends FormattingSettingsSimpleCard {
     public displayName: string = "Nodes";
     public displayNameKey: string = "Visual_Nodes";
 
+    public defaultContainerItem: NodesContainerItem = new NodesContainerItem();
+    public container: formattingSettings.Container = new formattingSettings.Container({
+        displayNameKey: "Visual_ApplySettingsTo",
+        containerItems: [this.defaultContainerItem]
+    });
     public nodeWidth = new formattingSettings.NumUpDown({
         name: "nodesWidth",
         displayName: "Width",
@@ -310,19 +372,7 @@ export class NodesSettings extends FormattingSettingsSimpleCard {
             }
         }
     });
-    public defaultColor = new formattingSettings.ColorPicker({
-        name: "defaultColor",
-        displayName: "Default color",
-        displayNameKey: "Visual_NodeDefaultColor",
-        value: { value: undefined }
-    });
-    public showAll = new formattingSettings.ToggleSwitch({
-        name: "showAll",
-        displayName: "Show all",
-        displayNameKey: "Visual_NodesShowAll",
-        value: false
-    });
-    public slices: FormattingSettingsSlice[] = [this.nodeWidth, this.defaultColor, this.showAll];
+    public slices?: formattingSettings.Slice[] = [this.nodeWidth];
 }
 
 export class ScaleSettings extends FormattingSettingsSimpleCard {
@@ -430,77 +480,20 @@ export class SankeyDiagramSettings extends FormattingSettingsModel {
 
     public labels: DataLabelsSettings = new DataLabelsSettings();
     public linkLabels: LinkLabelsSettings = new LinkLabelsSettings();
-    public linksSelector: LinksSettings = new LinksSettings();
-    private linksColorSelector: LinkColorSettings = this.linksSelector.colors
+    public linksSettings: LinksSettings = new LinksSettings();
     public nodesSettings: NodesSettings = new NodesSettings();
     public scale: ScaleSettings = new ScaleSettings();
     public cyclesLinks: CyclesLinkSettings = new CyclesLinkSettings();
     public nodeComplexSettings: NodeComplexSettings = new NodeComplexSettings();
-    public cards: FormattingSettingsCards[] = [this.labels, this.linkLabels, this.linksSelector, this.nodesSettings, this.scale, this.cyclesLinks, this.nodeComplexSettings];
+    public cards: FormattingSettingsCards[] = [this.labels, this.linkLabels, this.linksSettings, this.nodesSettings, this.scale, this.cyclesLinks, this.nodeComplexSettings];
 
     populateNodesColorSelector(nodes: SankeyDiagramNode[]) {
-        const slices = this.nodesSettings.slices;
-        if (nodes && this.nodesSettings.showAll.value) {
-            nodes.forEach(node => {
-                if(slices.some((nodeColorSelector: FormattingSettingsSlice) => nodeColorSelector.displayName === node.label.formattedName)){
-                    return;
-                }
-                slices.push(new formattingSettings.ColorPicker({
-                    name: "fill",
-                    displayName: node.label.formattedName,
-                    value: { value: node.fillColor },
-                    selector: ColorHelper.normalizeSelector((<ISelectionId>node.selectionId).getSelector())
-                }));
-            });
-        }
+        const containerItems = this.nodesSettings.container.containerItems;
+        nodes?.forEach(node => containerItems.push(new NodesContainerItem(node)));
     }
 
     populateLinksColorSelector(links: SankeyDiagramLink[]) {
-        // Reset slices to only the base controls
-        this.linksColorSelector.slices = [
-            this.linksColorSelector.matchNodeColors,
-            this.linksColorSelector.matchSourceOrDestination,
-            this.linksColorSelector.setIndividualColors
-        ];
-        const slices = this.linksColorSelector.slices;
-        this.linksColorSelector.matchSourceOrDestination.visible = false;
-
-        if (this.linksColorSelector.matchNodeColors.value) {
-            // Assign colors based on source or destination
-            this.linksColorSelector.setIndividualColors.visible = false;
-            this.linksColorSelector.matchSourceOrDestination.visible = true;
-            if (links) {
-                links.forEach(link => {
-                    if (this.linksColorSelector.matchSourceOrDestination.value.value === "source") {
-                        link.fillColor = link.source.fillColor;
-                    } else if (this.linksColorSelector.matchSourceOrDestination.value.value === "destination") {
-                        link.fillColor = link.destination.fillColor;
-                    }
-                });
-            }
-        } else if (this.linksColorSelector.setIndividualColors.value) {
-            // Show individual color pickers for each link
-            if (links) {
-                links.forEach(link => {
-                    slices.push(new formattingSettings.ColorPicker({
-                        name: "fill",
-                        displayName: link.source.label.formattedName + " - " + link.destination.label.formattedName,
-                        value: { value: link.fillColor },
-                        selector: ColorHelper.normalizeSelector((<ISelectionId>link.selectionId).getSelector())
-                    }));
-                });
-            }
-        } else {
-            // Show a single color picker for all links
-            slices.push(new formattingSettings.ColorPicker({
-                name: "fill",
-                displayName: "Link Color",
-                displayNameKey: "Visual_LinkColor",
-                type: powerbi.visuals.FormattingComponent.ColorPicker,
-                selector: dataViewWildcard.createDataViewWildcardSelector(dataViewWildcard.DataViewWildcardMatchingOption.InstancesAndTotals),
-                value: { value: links && links[0] ? links[0].fillColor : "#000000" },
-                instanceKind: powerbi.VisualEnumerationInstanceKinds.ConstantOrRule
-            }));
-        }
+        const containerItems = this.linksSettings.colors.container.containerItems;
+        links?.forEach(link => containerItems.push(new LinkColorContainerItem(link)));
     }
 }

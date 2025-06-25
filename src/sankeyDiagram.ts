@@ -98,6 +98,8 @@ import {
     FontSettingsOptions,
     ButtonSettings,
     buttonDefaults,
+    LinkMatchType,
+    LinkColorContainerItem,
 } from "./settings";
 import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
 
@@ -138,8 +140,6 @@ export class SankeyDiagram implements IVisual {
     private static resetButton: ClassAndSelector = createClassAndSelector("resetButton");
     private static ResetButtonRect: ClassAndSelector = createClassAndSelector("resetButtonRect");
     private static ResetButtonText: ClassAndSelector = createClassAndSelector("resetButtonText");
-
-    private static DefaultColourOfLink: string = "#4F4F4F";
 
     private static LinksPropertyIdentifier: DataViewObjectPropertyIdentifier = {
         objectName: "links",
@@ -451,7 +451,7 @@ export class SankeyDiagram implements IVisual {
         const name: string = node.levelValues?.[0]?.value?.toString() ?? null;
         const nodeFillColor = this.getColor(
             SankeyDiagram.NodesPropertyIdentifier,
-            settings.nodesSettings.defaultColor.value.value ?? this.colorPalette.getColor(name).value,
+            settings.nodesSettings.defaultContainerItem.fill.value.value ?? this.colorPalette.getColor(name).value,
             node.objects);
         const nodeStrokeColor = this.colorHelper.getHighContrastColor("foreground", nodeFillColor);
 
@@ -560,23 +560,14 @@ export class SankeyDiagram implements IVisual {
                     weightValues.push(weight);
                 }
 
-                const linkColorIndex: number = valueSources.indexOf(valueSources.filter((column: powerbi.DataViewMetadataColumn) => {
-                    return column.roles.LinkColor;
-                }).pop());
-
-                let linkColorValue: string | undefined = undefined;
-                if (linkColorIndex !== -1) {
-                    linkColorValue = (child.values[linkColorIndex] && child.values[linkColorIndex].value)
-                        ? child.values[linkColorIndex].value?.toString()
-                        : undefined;
-                }
-                const linkFillColor = linkColorValue ?? this.getColor(
+                const linkFillColor = this.getLinkColor(
+                    settings,
                     SankeyDiagram.LinksPropertyIdentifier,
-                    SankeyDiagram.DefaultColourOfLink,
-                    child.objects);
-                let linkStrokeColor = this.colorHelper.isHighContrast ? this.colorHelper.getHighContrastColor("foreground", linkFillColor) : linkFillColor;
-                // remove outline if setting is disabled
-                linkStrokeColor = settings.linksSelector.outline.draw.value ? linkStrokeColor : null;
+                    LinkColorContainerItem.DefaultColourOfLink,
+                    child.objects,
+                    foundSource,
+                    foundDestination);
+                const linkStrokeColor = this.colorHelper.isHighContrast ? this.colorHelper.getHighContrastColor("foreground", linkFillColor) : linkFillColor;
 
                 const valuesFormatterForLinkTooltipInfo = valueFormatter.create({
                     format: formatOfWeight,
@@ -937,6 +928,27 @@ export class SankeyDiagram implements IVisual {
         });
 
         return setting;
+    }
+
+
+    private getLinkColor(
+        settings: SankeyDiagramSettings,
+        properties: DataViewObjectPropertyIdentifier,
+        defaultColor: string,
+        objects: DataViewObjects,
+        source: SankeyDiagramNode,
+        destination: SankeyDiagramNode): string {
+
+        const color: string = this.getColor(properties, defaultColor, objects);
+        if (settings.linksSettings.colors.matchNodeColors.value) {
+            switch (settings.linksSettings.colors.matchSourceOrDestination.value.value) {
+                case LinkMatchType.Source:
+                    return source.fillColor || color;
+                case LinkMatchType.Destination:
+                    return destination.fillColor || color;
+            }
+        }
+        return color;
     }
 
     private getColor(

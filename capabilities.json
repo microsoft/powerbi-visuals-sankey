@@ -198,17 +198,9 @@
                         "bool": true
                     }
                 },
-                "setIndividualColors": {
-                    "type": {
-                        "bool": true
-                    }
-                },
                 "matchSourceOrDestination": {
                     "type": {
-                        "enumeration": [
-                            { "value": "source", "displayName": "Source" },
-                            { "value": "destination", "displayName": "Destination" }
-                        ]
+                        "enumeration": []
                     }
                 },
                 "fill": {
@@ -229,23 +221,9 @@
         },
         "nodes": {
             "properties": {
-                "defaultColor": {
-                    "type": {
-                        "fill": {
-                            "solid": {
-                                "color": true
-                            }
-                        }
-                    }
-                },
                 "nodesWidth": {
                     "type": {
                         "numeric": true
-                    }
-                },
-                "showAll": {
-                    "type": {
-                        "bool": true
                     }
                 },
                 "fill": {
