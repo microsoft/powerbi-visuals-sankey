@@ -301,9 +301,30 @@ class PersistPropertiesGroup extends FormattingSettingsSimpleCard {
     public displayNameKey: string = "Visual_NodePositions";
     public collapsible: boolean = false;
     public visible: boolean = true;
+    public keepNodeOrder = new formattingSettings.ToggleSwitch({
+        name: "keepNodeOrder",
+        displayNameKey: "Visual_KeepNodeOrder",
+        value: false,
+        descriptionKey: "Visual_KeepNodeOrderDescription"
+    });
+
+    public keepNodePosition = new formattingSettings.ToggleSwitch({
+        name: "keepNodePositions",
+        displayNameKey: "Visual_KeepNodePositions",
+        value: true,
+        descriptionKey: "Visual_KeepNodeOrderDescription"
+    });
+
     public nodePositions = new formattingSettings.ReadOnlyText({
         name: "nodePositions",
         displayNameKey: "Visual_NodePositions",
+        value: "",
+        visible: false,
+    });
+
+    public nodeOrder = new formattingSettings.ReadOnlyText({
+        name: "nodeOrder",
+        displayNameKey: "Visual_NodeOrder",
         value: "",
         visible: false,
     }); 
@@ -315,7 +336,7 @@ class PersistPropertiesGroup extends FormattingSettingsSimpleCard {
         visible: false,
     });
 
-    public slices: FormattingSettingsSlice[] = [this.nodePositions, this.viewportSize]
+    public slices: FormattingSettingsSlice[] = [this.keepNodePosition, this.keepNodeOrder, this.nodePositions, this.nodeOrder, this.viewportSize]
 }
 
 export class ButtonSettings extends FormattingSettingsSimpleCard {
@@ -347,6 +368,10 @@ export class NodeComplexSettings extends FormattingSettingsCompositeCard {
     public name: string = "nodeComplexSettings";
     public displayNameKey: string = "Visual_Sorting";
     public groups: FormattingSettingsCards[] = [this.persistProperties, this.links, this.button];
+    onPreProcess(): void {
+        this.persistProperties.keepNodeOrder.visible = !this.persistProperties.keepNodePosition.value;
+        this.persistProperties.keepNodePosition.visible = !this.persistProperties.keepNodeOrder.value;
+    }
 }
 
 export class CyclesLinkSettings extends FormattingSettingsSimpleCard {

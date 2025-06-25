@@ -243,6 +243,21 @@
                         "text": true
                     }
                 },
+                "nodeOrder": {
+                    "type": {
+                        "text": true
+                    }
+                },
+                "keepNodeOrder": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "keepNodePositions": {
+                    "type": {
+                        "bool": true
+                    }
+                },
                 "viewportSize": {
                     "type": {
                         "text": true
