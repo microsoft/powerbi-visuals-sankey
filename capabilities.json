@@ -263,11 +263,6 @@
                         "text": true
                     }
                 },
-                "linksReorder":{
-                    "type": {
-                        "bool": true
-                    }
-                },
                 "showResetButon": {
                     "type": {
                         "bool": true

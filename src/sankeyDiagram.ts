@@ -1200,20 +1200,13 @@ export class SankeyDiagram implements IVisual {
             this.viewport.height,
             settings.cyclesLinks.selfLinksWeight.value && settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.Backward
         );
+        this.applySavedPositions(sankeyDiagramDataView, settings);
 
-        const shouldReorder = settings.nodeComplexSettings.links.shouldReorder.value;
         const yScale = settings._scale.y;
         const shouldUseSelfLinkWeight = settings.cyclesLinks.selfLinksWeight.value && 
             settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.Backward;
 
-        if (shouldReorder) {
-            this.applySavedPositions(sankeyDiagramDataView, settings);
-            this.computeYPosition(sankeyDiagramDataView.nodes, yScale, shouldUseSelfLinkWeight);
-        } else {
-            this.computeYPosition(sankeyDiagramDataView.nodes, yScale, shouldUseSelfLinkWeight);
-            this.applySavedPositions(sankeyDiagramDataView, settings);
-        }
-
+        this.computeYPosition(sankeyDiagramDataView.nodes, yScale, shouldUseSelfLinkWeight);
         this.computeBordersOfTheNode(sankeyDiagramDataView, settings);
         SankeyDiagram.computeIntersections(sankeyDiagramDataView, settings);
     }

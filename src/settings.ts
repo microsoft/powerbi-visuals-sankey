@@ -283,19 +283,6 @@ export class ScaleSettings extends FormattingSettingsSimpleCard {
     public slices: FormattingSettingsSlice[] = [this.provideMinHeight, this.lnScale];
 }
 
-export class LinksOrder extends FormattingSettingsSimpleCard {
-    public name: string = "linkOrderGroup";
-    public displayNameKey: string = "Visual_LinksOrder";
-
-    public shouldReorder= new formattingSettings.ToggleSwitch({
-        name: "linksReorder",
-        displayNameKey: "Visual_AutoLinksReorder",
-        value: false,
-    });
-
-    slices: formattingSettings.Slice[] = [this.shouldReorder];
-}
-
 class PersistPropertiesGroup extends FormattingSettingsSimpleCard {
     public name: string = "persistProperties";
     public displayNameKey: string = "Visual_NodePositions";
@@ -362,12 +349,11 @@ export class ButtonSettings extends FormattingSettingsSimpleCard {
 
 export class NodeComplexSettings extends FormattingSettingsCompositeCard {
     public persistProperties: PersistPropertiesGroup = new PersistPropertiesGroup();
-    public links: LinksOrder = new LinksOrder();
     public button: ButtonSettings = new ButtonSettings();
 
     public name: string = "nodeComplexSettings";
     public displayNameKey: string = "Visual_Sorting";
-    public groups: FormattingSettingsCards[] = [this.persistProperties, this.links, this.button];
+    public groups: FormattingSettingsCards[] = [this.persistProperties, this.button];
     onPreProcess(): void {
         this.persistProperties.keepNodeOrder.visible = !this.persistProperties.keepNodePosition.value;
         this.persistProperties.keepNodePosition.visible = !this.persistProperties.keepNodeOrder.value;
