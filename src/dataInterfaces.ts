@@ -86,6 +86,7 @@ export interface SankeyDiagramNode extends
     backwardWeight?: number;
     selfLinkWeight?: number;
     links: SankeyDiagramLink[];
+    columnIndex: number;
     x?: number;
     y?: number;
     width?: number;
@@ -116,6 +117,7 @@ export interface SankeyDiagramLink extends
 export interface SankeyDiagramColumn {
     countOfNodes: number;
     sumValueOfNodes: number;
+    x: number;
 }
 
 export enum SankeyDiagramNodeStatus {

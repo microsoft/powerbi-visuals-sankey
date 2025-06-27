@@ -226,7 +226,6 @@ export class SankeyDiagram implements IVisual {
         left: 10
     };
 
-    private nodeWidth: number = 21.5;
     private curvatureOfLinks: number = 0.5;
 
     private static NodeAndBackwardLinkDistance: number = 5;
@@ -467,6 +466,7 @@ export class SankeyDiagram implements IVisual {
             selfLinkWeight: 0,
             width: settings.nodesSettings.nodeWidth.value,
             height: 0,
+            columnIndex: SankeyDiagram.DefaultIndex,
             fillColor: nodeFillColor,
             strokeColor: nodeStrokeColor,
             tooltipInfo: [],
@@ -646,7 +646,7 @@ export class SankeyDiagram implements IVisual {
         };
 
         if (settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.Backward) {
-            SankeyDiagram.computeXPositions(sankeyDiagramDataView);
+            SankeyDiagram.computeColumnXPositions(sankeyDiagramDataView);
             sankeyDiagramDataView.links = this.processCyclesForBackwardLinks(cycles, links);
             sankeyDiagramDataView.links.forEach((link: SankeyDiagramLink) => {
                 if (link.destination === link.source) {
@@ -1109,9 +1109,10 @@ export class SankeyDiagram implements IVisual {
         let maxColumn: SankeyDiagramColumn,
             columns: SankeyDiagramColumn[];
 
-        const maxXPosition: number = SankeyDiagram.computeXPositions(sankeyDiagramDataView);
+        const maxXPosition: number = SankeyDiagram.computeColumnXPositions(sankeyDiagramDataView);
+        settings._scale.x = this.getScaleByAxisX(maxXPosition);
 
-        SankeyDiagram.sortNodesByX(sankeyDiagramDataView.nodes);
+        SankeyDiagram.sortNodesByColumnIndex(sankeyDiagramDataView.nodes);
 
         let scaleShift: number = 0;
         let minWeight: number = 1;
@@ -1178,7 +1179,7 @@ export class SankeyDiagram implements IVisual {
                 SankeyDiagram.updateValueOfNode(node);
             });
 
-            columns = this.getColumns(sankeyDiagramDataView.nodes);
+            columns = this.getColumns(sankeyDiagramDataView.nodes, settings._scale);
             maxColumn = SankeyDiagram.getMaxColumn(columns);
 
             minWeight = d3Min(sankeyDiagramDataView.nodes.filter((n) => Math.max(n.inputWeight, n.outputWeight) > 0).map((n) => Math.max(n.inputWeight, n.outputWeight)));
@@ -1190,7 +1191,6 @@ export class SankeyDiagram implements IVisual {
             scaleShift += SankeyDiagram.ScaleStep;
             scaleStepCount++;
         }
-        settings._scale.x = this.getScaleByAxisX(maxXPosition);
 
         SankeyDiagram.scalePositionsByAxes(
             settings.sort,
@@ -1296,7 +1296,7 @@ export class SankeyDiagram implements IVisual {
         return newarray;
     }
 
-    private static computeXPositions(sankeyDiagramDataView: SankeyDiagramDataView): number {
+    private static computeColumnXPositions(sankeyDiagramDataView: SankeyDiagramDataView): number {
         let nodes: SankeyDiagramNode[] = sankeyDiagramDataView.nodes,
             nextNodes: SankeyDiagramNode[] = [],
             previousNodes: SankeyDiagramNode[] = [],
@@ -1307,7 +1307,7 @@ export class SankeyDiagram implements IVisual {
             nextNodes = [];
 
             nodes.forEach((currentNode: SankeyDiagramNode) => {
-                currentNode.x = x;
+                currentNode.columnIndex = x;
 
                 // put all destination nodes from current node to nextNodes
                 currentNode.links.forEach((link: SankeyDiagramLink) => {
@@ -1330,7 +1330,7 @@ export class SankeyDiagram implements IVisual {
 
             if (isRecursiveDependencies) {
                 previousNodes.forEach((element: SankeyDiagramNode) => {
-                    element.x = x;
+                    element.columnIndex = x;
 
                     x++;
                 });
@@ -1349,28 +1349,29 @@ export class SankeyDiagram implements IVisual {
     }
 
     private getScaleByAxisX(numberOfColumns: number = SankeyDiagram.DefaultNumberOfColumns): number {
-        return SankeyDiagram.getPositiveNumber((this.viewport.width - this.nodeWidth) / numberOfColumns);
+        return SankeyDiagram.getPositiveNumber((this.viewport.width - this.sankeyDiagramSettings.nodesSettings.nodeWidth.value) / numberOfColumns);
     }
 
-    public static sortNodesByX(nodes: SankeyDiagramNode[]): SankeyDiagramNode[] {
+    public static sortNodesByColumnIndex(nodes: SankeyDiagramNode[]): SankeyDiagramNode[] {
         return nodes.sort((firstNode: SankeyDiagramNode, secondNode: SankeyDiagramNode) => {
-            return firstNode.x - secondNode.x;
+            return firstNode.columnIndex - secondNode.columnIndex;
         });
     }
 
-    public getColumns(nodes: SankeyDiagramNode[]): SankeyDiagramColumn[] {
+    public getColumns(nodes: SankeyDiagramNode[], scale: SankeyDiagramScaleSettings): SankeyDiagramColumn[] {
         const columns: SankeyDiagramColumn[] = [];
 
         nodes.forEach((node: SankeyDiagramNode) => {
-            if (!columns[node.x]) {
-                columns[node.x] = {
+            if (!columns[node.columnIndex]) {
+                columns[node.columnIndex] = {
                     countOfNodes: SankeyDiagram.DefaultCountOfNodes,
-                    sumValueOfNodes: SankeyDiagram.DefaultSumValueOfNodes
+                    sumValueOfNodes: SankeyDiagram.DefaultSumValueOfNodes,
+                    x: node.columnIndex * scale.x
                 };
             }
 
-            columns[node.x].sumValueOfNodes += Math.max(node.inputWeight, node.outputWeight);
-            columns[node.x].countOfNodes++;
+            columns[node.columnIndex].sumValueOfNodes += Math.max(node.inputWeight, node.outputWeight);
+            columns[node.columnIndex].countOfNodes++;
 
             let nodeBackwardWeight = 0;
             let nodeSelflinkWeight = 0;
@@ -1380,18 +1381,18 @@ export class SankeyDiagram implements IVisual {
                 return link.direction === SankeyLinkDirrections.Backward ? true : false;
             })) {
                 nodeBackwardWeight = node.backwardWeight;
-                columns[node.x].countOfNodes++;
+                columns[node.columnIndex].countOfNodes++;
             }
 
             if (node.links.some((link: SankeyDiagramLink) => {
                 return link.direction === SankeyLinkDirrections.SelfLink ? true : false;
             })) {
                 nodeSelflinkWeight = node.selfLinkWeight;
-                columns[node.x].sumValueOfNodes += node.selfLinkWeight;
-                columns[node.x].countOfNodes++;
+                columns[node.columnIndex].sumValueOfNodes += node.selfLinkWeight;
+                columns[node.columnIndex].countOfNodes++;
             }
 
-            columns[node.x].sumValueOfNodes += nodeBackwardWeight > nodeSelflinkWeight ? nodeBackwardWeight : nodeSelflinkWeight;
+            columns[node.columnIndex].sumValueOfNodes += nodeBackwardWeight > nodeSelflinkWeight ? nodeBackwardWeight : nodeSelflinkWeight;
         });
 
         return columns;
@@ -1400,7 +1401,8 @@ export class SankeyDiagram implements IVisual {
     public static getMaxColumn(columns: SankeyDiagramColumn[] = []): SankeyDiagramColumn {
         let currentMaxColumn: SankeyDiagramColumn = {
             sumValueOfNodes: SankeyDiagram.DefaultSumValueOfNodes,
-            countOfNodes: SankeyDiagram.DefaultCountOfNodes
+            countOfNodes: SankeyDiagram.DefaultCountOfNodes,
+            x: SankeyDiagram.DefaultPosition
         };
 
         columns.forEach((column: SankeyDiagramColumn) => {
@@ -1472,8 +1474,8 @@ export class SankeyDiagram implements IVisual {
             let offsetByY: number = SankeyDiagram.DefaultOffset,
                 availableHeight: number = SankeyDiagram.MinSize;
 
-            if (currentX !== node.x) {
-                currentX = node.x;
+            if (currentX !== node.columnIndex) {
+                currentX = node.columnIndex;
                 shiftByAxisY = SankeyDiagram.DefaultOffset;
                 index = SankeyDiagram.DefaultIndex;
             }
@@ -1484,7 +1486,7 @@ export class SankeyDiagram implements IVisual {
                 offsetByY = availableHeight / columns[currentX].countOfNodes;
             }
 
-            node.x *= scale.x;
+            node.x = node.columnIndex * scale.x;
 
             let selfLinkHeight: number = d3Max(node.links.filter(l => l.direction === SankeyLinkDirrections.SelfLink).map(l => l.weight));
 
