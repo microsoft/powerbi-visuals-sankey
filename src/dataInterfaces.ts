@@ -117,7 +117,7 @@ export interface SankeyDiagramLink extends
 export interface SankeyDiagramColumn {
     countOfNodes: number;
     sumValueOfNodes: number;
-    x: number;
+    x?: number;
 }
 
 export enum SankeyDiagramNodeStatus {
