@@ -1,6 +1,15 @@
 ## 3.4.5.0
 
 ### New features
+* Used automatic sorting of links by default
+* Adjusted vertical positions of nodes in the same column
+
+### Development
+* Keep columnIndex in persist properties along with positions
+
+## 3.4.5.0
+
+### New features
 * Added a reset button that returns nodes to their original positions
 * Added a toggle that enables automatic sorting of links
 
