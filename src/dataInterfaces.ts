@@ -94,7 +94,7 @@ export interface SankeyDiagramNode extends
     fillColor?: string;
     strokeColor?: string;
     cloneLink?: SankeyDiagramNode;
-    settings?: SankeyDiagramNodePositionSetting;
+    settings?: SankeyDiagramNodeSetting;
     linkSelectableIds?: ISelectionId[];
 }
 
@@ -147,10 +147,11 @@ export interface SankeyDiagramRoleNames {
     values: string;
 }
 
-export interface SankeyDiagramNodePositionSetting {
+export interface SankeyDiagramNodeSetting {
     name: string;
     y?: string;
     x?: string;
+    columnIndex?: number;
 }
 
 export interface TextPropertiesExtended extends TextProperties {

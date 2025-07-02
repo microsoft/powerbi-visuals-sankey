@@ -109,7 +109,7 @@ import {
     SankeyDiagramLabel,
     SankeyDiagramLink,
     SankeyDiagramNode,
-    SankeyDiagramNodePositionSetting,
+    SankeyDiagramNodeSetting,
     SankeyDiagramNodeStatus,
     SankeyDiagramRoleNames,
     SankeyLinkDirrections,
@@ -183,6 +183,7 @@ export class SankeyDiagram implements IVisual {
     private static DefaultIndex: number = 0;
 
     private static NodeMarginFactor: number = 2;
+    private static NodeOffsetFactor: number = 2;
     private static MiddleFactor: number = 2;
 
     private static DefaultNumberOfColumns: number = 1;
@@ -351,7 +352,6 @@ export class SankeyDiagram implements IVisual {
 
     public update(visualUpdateOptions: VisualUpdateOptions): void {
         this.visualHost.eventService.renderingStarted(visualUpdateOptions);
-
         const dataView: DataView = visualUpdateOptions
             && visualUpdateOptions.dataViews
             && visualUpdateOptions.dataViews[0];
@@ -384,8 +384,8 @@ export class SankeyDiagram implements IVisual {
 
         const buttonPosition: ButtonPosition = settings.nodeComplexSettings.button.position.value.value as ButtonPosition;
 
-        if (settings.nodeComplexSettings.button.show.value){
-            switch (buttonPosition){
+        if (settings.nodeComplexSettings.button.show.value) {
+            switch (buttonPosition) {
                 case ButtonPosition.Top:
                 case ButtonPosition.TopRight:
                 case ButtonPosition.TopCenter:
@@ -424,7 +424,7 @@ export class SankeyDiagram implements IVisual {
     }
 
     private getVerticalPositionShift(buttonPosition: ButtonPosition, viewport: IViewport, margin: IMargin): number {
-        switch (buttonPosition){
+        switch (buttonPosition) {
             case ButtonPosition.Bottom:
             case ButtonPosition.BottomRight:
             case ButtonPosition.BottomCenter:
@@ -435,7 +435,7 @@ export class SankeyDiagram implements IVisual {
     }
 
     private getHorizontalPositionShift(buttonPosition: ButtonPosition, viewport: IViewport, margin: IMargin): number {
-        switch (buttonPosition){
+        switch (buttonPosition) {
             case ButtonPosition.TopRight:
             case ButtonPosition.BottomRight:
                 return viewport.width - buttonDefaults.width - margin.left;
@@ -604,7 +604,7 @@ export class SankeyDiagram implements IVisual {
                 }
 
                 // preventing double copying of selectableDataPoints and links to a node with selflink 
-                if (!selfLinkFound){
+                if (!selfLinkFound) {
                     foundSource.linkSelectableIds.push(link.selectionId);
                     foundSource.links.push(link);
                 }
@@ -629,8 +629,8 @@ export class SankeyDiagram implements IVisual {
         if (settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.Duplicate) {
             links = this.processCyclesForwardLinks(cycles, nodes, links);
         }
-        
-        if (settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.DuplicateOptimized){
+
+        if (settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.DuplicateOptimized) {
             links = this.processCyclesForwardLinksOptimized(cycles, nodes, links);
         }
 
@@ -708,14 +708,13 @@ export class SankeyDiagram implements IVisual {
         for (const nodeName of Object.keys(cycles)) {
             const keyNode: SankeyDiagramNode = nodes.find(node => node.label.name === nodeName);
             cycles[nodeName].forEach((cycleNode: SankeyDiagramNode) => {
-                const cycleNodeName: string = cycleNode.label.name; 
-                if (cycles[cycleNodeName])
-                {
+                const cycleNodeName: string = cycleNode.label.name;
+                if (cycles[cycleNodeName]) {
                     // if the current value is also a key, then we need to clone the current key
                     nodesToClone.add(keyNode);
                     // if the current value is also a key and does not have a selflink, we dont need to clone it
                     const hasSelflink: boolean = cycles[cycleNodeName]?.some(node => node.label.name === cycleNodeName);
-                    if(!hasSelflink){
+                    if (!hasSelflink) {
                         nodesNotToClone.add(cycleNode);
                     }
                 }
@@ -723,13 +722,13 @@ export class SankeyDiagram implements IVisual {
             });
         }
 
-        for (const node of nodesToClone){
-            if (nodesNotToClone.has(node)){
+        for (const node of nodesToClone) {
+            if (nodesNotToClone.has(node)) {
                 nodesToClone.delete(node);
             }
         }
 
-        for (const node of nodesToClone){
+        for (const node of nodesToClone) {
             const nodeCopy: SankeyDiagramNode = lodashCloneDeep(node);
             nodeCopy.label.name += SankeyDiagram.DuplicatedNamePostfix;
             nodeCopy.linkSelectableIds = node.linkSelectableIds;
@@ -758,7 +757,7 @@ export class SankeyDiagram implements IVisual {
 
                 return false;
             });
-                
+
             SankeyDiagram.updateValueOfNode(node);
             SankeyDiagram.updateValueOfNode(nodeCopy);
             nodes.push(nodeCopy);
@@ -784,8 +783,8 @@ export class SankeyDiagram implements IVisual {
                     return false;
                 });
 
-                 // copy only! output links to new node;
-                 nodeCopy.links.forEach((link: SankeyDiagramLink) => {
+                // copy only! output links to new node;
+                nodeCopy.links.forEach((link: SankeyDiagramLink) => {
                     link.source = nodeCopy;
                 });
 
@@ -797,7 +796,7 @@ export class SankeyDiagram implements IVisual {
 
                     return false;
                 });
-                
+
                 SankeyDiagram.updateValueOfNode(cycleNode);
                 SankeyDiagram.updateValueOfNode(nodeCopy);
                 nodes.push(nodeCopy);
@@ -830,7 +829,7 @@ export class SankeyDiagram implements IVisual {
     }
 
     private checkNodePositionSettings(nodes: SankeyDiagramNode[], settings: SankeyDiagramSettings) {
-        const nodePositions: SankeyDiagramNodePositionSetting[] = settings._nodePositions;
+        const nodePositions: SankeyDiagramNodeSetting[] = settings.nodeComplexSettings.persistProperties._nodePositions;
         const nodesSet = new Set(nodes.map((node: SankeyDiagramNode) => node.label.name));
         let check: boolean = nodePositions.length === nodesSet.size;
 
@@ -842,13 +841,13 @@ export class SankeyDiagram implements IVisual {
         // if check failed then reset positions
         if (!check) {
             settings.nodeComplexSettings.persistProperties.nodePositions.value = "{}";
-            settings._nodePositions = [];
+            settings.nodeComplexSettings.persistProperties._nodePositions = [];
         }
     }
 
     private restoreNodePositions(nodes: SankeyDiagramNode[], settings: SankeyDiagramSettings) {
         nodes.forEach((node: SankeyDiagramNode) => {
-            const nodeSettings: SankeyDiagramNodePositionSetting = this.getNodeSettings(node.label.name, settings);
+            const nodeSettings: SankeyDiagramNodeSetting = this.getNodeSettings(node.label.name, settings);
             node.settings = nodeSettings;
         });
     }
@@ -914,10 +913,10 @@ export class SankeyDiagram implements IVisual {
 
     private getNodeSettings(
         name: string,
-        settings: SankeyDiagramSettings): SankeyDiagramNodePositionSetting {
+        settings: SankeyDiagramSettings): SankeyDiagramNodeSetting {
 
-        let setting: SankeyDiagramNodePositionSetting = null;
-        settings._nodePositions.some((nodePositions: SankeyDiagramNodePositionSetting) => {
+        let setting: SankeyDiagramNodeSetting = null;
+        settings.nodeComplexSettings.persistProperties._nodePositions.some((nodePositions: SankeyDiagramNodeSetting) => {
             if (nodePositions.name === name) {
                 setting = nodePositions;
                 return true;
@@ -986,39 +985,39 @@ export class SankeyDiagram implements IVisual {
         node.links.forEach((currentLink: SankeyDiagramLink) => {
             node.inputWeight +=
                 currentLink.destination === node &&
-                currentLink.destination !== currentLink.source &&
-                currentLink.direction === SankeyLinkDirrections.Forward
-                ?
-                currentLink.weight
-                :
-                SankeyDiagram.DefaultWeightValue;
+                    currentLink.destination !== currentLink.source &&
+                    currentLink.direction === SankeyLinkDirrections.Forward
+                    ?
+                    currentLink.weight
+                    :
+                    SankeyDiagram.DefaultWeightValue;
 
             node.inputWeight +=
                 currentLink.source === node &&
-                currentLink.destination !== currentLink.source &&
-                currentLink.direction === SankeyLinkDirrections.Backward
-                ?
-                currentLink.weight
-                :
-                SankeyDiagram.DefaultWeightValue;
+                    currentLink.destination !== currentLink.source &&
+                    currentLink.direction === SankeyLinkDirrections.Backward
+                    ?
+                    currentLink.weight
+                    :
+                    SankeyDiagram.DefaultWeightValue;
 
             node.outputWeight +=
                 currentLink.source === node &&
-                currentLink.destination !== currentLink.source &&
-                currentLink.direction === SankeyLinkDirrections.Forward
-                ?
-                currentLink.weight
-                :
-                SankeyDiagram.DefaultWeightValue;
+                    currentLink.destination !== currentLink.source &&
+                    currentLink.direction === SankeyLinkDirrections.Forward
+                    ?
+                    currentLink.weight
+                    :
+                    SankeyDiagram.DefaultWeightValue;
 
             node.outputWeight +=
                 currentLink.destination === node &&
-                currentLink.destination !== currentLink.source &&
-                currentLink.direction === SankeyLinkDirrections.Backward
-                ?
-                currentLink.weight
-                :
-                SankeyDiagram.DefaultWeightValue;
+                    currentLink.destination !== currentLink.source &&
+                    currentLink.direction === SankeyLinkDirrections.Backward
+                    ?
+                    currentLink.weight
+                    :
+                    SankeyDiagram.DefaultWeightValue;
 
             if (currentLink.direction === SankeyLinkDirrections.Backward) {
                 node.backwardWeight = currentLink.weight > node.backwardWeight ? currentLink.weight : node.backwardWeight;
@@ -1060,10 +1059,10 @@ export class SankeyDiagram implements IVisual {
                 displayName: localizationManager.getDisplayName("Visual_Input"),
                 value: formattedNodeInputWeight
             },
-            {
-                displayName: localizationManager.getDisplayName("Visual_Output"),
-                value: formattedNodeOutputWeight
-            });
+                {
+                    displayName: localizationManager.getDisplayName("Visual_Output"),
+                    value: formattedNodeOutputWeight
+                });
         }
 
         return tooltips;
@@ -1084,22 +1083,22 @@ export class SankeyDiagram implements IVisual {
         // node positions
         try {
             const nodePositionsValue = settings.nodeComplexSettings.persistProperties.nodePositions.value;
-            settings._nodePositions = JSON.parse(nodePositionsValue) as SankeyDiagramNodePositionSetting[];
+            settings.nodeComplexSettings.persistProperties._nodePositions = JSON.parse(nodePositionsValue) as SankeyDiagramNodeSetting[];
         }
         // eslint-disable-next-line
         catch (exception) {
-            settings._nodePositions = [];
+            settings.nodeComplexSettings.persistProperties._nodePositions = [];
             settings.nodeComplexSettings.persistProperties.nodePositions.value = "[]";
         }
 
         // viewport size
         try {
             const viewportSizeValue = settings.nodeComplexSettings.persistProperties.viewportSize.value
-            settings._viewportSize = <ViewportSize>JSON.parse(viewportSizeValue);
+            settings.nodeComplexSettings.persistProperties._viewportSize = <ViewportSize>JSON.parse(viewportSizeValue);
         }
         // eslint-disable-next-line
         catch (exception) {
-            settings._nodePositions = settings._nodePositions || [];
+            settings.nodeComplexSettings.persistProperties._nodePositions = settings.nodeComplexSettings.persistProperties._nodePositions || [];
             settings.nodeComplexSettings.persistProperties.viewportSize.value = "{}";
         }
         return settings;
@@ -1192,43 +1191,95 @@ export class SankeyDiagram implements IVisual {
             scaleStepCount++;
         }
 
-        SankeyDiagram.scalePositionsByAxes(
-            settings.sort,
-            sankeyDiagramDataView.nodes,
-            columns,
-            settings._scale,
-            this.viewport.height,
-            settings.cyclesLinks.selfLinksWeight.value && settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.Backward
-        );
-        this.applySavedPositions(sankeyDiagramDataView, settings);
+        this.computeNodesPositions(sankeyDiagramDataView, columns);
 
         const yScale = settings._scale.y;
-        const shouldUseSelfLinkWeight = settings.cyclesLinks.selfLinksWeight.value && 
+        const shouldUseSelfLinkWeight = settings.cyclesLinks.selfLinksWeight.value &&
             settings.cyclesLinks.drawCycles.value.value === CyclesDrawType.Backward;
 
-        this.computeYPosition(sankeyDiagramDataView.nodes, yScale, shouldUseSelfLinkWeight);
+        this.computeLinksYPosition(sankeyDiagramDataView.nodes, yScale, shouldUseSelfLinkWeight);
         this.computeBordersOfTheNode(sankeyDiagramDataView, settings);
         SankeyDiagram.computeIntersections(sankeyDiagramDataView, settings);
     }
 
-    private applySavedPositions(sankeyDiagramDataView: SankeyDiagramDataView, settings: SankeyDiagramSettings) {
-        // if size were changed shift positions of nodes
-        const viewPort: ViewportSize = settings._viewportSize;
-        let scaleHeight: number = 1;
-        if (+viewPort.height !== this.viewport.height && viewPort.height && +viewPort.height !== 0) {
-            scaleHeight = this.viewport.height / +viewPort.height;
-        }
-        let scaleWidth: number = 1;
-        if (+viewPort.width !== this.viewport.width && viewPort.width && +viewPort.width !== 0) {
-            scaleWidth = this.viewport.width / +viewPort.width;
+    private computeNodesPositions(dataView: SankeyDiagramDataView, columns: SankeyDiagramColumn[]): void {
+        SankeyDiagram.scalePositionsByAxes(
+            this.sankeyDiagramSettings.sort,
+            dataView.nodes,
+            columns,
+            this.sankeyDiagramSettings._scale,
+            this.viewport,
+            this.sankeyDiagramSettings.cyclesLinks.selfLinksWeight.value && this.sankeyDiagramSettings.cyclesLinks.drawCycles.value.value === CyclesDrawType.Backward,
+            this.sankeyDiagramSettings
+        );
+
+        this.adjustNodesPositions(dataView.nodes, this.sankeyDiagramSettings);
+    }
+
+    private adjustNodesPositions(nodes: SankeyDiagramNode[], settings: SankeyDiagramSettings) {
+        const nodeWidth: number = settings.nodesSettings.nodeWidth.value;
+
+        // split nodes by columns
+        const columns = new Map<number, SankeyDiagramNode[]>();
+        for (const node of nodes) {
+            if (!columns.has(node.columnIndex)) {
+                columns.set(node.columnIndex, []);
+            }
+            columns.get(node.columnIndex)!.push(node);
         }
 
-        sankeyDiagramDataView.nodes.forEach((node: SankeyDiagramNode) => {
-            if (node.settings !== null) {
-                node.x = (+node.settings.x) * scaleWidth;
-                node.y = (+node.settings.y) * scaleHeight;
+        // adjust vertical position of nodes in each column
+        for (const columnNodes of columns.values()) {
+            this.adjustColumnVerticalPosition(columnNodes, nodeWidth);
+        }
+    }
+
+    private adjustColumnVerticalPosition(columnNodes: SankeyDiagramNode[], nodeWidth: number): void {
+        if (columnNodes.length === 0) {
+            return;
+        }
+
+        columnNodes.sort((first: SankeyDiagramNode, second: SankeyDiagramNode) => {
+            const xDiff: number = Math.abs(first.x - second.x);
+            if (xDiff < nodeWidth) {
+                return first.y - second.y;
             }
+            return first.x - second.x;
         });
+
+        // getting rid of overlaps in the column
+        for (let i = 1; i < columnNodes.length; i++) {
+            const previousNode = columnNodes[i - 1];
+            const currentNode = columnNodes[i];
+
+            if (Math.abs(previousNode.x - currentNode.x) <= nodeWidth) {
+                const requiredY = previousNode.y + previousNode.height + SankeyDiagram.NodeOffsetFactor;
+                if (currentNode.y < requiredY) {
+                    currentNode.y = requiredY;
+                }
+            }
+        }
+
+        // check if the last node in the column overflows the viewport
+        const lastNode: SankeyDiagramNode = columnNodes[columnNodes.length - 1];
+        let upwardShift: number = this.viewport.height - (lastNode.y + lastNode.height);
+        upwardShift = upwardShift > 0 ? 0 : upwardShift;
+
+        // Propagate the upward shift from bottom to top, adjusting to prevent overlaps.
+        for (let i: number = columnNodes.length - 1; i > 0; i--) {
+            columnNodes[i].y += upwardShift;
+            const previousNode: SankeyDiagramNode = columnNodes[i - 1];
+            const targetY: number = previousNode.y + previousNode.height + SankeyDiagram.NodeOffsetFactor;
+
+            if (Math.abs(previousNode.x - columnNodes[i].x) > nodeWidth || columnNodes[i].y >= targetY) {
+                upwardShift = 0;
+                continue;
+            }
+            // The previous node needs to be shifted up to avoid overlap.
+            upwardShift = columnNodes[i].y - SankeyDiagram.NodeOffsetFactor - previousNode.height - previousNode.y;
+        }
+
+        columnNodes[0].y += upwardShift;
     }
 
     private computeBordersOfTheNode(sankeyDiagramDataView: SankeyDiagramDataView, settings: SankeyDiagramSettings): void {
@@ -1465,7 +1516,7 @@ export class SankeyDiagram implements IVisual {
         nodes: SankeyDiagramNode[],
         columns: SankeyDiagramColumn[],
         scale: SankeyDiagramScaleSettings,
-        viewportHeight: number, ignoreSelfLinkWeight: boolean): void {
+        viewport: IViewport, ignoreSelfLinkWeight: boolean, settings: SankeyDiagramSettings): void {
         let shiftByAxisY: number = SankeyDiagram.DefaultOffset,
             currentX: number = SankeyDiagram.DefaultPosition,
             index: number = SankeyDiagram.DefaultIndex;
@@ -1481,35 +1532,69 @@ export class SankeyDiagram implements IVisual {
             }
 
             if (columns[currentX]) {
-                availableHeight = viewportHeight - columns[currentX].sumValueOfNodes * scale.y;
+                availableHeight = viewport.height - columns[currentX].sumValueOfNodes * scale.y;
 
                 offsetByY = availableHeight / columns[currentX].countOfNodes;
             }
 
-            node.x = node.columnIndex * scale.x;
+            node.x = SankeyDiagram.calculateNodeX(node, scale, settings, viewport);
 
-            let selfLinkHeight: number = d3Max(node.links.filter(l => l.direction === SankeyLinkDirrections.SelfLink).map(l => l.weight));
-
-            if (!selfLinkHeight) {
-                selfLinkHeight = 0;
-            }
-            if (ignoreSelfLinkWeight && selfLinkHeight > 0) {
-                selfLinkHeight = node.width;
-            }
-
-            node.height = (Math.max(node.inputWeight, node.outputWeight, node.inputWeight + selfLinkHeight, node.outputWeight + selfLinkHeight)
-            ) * scale.y;
+            const selfLinkHeight: number = SankeyDiagram.calculateSelfLinkHeight(node, ignoreSelfLinkWeight);
+            node.height = SankeyDiagram.calculateNodeHeight(node, selfLinkHeight, scale);
 
             const backwardPsudoNodeSpace = d3Max([node.backwardWeight, node.selfLinkWeight]) * scale.y;
-
-            node.y = shiftByAxisY + offsetByY * index + backwardPsudoNodeSpace;
+            node.y = SankeyDiagram.calculateNodeY(node, index, backwardPsudoNodeSpace, offsetByY, shiftByAxisY, settings, viewport);
             shiftByAxisY += node.height + backwardPsudoNodeSpace;
             index++;
         });
     }
 
+    private static calculateNodeX(node: SankeyDiagramNode, scale: SankeyDiagramScaleSettings, settings: SankeyDiagramSettings, currentViewport: IViewport): number {
+        if (node.settings !== null) {
+            const viewPort: ViewportSize = settings.nodeComplexSettings.persistProperties._viewportSize;
+            let scaleWidth: number = 1;
+            if (+viewPort.width !== currentViewport.width && viewPort.width && +viewPort.width !== 0) {
+                scaleWidth = currentViewport.width / +viewPort.width;
+            }
+            return (+node.settings.x) * scaleWidth;
+        }
+
+        return node.columnIndex * scale.x;
+    }
+
+    private static calculateSelfLinkHeight(node: SankeyDiagramNode, ignoreSelfLinkWeight: boolean): number {
+        let selfLinkHeight: number = d3Max(node.links.filter(l => l.direction === SankeyLinkDirrections.SelfLink).map(l => l.weight));
+
+        if (!selfLinkHeight) {
+            selfLinkHeight = 0;
+        }
+        if (ignoreSelfLinkWeight && selfLinkHeight > 0) {
+            selfLinkHeight = node.width;
+        }
+
+        return selfLinkHeight;
+    }
+
+    private static calculateNodeHeight(node: SankeyDiagramNode, selfLinkHeight: number, scale: SankeyDiagramScaleSettings): number {
+        return (Math.max(node.inputWeight, node.outputWeight, node.inputWeight + selfLinkHeight, node.outputWeight + selfLinkHeight)
+        ) * scale.y;
+    }
+
+    private static calculateNodeY(node: SankeyDiagramNode, index: number, backwardPsudoNodeSpace: number, offsetByY: number, shiftByAxisY: number, settings: SankeyDiagramSettings, currentViewport: IViewport): number {
+        if (node.settings !== null) {
+            const viewPort: ViewportSize = settings.nodeComplexSettings.persistProperties._viewportSize;
+            let scaleHeight: number = 1;
+            if (+viewPort.height !== currentViewport.height && viewPort.height && +viewPort.height !== 0) {
+                scaleHeight = currentViewport.height / +viewPort.height;
+            }
+            return (+node.settings.y) * scaleHeight;
+        }
+
+        return shiftByAxisY + offsetByY * index + backwardPsudoNodeSpace;
+    }
+
     // TODO: Update this method to improve a distribution by height.
-    private computeYPosition(
+    private computeLinksYPosition(
         nodes: SankeyDiagramNode[],
         scale: number,
         selfLinksWeight: boolean): void {
@@ -1730,7 +1815,7 @@ export class SankeyDiagram implements IVisual {
                             return self.getSvgPathForSelfLink(link, minHeight, settings);
                         }
                     }
-                );  
+                );
             // Update each link label related with this node
             self.defs
                 .selectAll(SankeyDiagram.LinkLabelPathsSelector.selectorName)
@@ -1779,15 +1864,16 @@ export class SankeyDiagram implements IVisual {
     }
 
     private saveNodePositions(nodes: SankeyDiagramNode[]): void {
-        const nodePositions: SankeyDiagramNodePositionSetting[] = [];
+        const nodePositions: SankeyDiagramNodeSetting[] = [];
         nodes.forEach((node: SankeyDiagramNode) => {
             if (node.height === 0) {
                 return;
             }
-            const settings: SankeyDiagramNodePositionSetting = <SankeyDiagramNodePositionSetting>{
+            const settings: SankeyDiagramNodeSetting = <SankeyDiagramNodeSetting>{
                 name: node.label.name,
                 x: node.x.toFixed(0),
-                y: node.y.toFixed(0)
+                y: node.y.toFixed(0),
+                columnIndex: node.columnIndex
             };
             nodePositions.push(settings);
         });
@@ -1838,10 +1924,10 @@ export class SankeyDiagram implements IVisual {
                 sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
                     return link.height > SankeyDiagram.MinSize;
                 }).sort((a: SankeyDiagramLink, b: SankeyDiagramLink) => {
-                    if (a.source.x !== b.source.x){
+                    if (a.source.x !== b.source.x) {
                         return a.source.x - b.source.x;
                     }
-                    if (a.direction !== b.direction){
+                    if (a.direction !== b.direction) {
                         return a.direction - b.direction;
                     }
 
@@ -1921,7 +2007,7 @@ export class SankeyDiagram implements IVisual {
                     return SankeyDiagram.createLinkId(link, true);
                 }
             );
-    
+
         // add text by using paths from defs
         const linkLabelTexts: Selection<SankeyDiagramLink> = this.links
             .selectAll(SankeyDiagram.LinkLabelTextsSelector.selectorName)
@@ -1990,7 +2076,7 @@ export class SankeyDiagram implements IVisual {
             y1: number;
 
         const x0 = link.source.x + link.source.width / 2;
-        const x1 = link.destination.x; 
+        const x1 = link.destination.x;
 
         // drawing area as combination of 4 lines in one path element of svg to fill this area with required color
 
@@ -2103,42 +2189,42 @@ export class SankeyDiagram implements IVisual {
         y1 = link.destination.y - (fixedLinkHeight + SankeyDiagram.NodeAndBackwardLinkDistance);
 
         pathParams += ` M ${x0} ${y0} C ${x2} ${y0}, ${x3} ${y1}, ${x1} ${y1}`;
-        
+
         // right border of link
         curveCenterX = link.destination.x + link.destination.width;
-        curveRadius = fixedLinkHeight + (SankeyDiagram.NodeAndBackwardLinkDistance + link.shiftByAxisYDestination)/2;
+        curveRadius = fixedLinkHeight + (SankeyDiagram.NodeAndBackwardLinkDistance + link.shiftByAxisYDestination) / 2;
         curveCenterY = link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance - fixedLinkHeight + curveRadius;
-        linkInnerKneeSize = (link.destination.selfLinkWeight? Math.min(link.destination.width, minHeight) + SankeyDiagram.DistanceBetweenLinks : 0) + SankeyDiagram.NodeAndBackwardLinkDistance;
+        linkInnerKneeSize = (link.destination.selfLinkWeight ? Math.min(link.destination.width, minHeight) + SankeyDiagram.DistanceBetweenLinks : 0) + SankeyDiagram.NodeAndBackwardLinkDistance;
         fixedLinkKneeSize = linkKneeSize + SankeyDiagram.NodeAndBackwardLinkDistance;
 
-        if (fixedLinkKneeSize - linkInnerKneeSize < link.destination.width){
+        if (fixedLinkKneeSize - linkInnerKneeSize < link.destination.width) {
             fixedLinkKneeSize = link.destination.width + linkInnerKneeSize;
         }
-        
+
         pathParams +=
-            `C ${curveCenterX - link.destination.width/2} ${curveCenterY - curveRadius}, ` +
+            `C ${curveCenterX - link.destination.width / 2} ${curveCenterY - curveRadius}, ` +
             `${curveCenterX + fixedLinkKneeSize} ${curveCenterY - curveRadius}, ` +
-            `${curveCenterX + fixedLinkKneeSize} ${curveCenterY}`; 
+            `${curveCenterX + fixedLinkKneeSize} ${curveCenterY}`;
 
         pathParams +=
             `C ${curveCenterX + fixedLinkKneeSize} ${curveCenterY},` +
-            ` ${curveCenterX + fixedLinkKneeSize} ${link.destination.y + fixedLinkHeight + link.shiftByAxisYDestination + SankeyDiagram.DistanceBetweenLinks/2} ,` +
+            ` ${curveCenterX + fixedLinkKneeSize} ${link.destination.y + fixedLinkHeight + link.shiftByAxisYDestination + SankeyDiagram.DistanceBetweenLinks / 2} ,` +
             ` ${curveCenterX} ${link.destination.y + fixedLinkHeight + link.shiftByAxisYDestination}`;
 
-        pathParams += `L ${curveCenterX} ${link.destination.y + link.shiftByAxisYDestination + SankeyDiagram.DistanceBetweenLinks/2}`;
+        pathParams += `L ${curveCenterX} ${link.destination.y + link.shiftByAxisYDestination + SankeyDiagram.DistanceBetweenLinks / 2}`;
 
-        curveRadius = (link.shiftByAxisYDestination + SankeyDiagram.NodeAndBackwardLinkDistance)/2; 
+        curveRadius = (link.shiftByAxisYDestination + SankeyDiagram.NodeAndBackwardLinkDistance) / 2;
         curveCenterY = link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance + curveRadius;
-       
+
         pathParams +=
-            `C ${curveCenterX - link.destination.width/2} ${link.destination.y + link.shiftByAxisYDestination + SankeyDiagram.DistanceBetweenLinks/2},` +
-            ` ${curveCenterX + linkInnerKneeSize} ${link.destination.y + link.shiftByAxisYDestination + SankeyDiagram.DistanceBetweenLinks/2} ,` +
-            ` ${curveCenterX + linkInnerKneeSize} ${curveCenterY}`;      
+            `C ${curveCenterX - link.destination.width / 2} ${link.destination.y + link.shiftByAxisYDestination + SankeyDiagram.DistanceBetweenLinks / 2},` +
+            ` ${curveCenterX + linkInnerKneeSize} ${link.destination.y + link.shiftByAxisYDestination + SankeyDiagram.DistanceBetweenLinks / 2} ,` +
+            ` ${curveCenterX + linkInnerKneeSize} ${curveCenterY}`;
 
         pathParams +=
             `C ${curveCenterX + linkInnerKneeSize} ${curveCenterY}, ` +
             `${curveCenterX + linkInnerKneeSize} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance}, ` +
-            `${curveCenterX - link.destination.width/2} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance}`; 
+            `${curveCenterX - link.destination.width / 2} ${link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance}`;
         // bottom border of link
         xi = d3InterpolateNumber(x0, x1);
         x2 = xi(this.curvatureOfLinks);
@@ -2146,43 +2232,43 @@ export class SankeyDiagram implements IVisual {
         y0 = link.source.y - SankeyDiagram.NodeAndBackwardLinkDistance;
         y1 = link.destination.y - SankeyDiagram.NodeAndBackwardLinkDistance;
 
-        pathParams += `C ${x2} ${y1}, ${x3} ${y0}, ${link.source.x + link.source.width/2} ${y0}`;
+        pathParams += `C ${x2} ${y1}, ${x3} ${y0}, ${link.source.x + link.source.width / 2} ${y0}`;
 
         // left border of link
         curveCenterX = link.source.x;
-        curveRadius = (link.shiftByAxisYSource + SankeyDiagram.NodeAndBackwardLinkDistance)/2;
+        curveRadius = (link.shiftByAxisYSource + SankeyDiagram.NodeAndBackwardLinkDistance) / 2;
         curveCenterY = link.source.y - SankeyDiagram.NodeAndBackwardLinkDistance + curveRadius;
-        linkInnerKneeSize = (link.source.selfLinkWeight? Math.min(link.source.width, minHeight) + SankeyDiagram.DistanceBetweenLinks : 0) + SankeyDiagram.NodeAndBackwardLinkDistance;
+        linkInnerKneeSize = (link.source.selfLinkWeight ? Math.min(link.source.width, minHeight) + SankeyDiagram.DistanceBetweenLinks : 0) + SankeyDiagram.NodeAndBackwardLinkDistance;
         fixedLinkKneeSize = linkKneeSize + SankeyDiagram.NodeAndBackwardLinkDistance;
 
-        if (fixedLinkKneeSize - linkInnerKneeSize < link.source.width){
+        if (fixedLinkKneeSize - linkInnerKneeSize < link.source.width) {
             fixedLinkKneeSize = link.source.width + linkInnerKneeSize;
         }
         pathParams +=
-            `C ${curveCenterX + link.source.width/2} ${curveCenterY - curveRadius}, ` +
+            `C ${curveCenterX + link.source.width / 2} ${curveCenterY - curveRadius}, ` +
             `${curveCenterX - linkInnerKneeSize} ${curveCenterY - curveRadius}, ` +
             `${curveCenterX - linkInnerKneeSize} ${curveCenterY}`;
 
         pathParams +=
             `C ${curveCenterX - linkInnerKneeSize} ${curveCenterY}, ` +
-            `${curveCenterX - linkInnerKneeSize} ${link.source.y + link.shiftByAxisYSource + SankeyDiagram.DistanceBetweenLinks/2}, ` +
-            `${curveCenterX + link.source.width/2} ${link.source.y + link.shiftByAxisYSource + SankeyDiagram.DistanceBetweenLinks/2}`;
+            `${curveCenterX - linkInnerKneeSize} ${link.source.y + link.shiftByAxisYSource + SankeyDiagram.DistanceBetweenLinks / 2}, ` +
+            `${curveCenterX + link.source.width / 2} ${link.source.y + link.shiftByAxisYSource + SankeyDiagram.DistanceBetweenLinks / 2}`;
 
-        pathParams += `L ${curveCenterX} ${link.source.y + link.shiftByAxisYSource + SankeyDiagram.DistanceBetweenLinks/2}`;
+        pathParams += `L ${curveCenterX} ${link.source.y + link.shiftByAxisYSource + SankeyDiagram.DistanceBetweenLinks / 2}`;
         pathParams += `L ${curveCenterX} ${link.source.y + fixedLinkHeight + link.shiftByAxisYSource}`;
 
-        curveRadius = fixedLinkHeight + (SankeyDiagram.NodeAndBackwardLinkDistance + link.shiftByAxisYSource)/2;
+        curveRadius = fixedLinkHeight + (SankeyDiagram.NodeAndBackwardLinkDistance + link.shiftByAxisYSource) / 2;
         curveCenterY = link.source.y - SankeyDiagram.NodeAndBackwardLinkDistance - fixedLinkHeight + curveRadius;
 
         pathParams +=
             `C ${curveCenterX} ${link.source.y + fixedLinkHeight + link.shiftByAxisYSource},` +
-            ` ${curveCenterX - fixedLinkKneeSize} ${link.source.y + fixedLinkHeight + link.shiftByAxisYSource + SankeyDiagram.DistanceBetweenLinks/2} ,` +
+            ` ${curveCenterX - fixedLinkKneeSize} ${link.source.y + fixedLinkHeight + link.shiftByAxisYSource + SankeyDiagram.DistanceBetweenLinks / 2} ,` +
             ` ${curveCenterX - fixedLinkKneeSize} ${curveCenterY}`;
 
         pathParams +=
             `C ${curveCenterX - fixedLinkKneeSize} ${curveCenterY},` +
             ` ${curveCenterX - fixedLinkKneeSize} ${curveCenterY - curveRadius} ,` +
-            ` ${curveCenterX + link.source.width/2} ${curveCenterY - curveRadius}`;     
+            ` ${curveCenterX + link.source.width / 2} ${curveCenterY - curveRadius}`;
 
         // close path to get closed area
         pathParams += ` Z`;

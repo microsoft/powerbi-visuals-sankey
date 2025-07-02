@@ -31,7 +31,7 @@ import {
     ButtonPosition,
     SankeyDiagramLink,
     SankeyDiagramNode,
-    SankeyDiagramNodePositionSetting
+    SankeyDiagramNodeSetting
 } from "./dataInterfaces";
 
 import FormattingSettingsCards = formattingSettings.Cards;
@@ -288,19 +288,9 @@ class PersistPropertiesGroup extends FormattingSettingsSimpleCard {
     public displayNameKey: string = "Visual_NodePositions";
     public collapsible: boolean = false;
     public visible: boolean = true;
-    public keepNodeOrder = new formattingSettings.ToggleSwitch({
-        name: "keepNodeOrder",
-        displayNameKey: "Visual_KeepNodeOrder",
-        value: false,
-        descriptionKey: "Visual_KeepNodeOrderDescription"
-    });
 
-    public keepNodePosition = new formattingSettings.ToggleSwitch({
-        name: "keepNodePositions",
-        displayNameKey: "Visual_KeepNodePositions",
-        value: true,
-        descriptionKey: "Visual_KeepNodeOrderDescription"
-    });
+    public _nodePositions: SankeyDiagramNodeSetting[] = [];
+    public _viewportSize: ViewportSize = {};
 
     public nodePositions = new formattingSettings.ReadOnlyText({
         name: "nodePositions",
@@ -309,13 +299,6 @@ class PersistPropertiesGroup extends FormattingSettingsSimpleCard {
         visible: false,
     });
 
-    public nodeOrder = new formattingSettings.ReadOnlyText({
-        name: "nodeOrder",
-        displayNameKey: "Visual_NodeOrder",
-        value: "",
-        visible: false,
-    }); 
-
     public viewportSize = new formattingSettings.ReadOnlyText({
         name: "viewportSize",
         displayNameKey: "Visual_ViewportSize",
@@ -323,7 +306,7 @@ class PersistPropertiesGroup extends FormattingSettingsSimpleCard {
         visible: false,
     });
 
-    public slices: FormattingSettingsSlice[] = [this.keepNodePosition, this.keepNodeOrder, this.nodePositions, this.nodeOrder, this.viewportSize]
+    public slices: FormattingSettingsSlice[] = [this.nodePositions, this.viewportSize]
 }
 
 export class ButtonSettings extends FormattingSettingsSimpleCard {
@@ -354,10 +337,6 @@ export class NodeComplexSettings extends FormattingSettingsCompositeCard {
     public name: string = "nodeComplexSettings";
     public displayNameKey: string = "Visual_Sorting";
     public groups: FormattingSettingsCards[] = [this.persistProperties, this.button];
-    onPreProcess(): void {
-        this.persistProperties.keepNodeOrder.visible = !this.persistProperties.keepNodePosition.value;
-        this.persistProperties.keepNodePosition.visible = !this.persistProperties.keepNodeOrder.value;
-    }
 }
 
 export class CyclesLinkSettings extends FormattingSettingsSimpleCard {
@@ -384,8 +363,6 @@ export class CyclesLinkSettings extends FormattingSettingsSimpleCard {
 
 export class SankeyDiagramSettings extends FormattingSettingsModel {
     public _scale: SankeyDiagramScaleSettings = new SankeyDiagramScaleSettings();
-    public _nodePositions: SankeyDiagramNodePositionSetting[] = [];
-    public _viewportSize: ViewportSize = {};
     public sort: string = "";
 
     public labels: DataLabelsSettings = new DataLabelsSettings();
