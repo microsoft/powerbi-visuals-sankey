@@ -1,4 +1,4 @@
-## 3.4.5.0
+## 3.4.6.0
 
 ### New features
 * Used automatic sorting of links by default
