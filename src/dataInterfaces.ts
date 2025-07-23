@@ -29,10 +29,6 @@ import ISelectionId = powerbi.visuals.ISelectionId;
 import { interfaces } from "powerbi-visuals-utils-formattingutils";
 import TextProperties = interfaces.TextProperties;
 
-import {
-    SankeyDiagramSettings
-} from "./settings";
-
 // powerbi.extensibility.utils.tooltip
 import {
     TooltipEnabledDataPoint
