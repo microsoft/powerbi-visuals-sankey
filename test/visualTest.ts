@@ -61,7 +61,7 @@ import {
     isColorAppliedToElements
 } from "./helpers/helpers";
 
-import { DataLabelsSettings, LinkLabelsSettings, SankeyDiagramSettings } from "../src/settings";
+import { DataLabelsSettings, LinkLabelsSettings, SankeyDiagramScaleSettings, SankeyDiagramSettings } from "../src/settings";
 
 
 interface SankeyDiagramTestsNode {
@@ -123,7 +123,7 @@ describe("SankeyDiagram", () => {
         });
     });
 
-    describe("sortNodesByX", () => {
+    describe("sortNodesByColumnIndex", () => {
         it("nodes should be sorted correctly", () => {
             let xValues: number[],
                 nodes: SankeyDiagramNode[];
@@ -136,8 +136,8 @@ describe("SankeyDiagram", () => {
                 return x - y;
             });
 
-            VisualClass.sortNodesByX(nodes).forEach((node: SankeyDiagramNode, index: number) => {
-                expect(node.x).toBe(xValues[index]);
+            VisualClass.sortNodesByColumnIndex(nodes).forEach((node: SankeyDiagramNode, index: number) => {
+                expect(node.columnIndex).toBe(xValues[index]);
             });
         });
 
@@ -157,7 +157,8 @@ describe("SankeyDiagram", () => {
                     selectionId: null,
                     selected: false,
                     links: [],
-                    x: xValue,
+                    x: 0,
+                    columnIndex: xValue,
                     y: 0,
                     width: 0,
                     height: 0,
@@ -172,6 +173,10 @@ describe("SankeyDiagram", () => {
     describe("getColumns", () => {
         it("getColumns", () => {
             let testNodes: SankeyDiagramTestsNode[];
+            const scale: SankeyDiagramScaleSettings = {
+                x: 1,
+                y: 1
+            }
 
             testNodes = [
                 { x: 0, inputWeight: 15, outputWeight: 14 },
@@ -180,7 +185,7 @@ describe("SankeyDiagram", () => {
                 { x: 3, inputWeight: 42, outputWeight: 28 }
             ];
 
-            visualInstance.getColumns(createNodes(testNodes))
+            visualInstance.getColumns(createNodes(testNodes), scale)
                 .forEach((column: SankeyDiagramColumn, index: number) => {
                     expect(column.countOfNodes).toBe(1);
 
@@ -204,7 +209,8 @@ describe("SankeyDiagram", () => {
                     selectionId: null,
                     selected: false,
                     links: [],
-                    x: testNode.x,
+                    x: 0,
+                    columnIndex: testNode.x,
                     y: 0,
                     width: 0,
                     height: 0,
