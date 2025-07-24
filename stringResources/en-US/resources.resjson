@@ -56,5 +56,9 @@
 	"Visual_Bottom": "Bottom",
 	"Visual_BottomCenter": "Bottom center",
 	"Visual_BottomRight": "Bottom right",
-	"Visual_ResetButonDescription": "A button that will reset the nodes to their original positions"
+	"Visual_ResetButonDescription": "A button that will reset the nodes to their original positions",
+	"Visual_KeepNodeOrderDescription": "If enabled, the node order will be saved and restored when the visual is reloaded",
+	"Visual_KeepNodeOrder": "Keep order of nodes",
+	"Visual_KeepNodePositions": "Keep positions of nodes",
+	"Visual_KeepNodePositionsDescription": "If enabled, the node positions will be saved and restored when the visual is reloaded"
 }

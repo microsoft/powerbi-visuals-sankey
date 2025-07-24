@@ -29,10 +29,6 @@ import ISelectionId = powerbi.visuals.ISelectionId;
 import { interfaces } from "powerbi-visuals-utils-formattingutils";
 import TextProperties = interfaces.TextProperties;
 
-import {
-    SankeyDiagramSettings
-} from "./settings";
-
 // powerbi.extensibility.utils.tooltip
 import {
     TooltipEnabledDataPoint
@@ -86,6 +82,7 @@ export interface SankeyDiagramNode extends
     backwardWeight?: number;
     selfLinkWeight?: number;
     links: SankeyDiagramLink[];
+    columnIndex: number;
     x?: number;
     y?: number;
     width?: number;
@@ -93,7 +90,7 @@ export interface SankeyDiagramNode extends
     fillColor?: string;
     strokeColor?: string;
     cloneLink?: SankeyDiagramNode;
-    settings?: SankeyDiagramNodePositionSetting;
+    settings?: SankeyDiagramNodeSetting;
     linkSelectableIds?: ISelectionId[];
 }
 
@@ -116,6 +113,7 @@ export interface SankeyDiagramLink extends
 export interface SankeyDiagramColumn {
     countOfNodes: number;
     sumValueOfNodes: number;
+    x?: number;
 }
 
 export enum SankeyDiagramNodeStatus {
@@ -137,7 +135,6 @@ export interface SankeyDiagramDataView {
     nodes: SankeyDiagramNode[];
     links: SankeyDiagramLink[];
     columns: SankeyDiagramColumn[];
-    settings: SankeyDiagramSettings;
 }
 
 export interface SankeyDiagramRoleNames {
@@ -146,10 +143,11 @@ export interface SankeyDiagramRoleNames {
     values: string;
 }
 
-export interface SankeyDiagramNodePositionSetting {
+export interface SankeyDiagramNodeSetting {
     name: string;
     y?: string;
     x?: string;
+    columnIndex?: number;
 }
 
 export interface TextPropertiesExtended extends TextProperties {
