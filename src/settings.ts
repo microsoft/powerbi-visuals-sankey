@@ -245,9 +245,11 @@ export class LinkLabelsSettings extends BaseFontSettingsCard {
 }
 
 export class LinkColorContainerItem extends ContainerItem {
-    public slices: formattingSettings.Slice[] = [];
+    public static DefaultColorOfLink: string = "#4F4F4F";
+
     public fill?: formattingSettings.ColorPicker;
-    public static DefaultColourOfLink: string = "#4F4F4F";
+    public groups?: formattingSettings.Group[] = [];
+    public border: LinkOutlineSettings;
 
     constructor(link?: SankeyDiagramLink) {
         super();
@@ -257,19 +259,27 @@ export class LinkColorContainerItem extends ContainerItem {
             name: "fill",
             displayName: "Color",
             displayNameKey: "Visual_Color",
-            value: { value: link ? link.fillColor : LinkColorContainerItem.DefaultColourOfLink },
+            value: { value: link ? link.fillColor : LinkColorContainerItem.DefaultColorOfLink },
             selector: link ? ColorHelper.normalizeSelector(link.selectionId.getSelector()) : dataViewWildcard.createDataViewWildcardSelector(dataViewWildcard.DataViewWildcardMatchingOption.InstancesAndTotals),
             instanceKind: link ? undefined : powerbi.VisualEnumerationInstanceKinds.ConstantOrRule,
             altConstantSelector: link ? undefined : null
         });
 
-        this.slices = [this.fill];
+        this.border = new LinkOutlineSettings(link ? true : false);
+
+        this.groups = [
+            new formattingSettings.Group({
+            name: "linkColorGroup",
+            displayNameKey: "Visual_Color",
+            slices: [this.fill]
+        }), this.border];
     }
 }
 
 export class LinkColorSettings extends FormattingSettingsSimpleCard {
     public name: string = "linkColors";
     public displayNameKey: string = "Visual_Color";
+    public border: LinkOutlineSettings = new LinkOutlineSettings();
 
     public matchNodeColors = new formattingSettings.ToggleSwitch({
         name: "matchNodeColors",
@@ -287,75 +297,99 @@ export class LinkColorSettings extends FormattingSettingsSimpleCard {
         visible: false
     });
 
-    public slices: FormattingSettingsSlice[] = [
-        this.matchNodeColors,
-        this.matchSourceOrDestination
-    ];
-
     public defaultContainerItem: LinkColorContainerItem = new LinkColorContainerItem();
     public container?: formattingSettings.Container = new formattingSettings.Container({
-        displayNameKey: "Visual_ApplySettingsTo",
+        displayNameKey: "Visual_Links",
         containerItems: [this.defaultContainerItem]
     });
+
+    constructor(){
+        super();
+        this.defaultContainerItem.groups[0].slices.push(this.matchNodeColors, this.matchSourceOrDestination);
+    }
 }
 
 export class LinkOutlineSettings extends FormattingSettingsSimpleCard {
     public name: string = "linkOutline";
     public displayName: string = "Outline";
-    public displayNameKey: string = "Visual_LinkOutline";
-    public draw = new formattingSettings.ToggleSwitch({
-        name: "showLinkOutine",
+    public displayNameKey: string = "Visual_Border";
+    public show = new formattingSettings.ToggleSwitch({
+        name: "showBorder",
         displayNameKey: "Visual_ShowLinkOutline",
         value: true
     });
-    public topLevelSlice: formattingSettings.ToggleSwitch = this.draw;
-    public slices: FormattingSettingsSlice[] = [];
+    public width = new formattingSettings.NumUpDown({
+        name: "borderWidth",
+        displayName: "Width",
+        displayNameKey: "Visual_Width",
+        value: 1,
+        options: {
+            minValue: {
+                type: powerbiVisualsApi.visuals.ValidatorType.Min,
+                value: 1,
+            },
+            maxValue: {
+                type: powerbiVisualsApi.visuals.ValidatorType.Max,
+                value: 5
+            }
+        }
+    });
+    public color = new formattingSettings.ColorPicker({
+        name: "borderColor",
+        displayName: "Color",
+        displayNameKey: "Visual_Color",
+        value: { value: null }
+    });
+    public topLevelSlice: formattingSettings.ToggleSwitch = this.show;
+    public slices: FormattingSettingsSlice[] = [this.color, this.width];
+
+    constructor(disabled: boolean = false) {
+        super();
+        this.disabled = disabled;
+        this.disabledReasonKey = "Visual_BorderDisabledReason";
+    }
 }
 
-export class LinksSettings extends FormattingSettingsCompositeCard {
-    public persistProperties: PersistPropertiesGroup = new PersistPropertiesGroup();
-    public colors: LinkColorSettings = new LinkColorSettings();
-    public outline: LinkOutlineSettings = new LinkOutlineSettings();
-
+export class LinksSettings extends FormattingSettingsSimpleCard {
     public name: string = "links";
     public displayName: string = "Links";
     public displayNameKey: string = "Visual_Links";
-    public groups: FormattingSettingsCards[] = [this.colors, this.outline];
     onPreProcess(): void {
-        // this.colors.container.visible = this.colors.matchNodeColors.value;
-        this.colors.matchSourceOrDestination.visible = this.colors.matchNodeColors.value;
+        this.matchSourceOrDestination.visible = this.matchNodeColors.value;
+        this.defaultContainerItem.fill.disabled = this.matchNodeColors.value;
+    }
+
+    public matchNodeColors = new formattingSettings.ToggleSwitch({
+        name: "matchNodeColors",
+        displayName: "Match Node Colors",
+        displayNameKey: "Visual_LinkMatchNodeColors",
+        value: false
+    });
+
+    public matchSourceOrDestination = new formattingSettings.ItemDropdown({
+        name: "matchSourceOrDestination",
+        displayName: "Match Color To",
+        displayNameKey: "Visual_MatchColorTo",
+        items: matchSourceOrDestinationOptions,
+        value: matchSourceOrDestinationOptions[0],
+        visible: false
+    });
+
+    public defaultContainerItem: LinkColorContainerItem = new LinkColorContainerItem();
+    public container?: formattingSettings.Container = new formattingSettings.Container({
+        displayNameKey: "Visual_Links",
+        containerItems: [this.defaultContainerItem]
+    });
+
+    constructor(){
+        super();
+        this.defaultContainerItem.groups[0].slices.push(this.matchNodeColors, this.matchSourceOrDestination);
     }
 }
 
 class NodesContainerItem extends ContainerItem {
-    public slices: formattingSettings.Slice[] = [];
+    public groups: formattingSettings.Group[] = [];
     public fill?: formattingSettings.ColorPicker;
-
-    constructor(node?: SankeyDiagramNode) {
-        super();
-        this.displayName = node ? node.label.formattedName : "All";
-        this.displayNameKey = node ? undefined : "Visual_All";
-        this.fill = new formattingSettings.ColorPicker({
-            name: "fill",
-            displayNameKey: "Visual_Color",
-            value: { value: node ? node.fillColor : undefined },
-            selector: node ? ColorHelper.normalizeSelector(node.selectionId.getSelector()) : undefined
-        });
-
-        this.slices = [this.fill];
-    }
-}
-
-export class NodesSettings extends FormattingSettingsSimpleCard {
-    public name: string = "nodes";
-    public displayName: string = "Nodes";
-    public displayNameKey: string = "Visual_Nodes";
-
-    public defaultContainerItem: NodesContainerItem = new NodesContainerItem();
-    public container: formattingSettings.Container = new formattingSettings.Container({
-        displayNameKey: "Visual_ApplySettingsTo",
-        containerItems: [this.defaultContainerItem]
-    });
     public nodeWidth = new formattingSettings.NumUpDown({
         name: "nodesWidth",
         displayName: "Width",
@@ -372,7 +406,45 @@ export class NodesSettings extends FormattingSettingsSimpleCard {
             }
         }
     });
-    public slices?: formattingSettings.Slice[] = [this.nodeWidth];
+
+    constructor(node?: SankeyDiagramNode) {
+        super();
+        this.displayName = node ? node.label.formattedName : "All";
+        this.displayNameKey = node ? undefined : "Visual_All";
+        this.fill = new formattingSettings.ColorPicker({
+            name: "fill",
+            displayNameKey: "Visual_Color",
+            value: { value: node ? node.fillColor : undefined },
+            selector: node ? ColorHelper.normalizeSelector(node.selectionId.getSelector()) : undefined
+        });
+
+        this.groups = [ 
+            new formattingSettings.Group({
+                name: "nodeColorGroup",
+                displayNameKey: "Visual_Color",
+                slices: [this.fill]
+            }),
+            new formattingSettings.Group({
+                name: "nodeOptionGroup",
+                disabled: node ? true : false,
+                disabledReasonKey: "Visual_NodeWidthDisabledReason",
+                displayNameKey: "Visual_Option",
+                slices: [this.nodeWidth]
+            })
+        ];
+    }
+}
+
+export class NodesSettings extends FormattingSettingsSimpleCard {
+    public name: string = "nodes";
+    public displayName: string = "Nodes";
+    public displayNameKey: string = "Visual_Nodes";
+
+    public defaultContainerItem: NodesContainerItem = new NodesContainerItem();
+    public container: formattingSettings.Container = new formattingSettings.Container({
+        displayNameKey: "Visual_Nodes",
+        containerItems: [this.defaultContainerItem]
+    });
 }
 
 export class ScaleSettings extends FormattingSettingsSimpleCard {
@@ -480,20 +552,20 @@ export class SankeyDiagramSettings extends FormattingSettingsModel {
 
     public labels: DataLabelsSettings = new DataLabelsSettings();
     public linkLabels: LinkLabelsSettings = new LinkLabelsSettings();
-    public linksSettings: LinksSettings = new LinksSettings();
-    public nodesSettings: NodesSettings = new NodesSettings();
+    public links: LinksSettings = new LinksSettings();
+    public nodes: NodesSettings = new NodesSettings();
     public scale: ScaleSettings = new ScaleSettings();
     public cyclesLinks: CyclesLinkSettings = new CyclesLinkSettings();
     public nodeComplexSettings: NodeComplexSettings = new NodeComplexSettings();
-    public cards: FormattingSettingsCards[] = [this.labels, this.linkLabels, this.linksSettings, this.nodesSettings, this.scale, this.cyclesLinks, this.nodeComplexSettings];
+    public cards: FormattingSettingsCards[] = [this.labels, this.linkLabels, this.links, this.nodes, this.scale, this.cyclesLinks, this.nodeComplexSettings];
 
     populateNodesColorSelector(nodes: SankeyDiagramNode[]) {
-        const containerItems = this.nodesSettings.container.containerItems;
+        const containerItems = this.nodes.container.containerItems;
         nodes?.forEach(node => containerItems.push(new NodesContainerItem(node)));
     }
 
     populateLinksColorSelector(links: SankeyDiagramLink[]) {
-        const containerItems = this.linksSettings.colors.container.containerItems;
+        const containerItems = this.links.container.containerItems;
         links?.forEach(link => containerItems.push(new LinkColorContainerItem(link)));
     }
 }

@@ -212,9 +212,23 @@
                         }
                     }
                 },
-                "showLinkOutine": {
+                "showBorder": {
                     "type": {
                         "bool": true
+                    }
+                },
+                "borderWidth": {
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "borderColor": {
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
                     }
                 }
             }

@@ -19,7 +19,7 @@
 	"Visual_MatchColorTo": "Match color to",
 	"Visual_MatchColorTo_Source": "Source",
 	"Visual_LinkColor": "Link color",
-	"Visual_LinkOutline": "Outline",
+	"Visual_Border": "Border",
 	"Visual_LogarithmicScale": "Enable logarithmic scale",
 	"Visual_ScaleSettings": "Scale settings",
 	"Visual_MinOptimalHeight": "Provide min optimal height of node",
@@ -55,5 +55,8 @@
 	"Visual_BottomRight": "Bottom right",
 	"Visual_ResetButonDescription": "A button that will reset the nodes to their original positions",
 	"Visual_ApplySettingsTo": "Apply settings to",
-	"Visual_All": "All"
+	"Visual_All": "All",
+	"Visual_BorderDisabledReason": "These options are available when Links is set to All",
+	"Visual_NodeWidthDisabledReason": "These options are available when Nodes is set to All",
+	"Visual_Option": "Option"
 }

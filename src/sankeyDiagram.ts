@@ -140,11 +140,16 @@ export class SankeyDiagram implements IVisual {
     private static resetButton: ClassAndSelector = createClassAndSelector("resetButton");
     private static ResetButtonRect: ClassAndSelector = createClassAndSelector("resetButtonRect");
     private static ResetButtonText: ClassAndSelector = createClassAndSelector("resetButtonText");
-    private static StrokeNotVisibleClass: ClassAndSelector = createClassAndSelector("strokeNotVisible");
+    private static StrokeVisibleClass: ClassAndSelector = createClassAndSelector("strokeVisible");
 
     private static LinksPropertyIdentifier: DataViewObjectPropertyIdentifier = {
         objectName: "links",
         propertyName: "fill"
+    };
+
+    private static LinksBorderPropertyIdentifier: DataViewObjectPropertyIdentifier = {
+        objectName: "links",
+        propertyName: "borderColor"
     };
 
     private static NodesPropertyIdentifier: DataViewObjectPropertyIdentifier = {
@@ -452,7 +457,7 @@ export class SankeyDiagram implements IVisual {
         const name: string = node.levelValues?.[0]?.value?.toString() ?? null;
         const nodeFillColor = this.getColor(
             SankeyDiagram.NodesPropertyIdentifier,
-            settings.nodesSettings.defaultContainerItem.fill.value.value ?? this.colorPalette.getColor(name).value,
+            settings.nodes.defaultContainerItem.fill.value.value ?? this.colorPalette.getColor(name).value,
             node.objects);
         const nodeStrokeColor = this.colorHelper.getHighContrastColor("foreground", nodeFillColor);
 
@@ -465,7 +470,7 @@ export class SankeyDiagram implements IVisual {
             outputWeight: 0,
             backwardWeight: 0,
             selfLinkWeight: 0,
-            width: settings.nodesSettings.nodeWidth.value,
+            width: settings.nodes.defaultContainerItem.nodeWidth.value,
             height: 0,
             columnIndex: SankeyDiagram.DefaultIndex,
             fillColor: nodeFillColor,
@@ -564,11 +569,11 @@ export class SankeyDiagram implements IVisual {
                 const linkFillColor = this.getLinkColor(
                     settings,
                     SankeyDiagram.LinksPropertyIdentifier,
-                    LinkColorContainerItem.DefaultColourOfLink,
+                    settings.links.defaultContainerItem.fill.value.value || LinkColorContainerItem.DefaultColorOfLink,
                     child.objects,
                     foundSource,
                     foundDestination);
-                const linkStrokeColor = this.colorHelper.isHighContrast ? this.colorHelper.getHighContrastColor("foreground", linkFillColor) : linkFillColor;
+                const linkStrokeColor = this.colorHelper.getHighContrastColor("foreground", this.getLinkBorderColor(SankeyDiagram.LinksBorderPropertyIdentifier, linkFillColor, child.objects, settings));
 
                 const valuesFormatterForLinkTooltipInfo = valueFormatter.create({
                     format: formatOfWeight,
@@ -941,8 +946,8 @@ export class SankeyDiagram implements IVisual {
         destination: SankeyDiagramNode): string {
 
         const color: string = this.getColor(properties, defaultColor, objects);
-        if (settings.linksSettings.colors.matchNodeColors.value) {
-            switch (settings.linksSettings.colors.matchSourceOrDestination.value.value) {
+        if (settings.links.matchNodeColors.value) {
+            switch (settings.links.matchSourceOrDestination.value.value) {
                 case LinkMatchType.Source:
                     return source.fillColor || color;
                 case LinkMatchType.Destination:
@@ -950,6 +955,13 @@ export class SankeyDiagram implements IVisual {
             }
         }
         return color;
+    }
+
+    private getLinkBorderColor(properties: DataViewObjectPropertyIdentifier, linkColor: string, objects: DataViewObjects, settings: SankeyDiagramSettings): string{
+        const defaultColor = settings.links.defaultContainerItem.border.color.value.value || linkColor;
+        const color: string = this.getColor(properties, defaultColor, objects);
+
+        return this.colorHelper.getHighContrastColor("foreground", color);
     }
 
     private getColor(
@@ -1243,7 +1255,7 @@ export class SankeyDiagram implements IVisual {
     }
 
     private adjustNodesPositions(nodes: SankeyDiagramNode[], settings: SankeyDiagramSettings) {
-        const nodeWidth: number = settings.nodesSettings.nodeWidth.value;
+        const nodeWidth: number = settings.nodes.defaultContainerItem.nodeWidth.value;
 
         // split nodes by columns
         const columns = new Map<number, SankeyDiagramNode[]>();
@@ -1426,7 +1438,7 @@ export class SankeyDiagram implements IVisual {
     }
 
     private getScaleByAxisX(numberOfColumns: number = SankeyDiagram.DefaultNumberOfColumns): number {
-        return SankeyDiagram.getPositiveNumber((this.viewport.width - this.sankeyDiagramSettings.nodesSettings.nodeWidth.value) / numberOfColumns);
+        return SankeyDiagram.getPositiveNumber((this.viewport.width - this.sankeyDiagramSettings.nodes.defaultContainerItem.nodeWidth.value) / numberOfColumns);
     }
 
     public static sortNodesByColumnIndex(nodes: SankeyDiagramNode[]): SankeyDiagramNode[] {
@@ -1996,8 +2008,9 @@ export class SankeyDiagram implements IVisual {
             .attr("aria-selected", "false")
             .attr('aria-label', (link: SankeyDiagramLink) => `${link.source.label.name} to ${link.destination.label.name} weighted at ${link.weight}`)
             .style("stroke", (link: SankeyDiagramLink) => link.strokeColor)
+            .style("stroke-width", this.sankeyDiagramSettings.links.defaultContainerItem.border.show.value ? this.sankeyDiagramSettings.links.defaultContainerItem.border.width.value + "px" : "0px")
             .style("fill", (link: SankeyDiagramLink) => link.fillColor)
-            .classed(SankeyDiagram.StrokeNotVisibleClass.className, !this.sankeyDiagramSettings.linksSettings.outline.draw.value && !this.colorHelper.isHighContrast);
+            .classed(SankeyDiagram.StrokeVisibleClass.className, !this.sankeyDiagramSettings.links.defaultContainerItem.border.show.value && this.colorHelper.isHighContrast);
 
         return linksElements;
     }
