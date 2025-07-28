@@ -3,6 +3,7 @@
 ### New features
 * Added conditional formatting to link color options
 * Added matchNodeColor setting to links
+* Added border color for links
 
 ## 3.4.6.0
 

@@ -647,6 +647,7 @@ export class SankeyDiagram implements IVisual {
         // add ColorPicker for each node and link to the Format pane
         this.sankeyDiagramSettings.populateNodesColorSelector(nodes);
         this.sankeyDiagramSettings.populateLinksColorSelector(links);
+        this.sankeyDiagramSettings.handleHighContrastMode(this.colorHelper);
 
         const sankeyDiagramDataView = {
             nodes,
@@ -1115,9 +1116,6 @@ export class SankeyDiagram implements IVisual {
             settings.sort = foundSortedColumn.displayName + "|" + foundSortedColumn.sort;
         }
 
-        // change settings from high contrast mode
-        settings.labels.fill.value.value = this.colorHelper.getHighContrastColor("foreground", settings.labels.fill.value.value);
-        settings.linkLabels.fill.value.value = this.colorHelper.getHighContrastColor("foreground", settings.linkLabels.fill.value.value);
         // node positions
         try {
             const nodePositionsValue = settings.nodeComplexSettings.persistProperties.nodePositions.value;
@@ -1765,7 +1763,7 @@ export class SankeyDiagram implements IVisual {
             .attr("x", (node: SankeyDiagramNode) => node.left - node.x)
             .attr("y", (node: SankeyDiagramNode) => node.top - node.y)
             .attr("dy", SankeyDiagram.DefaultDy)
-            .style("fill", (node: SankeyDiagramNode) => node.label.color)
+            .style("fill", (node: SankeyDiagramNode) => this.colorHelper.getHighContrastColor("foreground", node.label.color))
             .style("font-family", nodeLabelTextProperties.fontFamily)
             .style("font-size", nodeLabelTextProperties.fontSize)
             .style("font-weight", nodeLabelTextProperties.fontWeight)
@@ -2072,7 +2070,7 @@ export class SankeyDiagram implements IVisual {
             .style("font-weight", linkLabelsTextProperties.fontWeight)
             .style("font-style", linkLabelsTextProperties.fontStyle)
             .style("text-decoration", linkLabelsTextProperties.textDecoration)
-            .style("fill", (link: SankeyDiagramLink) => link.label.color)
+            .style("fill", (link: SankeyDiagramLink) => this.colorHelper.getHighContrastColor("foreground", link.label.color))
             .text((link: SankeyDiagramLink) => (link.label.formattedName && (link.label.formattedName.length > 0)) ? link.label.formattedName :
                 `${link.source.label.name || ""}-${link.destination.label.name || ""}:${(link.tooltipInfo[2] || { value: "" }).value}`
             );
