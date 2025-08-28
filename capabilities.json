@@ -193,7 +193,36 @@
         },
         "links": {
             "properties": {
+                "matchNodeColors": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "matchSourceOrDestination": {
+                    "type": {
+                        "enumeration": []
+                    }
+                },
                 "fill": {
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "showBorder": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "borderWidth": {
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "borderColor": {
                     "type": {
                         "fill": {
                             "solid": {
@@ -206,7 +235,7 @@
         },
         "nodes": {
             "properties": {
-                "nodesWidth":{
+                "nodesWidth": {
                     "type": {
                         "numeric": true
                     }

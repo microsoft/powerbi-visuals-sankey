@@ -89,7 +89,6 @@
             fill: none;
             stroke-opacity: 0.6;
             fill-opacity: 0.2;
-            stroke-width: 1;
             
             &:focus {
                 outline: none;
@@ -97,8 +96,12 @@
     
             &:focus-visible {
                 outline: none;
-                stroke-width: 2px;
+                stroke-width: 3px !important;
                 stroke-opacity: 1;
+            }
+
+            &.strokeVisible {
+                stroke-width: 1px !important;
             }
         }
 

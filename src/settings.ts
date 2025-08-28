@@ -33,20 +33,25 @@ import {
     SankeyDiagramNode,
     SankeyDiagramNodeSetting
 } from "./dataInterfaces";
+import { dataViewWildcard } from "powerbi-visuals-utils-dataviewutils";
 
 import FormattingSettingsCards = formattingSettings.Cards;
 import FormattingSettingsSimpleCard = formattingSettings.SimpleCard;
 import FormattingSettingsCompositeCard = formattingSettings.CompositeCard;
 import FormattingSettingsSlice = formattingSettings.Slice;
 import FormattingSettingsModel = formattingSettings.Model;
+import ContainerItem = formattingSettings.ContainerItem;
 import ILocalizedItemMember = formattingSettingsInterfaces.ILocalizedItemMember;
-
-import ISelectionId = powerbiVisualsApi.visuals.ISelectionId;
 
 export enum CyclesDrawType {
     Duplicate,
     Backward,
     DuplicateOptimized
+}
+
+export enum LinkMatchType{
+    Source = "source",
+    Destination = "destination"
 }
 
 export interface ViewportSize {
@@ -63,6 +68,10 @@ interface IButtonSettings {
     height: number;
 }
 
+interface IHandleHighContrastMode {
+    handleHighContrastMode? (colorHelper: ColorHelper): void;
+}
+
 export const buttonDefaults: IButtonSettings = {
     fill: "#DCDCDC",
     stroke: "#A9A9A9",
@@ -73,19 +82,24 @@ export const buttonDefaults: IButtonSettings = {
 };
 
 export const buttonPositionOptions: ILocalizedItemMember[] = [
-    {value : ButtonPosition.Top, displayNameKey: "Visual_Top"},
-    {value : ButtonPosition.TopCenter, displayNameKey: "Visual_TopCenter"},
-    {value : ButtonPosition.TopRight, displayNameKey: "Visual_TopRight"},
-    {value : ButtonPosition.Bottom, displayNameKey: "Visual_Bottom"},
-    {value : ButtonPosition.BottomCenter, displayNameKey: "Visual_BottomCenter"},
-    {value : ButtonPosition.BottomRight, displayNameKey: "Visual_BottomRight"}
+    { value: ButtonPosition.Top, displayNameKey: "Visual_Top" },
+    { value: ButtonPosition.TopCenter, displayNameKey: "Visual_TopCenter" },
+    { value: ButtonPosition.TopRight, displayNameKey: "Visual_TopRight" },
+    { value: ButtonPosition.Bottom, displayNameKey: "Visual_Bottom" },
+    { value: ButtonPosition.BottomCenter, displayNameKey: "Visual_BottomCenter" },
+    { value: ButtonPosition.BottomRight, displayNameKey: "Visual_BottomRight" }
 ];
 
-export const duplicateNodesOptions : ILocalizedItemMember[] = [
-    {value : CyclesDrawType.Duplicate, displayNameKey: "Visual_Duplicate"},
-    {value : CyclesDrawType.Backward, displayNameKey: "Visual_DrawBackwardLink"},
-    {value : CyclesDrawType.DuplicateOptimized, displayNameKey: "Visual_DuplicateOptimized"}
+export const duplicateNodesOptions: ILocalizedItemMember[] = [
+    { value: CyclesDrawType.Duplicate, displayNameKey: "Visual_Duplicate" },
+    { value: CyclesDrawType.Backward, displayNameKey: "Visual_DrawBackwardLink" },
+    { value: CyclesDrawType.DuplicateOptimized, displayNameKey: "Visual_DuplicateOptimized" }
 ];
+
+export const matchSourceOrDestinationOptions: ILocalizedItemMember[] = [
+    { value: LinkMatchType.Source, displayNameKey: "Visual_Source" },
+    { value: LinkMatchType.Destination, displayNameKey: "Visual_Destination" }
+]
 
 export class FontSettingsOptions {
     public static DefaultFontSize: number = 12;
@@ -116,7 +130,7 @@ export class SankeyComplexSettings {
     public viewportSize: string = "{}";
 }
 
-export class BaseFontSettingsCard extends FormattingSettingsCompositeCard {
+export class BaseFontSettingsCard extends FormattingSettingsCompositeCard implements IHandleHighContrastMode {
     public show = new formattingSettings.ToggleSwitch({
         name: "show",
         displayNameKey: "Visual_Show",
@@ -183,7 +197,7 @@ export class BaseFontSettingsCard extends FormattingSettingsCompositeCard {
         slices: [this.fontControl, this.fill],
     });
 
-    constructor(cardName: string, defaultFontSize?: number){
+    constructor(cardName: string, defaultFontSize?: number) {
         super();
         this.name = cardName;
         this.fontGroup.name = `${cardName}Values`;
@@ -191,7 +205,13 @@ export class BaseFontSettingsCard extends FormattingSettingsCompositeCard {
         this.topLevelSlice = this.show;
     }
 
-    public groups: FormattingSettingsSlice[] = [ this.fontGroup ];
+    public groups: FormattingSettingsSlice[] = [this.fontGroup];
+
+    public handleHighContrastMode(colorHelper: ColorHelper): void {
+        this.fill.value.value = colorHelper.getHighContrastColor("foreground", this.fill.value.value);
+        this.fill.disabled = colorHelper.isHighContrast ? true : this.fill.disabled;
+        this.fill.disabledReasonKey = "Visual_ColorDisabledDescription";
+    }
 }
 
 export class DataLabelsSettings extends BaseFontSettingsCard {
@@ -231,18 +251,141 @@ export class LinkLabelsSettings extends BaseFontSettingsCard {
     }
 }
 
-export class LinksSettings extends FormattingSettingsSimpleCard {
+export class LinkOutlineSettings extends FormattingSettingsSimpleCard implements IHandleHighContrastMode {
+    public name: string = "linkOutline";
+    public displayName: string = "Outline";
+    public displayNameKey: string = "Visual_Border";
+    public show = new formattingSettings.ToggleSwitch({
+        name: "showBorder",
+        displayNameKey: "Visual_ShowLinkOutline",
+        value: true
+    });
+    public width = new formattingSettings.NumUpDown({
+        name: "borderWidth",
+        displayName: "Width",
+        displayNameKey: "Visual_Width",
+        value: 1,
+        options: {
+            minValue: {
+                type: powerbiVisualsApi.visuals.ValidatorType.Min,
+                value: 1,
+            },
+            maxValue: {
+                type: powerbiVisualsApi.visuals.ValidatorType.Max,
+                value: 5
+            }
+        }
+    });
+    public color = new formattingSettings.ColorPicker({
+        name: "borderColor",
+        displayName: "Color",
+        displayNameKey: "Visual_Color",
+        value: { value: null }
+    });
+    public topLevelSlice: formattingSettings.ToggleSwitch = this.show;
+    public slices: FormattingSettingsSlice[] = [this.color, this.width];
+
+    constructor(disabled: boolean = false) {
+        super();
+        this.disabled = disabled;
+        this.disabledReasonKey = "Visual_BorderDisabledReason";
+    }
+
+    public handleHighContrastMode(colorHelper: ColorHelper): void {
+        this.color.value.value = colorHelper.getHighContrastColor("foreground", this.color.value.value);
+        this.color.disabled = colorHelper.isHighContrast ? true : this.color.visible;
+        this.color.disabledReasonKey = "Visual_ColorDisabledDescription";
+    }
+}
+
+export class LinkColorContainerItem extends ContainerItem implements IHandleHighContrastMode {
+    public static DefaultColorOfLink: string = "#4F4F4F";
+
+    public fill?: formattingSettings.ColorPicker;
+    public groups?: formattingSettings.Group[] = [];
+    public border: LinkOutlineSettings;
+    public color: formattingSettings.Group;
+
+    constructor(link?: SankeyDiagramLink) {
+        super();
+        this.displayName = link ? `${link.source.label.formattedName} - ${link.destination.label.formattedName}` : "All";
+        this.displayNameKey = link ? undefined : "Visual_All";
+        this.fill = new formattingSettings.ColorPicker({
+            name: "fill",
+            displayName: "Color",
+            displayNameKey: "Visual_Color",
+            value: { value: link ? link.fillColor : LinkColorContainerItem.DefaultColorOfLink },
+            selector: link ? ColorHelper.normalizeSelector(link.selectionId.getSelector()) : dataViewWildcard.createDataViewWildcardSelector(dataViewWildcard.DataViewWildcardMatchingOption.InstancesAndTotals),
+            instanceKind: link ? undefined : powerbi.VisualEnumerationInstanceKinds.ConstantOrRule,
+            altConstantSelector: link ? undefined : null
+        });
+
+        this.border = new LinkOutlineSettings(link ? true : false);
+        this.color = new formattingSettings.Group({
+            name: "linkColorGroup",
+            displayNameKey: "Visual_Color",
+            slices: [this.fill]
+        });
+
+        this.groups = [this.color, this.border];
+    }
+
+    public handleHighContrastMode(colorHelper: ColorHelper): void {
+        this.fill.value.value = colorHelper.getHighContrastColor("foreground", this.fill.value.value);
+        this.color.disabled = colorHelper.isHighContrast ? true : this.groups[0].visible;
+        this.color.disabledReasonKey = "Visual_ColorDisabledDescription";
+
+        this.border.handleHighContrastMode(colorHelper);
+    }
+}
+
+export class LinksSettings extends FormattingSettingsSimpleCard implements IHandleHighContrastMode {
     public name: string = "links";
     public displayName: string = "Links";
     public displayNameKey: string = "Visual_Links";
-    public slices: FormattingSettingsSlice[] = [];
+    onPreProcess(): void {
+        this.matchSourceOrDestination.visible = this.matchNodeColors.value;
+        this.defaultContainerItem.fill.disabled = this.matchNodeColors.value;
+    }
+
+    public matchNodeColors = new formattingSettings.ToggleSwitch({
+        name: "matchNodeColors",
+        displayName: "Match Node Colors",
+        displayNameKey: "Visual_LinkMatchNodeColors",
+        value: false
+    });
+
+    public matchSourceOrDestination = new formattingSettings.ItemDropdown({
+        name: "matchSourceOrDestination",
+        displayName: "Match Color To",
+        displayNameKey: "Visual_MatchColorTo",
+        items: matchSourceOrDestinationOptions,
+        value: matchSourceOrDestinationOptions[0],
+        visible: false
+    });
+
+    public defaultContainerItem: LinkColorContainerItem = new LinkColorContainerItem();
+    public container?: formattingSettings.Container = new formattingSettings.Container({
+        displayNameKey: "Visual_Links",
+        containerItems: [this.defaultContainerItem]
+    });
+
+    constructor(){
+        super();
+        this.defaultContainerItem.groups[0].slices.push(this.matchNodeColors, this.matchSourceOrDestination);
+    }
+
+    public handleHighContrastMode(colorHelper: ColorHelper): void {
+        this.container.containerItems.forEach((item: LinkColorContainerItem) => {
+            item?.handleHighContrastMode(colorHelper);
+        });
+    }
 }
 
-export class NodesSettings extends FormattingSettingsSimpleCard {
-    public name: string = "nodes";
-    public displayName: string = "Nodes";
-    public displayNameKey: string = "Visual_Nodes";
-
+class NodesContainerItem extends ContainerItem implements IHandleHighContrastMode {
+    public groups: formattingSettings.Group[] = [];
+    public fill?: formattingSettings.ColorPicker;
+    public color: formattingSettings.Group;
     public nodeWidth = new formattingSettings.NumUpDown({
         name: "nodesWidth",
         displayName: "Width",
@@ -259,7 +402,58 @@ export class NodesSettings extends FormattingSettingsSimpleCard {
             }
         }
     });
-    public slices: FormattingSettingsSlice[] = [this.nodeWidth];
+
+    constructor(node?: SankeyDiagramNode) {
+        super();
+        this.displayName = node ? node.label.formattedName : "All";
+        this.displayNameKey = node ? undefined : "Visual_All";
+        this.fill = new formattingSettings.ColorPicker({
+            name: "fill",
+            displayNameKey: "Visual_Color",
+            value: { value: node ? node.fillColor : undefined },
+            selector: node ? ColorHelper.normalizeSelector(node.selectionId.getSelector()) : undefined
+        });
+
+        this.color = new formattingSettings.Group({
+                name: "nodeColorGroup",
+                displayNameKey: "Visual_Color",
+                slices: [this.fill]
+        });
+        this.groups = [ this.color,
+            new formattingSettings.Group({
+                name: "nodeOptionGroup",
+                disabled: node ? true : false,
+                disabledReasonKey: "Visual_NodeWidthDisabledReason",
+                displayNameKey: "Visual_Option",
+                slices: [this.nodeWidth]
+            })
+        ];
+    }
+
+    public handleHighContrastMode(colorHelper: ColorHelper): void {
+        this.fill.value.value = colorHelper.getHighContrastColor("foreground", this.fill.value.value);
+        this.color.disabled = colorHelper.isHighContrast ? true : this.color.disabled;
+        this.color.disabledReasonKey = "Visual_ColorDisabledDescription";
+    }
+}
+
+export class NodesSettings extends FormattingSettingsSimpleCard implements IHandleHighContrastMode {
+    public name: string = "nodes";
+    public displayName: string = "Nodes";
+    public displayNameKey: string = "Visual_Nodes";
+
+    public defaultContainerItem: NodesContainerItem = new NodesContainerItem();
+
+    public handleHighContrastMode(colorHelper: ColorHelper): void {
+        this.container.containerItems.forEach((item: NodesContainerItem) => {
+            item?.handleHighContrastMode(colorHelper);
+        });
+    }
+
+    public container: formattingSettings.Container = new formattingSettings.Container({
+        displayNameKey: "Visual_Nodes",
+        containerItems: [this.defaultContainerItem]
+    });
 }
 
 export class ScaleSettings extends FormattingSettingsSimpleCard {
@@ -367,41 +561,29 @@ export class SankeyDiagramSettings extends FormattingSettingsModel {
 
     public labels: DataLabelsSettings = new DataLabelsSettings();
     public linkLabels: LinkLabelsSettings = new LinkLabelsSettings();
-    public linksColorSelector: LinksSettings = new LinksSettings();
-    public nodesSettings: NodesSettings = new NodesSettings();
+    public links: LinksSettings = new LinksSettings();
+    public nodes: NodesSettings = new NodesSettings();
     public scale: ScaleSettings = new ScaleSettings();
     public cyclesLinks: CyclesLinkSettings = new CyclesLinkSettings();
     public nodeComplexSettings: NodeComplexSettings = new NodeComplexSettings();
-    public cards: FormattingSettingsCards[] = [this.labels, this.linkLabels, this.linksColorSelector, this.nodesSettings, this.scale, this.cyclesLinks, this.nodeComplexSettings];
+    public cards: FormattingSettingsCards[] = [this.labels, this.linkLabels, this.links, this.nodes, this.scale, this.cyclesLinks, this.nodeComplexSettings];
 
     populateNodesColorSelector(nodes: SankeyDiagramNode[]) {
-        const slices = this.nodesSettings.slices;
-        if (nodes) {
-            nodes.forEach(node => {
-                if(slices.some((nodeColorSelector: FormattingSettingsSlice) => nodeColorSelector.displayName === node.label.formattedName)){
-                    return;
-                }
-                slices.push(new formattingSettings.ColorPicker({
-                    name: "fill",
-                    displayName: node.label.formattedName,
-                    value: { value: node.fillColor },
-                    selector: ColorHelper.normalizeSelector((<ISelectionId>node.selectionId).getSelector())
-                }));
-            });
-        }
+        const containerItems = this.nodes.container.containerItems;
+        nodes?.forEach(node => containerItems.push(new NodesContainerItem(node)));
     }
 
     populateLinksColorSelector(links: SankeyDiagramLink[]) {
-        const slices = this.linksColorSelector.slices;
-        if (links) {
-            links.forEach(link => {
-                slices.push(new formattingSettings.ColorPicker({
-                    name: "fill",
-                    displayName: link.source.label.formattedName + " - " + link.destination.label.formattedName,
-                    value: { value: link.fillColor },
-                    selector: ColorHelper.normalizeSelector((<ISelectionId>link.selectionId).getSelector())
-                }));
-            });
-        }
+        const containerItems = this.links.container.containerItems;
+        links?.forEach(link => containerItems.push(new LinkColorContainerItem(link)));
+    }
+
+    handleHighContrastMode(colorHelper: ColorHelper): void {
+        this.cards.forEach((card: FormattingSettingsCards) => {
+            const highContrastCard = card as IHandleHighContrastMode;
+            if (highContrastCard.handleHighContrastMode) {
+                highContrastCard.handleHighContrastMode(colorHelper);
+            }
+        });
     }
 }

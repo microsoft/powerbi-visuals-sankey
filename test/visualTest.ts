@@ -987,7 +987,7 @@ describe("SankeyDiagram", () => {
         it("focused links should have styled stroke and outline", (done: DoneFn) => {
             visualBuilder.updateRenderTimeout(dataView, () => {
                 // defaults
-                const focusedStrokeWidth: string = "2px";
+                const focusedStrokeWidth: string = "3px";
                 const focusedStrokeOpacity: string = "1";
                 const focusedOutline: string = "rgb(0, 0, 0) none 0px";
                 const strokeWidth: string = "1px";
