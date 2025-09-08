@@ -15,6 +15,11 @@
   "Visual_Weight": "Степен важности",
   "Visual_DataPointsLinkLabels": "Ознаке веза ка подацима",
   "Visual_Links": "Везе",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Омогући логаритамску скалу",
   "Visual_ScaleSettings": "Поставке размере",
   "Visual_MinOptimalHeight": "Унесите минималну оптималну висину чвора",
@@ -35,6 +40,7 @@
   "Visual_Input": "Унос",
   "Visual_Output": "Излаз",
   "Visual_Width": "Ширина",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Вредности",
   "Visual_Font": "Фонт",
   "Visual_LinksOrder": "Редослед веза",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Дно",
   "Visual_BottomCenter": "Доле центар",
   "Visual_BottomRight": "Доле десно",
-  "Visual_ResetButonDescription": "Дугме које ће ресетовати чворове на њихове првобитне позиције"
+  "Visual_ResetButonDescription": "Дугме које ће ресетовати чворове на њихове првобитне позиције",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

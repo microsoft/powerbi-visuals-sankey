@@ -15,6 +15,11 @@
   "Visual_Weight": "Βάρος",
   "Visual_DataPointsLinkLabels": "Ετικέτες σύνδεσης δεδομένων",
   "Visual_Links": "Συνδέσεις",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Ενεργοποίηση λογαριθμικής κλίμακας",
   "Visual_ScaleSettings": "Ρυθμίσεις κλίμακας",
   "Visual_MinOptimalHeight": "Παράχετε το ελάχιστο βέλτιστο ύψος του κόμβου",
@@ -35,6 +40,7 @@
   "Visual_Input": "Είσοδος",
   "Visual_Output": "Έξοδος",
   "Visual_Width": "Πλάτος",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Τιμές",
   "Visual_Font": "Γραμματοσειρά",
   "Visual_LinksOrder": "Σειρά συνδέσεων",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Κάτω",
   "Visual_BottomCenter": "Κάτω κέντρο",
   "Visual_BottomRight": "Κάτω δεξιά",
-  "Visual_ResetButonDescription": "Ένα κουμπί που θα επαναφέρει τους κόμβους στις αρχικές θέσεις τους"
+  "Visual_ResetButonDescription": "Ένα κουμπί που θα επαναφέρει τους κόμβους στις αρχικές θέσεις τους",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

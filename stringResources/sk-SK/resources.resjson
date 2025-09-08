@@ -15,6 +15,11 @@
   "Visual_Weight": "Hmotnosť",
   "Visual_DataPointsLinkLabels": "Označenia prepojení na údaje",
   "Visual_Links": "Prepojenia",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Povoliť logaritmickú mierku",
   "Visual_ScaleSettings": "Nastavenia mierky",
   "Visual_MinOptimalHeight": "Zadajte minimálnu optimálnu výšku uzla",
@@ -35,6 +40,7 @@
   "Visual_Input": "Vstup",
   "Visual_Output": "Výstup",
   "Visual_Width": "Šírka",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Hodnoty",
   "Visual_Font": "Písmo",
   "Visual_LinksOrder": "Poradie prepojení",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Dole",
   "Visual_BottomCenter": "Dole v strede",
   "Visual_BottomRight": "Dole vpravo",
-  "Visual_ResetButonDescription": "Tlačidlo, ktoré resetuje pôvodné umiestnenie uzlov"
+  "Visual_ResetButonDescription": "Tlačidlo, ktoré resetuje pôvodné umiestnenie uzlov",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

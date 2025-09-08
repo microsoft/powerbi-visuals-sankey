@@ -15,6 +15,11 @@
   "Visual_Weight": "الوزن",
   "Visual_DataPointsLinkLabels": "تسميات ارتباط البيانات",
   "Visual_Links": "ارتباطات",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "تمكين المقياس اللوغارتمي",
   "Visual_ScaleSettings": "إعدادات المقياس",
   "Visual_MinOptimalHeight": "توفير أدنى ارتفاع مثالي لعقدة",
@@ -35,6 +40,7 @@
   "Visual_Input": "الإدخال",
   "Visual_Output": "الإخراج",
   "Visual_Width": "العرض",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "القيم",
   "Visual_Font": "الخط",
   "Visual_LinksOrder": "ترتيب الارتباطات",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "أسفل",
   "Visual_BottomCenter": "توسيط سفلي",
   "Visual_BottomRight": "أسفل اليمين",
-  "Visual_ResetButonDescription": "زر سيقوم بإعادة تعيين العقد إلى مواضعها الأصلية"
+  "Visual_ResetButonDescription": "زر سيقوم بإعادة تعيين العقد إلى مواضعها الأصلية",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

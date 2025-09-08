@@ -15,6 +15,11 @@
   "Visual_Weight": "Ağırlık",
   "Visual_DataPointsLinkLabels": "Veri bağlantısı etiketleri",
   "Visual_Links": "Bağlantılar",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Logaritmik ölçeği etkinleştir",
   "Visual_ScaleSettings": "Ölçek ayarları",
   "Visual_MinOptimalHeight": "Düğüm için en düşük ideal yüksekliği sağlayın",
@@ -35,6 +40,7 @@
   "Visual_Input": "Giriş",
   "Visual_Output": "Çıkış",
   "Visual_Width": "Genişlik",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Değerler",
   "Visual_Font": "Yazı Tipi",
   "Visual_LinksOrder": "Bağlantı sırası",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Alt",
   "Visual_BottomCenter": "Alt orta",
   "Visual_BottomRight": "Alt sağ",
-  "Visual_ResetButonDescription": "Düğümleri özgün konumlarına sıfırlayacak bir düğme"
+  "Visual_ResetButonDescription": "Düğümleri özgün konumlarına sıfırlayacak bir düğme",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

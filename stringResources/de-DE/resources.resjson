@@ -15,6 +15,11 @@
   "Visual_Weight": "Gewichtung",
   "Visual_DataPointsLinkLabels": "Datenlinkbezeichnungen",
   "Visual_Links": "Links",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Logarithmische Skalierung aktivieren",
   "Visual_ScaleSettings": "Skalierungseinstellungen",
   "Visual_MinOptimalHeight": "Optimale Mindesthöhe von Knoten angeben",
@@ -35,6 +40,7 @@
   "Visual_Input": "Eingabe",
   "Visual_Output": "Ausgabe",
   "Visual_Width": "Breite",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Werte",
   "Visual_Font": "Schriftart",
   "Visual_LinksOrder": "Anordnung der Links",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Unten",
   "Visual_BottomCenter": "Unten zentriert",
   "Visual_BottomRight": "Unten rechts",
-  "Visual_ResetButonDescription": "Eine Schaltfläche, die die Knoten auf ihre ursprünglichen Positionen zurücksetzt."
+  "Visual_ResetButonDescription": "Eine Schaltfläche, die die Knoten auf ihre ursprünglichen Positionen zurücksetzt.",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

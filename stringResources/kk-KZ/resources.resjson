@@ -15,6 +15,11 @@
   "Visual_Weight": "Салмақ",
   "Visual_DataPointsLinkLabels": "Деректерді беру арнасының белгілері",
   "Visual_Links": "Сілтемелер",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Логарифмдік шкаланы қосу",
   "Visual_ScaleSettings": "Масштаб параметрлері",
   "Visual_MinOptimalHeight": "Түйіннің минимал оңтайлы биіктігін беру",
@@ -35,6 +40,7 @@
   "Visual_Input": "Кіріс",
   "Visual_Output": "Нәтиже",
   "Visual_Width": "Ені",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Мәндер",
   "Visual_Font": "Қаріп",
   "Visual_LinksOrder": "Сілтемелердің тәртібі",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Төменгі жақ",
   "Visual_BottomCenter": "Ортасы бойынша төменге",
   "Visual_BottomRight": "Төменгі оң жақ",
-  "Visual_ResetButonDescription": "Тораптарды бастапқы қалыптарына қайта орнататын түймешік"
+  "Visual_ResetButonDescription": "Тораптарды бастапқы қалыптарына қайта орнататын түймешік",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }
