@@ -15,6 +15,11 @@
   "Visual_Weight": "Pisua",
   "Visual_DataPointsLinkLabels": "Datu-esteken etiketak",
   "Visual_Links": "Estekak",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Gaitu eskala logaritmikoa",
   "Visual_ScaleSettings": "Eskalaren ezarpenak",
   "Visual_MinOptimalHeight": "Adierazi nodoaren gutxieneko altuera optimoa",
@@ -35,6 +40,7 @@
   "Visual_Input": "Sarrera",
   "Visual_Output": "Emaitza",
   "Visual_Width": "Zabalera",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Balioak",
   "Visual_Font": "Letra-tipoa",
   "Visual_LinksOrder": "Esteken ordena",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Behean",
   "Visual_BottomCenter": "Behe-erdialdean",
   "Visual_BottomRight": "Behe-eskuinaldean",
-  "Visual_ResetButonDescription": "Nodoak jatorrizko posizioetara itzultzeko botoia"
+  "Visual_ResetButonDescription": "Nodoak jatorrizko posizioetara itzultzeko botoia",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

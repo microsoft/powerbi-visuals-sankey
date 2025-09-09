@@ -15,6 +15,11 @@
   "Visual_Weight": "Épaisseur",
   "Visual_DataPointsLinkLabels": "Étiquettes de liaisons de données",
   "Visual_Links": "Liens",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Activer l'échelle logarithmique",
   "Visual_ScaleSettings": "Paramètres de mise à l'échelle",
   "Visual_MinOptimalHeight": "Fournir la hauteur optimale minimum du nœud",
@@ -35,6 +40,7 @@
   "Visual_Input": "Entrée",
   "Visual_Output": "Sortie",
   "Visual_Width": "Largeur",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Valeurs",
   "Visual_Font": "Police",
   "Visual_LinksOrder": "Ordre des liens",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Bas",
   "Visual_BottomCenter": "Au centre en bas",
   "Visual_BottomRight": "En bas à droite",
-  "Visual_ResetButonDescription": "Bouton qui réinitialise les nœuds à leur positions d’origine"
+  "Visual_ResetButonDescription": "Bouton qui réinitialise les nœuds à leur positions d’origine",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

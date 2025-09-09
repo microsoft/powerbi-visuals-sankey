@@ -15,6 +15,11 @@
   "Visual_Weight": "Svarīgums",
   "Visual_DataPointsLinkLabels": "Datu saišu etiķetes",
   "Visual_Links": "Saites",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Iespējot logaritmisko skalu",
   "Visual_ScaleSettings": "Mēroga iestatījumi",
   "Visual_MinOptimalHeight": "Nodrošināt min. optimālo mezgla augstumu",
@@ -35,6 +40,7 @@
   "Visual_Input": "Ievade",
   "Visual_Output": "Izvade",
   "Visual_Width": "Platums",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Vērtības",
   "Visual_Font": "Fonts",
   "Visual_LinksOrder": "Saišu secība",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Apakšā",
   "Visual_BottomCenter": "Apakšā centrā",
   "Visual_BottomRight": "Apakšā pa labi",
-  "Visual_ResetButonDescription": "Poga, kas atiestatīs mezglus uz to sākotnējām pozīcijām"
+  "Visual_ResetButonDescription": "Poga, kas atiestatīs mezglus uz to sākotnējām pozīcijām",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

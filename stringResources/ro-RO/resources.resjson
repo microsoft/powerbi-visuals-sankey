@@ -15,6 +15,11 @@
   "Visual_Weight": "Pondere",
   "Visual_DataPointsLinkLabels": "Etichete linkuri de date",
   "Visual_Links": "Linkuri",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Activați scala logaritmică",
   "Visual_ScaleSettings": "Setări de scară",
   "Visual_MinOptimalHeight": "Oferiți înălțimea minimă optimă a nodului",
@@ -35,6 +40,7 @@
   "Visual_Input": "Intrare",
   "Visual_Output": "Rezultat",
   "Visual_Width": "Lățime",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Valori",
   "Visual_Font": "Font",
   "Visual_LinksOrder": "Ordinea linkurilor",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Jos",
   "Visual_BottomCenter": "Centru jos",
   "Visual_BottomRight": "Dreapta jos",
-  "Visual_ResetButonDescription": "Un buton care va reseta nodurile la pozițiile lor inițiale"
+  "Visual_ResetButonDescription": "Un buton care va reseta nodurile la pozițiile lor inițiale",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

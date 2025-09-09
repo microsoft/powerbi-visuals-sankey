@@ -15,6 +15,11 @@
   "Visual_Weight": "Vægt",
   "Visual_DataPointsLinkLabels": "Datalinketiketter",
   "Visual_Links": "Links",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Aktivér logaritmisk skala",
   "Visual_ScaleSettings": "Skalaindstillinger",
   "Visual_MinOptimalHeight": "Angiv min optimale nodehøjde",
@@ -35,6 +40,7 @@
   "Visual_Input": "Input",
   "Visual_Output": "Output",
   "Visual_Width": "Bredde",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Værdier",
   "Visual_Font": "Skrifttype",
   "Visual_LinksOrder": "Rækkefølge af links",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Bund",
   "Visual_BottomCenter": "Nederst i midten",
   "Visual_BottomRight": "Nederst til højre",
-  "Visual_ResetButonDescription": "En knap, der nulstiller noderne til deres oprindelige positioner"
+  "Visual_ResetButonDescription": "En knap, der nulstiller noderne til deres oprindelige positioner",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

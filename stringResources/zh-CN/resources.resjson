@@ -15,6 +15,11 @@
   "Visual_Weight": "称重",
   "Visual_DataPointsLinkLabels": "数据链接标签",
   "Visual_Links": "链接",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "启用对数刻度",
   "Visual_ScaleSettings": "缩放设置",
   "Visual_MinOptimalHeight": "提供节点的最佳高度下限",
@@ -35,6 +40,7 @@
   "Visual_Input": "输入",
   "Visual_Output": "输出",
   "Visual_Width": "宽度",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "值",
   "Visual_Font": "字体",
   "Visual_LinksOrder": "链接顺序",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "下",
   "Visual_BottomCenter": "靠下居中",
   "Visual_BottomRight": "右下方",
-  "Visual_ResetButonDescription": "将节点重置为其原始位置的按钮"
+  "Visual_ResetButonDescription": "将节点重置为其原始位置的按钮",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

@@ -15,6 +15,11 @@
   "Visual_Weight": "Вес",
   "Visual_DataPointsLinkLabels": "Метки связей данных",
   "Visual_Links": "Ссылки",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Включить логарифмическую шкалу",
   "Visual_ScaleSettings": "Настройки масштаба",
   "Visual_MinOptimalHeight": "Укажите минимальную оптимальную высоту узла",
@@ -35,6 +40,7 @@
   "Visual_Input": "Входные данные",
   "Visual_Output": "Выходные данные",
   "Visual_Width": "Ширина",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Значения",
   "Visual_Font": "Шрифт",
   "Visual_LinksOrder": "Порядок ссылок",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Снизу",
   "Visual_BottomCenter": "Снизу в центре",
   "Visual_BottomRight": "Снизу справа",
-  "Visual_ResetButonDescription": "Кнопка, которая сбросит узлы до их исходных позиций"
+  "Visual_ResetButonDescription": "Кнопка, которая сбросит узлы до их исходных позиций",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }
