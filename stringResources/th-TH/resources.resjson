@@ -15,6 +15,11 @@
   "Visual_Weight": "น้ำหนัก",
   "Visual_DataPointsLinkLabels": "ป้ายชื่อลิงก์ข้อมูล",
   "Visual_Links": "การเชื่อมโยง",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "เปิดใช้งานมาตราส่วนลอการิทึม",
   "Visual_ScaleSettings": "การตั้งค่ามาตราส่วน",
   "Visual_MinOptimalHeight": "แสดงความสูงที่เหมาะสมต่ำสุดของโหนด",
@@ -35,6 +40,7 @@
   "Visual_Input": "อินพุต",
   "Visual_Output": "เอาต์พุต",
   "Visual_Width": "ความกว้าง",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "มูลค่า",
   "Visual_Font": "แบบอักษร",
   "Visual_LinksOrder": "ลำดับลิงก์",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "ล่าง",
   "Visual_BottomCenter": "กึ่งกลางด้านล่าง",
   "Visual_BottomRight": "ล่างขวา",
-  "Visual_ResetButonDescription": "ปุ่มที่จะรีเซ็ตโหนดเป็นตําแหน่งเดิม"
+  "Visual_ResetButonDescription": "ปุ่มที่จะรีเซ็ตโหนดเป็นตําแหน่งเดิม",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

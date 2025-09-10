@@ -15,6 +15,11 @@
   "Visual_Weight": "Paino",
   "Visual_DataPointsLinkLabels": "Tietolinkkien otsikot",
   "Visual_Links": "Linkit",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Ota käyttöön logaritminen asteikko",
   "Visual_ScaleSettings": "Skaalausasetukset",
   "Visual_MinOptimalHeight": "Anna solmun pienin paras mahdollinen korkeus",
@@ -35,6 +40,7 @@
   "Visual_Input": "Syöte",
   "Visual_Output": "Tulos",
   "Visual_Width": "Leveys",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Arvot",
   "Visual_Font": "Fontti",
   "Visual_LinksOrder": "Linkkien järjestys",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Alhaalla",
   "Visual_BottomCenter": "Alhaalla keskellä",
   "Visual_BottomRight": "Alhaalla oikealla",
-  "Visual_ResetButonDescription": "Painike, joka palauttaa solmut alkuperäisiin sijainteihinsa"
+  "Visual_ResetButonDescription": "Painike, joka palauttaa solmut alkuperäisiin sijainteihinsa",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

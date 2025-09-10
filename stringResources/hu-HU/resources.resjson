@@ -15,6 +15,11 @@
   "Visual_Weight": "Súlyozás",
   "Visual_DataPointsLinkLabels": "Adathivatkozási címkék",
   "Visual_Links": "Hivatkozások",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Logaritmikus skála engedélyezése",
   "Visual_ScaleSettings": "Méretbeállítások",
   "Visual_MinOptimalHeight": "Adja meg a csomópont minimálisan optimális magasságát",
@@ -35,6 +40,7 @@
   "Visual_Input": "Bemenet",
   "Visual_Output": "Kimenet",
   "Visual_Width": "Szélesség",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Értékek",
   "Visual_Font": "Betűtípus",
   "Visual_LinksOrder": "Hivatkozások sorrendje",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Lent",
   "Visual_BottomCenter": "Alul középen",
   "Visual_BottomRight": "Alul jobbra",
-  "Visual_ResetButonDescription": "Egy gomb, amely visszaállítja a csomópontokat az eredeti helyükre"
+  "Visual_ResetButonDescription": "Egy gomb, amely visszaállítja a csomópontokat az eredeti helyükre",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

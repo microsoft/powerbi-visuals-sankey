@@ -15,6 +15,11 @@
   "Visual_Weight": "Pes",
   "Visual_DataPointsLinkLabels": "Etiquetes d'enllaços de dades",
   "Visual_Links": "Enllaços",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Permet l'escala logarítmica",
   "Visual_ScaleSettings": "Configuració de l'escala",
   "Visual_MinOptimalHeight": "Proporcioneu l'alçada mínima òptima del node.",
@@ -35,6 +40,7 @@
   "Visual_Input": "Entrada",
   "Visual_Output": "Sortida",
   "Visual_Width": "Amplada",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Valors",
   "Visual_Font": "Tipus de lletra",
   "Visual_LinksOrder": "Ordre dels enllaços",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Part inferior",
   "Visual_BottomCenter": "A baix, al centre",
   "Visual_BottomRight": "A baix, a la dreta",
-  "Visual_ResetButonDescription": "Botó que restablirà els nodes a les seves posicions originals"
+  "Visual_ResetButonDescription": "Botó que restablirà els nodes a les seves posicions originals",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

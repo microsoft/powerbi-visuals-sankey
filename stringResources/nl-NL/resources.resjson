@@ -15,6 +15,11 @@
   "Visual_Weight": "Gewicht",
   "Visual_DataPointsLinkLabels": "Labels voor gegevenskoppelingen",
   "Visual_Links": "Koppelingen",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Logaritmische schaal inschakelen",
   "Visual_ScaleSettings": "Schaalinstellingen",
   "Visual_MinOptimalHeight": "Minimum voor optimale hoogte van knooppunt opgeven",
@@ -35,6 +40,7 @@
   "Visual_Input": "Invoer",
   "Visual_Output": "Uitvoer",
   "Visual_Width": "Breedte",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Waarden",
   "Visual_Font": "Lettertype",
   "Visual_LinksOrder": "Volgorde van koppelingen",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Onder",
   "Visual_BottomCenter": "Middenonder",
   "Visual_BottomRight": "Rechtsonder",
-  "Visual_ResetButonDescription": "Een knop waarmee de knooppunten worden ingesteld op hun oorspronkelijke positie"
+  "Visual_ResetButonDescription": "Een knop waarmee de knooppunten worden ingesteld op hun oorspronkelijke positie",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

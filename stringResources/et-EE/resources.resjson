@@ -15,6 +15,11 @@
   "Visual_Weight": "Kaal",
   "Visual_DataPointsLinkLabels": "Andmelingi sildid",
   "Visual_Links": "Lingid",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Luba logaritmiline skaala",
   "Visual_ScaleSettings": "Mõõtkava sätted",
   "Visual_MinOptimalHeight": "Esita sõlme minimaalne optimaalne kõrgus",
@@ -35,6 +40,7 @@
   "Visual_Input": "Sisend",
   "Visual_Output": "Väljund",
   "Visual_Width": "Laius",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Väärtused",
   "Visual_Font": "Font",
   "Visual_LinksOrder": "Linkide järjestus",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Alla",
   "Visual_BottomCenter": "Alla keskele",
   "Visual_BottomRight": "Alla paremale",
-  "Visual_ResetButonDescription": "Nupp, mis taastab sõlmed algsetele asenditele"
+  "Visual_ResetButonDescription": "Nupp, mis taastab sõlmed algsetele asenditele",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }

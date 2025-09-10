@@ -15,6 +15,11 @@
   "Visual_Weight": "Berat",
   "Visual_DataPointsLinkLabels": "Label tautan data",
   "Visual_Links": "Tautan",
+  "Visual_LinkMatchNodeColors": "Match node colors",
+  "Visual_MatchColorTo": "Match color to",
+  "Visual_MatchColorTo_Source": "Source",
+  "Visual_LinkColor": "Link color",
+  "Visual_Border": "Border",
   "Visual_LogarithmicScale": "Aktifkan skala logaritmis",
   "Visual_ScaleSettings": "Pengaturan skala",
   "Visual_MinOptimalHeight": "Sediakan tinggi optimal node minimal",
@@ -35,6 +40,7 @@
   "Visual_Input": "Input",
   "Visual_Output": "Output",
   "Visual_Width": "Lebar",
+  "Visual_NodesShowAll": "Show all",
   "Visual_Values": "Nilai",
   "Visual_Font": "Font",
   "Visual_LinksOrder": "Urutan tautan",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Bawah",
   "Visual_BottomCenter": "Tengah bawah",
   "Visual_BottomRight": "Kanan bawah",
-  "Visual_ResetButonDescription": "Tombol yang akan mengatur ulang node ke posisi semula"
+  "Visual_ResetButonDescription": "Tombol yang akan mengatur ulang node ke posisi semula",
+  "Visual_ApplySettingsTo": "Apply settings to",
+  "Visual_All": "All",
+  "Visual_BorderDisabledReason": "These options are available when Links is set to \"All\"",
+  "Visual_NodeWidthDisabledReason": "These options are available when \"Nodes\" is set to \"All\"",
+  "Visual_Option": "Option",
+  "Visual_ColorDisabledDescription": "This option is available when \"High contrast colors\" is set to \"None\""
 }
