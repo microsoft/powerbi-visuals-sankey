@@ -15,6 +15,11 @@
   "Visual_Weight": "Težina",
   "Visual_DataPointsLinkLabels": "Oznake veza ka podacima",
   "Visual_Links": "Veze",
+  "Visual_LinkMatchNodeColors": "Podudaranje boja čvora",
+  "Visual_MatchColorTo": "Podudaranje boje sa",
+  "Visual_MatchColorTo_Source": "Izvor",
+  "Visual_LinkColor": "Boja veze",
+  "Visual_Border": "Ivica",
   "Visual_LogarithmicScale": "Omogući logaritamsku skalu",
   "Visual_ScaleSettings": "Postavke razmere",
   "Visual_MinOptimalHeight": "Unesite minimalnu optimalnu visinu čvora",
@@ -35,6 +40,7 @@
   "Visual_Input": "Unos",
   "Visual_Output": "Izlaz",
   "Visual_Width": "Širina",
+  "Visual_NodesShowAll": "Prikaži sve",
   "Visual_Values": "Vrednosti",
   "Visual_Font": "Font",
   "Visual_LinksOrder": "Redosled veza",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Dno",
   "Visual_BottomCenter": "Dole centar",
   "Visual_BottomRight": "Dole desno",
-  "Visual_ResetButonDescription": "Dugme koje će resetovati čvorove na njihove originalne pozicije"
+  "Visual_ResetButonDescription": "Dugme koje će resetovati čvorove na njihove originalne pozicije",
+  "Visual_ApplySettingsTo": "Primeni postavke na",
+  "Visual_All": "Sve",
+  "Visual_BorderDisabledReason": "Ove opcije su dostupne kada je serija postavljena na „Sve“",
+  "Visual_NodeWidthDisabledReason": "Ove opcije su dostupne kada su „Čvorovi” postavljeni na „Sve“",
+  "Visual_Option": "Opcija",
+  "Visual_ColorDisabledDescription": "Ova opcija je dostupna kada je opcija „Boje visokog kontrasta” postavljena na „Nijedno”"
 }
