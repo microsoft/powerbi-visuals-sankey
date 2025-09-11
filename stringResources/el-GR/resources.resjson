@@ -15,6 +15,11 @@
   "Visual_Weight": "Βάρος",
   "Visual_DataPointsLinkLabels": "Ετικέτες σύνδεσης δεδομένων",
   "Visual_Links": "Συνδέσεις",
+  "Visual_LinkMatchNodeColors": "Αντιστοίχιση χρωμάτων κόμβου",
+  "Visual_MatchColorTo": "Αντιστοίχιση χρώματος με",
+  "Visual_MatchColorTo_Source": "Προέλευση",
+  "Visual_LinkColor": "Χρώμα σύνδεσης",
+  "Visual_Border": "Περίγραμμα",
   "Visual_LogarithmicScale": "Ενεργοποίηση λογαριθμικής κλίμακας",
   "Visual_ScaleSettings": "Ρυθμίσεις κλίμακας",
   "Visual_MinOptimalHeight": "Παράχετε το ελάχιστο βέλτιστο ύψος του κόμβου",
@@ -35,6 +40,7 @@
   "Visual_Input": "Είσοδος",
   "Visual_Output": "Έξοδος",
   "Visual_Width": "Πλάτος",
+  "Visual_NodesShowAll": "Εμφάνιση όλων",
   "Visual_Values": "Τιμές",
   "Visual_Font": "Γραμματοσειρά",
   "Visual_LinksOrder": "Σειρά συνδέσεων",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Κάτω",
   "Visual_BottomCenter": "Κάτω κέντρο",
   "Visual_BottomRight": "Κάτω δεξιά",
-  "Visual_ResetButonDescription": "Ένα κουμπί που θα επαναφέρει τους κόμβους στις αρχικές θέσεις τους"
+  "Visual_ResetButonDescription": "Ένα κουμπί που θα επαναφέρει τους κόμβους στις αρχικές θέσεις τους",
+  "Visual_ApplySettingsTo": "Εφαρμογή ρυθμίσεων σε",
+  "Visual_All": "Όλα",
+  "Visual_BorderDisabledReason": "Αυτές οι επιλογές είναι διαθέσιμες όταν οι Συνδέσεις έχουν οριστεί σε \"Όλες\"",
+  "Visual_NodeWidthDisabledReason": "Αυτές οι επιλογές είναι διαθέσιμες όταν η επιλογή \"Κόμβοι\" έχει οριστεί σε \"Όλοι\"",
+  "Visual_Option": "Επιλογή",
+  "Visual_ColorDisabledDescription": "Αυτή η επιλογή είναι διαθέσιμη όταν η επιλογή \"Χρώματα υψηλής αντίθεσης\" έχει οριστεί σε \"Κανένα\""
 }
