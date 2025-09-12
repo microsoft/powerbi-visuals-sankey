@@ -15,6 +15,11 @@
   "Visual_Weight": "Pes",
   "Visual_DataPointsLinkLabels": "Etiquetes d'enllaços de dades",
   "Visual_Links": "Enllaços",
+  "Visual_LinkMatchNodeColors": "Fes coincidir els colors del node",
+  "Visual_MatchColorTo": "Fes coincidir el color amb",
+  "Visual_MatchColorTo_Source": "Origen",
+  "Visual_LinkColor": "Color de l'enllaç",
+  "Visual_Border": "Vora",
   "Visual_LogarithmicScale": "Permet l'escala logarítmica",
   "Visual_ScaleSettings": "Configuració de l'escala",
   "Visual_MinOptimalHeight": "Proporcioneu l'alçada mínima òptima del node.",
@@ -35,6 +40,7 @@
   "Visual_Input": "Entrada",
   "Visual_Output": "Sortida",
   "Visual_Width": "Amplada",
+  "Visual_NodesShowAll": "Mostra-ho tot",
   "Visual_Values": "Valors",
   "Visual_Font": "Tipus de lletra",
   "Visual_LinksOrder": "Ordre dels enllaços",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Part inferior",
   "Visual_BottomCenter": "A baix, al centre",
   "Visual_BottomRight": "A baix, a la dreta",
-  "Visual_ResetButonDescription": "Botó que restablirà els nodes a les seves posicions originals"
+  "Visual_ResetButonDescription": "Botó que restablirà els nodes a les seves posicions originals",
+  "Visual_ApplySettingsTo": "Aplica la configuració a",
+  "Visual_All": "Tot",
+  "Visual_BorderDisabledReason": "Aquestes opcions estan disponibles quan els enllaços estan definits com a \"Tots\"",
+  "Visual_NodeWidthDisabledReason": "Aquestes opcions estan disponibles quan \"Nodes\" està definit com a \"Tots\"",
+  "Visual_Option": "Opció",
+  "Visual_ColorDisabledDescription": "Aquesta opció està disponible quan el valor \"Colors de contrast alt\" està establert com a \"Cap\""
 }
