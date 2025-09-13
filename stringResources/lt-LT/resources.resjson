@@ -15,6 +15,11 @@
   "Visual_Weight": "Svoris",
   "Visual_DataPointsLinkLabels": "Duomenų saito žymos",
   "Visual_Links": "Saitai",
+  "Visual_LinkMatchNodeColors": "Pritaikyti mazgo spalvas",
+  "Visual_MatchColorTo": "Pritaikyti spalvą pagal",
+  "Visual_MatchColorTo_Source": "Šaltinis",
+  "Visual_LinkColor": "Saito spalva",
+  "Visual_Border": "Kraštinė",
   "Visual_LogarithmicScale": "Įjungti logaritminį mastelį",
   "Visual_ScaleSettings": "Mastelio keitimo parametrai",
   "Visual_MinOptimalHeight": "Pateikti mažiausią optimalų mazgo aukštį",
@@ -35,6 +40,7 @@
   "Visual_Input": "Įvestis",
   "Visual_Output": "Išvestis",
   "Visual_Width": "Plotis",
+  "Visual_NodesShowAll": "Rodyti viską",
   "Visual_Values": "Reikšmės",
   "Visual_Font": "Šriftas",
   "Visual_LinksOrder": "Saitų tvarka",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Apačia",
   "Visual_BottomCenter": "Apačioje centre",
   "Visual_BottomRight": "Apačioje dešinėje",
-  "Visual_ResetButonDescription": "Mygtukas, kuris iš naujo nustatys pradines mazgų padėtis"
+  "Visual_ResetButonDescription": "Mygtukas, kuris iš naujo nustatys pradines mazgų padėtis",
+  "Visual_ApplySettingsTo": "Taikyti parametrus",
+  "Visual_All": "Visi",
+  "Visual_BorderDisabledReason": "Šios parinktys pasiekiamos, kai saitai nustatyti kaip „Visi“",
+  "Visual_NodeWidthDisabledReason": "Šios parinktys pasiekiamos, kai „Mazgai“ nustatyti kaip „Visi“",
+  "Visual_Option": "Parinktis",
+  "Visual_ColorDisabledDescription": "Ši parinktis yra pasiekiama, kai „Didelio kontrastingumo spalvos“ nustatytos kaip „Nėra“"
 }
