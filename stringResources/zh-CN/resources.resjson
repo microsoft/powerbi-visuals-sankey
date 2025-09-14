@@ -15,6 +15,11 @@
   "Visual_Weight": "称重",
   "Visual_DataPointsLinkLabels": "数据链接标签",
   "Visual_Links": "链接",
+  "Visual_LinkMatchNodeColors": "匹配节点颜色",
+  "Visual_MatchColorTo": "将颜色匹配到",
+  "Visual_MatchColorTo_Source": "源",
+  "Visual_LinkColor": "链接颜色",
+  "Visual_Border": "边框",
   "Visual_LogarithmicScale": "启用对数刻度",
   "Visual_ScaleSettings": "缩放设置",
   "Visual_MinOptimalHeight": "提供节点的最佳高度下限",
@@ -35,6 +40,7 @@
   "Visual_Input": "输入",
   "Visual_Output": "输出",
   "Visual_Width": "宽度",
+  "Visual_NodesShowAll": "全部显示",
   "Visual_Values": "值",
   "Visual_Font": "字体",
   "Visual_LinksOrder": "链接顺序",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "下",
   "Visual_BottomCenter": "靠下居中",
   "Visual_BottomRight": "右下方",
-  "Visual_ResetButonDescription": "将节点重置为其原始位置的按钮"
+  "Visual_ResetButonDescription": "将节点重置为其原始位置的按钮",
+  "Visual_ApplySettingsTo": "将设置应用于",
+  "Visual_All": "全部",
+  "Visual_BorderDisabledReason": "当链接设置为“全部”时，这些选项可用",
+  "Visual_NodeWidthDisabledReason": "当“节点”设置为“全部”时，这些选项可用",
+  "Visual_Option": "选项",
+  "Visual_ColorDisabledDescription": "当“高对比度颜色”设置为“无”时，此选项可用"
 }
