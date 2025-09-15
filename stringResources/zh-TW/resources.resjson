@@ -15,6 +15,11 @@
   "Visual_Weight": "權數",
   "Visual_DataPointsLinkLabels": "資料連結標籤",
   "Visual_Links": "連結",
+  "Visual_LinkMatchNodeColors": "比對節點顏色",
+  "Visual_MatchColorTo": "將顏色比對至",
+  "Visual_MatchColorTo_Source": "來源",
+  "Visual_LinkColor": "連結顏色",
+  "Visual_Border": "邊界",
   "Visual_LogarithmicScale": "啟用對數刻度",
   "Visual_ScaleSettings": "調整設定",
   "Visual_MinOptimalHeight": "提供節點的最小最佳高度",
@@ -35,6 +40,7 @@
   "Visual_Input": "輸入",
   "Visual_Output": "輸出",
   "Visual_Width": "寬度",
+  "Visual_NodesShowAll": "顯示全部",
   "Visual_Values": "值",
   "Visual_Font": "字型",
   "Visual_LinksOrder": "連結順序",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "底端",
   "Visual_BottomCenter": "正下方",
   "Visual_BottomRight": "右下",
-  "Visual_ResetButonDescription": "一個將節點重置為其原始位置的按鈕"
+  "Visual_ResetButonDescription": "一個將節點重置為其原始位置的按鈕",
+  "Visual_ApplySettingsTo": "將設定套用至",
+  "Visual_All": "全部",
+  "Visual_BorderDisabledReason": "當 [連結] 設定為 [全部] 時，可以使用這些選項",
+  "Visual_NodeWidthDisabledReason": "當 [節點] 設定為 [全部] 時，可以使用這些選項",
+  "Visual_Option": "選項",
+  "Visual_ColorDisabledDescription": "當「高對比色彩」設定為「無」時，您可以使用此選項"
 }

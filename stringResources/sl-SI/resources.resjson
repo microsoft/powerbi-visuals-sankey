@@ -15,6 +15,11 @@
   "Visual_Weight": "Teža",
   "Visual_DataPointsLinkLabels": "Povezava oznake podatkov",
   "Visual_Links": "Povezave",
+  "Visual_LinkMatchNodeColors": "Uskladi z barvami vozlišč",
+  "Visual_MatchColorTo": "Uskladi barvo s/z",
+  "Visual_MatchColorTo_Source": "Vir",
+  "Visual_LinkColor": "Barva povezave",
+  "Visual_Border": "Obroba",
   "Visual_LogarithmicScale": "Omogoči logaritmično merilo",
   "Visual_ScaleSettings": "Nastavitve merila",
   "Visual_MinOptimalHeight": "Zagotovi najmanjšo optimalno višino vozlišča",
@@ -35,6 +40,7 @@
   "Visual_Input": "Vnos",
   "Visual_Output": "Rezultat",
   "Visual_Width": "Širina",
+  "Visual_NodesShowAll": "Pokaži vse",
   "Visual_Values": "Vrednosti",
   "Visual_Font": "Pisava",
   "Visual_LinksOrder": "Vrstni red povezav",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Dno",
   "Visual_BottomCenter": "Spodaj na sredino",
   "Visual_BottomRight": "Spodaj desno",
-  "Visual_ResetButonDescription": "Gumb, ki ponastavi vozlišča na njihova prvotna mesta"
+  "Visual_ResetButonDescription": "Gumb, ki ponastavi vozlišča na njihova prvotna mesta",
+  "Visual_ApplySettingsTo": "Uporabi nastavitve za",
+  "Visual_All": "Vse",
+  "Visual_BorderDisabledReason": "Te možnosti so na voljo, ko je možnost »Povezave« nastavljena na »Vse«",
+  "Visual_NodeWidthDisabledReason": "Te možnosti so na voljo, ko je možnost »Vozlišča« nastavljena na »Vse«",
+  "Visual_Option": "Možnost",
+  "Visual_ColorDisabledDescription": "Ta možnost je na voljo, ko je nastavitev »Visokokontrastne barve« nastavljena na »Brez«"
 }

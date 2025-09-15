@@ -15,6 +15,11 @@
   "Visual_Weight": "Pisua",
   "Visual_DataPointsLinkLabels": "Datu-esteken etiketak",
   "Visual_Links": "Estekak",
+  "Visual_LinkMatchNodeColors": "Bat etorri nodoen koloreak",
+  "Visual_MatchColorTo": "Kolorea bat etorri",
+  "Visual_MatchColorTo_Source": "Iturburua",
+  "Visual_LinkColor": "Estekaren kolorea",
+  "Visual_Border": "Ertza",
   "Visual_LogarithmicScale": "Gaitu eskala logaritmikoa",
   "Visual_ScaleSettings": "Eskalaren ezarpenak",
   "Visual_MinOptimalHeight": "Adierazi nodoaren gutxieneko altuera optimoa",
@@ -35,6 +40,7 @@
   "Visual_Input": "Sarrera",
   "Visual_Output": "Emaitza",
   "Visual_Width": "Zabalera",
+  "Visual_NodesShowAll": "Erakutsi denak",
   "Visual_Values": "Balioak",
   "Visual_Font": "Letra-tipoa",
   "Visual_LinksOrder": "Esteken ordena",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Behean",
   "Visual_BottomCenter": "Behe-erdialdean",
   "Visual_BottomRight": "Behe-eskuinaldean",
-  "Visual_ResetButonDescription": "Nodoak jatorrizko posizioetara itzultzeko botoia"
+  "Visual_ResetButonDescription": "Nodoak jatorrizko posizioetara itzultzeko botoia",
+  "Visual_ApplySettingsTo": "Aplikatu ezarpenak honi:",
+  "Visual_All": "Guztiak",
+  "Visual_BorderDisabledReason": "Aukera horiek eskuragarri daude Estekak aukeran “Guztiak” ezartzen denean",
+  "Visual_NodeWidthDisabledReason": "Aukera horiek eskuragarri daude “Nodoak” aukeran “Guztiak” ezartzen denean",
+  "Visual_Option": "Aukera",
+  "Visual_ColorDisabledDescription": "Aukera hau erabilgarri dago \"Kontraste handiko koloreak\" \"Bat ere ez\" gisa ezartzen denean"
 }
