@@ -15,6 +15,11 @@
   "Visual_Weight": "Салмақ",
   "Visual_DataPointsLinkLabels": "Деректерді беру арнасының белгілері",
   "Visual_Links": "Сілтемелер",
+  "Visual_LinkMatchNodeColors": "Түйіннің түстерін сәйкестендіру",
+  "Visual_MatchColorTo": "Түсті сәйкестендіру",
+  "Visual_MatchColorTo_Source": "Деректер көзі",
+  "Visual_LinkColor": "Сілтеменің түсі",
+  "Visual_Border": "Жиек",
   "Visual_LogarithmicScale": "Логарифмдік шкаланы қосу",
   "Visual_ScaleSettings": "Масштаб параметрлері",
   "Visual_MinOptimalHeight": "Түйіннің минимал оңтайлы биіктігін беру",
@@ -35,6 +40,7 @@
   "Visual_Input": "Кіріс",
   "Visual_Output": "Нәтиже",
   "Visual_Width": "Ені",
+  "Visual_NodesShowAll": "Барлығын көрсету",
   "Visual_Values": "Мәндер",
   "Visual_Font": "Қаріп",
   "Visual_LinksOrder": "Сілтемелердің тәртібі",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Төменгі жақ",
   "Visual_BottomCenter": "Ортасы бойынша төменге",
   "Visual_BottomRight": "Төменгі оң жақ",
-  "Visual_ResetButonDescription": "Тораптарды бастапқы қалыптарына қайта орнататын түймешік"
+  "Visual_ResetButonDescription": "Тораптарды бастапқы қалыптарына қайта орнататын түймешік",
+  "Visual_ApplySettingsTo": "Параметрлерді қолдану",
+  "Visual_All": "Барлығы",
+  "Visual_BorderDisabledReason": "Бұл параметрлер сілтемелер \"Барлығы\" мәніне орнатылғанда қолжетімді. болады.",
+  "Visual_NodeWidthDisabledReason": "Бұл параметрлер ”Түйіндер” \"Барлығы\" мәніне орнатылғанда қолжетімді болады.",
+  "Visual_Option": "Параметр",
+  "Visual_ColorDisabledDescription": "Бұл параметр \"Жоғары контрастты түстер\" параметрі \"Жоқ\" күйіне орнатылған кезде қолжетімді болады."
 }

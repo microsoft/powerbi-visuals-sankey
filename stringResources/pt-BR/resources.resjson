@@ -15,6 +15,11 @@
   "Visual_Weight": "Peso",
   "Visual_DataPointsLinkLabels": "Rótulos de link de dados",
   "Visual_Links": "Links",
+  "Visual_LinkMatchNodeColors": "Corresponder às cores do nó",
+  "Visual_MatchColorTo": "Corresponder cor a",
+  "Visual_MatchColorTo_Source": "Originar",
+  "Visual_LinkColor": "Vincular cor",
+  "Visual_Border": "Borda",
   "Visual_LogarithmicScale": "Habilitar a escala logarítmica",
   "Visual_ScaleSettings": "Configurações de dimensionamento",
   "Visual_MinOptimalHeight": "Fornecer a altura mínima ideal do nó",
@@ -35,6 +40,7 @@
   "Visual_Input": "Entrada",
   "Visual_Output": "Saída",
   "Visual_Width": "Largura",
+  "Visual_NodesShowAll": "Mostrar tudo",
   "Visual_Values": "Valores",
   "Visual_Font": "Fonte",
   "Visual_LinksOrder": "Ordem dos links",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Inferior",
   "Visual_BottomCenter": "Inferior central",
   "Visual_BottomRight": "Inferior direito",
-  "Visual_ResetButonDescription": "Um botão que redefinirá os nós para suas posições originais"
+  "Visual_ResetButonDescription": "Um botão que redefinirá os nós para suas posições originais",
+  "Visual_ApplySettingsTo": "Aplicar configurações para",
+  "Visual_All": "Tudo",
+  "Visual_BorderDisabledReason": "Essas opções estão disponíveis quando Links se encontram definidos como \"Todos\"",
+  "Visual_NodeWidthDisabledReason": "Essas opções estão disponíveis quando \"Nós\" se encontra definido como \"Todos\"",
+  "Visual_Option": "Opção",
+  "Visual_ColorDisabledDescription": "Essa opção está disponível quando \"Cores de alto contraste\" se encontram definidas como \"Nenhum\""
 }

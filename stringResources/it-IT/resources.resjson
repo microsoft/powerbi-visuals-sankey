@@ -15,6 +15,11 @@
   "Visual_Weight": "Peso",
   "Visual_DataPointsLinkLabels": "Etichette dei collegamenti ai dati",
   "Visual_Links": "Collegamenti",
+  "Visual_LinkMatchNodeColors": "Associa i colori dei nodi",
+  "Visual_MatchColorTo": "Associa il colore a",
+  "Visual_MatchColorTo_Source": "Origine",
+  "Visual_LinkColor": "Colore collegamento",
+  "Visual_Border": "Bordo",
   "Visual_LogarithmicScale": "Abilita scala logaritmica",
   "Visual_ScaleSettings": "Impostazioni scalabilità",
   "Visual_MinOptimalHeight": "Fornisci altezza minima ottimale del nodo",
@@ -35,6 +40,7 @@
   "Visual_Input": "Input",
   "Visual_Output": "Output",
   "Visual_Width": "Larghezza",
+  "Visual_NodesShowAll": "Mostra tutto",
   "Visual_Values": "Valori",
   "Visual_Font": "Tipo di carattere",
   "Visual_LinksOrder": "Ordine dei collegamenti",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Alla fine",
   "Visual_BottomCenter": "In basso al centro",
   "Visual_BottomRight": "In basso a destra",
-  "Visual_ResetButonDescription": "Un pulsante che ripristinerà le posizioni originali dei nodi"
+  "Visual_ResetButonDescription": "Un pulsante che ripristinerà le posizioni originali dei nodi",
+  "Visual_ApplySettingsTo": "Applicare le impostazioni a",
+  "Visual_All": "Tutto",
+  "Visual_BorderDisabledReason": "Queste opzioni sono disponibili quando l'opzione Collegamenti è impostata su \"Tutti\"",
+  "Visual_NodeWidthDisabledReason": "Queste opzioni sono disponibili quando l'opzione \"Nodi\" è impostata su \"Tutti\"",
+  "Visual_Option": "Opzione",
+  "Visual_ColorDisabledDescription": "Queste opzioni sono disponibili quando l'opzione \"A colori a contrasto elevato\" è impostata su \"Nessuno\""
 }
