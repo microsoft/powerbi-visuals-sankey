@@ -15,6 +15,11 @@
   "Visual_Weight": "भार",
   "Visual_DataPointsLinkLabels": "डेटा लिंक लेबल",
   "Visual_Links": "लिंक",
+  "Visual_LinkMatchNodeColors": "नोड रंग मिलाएँ",
+  "Visual_MatchColorTo": "इससे रंग मिलाएँ",
+  "Visual_MatchColorTo_Source": "स्रोत",
+  "Visual_LinkColor": "लिंक का रंग",
+  "Visual_Border": "बॉर्डर",
   "Visual_LogarithmicScale": "लॉगरिदमिक स्केल को सक्षम करें",
   "Visual_ScaleSettings": "स्केल की सेटिंग्स",
   "Visual_MinOptimalHeight": "नोड का न्यूनतम सर्वोत्कृष्ट ऊँचाई प्रदान करें",
@@ -35,6 +40,7 @@
   "Visual_Input": "इनपुट",
   "Visual_Output": "आउटपुट",
   "Visual_Width": "चौड़ाई",
+  "Visual_NodesShowAll": "सब दिखाएँ",
   "Visual_Values": "मान",
   "Visual_Font": "फ़ॉन्ट",
   "Visual_LinksOrder": "लिंक्स का क्रम",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "बॉटम",
   "Visual_BottomCenter": "नीचे बीच में",
   "Visual_BottomRight": "निचला दायाँ",
-  "Visual_ResetButonDescription": "एक बटन जो नोड्स को उनकी मूल स्थिति पर रीसेट कर देगा"
+  "Visual_ResetButonDescription": "एक बटन जो नोड्स को उनकी मूल स्थिति पर रीसेट कर देगा",
+  "Visual_ApplySettingsTo": "इस पर सेटिंग्स लागू करें",
+  "Visual_All": "सभी",
+  "Visual_BorderDisabledReason": "ये विकल्प तब उपलब्ध होते हैं जब लिंक्स \"सभी\" पर सेट हो",
+  "Visual_NodeWidthDisabledReason": "ये विकल्प तब उपलब्ध होते हैं जब \"नोड्स\", \"सभी\" पर सेट हो",
+  "Visual_Option": "विकल्प",
+  "Visual_ColorDisabledDescription": "यह विकल्प तब उपलब्ध होता है जब \"उच्च कॉन्ट्रास्ट रंग\" \"कोई नहीं\" पर सेट हो"
 }

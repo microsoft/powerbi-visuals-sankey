@@ -15,6 +15,11 @@
   "Visual_Weight": "Súlyozás",
   "Visual_DataPointsLinkLabels": "Adathivatkozási címkék",
   "Visual_Links": "Hivatkozások",
+  "Visual_LinkMatchNodeColors": "Csomópontok színének egyeztetése",
+  "Visual_MatchColorTo": "Szín egyeztetése a következővel:",
+  "Visual_MatchColorTo_Source": "Forrás",
+  "Visual_LinkColor": "Hivatkozás színe",
+  "Visual_Border": "Határ",
   "Visual_LogarithmicScale": "Logaritmikus skála engedélyezése",
   "Visual_ScaleSettings": "Méretbeállítások",
   "Visual_MinOptimalHeight": "Adja meg a csomópont minimálisan optimális magasságát",
@@ -35,6 +40,7 @@
   "Visual_Input": "Bemenet",
   "Visual_Output": "Kimenet",
   "Visual_Width": "Szélesség",
+  "Visual_NodesShowAll": "Az összes megjelenítése",
   "Visual_Values": "Értékek",
   "Visual_Font": "Betűtípus",
   "Visual_LinksOrder": "Hivatkozások sorrendje",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Lent",
   "Visual_BottomCenter": "Alul középen",
   "Visual_BottomRight": "Alul jobbra",
-  "Visual_ResetButonDescription": "Egy gomb, amely visszaállítja a csomópontokat az eredeti helyükre"
+  "Visual_ResetButonDescription": "Egy gomb, amely visszaállítja a csomópontokat az eredeti helyükre",
+  "Visual_ApplySettingsTo": "Beállítások alkalmazása erre:",
+  "Visual_All": "Az összes",
+  "Visual_BorderDisabledReason": "Ezek a beállítások akkor érhetők el, ha a Hivatkozások Az összes értékre van állítva",
+  "Visual_NodeWidthDisabledReason": "Ezek a beállítások akkor érhetők el, ha a Csomópontok Az összes értékre van állítva",
+  "Visual_Option": "Beállítás",
+  "Visual_ColorDisabledDescription": "Ez a beállítás akkor érhető el, ha a Kontrasztos színek beállítás értéke Nincs"
 }
