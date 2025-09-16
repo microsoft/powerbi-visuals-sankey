@@ -15,6 +15,11 @@
   "Visual_Weight": "Waga",
   "Visual_DataPointsLinkLabels": "Etykiety linków danych",
   "Visual_Links": "Łącza",
+  "Visual_LinkMatchNodeColors": "Dopasuj kolory węzłów",
+  "Visual_MatchColorTo": "Dopasuj kolor do",
+  "Visual_MatchColorTo_Source": "Źródło",
+  "Visual_LinkColor": "Kolor linku",
+  "Visual_Border": "Obramowanie",
   "Visual_LogarithmicScale": "Włącz skalę logarytmiczną",
   "Visual_ScaleSettings": "Ustawienia skalowania",
   "Visual_MinOptimalHeight": "Podaj minimalną optymalną wysokość węzła",
@@ -35,6 +40,7 @@
   "Visual_Input": "Dane wejściowe",
   "Visual_Output": "Dane wyjściowe",
   "Visual_Width": "Szerokość",
+  "Visual_NodesShowAll": "Pokaż wszystko",
   "Visual_Values": "Wartości",
   "Visual_Font": "Czcionka",
   "Visual_LinksOrder": "Kolejność linków",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Dół",
   "Visual_BottomCenter": "Na dole na środku",
   "Visual_BottomRight": "Na dole z prawej",
-  "Visual_ResetButonDescription": "Przycisk, który zresetuje węzły do ich oryginalnych pozycji"
+  "Visual_ResetButonDescription": "Przycisk, który zresetuje węzły do ich oryginalnych pozycji",
+  "Visual_ApplySettingsTo": "Zastosuj ustawienia do",
+  "Visual_All": "Wszystko",
+  "Visual_BorderDisabledReason": "Te opcje są dostępne, gdy parametr Linki jest ustawiony na wartość „Wszystkie”",
+  "Visual_NodeWidthDisabledReason": "Te opcje są dostępne, gdy parametr „Węzły” jest ustawiony na wartość „Wszystkie”",
+  "Visual_Option": "Opcja",
+  "Visual_ColorDisabledDescription": "Ta opcja jest dostępna, gdy opcja „Kolory o wysokim kontraście” jest ustawiona na wartość „Brak”"
 }

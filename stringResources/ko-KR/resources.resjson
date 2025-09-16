@@ -15,6 +15,11 @@
   "Visual_Weight": "무게",
   "Visual_DataPointsLinkLabels": "데이터 링크 레이블",
   "Visual_Links": "링크",
+  "Visual_LinkMatchNodeColors": "노드 색상 일치",
+  "Visual_MatchColorTo": "다음에 색상 일치",
+  "Visual_MatchColorTo_Source": "원본",
+  "Visual_LinkColor": "링크 색상",
+  "Visual_Border": "테두리",
   "Visual_LogarithmicScale": "로그 눈금 간격 사용",
   "Visual_ScaleSettings": "크기 조정 설정",
   "Visual_MinOptimalHeight": "노드의 최소 최적 높이를 지정합니다.",
@@ -35,6 +40,7 @@
   "Visual_Input": "입력",
   "Visual_Output": "출력",
   "Visual_Width": "너비",
+  "Visual_NodesShowAll": "모두 표시",
   "Visual_Values": "값",
   "Visual_Font": "글꼴",
   "Visual_LinksOrder": "링크 순서",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "아래쪽",
   "Visual_BottomCenter": "아래쪽 가운데",
   "Visual_BottomRight": "오른쪽 아래",
-  "Visual_ResetButonDescription": "노드를 원래 위치로 초기화하는 버튼"
+  "Visual_ResetButonDescription": "노드를 원래 위치로 초기화하는 버튼",
+  "Visual_ApplySettingsTo": "설정 적용 대상",
+  "Visual_All": "모두",
+  "Visual_BorderDisabledReason": "이러한 옵션은 링크가 ‘모두’로 설정된 경우에 사용할 수 있습니다.",
+  "Visual_NodeWidthDisabledReason": "이러한 옵션은 ‘노드’가 ‘모두’로 설정된 경우에 사용할 수 있습니다.",
+  "Visual_Option": "옵션",
+  "Visual_ColorDisabledDescription": "이 옵션은 ‘고대비 색상’이 ‘없음’으로 설정된 경우에 사용할 수 있습니다."
 }

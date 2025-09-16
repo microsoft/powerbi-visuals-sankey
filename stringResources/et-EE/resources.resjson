@@ -15,6 +15,11 @@
   "Visual_Weight": "Kaal",
   "Visual_DataPointsLinkLabels": "Andmelingi sildid",
   "Visual_Links": "Lingid",
+  "Visual_LinkMatchNodeColors": "Vastenda sõlme värvid",
+  "Visual_MatchColorTo": "Vastenda värv",
+  "Visual_MatchColorTo_Source": "Allikas",
+  "Visual_LinkColor": "Lingi värv",
+  "Visual_Border": "Ääris",
   "Visual_LogarithmicScale": "Luba logaritmiline skaala",
   "Visual_ScaleSettings": "Mõõtkava sätted",
   "Visual_MinOptimalHeight": "Esita sõlme minimaalne optimaalne kõrgus",
@@ -35,6 +40,7 @@
   "Visual_Input": "Sisend",
   "Visual_Output": "Väljund",
   "Visual_Width": "Laius",
+  "Visual_NodesShowAll": "Kuva kõik",
   "Visual_Values": "Väärtused",
   "Visual_Font": "Font",
   "Visual_LinksOrder": "Linkide järjestus",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Alla",
   "Visual_BottomCenter": "Alla keskele",
   "Visual_BottomRight": "Alla paremale",
-  "Visual_ResetButonDescription": "Nupp, mis taastab sõlmed algsetele asenditele"
+  "Visual_ResetButonDescription": "Nupp, mis taastab sõlmed algsetele asenditele",
+  "Visual_ApplySettingsTo": "Rakenda sätted järgmistele üksustele",
+  "Visual_All": "Kõik",
+  "Visual_BorderDisabledReason": "Need suvandid on saadaval, kui sätte „Lingid“ väärtuseks on määratud „Kõik“",
+  "Visual_NodeWidthDisabledReason": "Need suvandid on saadaval, kui sätte „Sõlmed“ väärtuseks on määratud „Kõik“",
+  "Visual_Option": "Suvand",
+  "Visual_ColorDisabledDescription": "See suvand on saadaval, kui sätte „Kõrge kontrastiga värvid“ väärtuseks on määratud „Pole“"
 }
