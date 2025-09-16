@@ -15,6 +15,11 @@
   "Visual_Weight": "Значимість",
   "Visual_DataPointsLinkLabels": "Підписи зв’язку з даними",
   "Visual_Links": "Посилання",
+  "Visual_LinkMatchNodeColors": "Зіставити кольори вузлів",
+  "Visual_MatchColorTo": "Зіставити колір із",
+  "Visual_MatchColorTo_Source": "Джерело",
+  "Visual_LinkColor": "Колір посилання",
+  "Visual_Border": "Межа",
   "Visual_LogarithmicScale": "Увімкнути логарифмічну шкалу",
   "Visual_ScaleSettings": "Параметри масштабу",
   "Visual_MinOptimalHeight": "Укажіть оптимальну мінімальну висоту вузла",
@@ -35,6 +40,7 @@
   "Visual_Input": "Вхідні дані",
   "Visual_Output": "Вихідні дані",
   "Visual_Width": "Ширина",
+  "Visual_NodesShowAll": "Показати все",
   "Visual_Values": "Значення",
   "Visual_Font": "Шрифт",
   "Visual_LinksOrder": "Порядок посилань",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Унизу",
   "Visual_BottomCenter": "Унизу по центру",
   "Visual_BottomRight": "Унизу праворуч",
-  "Visual_ResetButonDescription": "Кнопка, яка скине вузли до їхніх початкових позицій"
+  "Visual_ResetButonDescription": "Кнопка, яка скине вузли до їхніх початкових позицій",
+  "Visual_ApplySettingsTo": "Застосувати параметри до",
+  "Visual_All": "Усі",
+  "Visual_BorderDisabledReason": "Ці параметри доступні, якщо для параметра \"Посилання\" вибрано значення \"Усі\"",
+  "Visual_NodeWidthDisabledReason": "Ці параметри доступні, якщо для параметра \"Вузли\" вибрано значення \"Усі\"",
+  "Visual_Option": "Варіант",
+  "Visual_ColorDisabledDescription": "Цей параметр доступний, якщо для параметра \"Контрастні кольори\" вибрано значення \"Немає\""
 }

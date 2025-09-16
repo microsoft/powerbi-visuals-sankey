@@ -15,6 +15,11 @@
   "Visual_Weight": "Тегло",
   "Visual_DataPointsLinkLabels": "Етикети на връзката за данни",
   "Visual_Links": "Връзки",
+  "Visual_LinkMatchNodeColors": "Съгласуване на цветовете на възела",
+  "Visual_MatchColorTo": "Съгласуване на цвета с",
+  "Visual_MatchColorTo_Source": "Източник",
+  "Visual_LinkColor": "Цвят на връзката",
+  "Visual_Border": "Граница",
   "Visual_LogarithmicScale": "Разрешаване на логаритмичен мащаб",
   "Visual_ScaleSettings": "Настройки на мащаба",
   "Visual_MinOptimalHeight": "Предоставяне на минимална оптимална височина на възела",
@@ -35,6 +40,7 @@
   "Visual_Input": "Въвеждане",
   "Visual_Output": "Изход",
   "Visual_Width": "Широчина",
+  "Visual_NodesShowAll": "Показване на всички",
   "Visual_Values": "Стойности",
   "Visual_Font": "Шрифт",
   "Visual_LinksOrder": "Ред на връзките",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Долу",
   "Visual_BottomCenter": "Центрирано долу",
   "Visual_BottomRight": "Долу дясно",
-  "Visual_ResetButonDescription": "Бутон, който ще нулира възлите до първоначалните им позиции"
+  "Visual_ResetButonDescription": "Бутон, който ще нулира възлите до първоначалните им позиции",
+  "Visual_ApplySettingsTo": "Прилагане на настройките към",
+  "Visual_All": "Всички",
+  "Visual_BorderDisabledReason": "Тези опции са налични, когато връзките са зададени на „Всички“",
+  "Visual_NodeWidthDisabledReason": "Тези опции са налични, когато „Възли“ е зададено на „Всички“",
+  "Visual_Option": "Опция",
+  "Visual_ColorDisabledDescription": "Тази опция е налична, когато „Цветове с повишена четливост“ е зададено на „Няма“"
 }
