@@ -15,6 +15,11 @@
   "Visual_Weight": "משקל",
   "Visual_DataPointsLinkLabels": "תוויות קישור נתונים",
   "Visual_Links": "קישורים",
+  "Visual_LinkMatchNodeColors": "התאם צבעי צומת",
+  "Visual_MatchColorTo": "התאם צבע ל",
+  "Visual_MatchColorTo_Source": "מקור",
+  "Visual_LinkColor": "צבע קישור",
+  "Visual_Border": "גבול",
   "Visual_LogarithmicScale": "אפשר סרגל לוגריתמי",
   "Visual_ScaleSettings": "הגדרות קנה מידה",
   "Visual_MinOptimalHeight": "ספק גובה אופטימלי מינימלי של הצומת",
@@ -35,6 +40,7 @@
   "Visual_Input": "קלט",
   "Visual_Output": "פלט",
   "Visual_Width": "רוחב",
+  "Visual_NodesShowAll": "הצג הכל",
   "Visual_Values": "ערכים",
   "Visual_Font": "גופן",
   "Visual_LinksOrder": "סדר הקישורים",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "תחתון",
   "Visual_BottomCenter": "מרכז תחתון",
   "Visual_BottomRight": "ימני תחתון",
-  "Visual_ResetButonDescription": "לחצן שיחזיר את הצמתים למיקומם המקורי"
+  "Visual_ResetButonDescription": "לחצן שיחזיר את הצמתים למיקומם המקורי",
+  "Visual_ApplySettingsTo": "החל הגדרות על",
+  "Visual_All": "הכול",
+  "Visual_BorderDisabledReason": "אפשרויות אלה זמינות כאשר קישורים מוגדרים ל'הכל'",
+  "Visual_NodeWidthDisabledReason": "אפשרויות אלה זמינות כאשר \"צמתים\" מוגדרים ל'הכל'",
+  "Visual_Option": "אפשרות",
+  "Visual_ColorDisabledDescription": "אפשרות זו זמינה כאשר 'צבעים בחדות גבוהה' מוגדרים כ'ללא'"
 }

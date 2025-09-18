@@ -15,6 +15,11 @@
   "Visual_Weight": "Peso",
   "Visual_DataPointsLinkLabels": "Etiquetas de vínculos de datos",
   "Visual_Links": "Vínculos",
+  "Visual_LinkMatchNodeColors": "Colores de nodo coincidentes",
+  "Visual_MatchColorTo": "Hacer coincidir el color con",
+  "Visual_MatchColorTo_Source": "Origen",
+  "Visual_LinkColor": "Color del vínculo",
+  "Visual_Border": "Borde",
   "Visual_LogarithmicScale": "Habilitar escala logarítmica",
   "Visual_ScaleSettings": "Configuración de escala",
   "Visual_MinOptimalHeight": "Proporcione la altura mínima óptima del nodo.",
@@ -35,6 +40,7 @@
   "Visual_Input": "Entrada",
   "Visual_Output": "Salida",
   "Visual_Width": "Ancho",
+  "Visual_NodesShowAll": "Mostrar todo",
   "Visual_Values": "Valores",
   "Visual_Font": "Fuente",
   "Visual_LinksOrder": "Orden de vínculos",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Inferior",
   "Visual_BottomCenter": "Centro inferior",
   "Visual_BottomRight": "Abajo a la derecha",
-  "Visual_ResetButonDescription": "Botón que restablecerá los nodos a sus posiciones originales"
+  "Visual_ResetButonDescription": "Botón que restablecerá los nodos a sus posiciones originales",
+  "Visual_ApplySettingsTo": "Aplicar configuración a",
+  "Visual_All": "Todo",
+  "Visual_BorderDisabledReason": "Estas opciones están disponibles cuando los vínculos se establecen en \"Todos\"",
+  "Visual_NodeWidthDisabledReason": "Estas opciones están disponibles cuando \"Nodos\" se establece en \"Todos\"",
+  "Visual_Option": "Opción",
+  "Visual_ColorDisabledDescription": "Esta opción está disponible cuando \"Colores de contraste alto\" se establece en \"Ninguno\""
 }

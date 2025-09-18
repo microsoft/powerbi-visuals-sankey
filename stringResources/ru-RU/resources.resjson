@@ -15,6 +15,11 @@
   "Visual_Weight": "Вес",
   "Visual_DataPointsLinkLabels": "Метки связей данных",
   "Visual_Links": "Ссылки",
+  "Visual_LinkMatchNodeColors": "Сопоставить цвета узлов",
+  "Visual_MatchColorTo": "Сопоставить цвет с",
+  "Visual_MatchColorTo_Source": "Источник",
+  "Visual_LinkColor": "Цвет ссылки",
+  "Visual_Border": "Граница",
   "Visual_LogarithmicScale": "Включить логарифмическую шкалу",
   "Visual_ScaleSettings": "Настройки масштаба",
   "Visual_MinOptimalHeight": "Укажите минимальную оптимальную высоту узла",
@@ -35,6 +40,7 @@
   "Visual_Input": "Входные данные",
   "Visual_Output": "Выходные данные",
   "Visual_Width": "Ширина",
+  "Visual_NodesShowAll": "Показать все",
   "Visual_Values": "Значения",
   "Visual_Font": "Шрифт",
   "Visual_LinksOrder": "Порядок ссылок",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Снизу",
   "Visual_BottomCenter": "Снизу в центре",
   "Visual_BottomRight": "Снизу справа",
-  "Visual_ResetButonDescription": "Кнопка, которая сбросит узлы до их исходных позиций"
+  "Visual_ResetButonDescription": "Кнопка, которая сбросит узлы до их исходных позиций",
+  "Visual_ApplySettingsTo": "Применить параметры к",
+  "Visual_All": "Все",
+  "Visual_BorderDisabledReason": "Эти параметры доступны, если для ссылок настроено значение \"Все\"",
+  "Visual_NodeWidthDisabledReason": "Эти параметры доступны, если для функции \"Узлы\" настроено значение \"Все\"",
+  "Visual_Option": "Параметр",
+  "Visual_ColorDisabledDescription": "Этот параметр доступен, если для параметра \"Цвета высокой контрастности\" настроено значение \"Нет\""
 }

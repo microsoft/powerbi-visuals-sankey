@@ -15,6 +15,11 @@
   "Visual_Weight": "Importância",
   "Visual_DataPointsLinkLabels": "Etiquetas de ligação de dados",
   "Visual_Links": "Ligações",
+  "Visual_LinkMatchNodeColors": "Corresponder cores do nó",
+  "Visual_MatchColorTo": "Corresponder cor a",
+  "Visual_MatchColorTo_Source": "Origem",
+  "Visual_LinkColor": "Cor da ligação",
+  "Visual_Border": "Limite",
   "Visual_LogarithmicScale": "Ativar escala logarítmica",
   "Visual_ScaleSettings": "Definições de dimensionamento",
   "Visual_MinOptimalHeight": "Fornecer a altura mínima ideal do nó",
@@ -35,6 +40,7 @@
   "Visual_Input": "Entrada",
   "Visual_Output": "Saída",
   "Visual_Width": "Largura",
+  "Visual_NodesShowAll": "Mostrar tudo",
   "Visual_Values": "Valores",
   "Visual_Font": "Tipo de Letra",
   "Visual_LinksOrder": "Ordem das ligações",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Para o fim",
   "Visual_BottomCenter": "Centro inferior",
   "Visual_BottomRight": "Canto inferior direito",
-  "Visual_ResetButonDescription": "Um botão que repõe os nós nas suas posições originais"
+  "Visual_ResetButonDescription": "Um botão que repõe os nós nas suas posições originais",
+  "Visual_ApplySettingsTo": "Aplicar definições a",
+  "Visual_All": "Tudo",
+  "Visual_BorderDisabledReason": "Estas opções estão disponíveis quando as Ligações estão definidas como \"Todas\"",
+  "Visual_NodeWidthDisabledReason": "Estas opções estão disponíveis quando \"Nós\" está definido como \"Todos\"",
+  "Visual_Option": "Opção",
+  "Visual_ColorDisabledDescription": "Esta opção está disponível quando \"Cores de alto contraste\" está definida como \"Nenhuma\""
 }

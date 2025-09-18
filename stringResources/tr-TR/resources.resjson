@@ -15,6 +15,11 @@
   "Visual_Weight": "Ağırlık",
   "Visual_DataPointsLinkLabels": "Veri bağlantısı etiketleri",
   "Visual_Links": "Bağlantılar",
+  "Visual_LinkMatchNodeColors": "Düğüm renklerini eşleştir",
+  "Visual_MatchColorTo": "Şu renge eşleştir:",
+  "Visual_MatchColorTo_Source": "Kaynak",
+  "Visual_LinkColor": "Bağlantı rengi",
+  "Visual_Border": "Kenarlık",
   "Visual_LogarithmicScale": "Logaritmik ölçeği etkinleştir",
   "Visual_ScaleSettings": "Ölçek ayarları",
   "Visual_MinOptimalHeight": "Düğüm için en düşük ideal yüksekliği sağlayın",
@@ -35,6 +40,7 @@
   "Visual_Input": "Giriş",
   "Visual_Output": "Çıkış",
   "Visual_Width": "Genişlik",
+  "Visual_NodesShowAll": "Tümünü göster",
   "Visual_Values": "Değerler",
   "Visual_Font": "Yazı Tipi",
   "Visual_LinksOrder": "Bağlantı sırası",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Alt",
   "Visual_BottomCenter": "Alt orta",
   "Visual_BottomRight": "Alt sağ",
-  "Visual_ResetButonDescription": "Düğümleri özgün konumlarına sıfırlayacak bir düğme"
+  "Visual_ResetButonDescription": "Düğümleri özgün konumlarına sıfırlayacak bir düğme",
+  "Visual_ApplySettingsTo": "Ayarları şuraya uygula:",
+  "Visual_All": "Tümü",
+  "Visual_BorderDisabledReason": "Bu seçenekler, Bağlantılar “Tümü” olarak ayarlandığında kullanılabilir",
+  "Visual_NodeWidthDisabledReason": "Bu seçenekler, “Düğümler” “Tümü” olarak ayarlandığında kullanılabilir",
+  "Visual_Option": "Seçenek",
+  "Visual_ColorDisabledDescription": "Bu seçenek, “Yüksek karşıtlık renkleri” ayarı “Yok” olarak ayarlandığında kullanılabilir"
 }
