@@ -15,6 +15,11 @@
   "Visual_Weight": "重量",
   "Visual_DataPointsLinkLabels": "データ リンクのラベル",
   "Visual_Links": "リンク",
+  "Visual_LinkMatchNodeColors": "ノードの色を一致させる",
+  "Visual_MatchColorTo": "色を次の色に一致させる",
+  "Visual_MatchColorTo_Source": "ソース",
+  "Visual_LinkColor": "リンクの色",
+  "Visual_Border": "罫線",
   "Visual_LogarithmicScale": "対数スケールを有効にする",
   "Visual_ScaleSettings": "スケールの設定",
   "Visual_MinOptimalHeight": "ノードの最適な最小の高さを指定する",
@@ -35,6 +40,7 @@
   "Visual_Input": "入力",
   "Visual_Output": "出力",
   "Visual_Width": "幅",
+  "Visual_NodesShowAll": "すべてを表示",
   "Visual_Values": "値",
   "Visual_Font": "フォント",
   "Visual_LinksOrder": "リンクの順序",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "下",
   "Visual_BottomCenter": "下部中央",
   "Visual_BottomRight": "下詰め (右)",
-  "Visual_ResetButonDescription": "ノードを元の位置にリセットするボタン"
+  "Visual_ResetButonDescription": "ノードを元の位置にリセットするボタン",
+  "Visual_ApplySettingsTo": "設定の適用先: ",
+  "Visual_All": "すべて",
+  "Visual_BorderDisabledReason": "これらのオプションは、[リンク] が [すべて] に設定されている場合に使用できます",
+  "Visual_NodeWidthDisabledReason": "これらのオプションは、[ノード] が [すべて] に設定されている場合に使用できます",
+  "Visual_Option": "オプション",
+  "Visual_ColorDisabledDescription": "このオプションは、[ハイコントラストの色] が [なし] に設定されている場合に使用できます"
 }

@@ -15,6 +15,11 @@
   "Visual_Weight": "Berat",
   "Visual_DataPointsLinkLabels": "Label pautan data",
   "Visual_Links": "Pautan",
+  "Visual_LinkMatchNodeColors": "Padankan warna nod",
+  "Visual_MatchColorTo": "Padankan warna dengan",
+  "Visual_MatchColorTo_Source": "Sumber",
+  "Visual_LinkColor": "Warna pautan",
+  "Visual_Border": "Sempadan",
   "Visual_LogarithmicScale": "Dayakan skala logaritma",
   "Visual_ScaleSettings": "Seting skala",
   "Visual_MinOptimalHeight": "Berikan tinggi optimum minimum bagi nod",
@@ -35,6 +40,7 @@
   "Visual_Input": "Input",
   "Visual_Output": "Output",
   "Visual_Width": "Lebar",
+  "Visual_NodesShowAll": "Tunjukkan semua",
   "Visual_Values": "Nilai",
   "Visual_Font": "Fon",
   "Visual_LinksOrder": "Tertib pautan",
@@ -47,5 +53,11 @@
   "Visual_Bottom": "Bawah",
   "Visual_BottomCenter": "Tengah bawah",
   "Visual_BottomRight": "Kanan bawah",
-  "Visual_ResetButonDescription": "Butang yang akan menetapkan semula nod kepada kedudukan asalnya"
+  "Visual_ResetButonDescription": "Butang yang akan menetapkan semula nod kepada kedudukan asalnya",
+  "Visual_ApplySettingsTo": "Gunakan seting pada",
+  "Visual_All": "Semua",
+  "Visual_BorderDisabledReason": "Opsyen ini tersedia apabila Pautan ditetapkan kepada \"Semua\"",
+  "Visual_NodeWidthDisabledReason": "Opsyen ini tersedia apabila \"Nod\" ditetapkan kepada \"Semua\"",
+  "Visual_Option": "Opsyen",
+  "Visual_ColorDisabledDescription": "Opsyen ini tersedia apabila \"Warna kontras tinggi\" ditetapkan kepada \"Tiada\""
 }
