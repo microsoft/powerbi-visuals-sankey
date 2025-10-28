@@ -1,6 +1,7 @@
 {
-  "name": "powerbi-visuals-sankey",
+  "name": "@Microsoft/powerbi-visuals-sankey",
   "version": "3.5.0.0",
+  "private": true,
   "description": "Sankey is a type of flow diagram in which the width of the series is in proportion to the quantity of the flow.  Use it to find major contributions to an overall flow.",
   "repository": {
     "type": "git",
