@@ -115,9 +115,9 @@ export class FontSettingsOptions {
 }
 
 export class NodeWidthDefaultOptions {
-    public static DefaultWidth: number = 10;
+    public static DefaultWidth: number = 60;
     public static MinWidth: number = 10;
-    public static MaxWidth: number = 30;
+    public static MaxWidth: number = 140;
 }
 
 export class SankeyDiagramScaleSettings {
@@ -352,7 +352,7 @@ export class LinksSettings extends FormattingSettingsSimpleCard implements IHand
         name: "matchNodeColors",
         displayName: "Match Node Colors",
         displayNameKey: "Visual_LinkMatchNodeColors",
-        value: false
+        value: true
     });
 
     public matchSourceOrDestination = new formattingSettings.ItemDropdown({
