@@ -407,13 +407,17 @@ describe("SankeyDiagram", () => {
         it("nodes labels are not overlapping", done => {
             visualBuilder.updateRenderTimeout(dataView, () => {
                 const nodeElements: HTMLElement[] = [...visualBuilder.nodeElements];
-                const firstNode: string = nodeElements[0].querySelector("text").innerHTML
-                const secondNode: string = nodeElements[1].querySelector("text").innerHTML
-                const thirdNode: string = nodeElements[2].querySelector("text").innerHTML
+                const firstNodeLines = nodeElements[0].querySelectorAll("text tspan");
+                const secondNodeLines = nodeElements[1].querySelectorAll("text tspan");
+                const thirdNodeLines = nodeElements[2].querySelectorAll("text tspan");
 
-                expect(firstNode).toBe("Brazil");
-                expect(secondNode).toBe("USA");
-                expect(thirdNode).toBe("Mexico");
+                expect(firstNodeLines.length).toBe(2);
+                expect(secondNodeLines.length).toBe(2);
+                expect(thirdNodeLines.length).toBe(2);
+
+                expect(firstNodeLines[0].textContent).toContain("Brazil");
+                expect(secondNodeLines[0].textContent).toContain("USA");
+                expect(thirdNodeLines[0].textContent).toContain("Mex");
 
                 done();
             });
@@ -802,6 +806,7 @@ describe("SankeyDiagram", () => {
                 const nodeLabelsFontSize: number = 12;
                 const linkLabelsFontSize: number = 9;
                 const unit: number = 0;
+                const nodeWidth: number = 60;
 
                 visualBuilder.instance.getFormattingModel();
 
@@ -819,6 +824,9 @@ describe("SankeyDiagram", () => {
                 expect(linkLabels.fontSize.value).toBe(linkLabelsFontSize);
                 expect(linkLabels.fill.value.value).toBe(someColor);
 
+                expect(visualBuilder.instance.sankeyDiagramSettings.links.matchNodeColors.value).toBeTrue();
+                expect(visualBuilder.instance.sankeyDiagramSettings.nodes.defaultContainerItem.nodeWidth.value).toBe(nodeWidth);
+
                 let scaleSettings = visualBuilder.instance.sankeyDiagramSettings.scale;
 
                 expect(scaleSettings.slices.length).toBe(2);
@@ -826,6 +834,30 @@ describe("SankeyDiagram", () => {
                 expect(scaleSettings.lnScale.value).toBeFalsy();
 
                 expect(visualBuilder.instance.sankeyDiagramSettings.cards.length).toBe(7);
+                done();
+            });
+        });
+    });
+
+    describe("Flow styling tests:", () => {
+        it("renders node labels as two-line text when weights are available", done => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                const firstLabel: SVGTextElement = visualBuilder.nodeLabelElements[0] as unknown as SVGTextElement;
+                const labelLines: NodeListOf<SVGTSpanElement> = firstLabel.querySelectorAll("tspan");
+
+                expect(labelLines.length).toBe(2);
+                expect(labelLines[0].textContent.length).toBeGreaterThan(0);
+                expect(labelLines[1].textContent.length).toBeGreaterThan(0);
+                done();
+            });
+        });
+
+        it("uses directional link gradients when matching node colors", done => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                const firstLink: SVGPathElement = visualBuilder.linkElements[0] as unknown as SVGPathElement;
+
+                expect(visualBuilder.linkGradientElements.length).toBeGreaterThan(0);
+                expect(firstLink.style.fill).toContain("linkGradient-");
                 done();
             });
         });

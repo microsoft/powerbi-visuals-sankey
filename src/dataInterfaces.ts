@@ -92,6 +92,7 @@ export interface SankeyDiagramNode extends
     cloneLink?: SankeyDiagramNode;
     settings?: SankeyDiagramNodeSetting;
     linkSelectableIds?: ISelectionId[];
+    formattedWeight?: string;
 }
 
 export interface SankeyDiagramLink extends
