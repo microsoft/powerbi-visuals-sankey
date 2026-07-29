@@ -61,7 +61,17 @@ import {
     isColorAppliedToElements
 } from "./helpers/helpers";
 
-import { DataLabelsSettings, LinkLabelsSettings, SankeyDiagramScaleSettings, SankeyDiagramSettings } from "../src/settings";
+import { ColorHelper } from "powerbi-visuals-utils-colorutils";
+
+import {
+    DataLabelsSettings,
+    LinkColorContainerItem,
+    LinkLabelsSettings,
+    LinkOutlineSettings,
+    NodesSettings,
+    SankeyDiagramScaleSettings,
+    SankeyDiagramSettings
+} from "../src/settings";
 
 
 interface SankeyDiagramTestsNode {
@@ -1097,6 +1107,127 @@ describe("SankeyDiagram", () => {
             visualBuilder.updateRenderTimeout(dataView, () => {
                 expect(isColorAppliedToElements([...visualBuilder.nodeElements], foregroundColor, "stroke"));
                 expect(isColorAppliedToElements([...visualBuilder.linkElements], foregroundColor, "stroke"));
+                done();
+            });
+        });
+
+        it("should disable color slices in the formatting model", (done) => {
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                visualBuilder.instance.getFormattingModel();
+                const settings: SankeyDiagramSettings = visualBuilder.instance.sankeyDiagramSettings;
+
+                expect(settings.labels.fill.disabled).toBeTrue();
+                expect(settings.linkLabels.fill.disabled).toBeTrue();
+                expect(settings.links.defaultContainerItem.color.disabled).toBeTrue();
+                expect(settings.links.defaultContainerItem.border.color.disabled).toBeTrue();
+                expect(settings.nodes.defaultContainerItem.color.disabled).toBeTrue();
+                done();
+            });
+        });
+    });
+
+    describe("high contrast mode settings", () => {
+        const backgroundColor: string = "#00ff00";
+        const foregroundColor: string = "#ff00ff";
+        const colorDisabledReasonKey: string = "Visual_ColorDisabledDescription";
+
+        const createColorHelper = (isHighContrast: boolean): ColorHelper => {
+            const colorPalette = visualBuilder.visualHost.colorPalette;
+
+            colorPalette.isHighContrast = isHighContrast;
+            colorPalette.background = { value: backgroundColor };
+            colorPalette.foreground = { value: foregroundColor };
+
+            return new ColorHelper(colorPalette);
+        };
+
+        it("should disable color slices when high contrast mode is on", () => {
+            const colorHelper: ColorHelper = createColorHelper(true);
+
+            const labels: DataLabelsSettings = new DataLabelsSettings();
+            const linkLabels: LinkLabelsSettings = new LinkLabelsSettings();
+            const linkOutline: LinkOutlineSettings = new LinkOutlineSettings();
+            const linkColor: LinkColorContainerItem = new LinkColorContainerItem();
+            const nodes: NodesSettings = new NodesSettings();
+
+            labels.handleHighContrastMode(colorHelper);
+            linkLabels.handleHighContrastMode(colorHelper);
+            linkOutline.handleHighContrastMode(colorHelper);
+            linkColor.handleHighContrastMode(colorHelper);
+            nodes.handleHighContrastMode(colorHelper);
+
+            expect(labels.fill.disabled).toBeTrue();
+            expect(labels.fill.disabledReasonKey).toBe(colorDisabledReasonKey);
+            expect(linkLabels.fill.disabled).toBeTrue();
+            expect(linkOutline.color.disabled).toBeTrue();
+            expect(linkOutline.color.disabledReasonKey).toBe(colorDisabledReasonKey);
+            expect(linkColor.color.disabled).toBeTrue();
+            expect(linkColor.border.color.disabled).toBeTrue();
+            expect(nodes.defaultContainerItem.color.disabled).toBeTrue();
+        });
+
+        it("should not disable color slices when high contrast mode is off", () => {
+            const colorHelper: ColorHelper = createColorHelper(false);
+
+            const labels: DataLabelsSettings = new DataLabelsSettings();
+            const linkLabels: LinkLabelsSettings = new LinkLabelsSettings();
+            const linkOutline: LinkOutlineSettings = new LinkOutlineSettings();
+            const linkColor: LinkColorContainerItem = new LinkColorContainerItem();
+            const nodes: NodesSettings = new NodesSettings();
+
+            labels.handleHighContrastMode(colorHelper);
+            linkLabels.handleHighContrastMode(colorHelper);
+            linkOutline.handleHighContrastMode(colorHelper);
+            linkColor.handleHighContrastMode(colorHelper);
+            nodes.handleHighContrastMode(colorHelper);
+
+            expect(labels.fill.disabled).toBeFalsy();
+            expect(linkLabels.fill.disabled).toBeFalsy();
+            expect(linkOutline.color.disabled).toBeFalsy();
+            expect(linkColor.color.disabled).toBeFalsy();
+            expect(linkColor.border.color.disabled).toBeFalsy();
+            expect(nodes.defaultContainerItem.color.disabled).toBeFalsy();
+        });
+
+        // guards against reading the disabled flag back from an unrelated property such as visible
+        it("should preserve an existing disabled state when high contrast mode is off", () => {
+            const colorHelper: ColorHelper = createColorHelper(false);
+
+            const labels: DataLabelsSettings = new DataLabelsSettings();
+            const linkOutline: LinkOutlineSettings = new LinkOutlineSettings();
+            const linkColor: LinkColorContainerItem = new LinkColorContainerItem();
+            const nodes: NodesSettings = new NodesSettings();
+
+            labels.fill.disabled = true;
+            linkOutline.color.disabled = true;
+            linkColor.color.disabled = true;
+            linkColor.border.color.disabled = true;
+            nodes.defaultContainerItem.color.disabled = true;
+
+            labels.handleHighContrastMode(colorHelper);
+            linkOutline.handleHighContrastMode(colorHelper);
+            linkColor.handleHighContrastMode(colorHelper);
+            nodes.handleHighContrastMode(colorHelper);
+
+            expect(labels.fill.disabled).toBeTrue();
+            expect(linkOutline.color.disabled).toBeTrue();
+            expect(linkColor.color.disabled).toBeTrue();
+            expect(linkColor.border.color.disabled).toBeTrue();
+            expect(nodes.defaultContainerItem.color.disabled).toBeTrue();
+        });
+
+        it("should not disable color slices in the formatting model when high contrast mode is off", (done) => {
+            createColorHelper(false);
+
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                visualBuilder.instance.getFormattingModel();
+                const settings: SankeyDiagramSettings = visualBuilder.instance.sankeyDiagramSettings;
+
+                expect(settings.labels.fill.disabled).toBeFalsy();
+                expect(settings.linkLabels.fill.disabled).toBeFalsy();
+                expect(settings.links.defaultContainerItem.color.disabled).toBeFalsy();
+                expect(settings.links.defaultContainerItem.border.color.disabled).toBeFalsy();
+                expect(settings.nodes.defaultContainerItem.color.disabled).toBeFalsy();
                 done();
             });
         });
