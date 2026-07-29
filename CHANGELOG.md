@@ -11,6 +11,11 @@
 * Used automatic sorting of links by default
 * Adjusted vertical positions of nodes in the same column
 
+### Breaking changes
+* Removed the "Auto links reorder" toggle: automatic sorting of links is now
+  always enabled and can no longer be turned off. Reports created with 3.4.5.0
+  that had the toggle disabled will render links in the new sorted order.
+
 ### Development
 * Keep columnIndex in persist properties along with positions
 

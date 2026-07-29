@@ -293,7 +293,7 @@ export class LinkOutlineSettings extends FormattingSettingsSimpleCard implements
 
     public handleHighContrastMode(colorHelper: ColorHelper): void {
         this.color.value.value = colorHelper.getHighContrastColor("foreground", this.color.value.value);
-        this.color.disabled = colorHelper.isHighContrast ? true : this.color.visible;
+        this.color.disabled = colorHelper.isHighContrast ? true : this.color.disabled;
         this.color.disabledReasonKey = "Visual_ColorDisabledDescription";
     }
 }
@@ -332,7 +332,7 @@ export class LinkColorContainerItem extends ContainerItem implements IHandleHigh
 
     public handleHighContrastMode(colorHelper: ColorHelper): void {
         this.fill.value.value = colorHelper.getHighContrastColor("foreground", this.fill.value.value);
-        this.color.disabled = colorHelper.isHighContrast ? true : this.groups[0].visible;
+        this.color.disabled = colorHelper.isHighContrast ? true : this.color.disabled;
         this.color.disabledReasonKey = "Visual_ColorDisabledDescription";
 
         this.border.handleHighContrastMode(colorHelper);
