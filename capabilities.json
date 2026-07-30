@@ -325,6 +325,7 @@
         "supportEnhancedTooltips": true
     },
     "supportsKeyboardFocus": true,
+    "supportsMultiVisualSelection": true,
     "supportsSynchronizingFilterState": true,
     "privileges": []
 }

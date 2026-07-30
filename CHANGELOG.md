@@ -4,6 +4,11 @@
 * Added conditional formatting to link color options
 * Added matchNodeColor setting to links
 * Added border color for links
+* Enabled selection across visuals
+
+### Development
+* Reported the renderingFailed event when an update throws
+* Removed the unused TSLint configuration
 
 ## 3.4.6.0
 

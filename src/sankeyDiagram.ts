@@ -358,23 +358,28 @@ export class SankeyDiagram implements IVisual {
 
     public update(visualUpdateOptions: VisualUpdateOptions): void {
         this.visualHost.eventService.renderingStarted(visualUpdateOptions);
-        const dataView: DataView = visualUpdateOptions
-            && visualUpdateOptions.dataViews
-            && visualUpdateOptions.dataViews[0];
 
-        this.sankeyDiagramSettings = this.parseSettings(dataView);
+        try {
+            const dataView: DataView = visualUpdateOptions
+                && visualUpdateOptions.dataViews
+                && visualUpdateOptions.dataViews[0];
 
-        this.updateViewport(visualUpdateOptions.viewport, this.sankeyDiagramSettings);
+            this.sankeyDiagramSettings = this.parseSettings(dataView);
 
-        const sankeyDiagramDataView: SankeyDiagramDataView = this.converter(dataView);
+            this.updateViewport(visualUpdateOptions.viewport, this.sankeyDiagramSettings);
 
-        this.computePositions(sankeyDiagramDataView, this.sankeyDiagramSettings);
+            const sankeyDiagramDataView: SankeyDiagramDataView = this.converter(dataView);
 
-        this.dataView = sankeyDiagramDataView;
+            this.computePositions(sankeyDiagramDataView, this.sankeyDiagramSettings);
 
-        this.render(sankeyDiagramDataView, this.sankeyDiagramSettings);
-        this.visualHost.eventService.renderingFinished(visualUpdateOptions);
+            this.dataView = sankeyDiagramDataView;
 
+            this.render(sankeyDiagramDataView, this.sankeyDiagramSettings);
+            this.visualHost.eventService.renderingFinished(visualUpdateOptions);
+        } catch (error) {
+            console.error(error);
+            this.visualHost.eventService.renderingFailed(visualUpdateOptions, error instanceof Error ? error.message : String(error));
+        }
     }
 
     public getFormattingModel(): powerbi.visuals.FormattingModel {
