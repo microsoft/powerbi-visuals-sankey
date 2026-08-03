@@ -55,7 +55,12 @@ import {
     assertColorsMatch,
     renderTimeout,
     getRandomNumbers,
+    createSelectionManager,
+    createVisualHost,
+    MockISelectionManager,
 } from "powerbi-visuals-utils-testutils";
+
+import { SankeyDiagramBehavior } from "../src/behavior";
 
 import {
     isColorAppliedToElements
@@ -861,6 +866,46 @@ describe("SankeyDiagram", () => {
             };
 
             objectsChecker(jsonData);
+        });
+    });
+
+    describe("Rendering events:", () => {
+        let eventService: powerbi.extensibility.IVisualEventService;
+
+        beforeEach(() => {
+            eventService = visualBuilder.visualHost.eventService;
+
+            spyOn(eventService, "renderingStarted");
+            spyOn(eventService, "renderingFinished");
+            spyOn(eventService, "renderingFailed");
+        });
+
+        it("should report started and finished on a successful update", () => {
+            visualBuilder.updateFlushAllD3Transitions(dataView);
+
+            expect(eventService.renderingStarted).toHaveBeenCalledTimes(1);
+            expect(eventService.renderingFinished).toHaveBeenCalledTimes(1);
+            expect(eventService.renderingFailed).not.toHaveBeenCalled();
+        });
+
+        it("should report failed instead of finished when rendering throws", () => {
+            spyOn(visualInstance, "converter").and.throwError("converter failure");
+
+            visualBuilder.updateFlushAllD3Transitions(dataView);
+
+            expect(eventService.renderingStarted).toHaveBeenCalledTimes(1);
+            expect(eventService.renderingFailed).toHaveBeenCalledTimes(1);
+            expect(eventService.renderingFinished).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("Selection callback:", () => {
+        it("should ignore a selection that arrives before the first render", () => {
+            const selectionManager: MockISelectionManager = createSelectionManager() as MockISelectionManager;
+
+            new SankeyDiagramBehavior(selectionManager, createVisualHost({}));
+
+            expect(() => selectionManager.simutateSelection([])).not.toThrow();
         });
     });
 
