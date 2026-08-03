@@ -27,7 +27,6 @@
 "use strict";
 
 const webpackConfig = require("./test.webpack.config.js");
-const tsconfig = require("./test.tsconfig.json");
 const path = require("path");
 
 const testRecursivePath = "test/visualTest.ts";
@@ -55,7 +54,6 @@ module.exports = (config) => {
         singleRun: true,
         plugins: [
             "karma-coverage",
-            "karma-typescript",
             "karma-webpack",
             "karma-jasmine",
             "karma-sourcemap-loader",
@@ -78,9 +76,6 @@ module.exports = (config) => {
         ],
         preprocessors: {
             [testRecursivePath]: ["webpack", "coverage"]
-        },
-        typescriptPreprocessor: {
-            options: tsconfig.compilerOptions
         },
         coverageReporter: {
             dir: path.join(__dirname, coverageFolder),

@@ -48,8 +48,6 @@
     "karma-jasmine": "^5.1.0",
     "karma-junit-reporter": "^2.0.1",
     "karma-sourcemap-loader": "^0.4.0",
-    "karma-typescript": "^5.5.4",
-    "karma-typescript-preprocessor": "^0.4.0",
     "karma-webpack": "^5.0.1",
     "less": "^4.3.0",
     "less-loader": "^12.3.0",
