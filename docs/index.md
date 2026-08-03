@@ -65,29 +65,29 @@ _Display units properties_ - changes display units in link labels and tooltips
 
 ### Links
 
-*Links* properties define how the links are coloured and outlined.
+*Links* properties define how the links are colored and outlined.
 
 ![Links properties](imgs/LinksProperties.png)
 
-_Color_ - defines the colour of the links. The *All* item applies a single colour to every link; expand the item list to override the colour of an individual link. The *All* colour also accepts conditional formatting, so link colours can be driven by a rule or a measure.
+_Color_ - defines the color of the links. The *All* item applies a single color to every link; expand the item list to override the color of an individual link. The *All* color also accepts conditional formatting, so link colors can be driven by a rule or a measure.
 
-_Match node colors_ - paints each link with the colour of one of the nodes it connects instead of the link colour. While this option is on, the link colour picker is disabled.
+_Match node colors_ - paints each link with the color of one of the nodes it connects instead of the link color. While this option is on, the link color picker is disabled.
 
-_Match color to_ - appears when *Match node colors* is enabled and selects which end of the link supplies the colour: *Source* or *Destination*.
+_Match color to_ - appears when *Match node colors* is enabled and selects which end of the link supplies the color: *Source* or *Destination*.
 
-![Links coloured by their source node](imgs/MatchNodeColors.png)
+![Links colored by their source node](imgs/MatchNodeColors.png)
 
-_Outline_ - draws a border around the links. *Show outline* turns the border on or off, _Color_ sets the border colour and _Width_ accepts values from 1 to 5 pixels. The outline applies to every link, so these options are available on the *All* item only.
+_Outline_ - draws a border around the links. *Show outline* turns the border on or off, _Color_ sets the border color and _Width_ accepts values from 1 to 5 pixels. The outline applies to every link, so these options are available on the *All* item only.
 
 ![Link outline with width of 5 pixels](imgs/LinkOutlineProperties.png)
 
-In high contrast mode the visual takes its colours from the system theme, so the link colour and the outline colour pickers are disabled.
+In high contrast mode the visual takes its colors from the system theme, so the link color and the outline color pickers are disabled.
 
 ### Nodes
 
-*Nodes* properties define the colour and the width of the nodes.
+*Nodes* properties define the color and the width of the nodes.
 
-_Color_ - the *All* item colours every node; expand the item list to override the colour of an individual node.
+_Color_ - the *All* item colors every node; expand the item list to override the color of an individual node.
 
 _Width_ - the width of the node rectangles in pixels. It applies to every node, so it is available on the *All* item only.
 
