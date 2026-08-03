@@ -5,11 +5,17 @@
 
 [Sankey format panel](#sankey-format-panel)
 
+[Links](#links)
+
+[Nodes](#nodes)
+
 [Scale settings](#scale-settings)
 
 [Cycles](#cycles)
 
 [Drag & drop](#drag--drop)
+
+[Reset button](#reset-button)
 
 ## Data fields
 
@@ -57,9 +63,35 @@ _Display units properties_ - changes display units in link labels and tooltips
 
 ![Display units properties](imgs/DisplayUnitsProperties.png)
 
-*Links* properties define color for each link
+### Links
+
+*Links* properties define how the links are coloured and outlined.
 
 ![Links properties](imgs/LinksProperties.png)
+
+_Color_ - defines the colour of the links. The *All* item applies a single colour to every link; expand the item list to override the colour of an individual link. The *All* colour also accepts conditional formatting, so link colours can be driven by a rule or a measure.
+
+_Match node colors_ - paints each link with the colour of one of the nodes it connects instead of the link colour. While this option is on, the link colour picker is disabled.
+
+_Match color to_ - appears when *Match node colors* is enabled and selects which end of the link supplies the colour: *Source* or *Destination*.
+
+![Links coloured by their source node](imgs/MatchNodeColors.png)
+
+_Outline_ - draws a border around the links. *Show outline* turns the border on or off, _Color_ sets the border colour and _Width_ accepts values from 1 to 5 pixels. The outline applies to every link, so these options are available on the *All* item only.
+
+![Link outline with width of 5 pixels](imgs/LinkOutlineProperties.png)
+
+In high contrast mode the visual takes its colours from the system theme, so the link colour and the outline colour pickers are disabled.
+
+### Nodes
+
+*Nodes* properties define the colour and the width of the nodes.
+
+_Color_ - the *All* item colours every node; expand the item list to override the colour of an individual node.
+
+_Width_ - the width of the node rectangles in pixels. It applies to every node, so it is available on the *All* item only.
+
+![Nodes with the width of 30 pixels](imgs/NodeWidth.png)
 
 ### Scale settings
 
@@ -93,3 +125,11 @@ Sankey visual allows moving nodes to any position of viewport by mouse. After mo
 ![Default view if chart](imgs/Default.png)
 
 ![Drag & Drop nodes](imgs/Drag&Drop.png)
+
+## Reset button
+
+The *Sorting* card provides the *Reset button* options. *Show reset button* displays a **Reset** button that returns all nodes to their original positions, which undoes the moves made with drag & drop.
+
+_Position_ - places the button in one of six places of the viewport: top, top center, top right, bottom, bottom center or bottom right.
+
+![Reset button](imgs/ResetButton.png)

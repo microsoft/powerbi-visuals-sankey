@@ -8,7 +8,10 @@
 
 ### Development
 * Reported the renderingFailed event when an update throws
+* Guarded the select callback against selection events arriving before the first render
 * Removed the unused TSLint configuration
+* Removed the unused karma-typescript packages and updated devDependencies to fix npm audit findings
+* Documented the reset button and the new link and node options
 
 ## 3.4.6.0
 
