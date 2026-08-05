@@ -11,6 +11,7 @@
 * Guarded the select callback against selection events arriving before the first render
 * Removed the unused TSLint configuration
 * Removed the unused karma-typescript packages and updated devDependencies to fix npm audit findings
+* Migrated unit tests from Karma and Jasmine to Vitest Browser Mode with Playwright Chromium
 * Documented the reset button and the new link and node options
 
 ## 3.4.6.0

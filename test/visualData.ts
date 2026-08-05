@@ -26,14 +26,12 @@
 
 // powerbi.extensibility.utils.type
 import { valueType } from "powerbi-visuals-utils-typeutils";
-import ValueType = valueType.ValueType;
 import powerbi from "powerbi-visuals-api";
 import DataView = powerbi.DataView;
 
 // powerbi.extensibility.utils.test
 import {
     testDataViewBuilder,
-    getRandomNumbers,
     getRandomNumber
 } from "powerbi-visuals-utils-testutils";
 import TestDataViewBuilder = testDataViewBuilder.TestDataViewBuilder;

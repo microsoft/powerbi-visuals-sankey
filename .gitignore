@@ -6,5 +6,6 @@ typings
 .api
 *.log
 /coverage
+/test-results
 
 /webpack.statistics.*html
