@@ -375,11 +375,14 @@ export class SankeyDiagram implements IVisual {
             this.dataView = sankeyDiagramDataView;
 
             this.render(sankeyDiagramDataView, this.sankeyDiagramSettings);
-            this.visualHost.eventService.renderingFinished(visualUpdateOptions);
         } catch (error) {
             console.error(error);
             this.visualHost.eventService.renderingFailed(visualUpdateOptions, error instanceof Error ? error.message : String(error));
+
+            return;
         }
+
+        this.visualHost.eventService.renderingFinished(visualUpdateOptions);
     }
 
     public getFormattingModel(): powerbi.visuals.FormattingModel {

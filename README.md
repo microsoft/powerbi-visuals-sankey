@@ -16,3 +16,17 @@ See also [Sankey at Microsoft Office store](https://store.office.com/en-us/app.a
 Check out documentation to find out more about visual's properties and features
 
 [Sankey visual](https://microsoft.github.io/powerbi-visuals-sankey)
+
+# Development
+
+```bash
+npm ci             # install dependencies
+npm start          # run the visual against the Power BI dev server
+npm run typecheck  # type check src and test
+npm run lint       # run ESLint
+npm test           # run the unit tests in headless Chromium
+npm run package    # build a .pbiviz package
+```
+
+Unit tests run in Vitest Browser Mode. `npm test` installs the Playwright Chromium build on first
+run; on Linux you may also need `npx playwright install --with-deps chromium` for the system libraries.

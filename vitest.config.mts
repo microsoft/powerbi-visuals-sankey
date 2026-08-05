@@ -26,7 +26,7 @@ export default defineConfig({
         }
     },
     test: {
-        include: ["test/visualTest.ts"],
+        include: ["test/**/*.test.ts"],
         // testutils' assertColorsMatch calls a global expect, so globals cannot be disabled.
         globals: true,
         setupFiles: ["test/setup.ts"],
@@ -40,14 +40,6 @@ export default defineConfig({
             viewport: {
                 width: 1280,
                 height: 720
-            }
-        },
-        deps: {
-            optimizer: {
-                client: {
-                    enabled: true,
-                    include: ["powerbi-visuals-utils-formattingutils"]
-                }
             }
         },
         clearMocks: true,

@@ -12,6 +12,7 @@
 * Removed the unused TSLint configuration
 * Removed the unused karma-typescript packages and updated devDependencies to fix npm audit findings
 * Migrated unit tests from Karma and Jasmine to Vitest Browser Mode with Playwright Chromium
+* Added a type check step for the source and the tests to the build workflow
 * Documented the reset button and the new link and node options
 
 ## 3.4.6.0

@@ -25,6 +25,7 @@
 */
 import powerbi from "powerbi-visuals-api";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { select } from "d3-selection";
 
 import capabilities from "../capabilities.json";
 
@@ -828,6 +829,10 @@ describe("SankeyDiagram", () => {
 
             objectsChecker(capabilities);
         });
+
+        it("should declare support for selection across visuals", () => {
+            expect(capabilities.supportsMultiVisualSelection).toBe(true);
+        });
     });
 
     describe("Rendering events:", () => {
@@ -871,6 +876,23 @@ describe("SankeyDiagram", () => {
             new SankeyDiagramBehavior(selectionManager, createVisualHost({}));
 
             expect(() => selectionManager.simutateSelection([])).not.toThrow();
+        });
+
+        it("should apply a selection that arrives from another visual", async () => {
+            const selectionManager: MockISelectionManager = visualBuilder.visualHost.createSelectionManager() as MockISelectionManager;
+
+            await updateRender(dataView);
+
+            const linkElement: HTMLElement = visualBuilder.linkElements[0];
+            // MockISelectionId.equals compares by reference, so the id has to come from the rendered datum.
+            const { selectionId } = select<HTMLElement, SankeyDiagramLink>(linkElement).datum();
+
+            // simutateSelection only fires the callback, so the host state has to be set separately.
+            selectionManager.select(selectionId);
+            selectionManager.simutateSelection([selectionId]);
+
+            expect(linkElement.classList).toContain("selected");
+            expect([...visualBuilder.linkElements].filter((link: HTMLElement) => link.classList.contains("selected")).length).toBe(1);
         });
     });
 

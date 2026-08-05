@@ -52,6 +52,7 @@ export class VisualBuilder extends VisualBuilderBase<VisualClass> {
     }
 
     public cleanup(): void {
+        this.destroy();
         this.element.remove();
     }
 

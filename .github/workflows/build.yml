@@ -28,6 +28,7 @@ jobs:
     - run: npm outdated
       continue-on-error: true
     - run: npm ci
+    - run: npm run typecheck
     - run: npx playwright install --with-deps chromium
     - run: npm run eslint --if-present
     - run: npm run lint --if-present
