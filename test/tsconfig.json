@@ -7,7 +7,7 @@
         "resolveJsonModule": true,
         "rootDir": "..",
         "skipLibCheck": true,
-        "types": ["node"]
+        "types": ["node", "vitest/globals"]
     },
     "include": [
         "../src/**/*.ts",

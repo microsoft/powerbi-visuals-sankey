@@ -10,19 +10,11 @@ export default defineConfig({
         alias: [
             {
                 find: /^powerbi-visuals-api$/,
-                replacement: path.resolve(rootDirectory, "test/mocks/powerbi-visuals-api.ts")
-            },
-            {
-                find: /^powerbi-visuals-utils-colorutils$/,
-                replacement: path.resolve(rootDirectory, "test/mocks/powerbi-visuals-utils-colorutils.ts")
+                replacement: path.resolve(rootDirectory, "test/shims/powerbi-visuals-api.ts")
             },
             {
                 find: /^powerbi-visuals-utils-dataviewutils$/,
-                replacement: path.resolve(rootDirectory, "test/mocks/powerbi-visuals-utils-dataviewutils.ts")
-            },
-            {
-                find: /^powerbi-visuals-utils-typeutils(?:\/lib\/index(?:\.js)?)?$/,
-                replacement: path.resolve(rootDirectory, "test/mocks/powerbi-visuals-utils-typeutils.ts")
+                replacement: path.resolve(rootDirectory, "test/shims/powerbi-visuals-utils-dataviewutils.ts")
             }
         ]
     },
@@ -35,6 +27,7 @@ export default defineConfig({
     },
     test: {
         include: ["test/visualTest.ts"],
+        // testutils' assertColorsMatch calls a global expect, so globals cannot be disabled.
         globals: true,
         setupFiles: ["test/setup.ts"],
         browser: {
@@ -59,15 +52,10 @@ export default defineConfig({
         },
         clearMocks: true,
         restoreMocks: true,
-        reporters: ["default", "junit", "json"],
-        outputFile: {
-            junit: "test-results/TESTS-report.xml",
-            json: "test-results/vitest-report.json"
-        },
         coverage: {
             provider: "v8",
             include: ["src/**/*.ts"],
-            reporter: ["text", "html", "lcov", "cobertura"]
+            reporter: ["text", "html", "lcov"]
         }
     }
 });

@@ -1,3 +1,4 @@
+// powerbi-visuals-api is types-only; esbuild cannot inline its const enums, so they need runtime values.
 const powerbiVisualsApi = {
     VisualEnumerationInstanceKinds: {
         Constant: 1,
