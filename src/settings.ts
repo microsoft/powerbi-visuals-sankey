@@ -205,7 +205,7 @@ export class BaseFontSettingsCard extends FormattingSettingsCompositeCard implem
         this.topLevelSlice = this.show;
     }
 
-    public groups: FormattingSettingsSlice[] = [this.fontGroup];
+    public groups: formattingSettings.Group[] = [this.fontGroup];
 
     public handleHighContrastMode(colorHelper: ColorHelper): void {
         this.fill.value.value = colorHelper.getHighContrastColor("foreground", this.fill.value.value);

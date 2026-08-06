@@ -13,6 +13,7 @@
 * Removed the unused karma-typescript packages and updated devDependencies to fix npm audit findings
 * Migrated unit tests from Karma and Jasmine to Vitest Browser Mode with Playwright Chromium
 * Added a type check step for the source and the tests to the build workflow
+* Upgraded powerbi-visuals-tools to 7.2.1 and powerbi-visuals-utils-testutils to 7.0.1, and moved the dataviewutils, formattingmodel, svgutils, and typeutils utilities to their v7 releases
 * Documented the reset button and the new link and node options
 
 ## 3.4.6.0
