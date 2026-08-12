@@ -11,10 +11,6 @@ export default defineConfig({
             {
                 find: /^powerbi-visuals-api$/,
                 replacement: path.resolve(rootDirectory, "test/shims/powerbi-visuals-api.ts")
-            },
-            {
-                find: /^powerbi-visuals-utils-dataviewutils$/,
-                replacement: path.resolve(rootDirectory, "test/shims/powerbi-visuals-utils-dataviewutils.ts")
             }
         ]
     },

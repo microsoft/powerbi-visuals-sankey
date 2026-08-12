@@ -315,7 +315,7 @@ export class LinkColorContainerItem extends ContainerItem implements IHandleHigh
             displayName: "Color",
             displayNameKey: "Visual_Color",
             value: { value: link ? link.fillColor : LinkColorContainerItem.DefaultColorOfLink },
-            selector: link ? ColorHelper.normalizeSelector(link.selectionId.getSelector()) : dataViewWildcard.createDataViewWildcardSelector(dataViewWildcard.DataViewWildcardMatchingOption.InstancesAndTotals),
+            selector: link ? ColorHelper.normalizeSelector(link.selectionId.getSelector()) : dataViewWildcard.createDataViewWildcardSelector(),
             instanceKind: link ? undefined : powerbi.VisualEnumerationInstanceKinds.ConstantOrRule,
             altConstantSelector: link ? undefined : null
         });

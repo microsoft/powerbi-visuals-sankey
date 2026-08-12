@@ -1,15 +1,15 @@
-// powerbi-visuals-api is types-only; esbuild cannot inline its const enums, so they need runtime values.
+import type powerbiApi from "powerbi-visuals-api";
+
+// powerbi-visuals-api is types-only; esbuild cannot inline its const enums, so they need runtime
+// values. `satisfies` pins them to the API so a drifted value fails the build.
 const powerbiVisualsApi = {
     VisualEnumerationInstanceKinds: {
-        Constant: 1,
-        Rule: 2,
-        ConstantOrRule: 3
+        ConstantOrRule: 3 satisfies powerbiApi.VisualEnumerationInstanceKinds.ConstantOrRule
     },
     visuals: {
         ValidatorType: {
-            Min: 0,
-            Max: 1,
-            Required: 2
+            Min: 0 satisfies powerbiApi.visuals.ValidatorType.Min,
+            Max: 1 satisfies powerbiApi.visuals.ValidatorType.Max
         }
     }
 };
