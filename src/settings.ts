@@ -205,7 +205,7 @@ export class BaseFontSettingsCard extends FormattingSettingsCompositeCard implem
         this.topLevelSlice = this.show;
     }
 
-    public groups: FormattingSettingsSlice[] = [this.fontGroup];
+    public groups: formattingSettings.Group[] = [this.fontGroup];
 
     public handleHighContrastMode(colorHelper: ColorHelper): void {
         this.fill.value.value = colorHelper.getHighContrastColor("foreground", this.fill.value.value);
@@ -315,7 +315,7 @@ export class LinkColorContainerItem extends ContainerItem implements IHandleHigh
             displayName: "Color",
             displayNameKey: "Visual_Color",
             value: { value: link ? link.fillColor : LinkColorContainerItem.DefaultColorOfLink },
-            selector: link ? ColorHelper.normalizeSelector(link.selectionId.getSelector()) : dataViewWildcard.createDataViewWildcardSelector(dataViewWildcard.DataViewWildcardMatchingOption.InstancesAndTotals),
+            selector: link ? ColorHelper.normalizeSelector(link.selectionId.getSelector()) : dataViewWildcard.createDataViewWildcardSelector(),
             instanceKind: link ? undefined : powerbi.VisualEnumerationInstanceKinds.ConstantOrRule,
             altConstantSelector: link ? undefined : null
         });

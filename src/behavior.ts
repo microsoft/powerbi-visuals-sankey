@@ -66,6 +66,10 @@ export class SankeyDiagramBehavior{
     }
 
     private onSelectCallback(selectionIds?: ISelectionId[]){
+        if (!this.behaviorOptions) {
+            return;
+        }
+
         this.applySelectionStateToData(selectionIds);
         this.renderSelection();
     }

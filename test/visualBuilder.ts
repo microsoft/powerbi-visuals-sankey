@@ -51,6 +51,11 @@ export class VisualBuilder extends VisualBuilderBase<VisualClass> {
         return this.visual;
     }
 
+    public cleanup(): void {
+        this.destroy();
+        this.element.remove();
+    }
+
     public get mainElement(): HTMLElement {
         // return this.element.children("svg.sankeyDiagram");
         return this.element.querySelector("svg.sankeyDiagram");

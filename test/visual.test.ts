@@ -24,11 +24,13 @@
 *  THE SOFTWARE.
 */
 import powerbi from "powerbi-visuals-api";
-import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { select } from "d3-selection";
+
+import capabilities from "../capabilities.json";
 
 // powerbi
 import DataView = powerbi.DataView;
-import FormattingSettingsCard = formattingSettings.Cards;
 
 // powerbi.extensibility.visual.test
 import { SankeyDiagramData } from "./visualData";
@@ -55,7 +57,12 @@ import {
     assertColorsMatch,
     renderTimeout,
     getRandomNumbers,
+    createSelectionManager,
+    createVisualHost,
+    MockISelectionManager,
 } from "powerbi-visuals-utils-testutils";
+
+import { SankeyDiagramBehavior } from "../src/behavior";
 
 import {
     isColorAppliedToElements
@@ -92,6 +99,12 @@ describe("SankeyDiagram", () => {
         defaultDataViewBuilder: SankeyDiagramData,
         dataView: DataView;
 
+    const updateRender = (dataView: DataView | DataView[], timeout?: number): Promise<void> =>
+        new Promise((resolve) => visualBuilder.updateRenderTimeout(dataView, resolve, timeout));
+
+    const waitForRender = (timeout?: number): Promise<void> =>
+        new Promise((resolve) => renderTimeout(resolve, timeout));
+
     beforeEach(() => {
         visualBuilder = new VisualBuilder(1000, 500);
 
@@ -99,6 +112,10 @@ describe("SankeyDiagram", () => {
         dataView = defaultDataViewBuilder.getDataView();
 
         visualInstance = visualBuilder.instance;
+    });
+
+    afterEach(() => {
+        visualBuilder.cleanup();
     });
 
     describe("getPositiveNumber", () => {
@@ -277,96 +294,88 @@ describe("SankeyDiagram", () => {
             expect(visualBuilder.mainElement).toBeDefined();
         });
 
-        it("number of displayed links should match the dataView", (done) => {
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                const allLinksInDataView = dataView.matrix.rows.root.children.reduce((acc, current) => acc + current.children.length, 0);
-                expect(visualBuilder.linksElement).toBeDefined();
-                expect(visualBuilder.linkElements.length).toBe(allLinksInDataView);
+        it("number of displayed links should match the dataView", async () => {
+            await updateRender(dataView);
 
-                let nodes: SankeyDiagramNode[] = visualBuilder.instance
-                    .converter(dataView)
-                    .nodes
-                    .filter((node: SankeyDiagramNode) => {
-                        if (node.links.length > 0) {
-                            return true;
-                        }
+            const allLinksInDataView = dataView.matrix.rows.root.children.reduce((acc, current) => acc + current.children.length, 0);
+            expect(visualBuilder.linksElement).toBeDefined();
+            expect(visualBuilder.linkElements.length).toBe(allLinksInDataView);
 
-                        return false;
-                    });
-                expect(visualBuilder.nodesElement).toBeDefined();
-                expect(visualBuilder.nodeElements.length).toEqual(nodes.length);
+            let nodes: SankeyDiagramNode[] = visualBuilder.instance
+                .converter(dataView)
+                .nodes
+                .filter((node: SankeyDiagramNode) => {
+                    if (node.links.length > 0) {
+                        return true;
+                    }
 
-                done();
-            });
+                    return false;
+                });
+            expect(visualBuilder.nodesElement).toBeDefined();
+            expect(visualBuilder.nodeElements.length).toEqual(nodes.length);
         });
 
 
-        it("update without weight values should display nodes", (done) => {
+        it("update without weight values should display nodes", async () => {
 
             dataView = defaultDataViewBuilder.getDataViewWithoutValues();
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                const allLinksInDataView = dataView.matrix.rows.root.children.reduce((acc, current) => acc + current.children.length, 0);
-                expect(visualBuilder.linksElement).toBeDefined();
-                expect(visualBuilder.linkElements.length).toBe(allLinksInDataView);
+            await updateRender(dataView);
 
-                let nodes: SankeyDiagramNode[] = visualBuilder.instance
-                    .converter(dataView)
-                    .nodes
-                    .filter((node: SankeyDiagramNode) => {
-                        if (node.links.length > 0) {
-                            return true;
-                        }
+            const allLinksInDataView = dataView.matrix.rows.root.children.reduce((acc, current) => acc + current.children.length, 0);
+            expect(visualBuilder.linksElement).toBeDefined();
+            expect(visualBuilder.linkElements.length).toBe(allLinksInDataView);
 
-                        return false;
-                    });
+            let nodes: SankeyDiagramNode[] = visualBuilder.instance
+                .converter(dataView)
+                .nodes
+                .filter((node: SankeyDiagramNode) => {
+                    if (node.links.length > 0) {
+                        return true;
+                    }
 
-                expect(visualBuilder.nodesElement).toBeDefined();
-                expect(visualBuilder.nodeElements.length).toEqual(nodes.length);
+                    return false;
+                });
 
-                done();
-            });
+            expect(visualBuilder.nodesElement).toBeDefined();
+            expect(visualBuilder.nodeElements.length).toEqual(nodes.length);
         });
 
 
-        it("node labels should display when labels: { show: true }", (done) => {
+        it("node labels should display when labels: { show: true }", async () => {
             dataView.metadata.objects = {
                 labels: {
                     show: true
                 }
             };
 
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                const display: string = window.getComputedStyle(
-                    visualBuilder.nodesElement.querySelector("text")
-                ).display
+            await updateRender(dataView);
 
-                expect(display).toBe("block");
+            const display: string = window.getComputedStyle(
+                visualBuilder.nodesElement.querySelector("text")
+            ).display
 
-                done();
-            });
+            expect(display).toBe("block");
         });
 
 
-        it("node labels should not display when labels: { show: false } off", (done) => {
+        it("node labels should not display when labels: { show: false } off", async () => {
             dataView.metadata.objects = {
                 labels: {
                     show: false
                 }
             };
 
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                const display: string = window.getComputedStyle(
-                    visualBuilder.nodesElement.querySelector("text")
-                ).display
+            await updateRender(dataView);
 
-                expect(display).toBe("none");
+            const display: string = window.getComputedStyle(
+                visualBuilder.nodesElement.querySelector("text")
+            ).display
 
-                done();
-            });
+            expect(display).toBe("none");
         });
 
 
-        it("nodes labels should change color", (done) => {
+        it("nodes labels should change color", async () => {
             const color: string = "#123123";
 
             dataView.metadata.objects = {
@@ -375,18 +384,17 @@ describe("SankeyDiagram", () => {
                 }
             };
 
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                const fill: string = window.getComputedStyle(
-                    visualBuilder.nodesElement.querySelector("text")
-                ).fill
+            await updateRender(dataView);
 
-                assertColorsMatch(fill, color);
-                done();
-            });
+            const fill: string = window.getComputedStyle(
+                visualBuilder.nodesElement.querySelector("text")
+            ).fill
+
+            assertColorsMatch(fill, color);
         });
 
 
-        it("links should change color", done => {
+        it("links should change color", async () => {
             const color: string = "#E0F600";
 
             // change colors for all links
@@ -403,85 +411,76 @@ describe("SankeyDiagram", () => {
             })
 
 
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                const someLink = visualBuilder.linksElement.querySelector("path.link");
-                const currentColor: string = window.getComputedStyle(someLink).stroke;
+            await updateRender(dataView);
 
-                assertColorsMatch(currentColor, color);
+            const someLink = visualBuilder.linksElement.querySelector("path.link");
+            const currentColor: string = window.getComputedStyle(someLink).stroke;
 
-                done();
-            });
+            assertColorsMatch(currentColor, color);
         });
 
 
-        it("nodes labels are not overlapping", done => {
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                const nodeElements: HTMLElement[] = [...visualBuilder.nodeElements];
-                const firstNode: string = nodeElements[0].querySelector("text").innerHTML
-                const secondNode: string = nodeElements[1].querySelector("text").innerHTML
-                const thirdNode: string = nodeElements[2].querySelector("text").innerHTML
+        it("nodes labels are not overlapping", async () => {
+            await updateRender(dataView);
 
-                expect(firstNode).toBe("Brazil");
-                expect(secondNode).toBe("USA");
-                expect(thirdNode).toBe("Mexico");
+            const nodeElements: HTMLElement[] = [...visualBuilder.nodeElements];
+            const firstNode: string = nodeElements[0].querySelector("text").innerHTML
+            const secondNode: string = nodeElements[1].querySelector("text").innerHTML
+            const thirdNode: string = nodeElements[2].querySelector("text").innerHTML
 
-                done();
-            });
+            expect(firstNode).toBe("Brazil");
+            expect(secondNode).toBe("USA");
+            expect(thirdNode).toBe("Mexico");
         });
 
 
         describe("selection and deselection", () => {
             const selectionClass: string = "selected";
-            it("nodes", (done) => {
-                visualBuilder.updateRenderTimeout(dataView, () => {
-                    const node: HTMLElement = visualBuilder.nodeElements[0];
-                    const firstNodeLinksCount: number = 4;
-                    const link: NodeListOf<HTMLElement> = visualBuilder.linkElements;
-                    const selectedNodesBeforeClick = [...visualBuilder.nodeElements].filter(node => node.classList.value.includes(selectionClass));
-                    expect(selectedNodesBeforeClick.length).toBe(0);
-                    // expect(selectedNodes).not.toBeInDOM();
-                    clickElement(node);
-                    renderTimeout(() => {
-                        const selectedNodesAfterClick = [...visualBuilder.nodeElements].filter(node => node.classList.value.includes(selectionClass));
-                        expect(selectedNodesAfterClick.length).not.toBe(0);
-                        // expect(visualBuilder.nodeElements.filter(selectionClass)).toBeInDOM();
-                        expect(selectedNodesAfterClick).toBeDefined();
-                        // when node selected, links of node also must be selected
-                        expect([...visualBuilder.linkElements].filter(link => link.classList.value.includes(selectionClass)).length).toBe(firstNodeLinksCount);
+            it("nodes", async () => {
+                await updateRender(dataView);
 
-                        clickElement(node);
-                        renderTimeout(() => {
-                            expect([...visualBuilder.nodeElements].filter(node => node.classList.value.includes(selectionClass)).length).toBe(0);
-                            done();
-                        });
-                    });
-                });
+                const node: HTMLElement = visualBuilder.nodeElements[0];
+                const firstNodeLinksCount: number = 4;
+                const link: NodeListOf<HTMLElement> = visualBuilder.linkElements;
+                const selectedNodesBeforeClick = [...visualBuilder.nodeElements].filter(node => node.classList.value.includes(selectionClass));
+                expect(selectedNodesBeforeClick.length).toBe(0);
+                // expect(selectedNodes).not.toBeInDOM();
+                clickElement(node);
+                await waitForRender();
+
+                const selectedNodesAfterClick = [...visualBuilder.nodeElements].filter(node => node.classList.value.includes(selectionClass));
+                expect(selectedNodesAfterClick.length).not.toBe(0);
+                // expect(visualBuilder.nodeElements.filter(selectionClass)).toBeInDOM();
+                expect(selectedNodesAfterClick).toBeDefined();
+                // when node selected, links of node also must be selected
+                expect([...visualBuilder.linkElements].filter(link => link.classList.value.includes(selectionClass)).length).toBe(firstNodeLinksCount);
+
+                clickElement(node);
+                await waitForRender();
+                expect([...visualBuilder.nodeElements].filter(node => node.classList.value.includes(selectionClass)).length).toBe(0);
             });
 
 
-            it("links", (done) => {
-                visualBuilder.updateRenderTimeout(dataView, () => {
-                    const link: HTMLElement = visualBuilder.linkElements[0];
-                    expect([...visualBuilder.linkElements].filter(link => link.classList.value.includes(selectionClass)).length).toBe(0);
-                    clickElement(link);
+            it("links", async () => {
+                await updateRender(dataView);
 
-                    renderTimeout(() => {
-                        // link is selected and in DOM
-                        expect(link).toBeDefined();
-                        expect(link.classList).toContain(selectionClass);
-                        // selected link is the only one that is selected
-                        expect([...visualBuilder.linkElements].filter(link => link.classList.value.includes(selectionClass)).length).toBe(1);
-                        
-                        // deselection does not work without passing 'true' as second argument
-                        clickElement(link, true);
+                const link: HTMLElement = visualBuilder.linkElements[0];
+                expect([...visualBuilder.linkElements].filter(link => link.classList.value.includes(selectionClass)).length).toBe(0);
+                clickElement(link);
+                await waitForRender();
 
-                        renderTimeout(() => {
-                            // no links selected
-                            expect([...visualBuilder.linkElements].filter(link => link.classList.value.includes(selectionClass)).length).toBe(0);
-                            done();
-                        });
-                    });
-                });
+                // link is selected and in DOM
+                expect(link).toBeDefined();
+                expect(link.classList).toContain(selectionClass);
+                // selected link is the only one that is selected
+                expect([...visualBuilder.linkElements].filter(link => link.classList.value.includes(selectionClass)).length).toBe(1);
+                
+                // deselection does not work without passing 'true' as second argument
+                clickElement(link, true);
+                await waitForRender();
+
+                // no links selected
+                expect([...visualBuilder.linkElements].filter(link => link.classList.value.includes(selectionClass)).length).toBe(0);
             });
 
             it("multi-selection test", () => {
@@ -504,7 +503,7 @@ describe("SankeyDiagram", () => {
 
 
         describe("data rendering", () => {
-            it("negative and zero values", done => {
+            it("negative and zero values", async () => {
                 let dataLength: number = defaultDataViewBuilder.valuesSourceDestination.length,
                     groupLength = Math.floor(dataLength / 3) - 2,
                     negativeValues = getRandomNumbers(groupLength, -100, 0),
@@ -514,59 +513,48 @@ describe("SankeyDiagram", () => {
 
                 const valuesValue = negativeValues.concat(zeroValues).concat(positiveValues);
 
-                visualBuilder.updateRenderTimeout([defaultDataViewBuilder.getDataView()], () => {
-                    expect(visualBuilder.linkElements.length).toBe(valuesValue.length);
-
-                    done();
-                });
+                await updateRender([defaultDataViewBuilder.getDataView()]);
+                expect(visualBuilder.linkElements.length).toBe(valuesValue.length);
             });
         });
 
         describe("self links", () => {
-            it("must exist", done => {
-                visualBuilder.updateRenderTimeout([defaultDataViewBuilder.getDataView()], () => {
-                    let transformedData: SankeyDiagramDataView = visualBuilder.instance.converter(dataView);
+            it("must exist", async () => {
+                await updateRender([defaultDataViewBuilder.getDataView()]);
+                let transformedData: SankeyDiagramDataView = visualBuilder.instance.converter(dataView);
 
-                    let links: SankeyDiagramLink[] = transformedData.links.filter((link: SankeyDiagramLink, index: number) => {
-                        if (link.source.label.name.match(/\**_SK_SELFLINK/)) {
-                            return true;
-                        }
-                        return false;
-                    });
-
-                    expect(links.length).toBeGreaterThan(0);
-
-                    done();
+                let links: SankeyDiagramLink[] = transformedData.links.filter((link: SankeyDiagramLink, index: number) => {
+                    if (link.source.label.name.match(/\**_SK_SELFLINK/)) {
+                        return true;
+                    }
+                    return false;
                 });
+
+                expect(links.length).toBeGreaterThan(0);
             });
         });
 
         describe("cycles in graph", () => {
-            it("must have two nodes with same label", done => {
-                visualBuilder.updateRenderTimeout([defaultDataViewBuilder.getDataView()], () => {
-                    let transformedData: SankeyDiagramDataView = visualBuilder.instance.converter(dataView);
-                    let links: SankeyDiagramLink[] = transformedData.links.filter((link) => link.source.label.formattedName === link.destination.label.formattedName);
-                    expect(links.length).toBeGreaterThan(0);
-
-                    done();
-                });
+            it("must have two nodes with same label", async () => {
+                await updateRender([defaultDataViewBuilder.getDataView()]);
+                let transformedData: SankeyDiagramDataView = visualBuilder.instance.converter(dataView);
+                let links: SankeyDiagramLink[] = transformedData.links.filter((link) => link.source.label.formattedName === link.destination.label.formattedName);
+                expect(links.length).toBeGreaterThan(0);
             });
         });
 
         describe("0-1 values in graph", () => {
-            it("must give positive weigth of links", done => {
+            it("must give positive weigth of links", async () => {
                 const expectedLinksCount = 3;
                 let dataView: DataView = defaultDataViewBuilder.getDataViewWithLowValue();
-                visualBuilder.updateRenderTimeout([dataView], () => {
-                    let linksCount = visualBuilder.linksElement.childElementCount;
-                    expect(linksCount).toBe(expectedLinksCount);
-                    done();
-                });
+                await updateRender([dataView]);
+                let linksCount = visualBuilder.linksElement.childElementCount;
+                expect(linksCount).toBe(expectedLinksCount);
             });
         });
 
         describe("datalabels", () => {
-            it("must be rendered", done => {
+            it("must be rendered", async () => {
                 let dataView: DataView = defaultDataViewBuilder.getDataViewWithLowValue();
 
                 dataView.metadata.objects = {
@@ -575,28 +563,26 @@ describe("SankeyDiagram", () => {
                     }
                 };
 
-                visualBuilder.updateRenderTimeout([dataView], () => {
-                    expect(visualBuilder.mainElement.querySelectorAll(".linkLabelTexts")).toBeDefined();
-                    done();
-                });
+                await updateRender([dataView]);
+                expect(visualBuilder.mainElement.querySelectorAll(".linkLabelTexts")).toBeDefined();
             });
         });
 
         describe("nodes", () => {
-            it("must be dragged and the displayed correctly", done => {
+            it("must be dragged and the displayed correctly", async () => {
                 let dataView: DataView = defaultDataViewBuilder.getDataView();
-                visualBuilder.updateRenderTimeout([dataView], () => {
-                    let nodeToDrag = visualBuilder.nodeElements[0];
+                await updateRender([dataView]);
+                let nodeToDrag = visualBuilder.nodeElements[0];
 
-                    let node1 = nodeToDrag.querySelector(".nodeRect").getBoundingClientRect();
-                    let center1X = Math.floor((node1.left + node1.right) / 2);
-                    let center1Y = Math.floor((node1.top + node1.bottom) / 2);
+                let node1 = nodeToDrag.querySelector(".nodeRect").getBoundingClientRect();
+                let center1X = Math.floor((node1.left + node1.right) / 2);
+                let center1Y = Math.floor((node1.top + node1.bottom) / 2);
 
-                    // user second node as target
-                    let anotherNode = visualBuilder.nodeElements[1];
-                    const node2 = anotherNode.querySelector(".nodeRect").getBoundingClientRect();
-                    let center2X = Math.floor((node2.left + node2.right) / 2);
-                    let center2Y = Math.floor((node2.top + node2.bottom) / 2);
+                // user second node as target
+                let anotherNode = visualBuilder.nodeElements[1];
+                const node2 = anotherNode.querySelector(".nodeRect").getBoundingClientRect();
+                let center2X = Math.floor((node2.left + node2.right) / 2);
+                let center2Y = Math.floor((node2.top + node2.bottom) / 2);
 
                     // mouse over dragged element and mousedown
                     fireMouseEvent('mousemove', nodeToDrag, center1X, center1Y);
@@ -650,32 +636,27 @@ describe("SankeyDiagram", () => {
                     expect(nodeToDrag.getBoundingClientRect().bottom).toBeGreaterThan(visualBuilder.viewport.height - 20);
 
 
-                    // call private methods
-                    (<any>visualBuilder.instance).saveNodePositions((<any>visualBuilder.instance).dataView.nodes);
-                    (<any>visualBuilder.instance).saveViewportSize();
-
-                    done();
-                });
+                // call private methods
+                (<any>visualBuilder.instance).saveNodePositions((<any>visualBuilder.instance).dataView.nodes);
+                (<any>visualBuilder.instance).saveViewportSize();
             });
         });
 
         describe("reset button", () => {
-            it("must be displayed correctly", done => {
+            it("must be displayed correctly", async () => {
                 let dataView: DataView = defaultDataViewBuilder.getDataView();
                 dataView.metadata.objects = {
                     nodeComplexSettings: {
                         showResetButon: true
                     }
                 };
-                visualBuilder.updateRenderTimeout([dataView], () => {
-                    const resetButton = visualBuilder.resetButton;
-                    const visibility: string = resetButton.style.visibility;
-                    expect(visibility).toBe("visible");
-                    done();
-                });
+                await updateRender([dataView]);
+                const resetButton = visualBuilder.resetButton;
+                const visibility: string = resetButton.style.visibility;
+                expect(visibility).toBe("visible");
             });
 
-            it("must reset saved positions", done => {
+            it("must reset saved positions", async () => {
                 let dataView: DataView = defaultDataViewBuilder.getDataView();
                 const nodePositions = `[{"name":"Brazil","x":"477","y":"348"},{"name":"USA_SK_SELFLINK","x":"0","y":"137"},{"name":"Mexico_SK_SELFLINK","x":"0","y":"297"},{"name":"Canada_SK_SELFLINK","x":"0","y":"402"},{"name":"Canada","x":"479","y":"0"},{"name":"England","x":"479","y":"26"},{"name":"Portugal","x":"479","y":"163"},{"name":"France","x":"479","y":"302"},{"name":"Spain","x":"479","y":"406"},{"name":"Mexico","x":"959","y":"0"},{"name":"USA","x":"959","y":"105"},{"name":"Angola","x":"959","y":"267"},{"name":"Senegal","x":"959","y":"320"},{"name":"Morocco","x":"959","y":"437"}]`;
                 dataView.metadata.objects = {
@@ -686,17 +667,15 @@ describe("SankeyDiagram", () => {
                     }
                 };
 
-                visualBuilder.updateRenderTimeout([dataView], () => {
-                    let nodePositionSettings = visualBuilder.instance.sankeyDiagramSettings.nodeComplexSettings.persistProperties.nodePositions.value;
-                    expect(nodePositionSettings).toBe(nodePositions);
+                await updateRender([dataView]);
+                let nodePositionSettings = visualBuilder.instance.sankeyDiagramSettings.nodeComplexSettings.persistProperties.nodePositions.value;
+                expect(nodePositionSettings).toBe(nodePositions);
 
-                    spyOn(visualBuilder.visualHost, 'persistProperties').and.callThrough();
-                    const resetButton = visualBuilder.resetButton;
-                    clickElement(resetButton);
+                vi.spyOn(visualBuilder.visualHost, 'persistProperties');
+                const resetButton = visualBuilder.resetButton;
+                clickElement(resetButton);
 
-                    expect(visualBuilder.visualHost.persistProperties).toHaveBeenCalled();
-                    done();
-                })
+                expect(visualBuilder.visualHost.persistProperties).toHaveBeenCalled();
             });
         });
 
@@ -724,7 +703,7 @@ describe("SankeyDiagram", () => {
     });
 
     describe("Scale settings test:", () => {
-        it("the visual must provide min height of node", done => {
+        it("the visual must provide min height of node", async () => {
             let dataView: DataView = defaultDataViewBuilder.getDataViewWithLowValue();
             const firstElement: number = 0;
 
@@ -740,23 +719,21 @@ describe("SankeyDiagram", () => {
             // the dataset has significantly different range of values
             // the visual must provide min height of node
 
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                const minHeightOfNode: number = 5;
-                let nodes = visualBuilder.nodeElements;
+            await updateRender(dataView);
+            const minHeightOfNode: number = 5;
+            let nodes = visualBuilder.nodeElements;
 
-                let minHeight: number = +nodes[firstElement].children[firstElement].getAttribute("height");
-                nodes.forEach((el: HTMLElement) => {
-                    let height = +el.children[firstElement].getAttribute("height");
-                    if (height < minHeight) {
-                        minHeight = height;
-                    }
-                });
-                expect(minHeight).toBeGreaterThan(minHeightOfNode);
-                done();
+            let minHeight: number = +nodes[firstElement].children[firstElement].getAttribute("height");
+            nodes.forEach((el: HTMLElement) => {
+                let height = +el.children[firstElement].getAttribute("height");
+                if (height < minHeight) {
+                    minHeight = height;
+                }
             });
+            expect(minHeight).toBeGreaterThan(minHeightOfNode);
         });
 
-        it("the visual must not provide min height of node", done => {
+        it("the visual must not provide min height of node", async () => {
             let dataView: DataView = defaultDataViewBuilder.getDataViewWithLowValue();
             const firstElement: number = 0;
 
@@ -773,20 +750,18 @@ describe("SankeyDiagram", () => {
             dataView.matrix.rows.root.children[0].children[1].values[0].value = 1;
             dataView.matrix.rows.root.children[0].children[2].values[0].value = 1000000;
 
-            visualBuilder.updateRenderTimeout([dataView], () => {
-                const minHeightOfNode: number = 5;
-                let nodes = visualBuilder.nodeElements;
+            await updateRender([dataView]);
+            const minHeightOfNode: number = 5;
+            let nodes = visualBuilder.nodeElements;
 
-                let minHeight: number = +nodes[firstElement].children[firstElement].getAttribute("height");
-                nodes.forEach((el: HTMLElement) => {
-                    let height = +el.children[firstElement].getAttribute("height");
-                    if (height < minHeight) {
-                        minHeight = height;
-                    }
-                });
-                expect(minHeight).toBeLessThan(minHeightOfNode);
-                done();
+            let minHeight: number = +nodes[firstElement].children[firstElement].getAttribute("height");
+            nodes.forEach((el: HTMLElement) => {
+                let height = +el.children[firstElement].getAttribute("height");
+                if (height < minHeight) {
+                    minHeight = height;
+                }
             });
+            expect(minHeight).toBeLessThan(minHeightOfNode);
         });
     });
 
@@ -796,26 +771,24 @@ describe("SankeyDiagram", () => {
             dataView = defaultDataViewBuilder.getDataView();
         });
 
-        it("nodeComplexSettings persist properties properties must be hidden", done => {
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                visualBuilder.instance.getFormattingModel();
-                expect(visualBuilder.instance.sankeyDiagramSettings.nodeComplexSettings.persistProperties.nodePositions.visible).toBeFalse();
-                expect(visualBuilder.instance.sankeyDiagramSettings.nodeComplexSettings.persistProperties.viewportSize.visible).toBeFalse();
-                done();
-            });
+        it("nodeComplexSettings persist properties properties must be hidden", async () => {
+            await updateRender(dataView);
+            visualBuilder.instance.getFormattingModel();
+            expect(visualBuilder.instance.sankeyDiagramSettings.nodeComplexSettings.persistProperties.nodePositions.visible).toBe(false);
+            expect(visualBuilder.instance.sankeyDiagramSettings.nodeComplexSettings.persistProperties.viewportSize.visible).toBe(false);
         });
 
-        it("other properties must exist", done => {
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                // defaults
-                const someColor: string = "#000000";
-                const nodeLabelsFontSize: number = 12;
-                const linkLabelsFontSize: number = 9;
-                const unit: number = 0;
+        it("other properties must exist", async () => {
+            await updateRender(dataView);
+            // defaults
+            const someColor: string = "#000000";
+            const nodeLabelsFontSize: number = 12;
+            const linkLabelsFontSize: number = 9;
+            const unit: number = 0;
 
-                visualBuilder.instance.getFormattingModel();
+            visualBuilder.instance.getFormattingModel();
 
-                let labels: DataLabelsSettings = visualBuilder.instance.sankeyDiagramSettings.labels;
+            let labels: DataLabelsSettings = visualBuilder.instance.sankeyDiagramSettings.labels;
 
                 expect(labels.show.value).toBeTruthy();
                 expect(labels.fontSize.value).toBe(nodeLabelsFontSize);
@@ -835,167 +808,203 @@ describe("SankeyDiagram", () => {
                 expect(scaleSettings.provideMinHeight.value).toBeTruthy();
                 expect(scaleSettings.lnScale.value).toBeFalsy();
 
-                expect(visualBuilder.instance.sankeyDiagramSettings.cards.length).toBe(7);
-                done();
-            });
+            expect(visualBuilder.instance.sankeyDiagramSettings.cards.length).toBe(7);
         });
     });
 
     describe("Capabilities tests", () => {
         it("all items having displayName should have displayNameKey property", () => {
-            let r = fetch("base/capabilities.json");
-            let jsonData = JSON.stringify(r);
-
-            let objectsChecker: Function = (obj) => {
-                for (let property of Object.keys(obj)) {
-                    let value: any = obj[property];
-
-                    if (value.displayName) {
-                        expect(value.displayNameKey).toBeDefined();
-                    }
-
-                    if (typeof value === "object") {
-                        objectsChecker(value);
-                    }
+            const objectsChecker = (value: unknown): void => {
+                if (value === null || typeof value !== "object") {
+                    return;
                 }
+
+                const object = value as Record<string, unknown>;
+                if (object.displayName) {
+                    expect(object.displayNameKey).toBeDefined();
+                }
+
+                Object.values(object).forEach(objectsChecker);
             };
 
-            objectsChecker(jsonData);
+            objectsChecker(capabilities);
+        });
+
+        it("should declare support for selection across visuals", () => {
+            expect(capabilities.supportsMultiVisualSelection).toBe(true);
+        });
+    });
+
+    describe("Rendering events:", () => {
+        let eventService: powerbi.extensibility.IVisualEventService;
+
+        beforeEach(() => {
+            eventService = visualBuilder.visualHost.eventService;
+
+            vi.spyOn(eventService, "renderingStarted");
+            vi.spyOn(eventService, "renderingFinished");
+            vi.spyOn(eventService, "renderingFailed");
+        });
+
+        it("should report started and finished on a successful update", () => {
+            visualBuilder.updateFlushAllD3Transitions(dataView);
+
+            expect(eventService.renderingStarted).toHaveBeenCalledTimes(1);
+            expect(eventService.renderingFinished).toHaveBeenCalledTimes(1);
+            expect(eventService.renderingFailed).not.toHaveBeenCalled();
+        });
+
+        it("should report failed instead of finished when rendering throws", () => {
+            vi.spyOn(visualInstance, "converter").mockImplementation(() => {
+                throw new Error("converter failure");
+            });
+            const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+            visualBuilder.updateFlushAllD3Transitions(dataView);
+
+            expect(eventService.renderingStarted).toHaveBeenCalledTimes(1);
+            expect(eventService.renderingFailed).toHaveBeenCalledTimes(1);
+            expect(eventService.renderingFinished).not.toHaveBeenCalled();
+            expect(consoleErrorSpy).toHaveBeenCalled();
+        });
+    });
+
+    describe("Selection callback:", () => {
+        it("should ignore a selection that arrives before the first render", () => {
+            const selectionManager: MockISelectionManager = createSelectionManager() as MockISelectionManager;
+
+            new SankeyDiagramBehavior(selectionManager, createVisualHost({}));
+
+            expect(() => selectionManager.simutateSelection([])).not.toThrow();
+        });
+
+        it("should apply a selection that arrives from another visual", async () => {
+            const selectionManager: MockISelectionManager = visualBuilder.visualHost.createSelectionManager() as MockISelectionManager;
+
+            await updateRender(dataView);
+
+            const linkElement: HTMLElement = visualBuilder.linkElements[0];
+            // MockISelectionId.equals compares by reference, so the id has to come from the rendered datum.
+            const { selectionId } = select<HTMLElement, SankeyDiagramLink>(linkElement).datum();
+
+            // simutateSelection only fires the callback, so the host state has to be set separately.
+            selectionManager.select(selectionId);
+            selectionManager.simutateSelection([selectionId]);
+
+            expect(linkElement.classList).toContain("selected");
+            expect([...visualBuilder.linkElements].filter((link: HTMLElement) => link.classList.contains("selected")).length).toBe(1);
         });
     });
 
     describe("Keyboard Navigation tests:", () => {
-        it("links should have attributes tabindex>0, role=option, aria-label is not null, and aria-selected=false", (done: DoneFn) => {
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                let links = visualBuilder.linkElements;
-                links.forEach((el: Element) => {
-                    expect(el.getAttribute("role")).toBe("option");
-                    expect(el.getAttribute("tabindex")).toBeGreaterThanOrEqual(1);
-                    expect(el.getAttribute("aria-selected")).toBe("false");
-                    expect(el.getAttribute("aria-label")).not.toBeNull();
-                });
-                done();
+        it("links should have attributes tabindex>0, role=option, aria-label is not null, and aria-selected=false", async () => {
+            await updateRender(dataView);
+            let links = visualBuilder.linkElements;
+            links.forEach((el: Element) => {
+                expect(el.getAttribute("role")).toBe("option");
+                expect(Number(el.getAttribute("tabindex"))).toBeGreaterThanOrEqual(1);
+                expect(el.getAttribute("aria-selected")).toBe("false");
+                expect(el.getAttribute("aria-label")).not.toBeNull();
             });
         });
 
-        it("nodes should have attributes tabindex>0, role=option, aria-label is not null, and aria-selected=false", (done: DoneFn) => {
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                let nodeRects = visualBuilder.nodeRectElements;
-                nodeRects.forEach((el: Element) => {
-                    expect(el.getAttribute("role")).toBe("option");
-                    expect(el.getAttribute("tabindex")).toBeGreaterThanOrEqual(1);
-                    expect(el.getAttribute("aria-selected")).toBe("false");
-                    expect(el.getAttribute("aria-label")).not.toBeNull();
-                });
-                done();
+        it("nodes should have attributes tabindex>0, role=option, aria-label is not null, and aria-selected=false", async () => {
+            await updateRender(dataView);
+            let nodeRects = visualBuilder.nodeRectElements;
+            nodeRects.forEach((el: Element) => {
+                expect(el.getAttribute("role")).toBe("option");
+                expect(Number(el.getAttribute("tabindex"))).toBeGreaterThanOrEqual(1);
+                expect(el.getAttribute("aria-selected")).toBe("false");
+                expect(el.getAttribute("aria-label")).not.toBeNull();
             });
         });
 
-        it("enter toggles the correct slice", (done: DoneFn) => {
+        it("enter toggles the correct slice", async () => {
             const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
-            visualBuilder.updateRenderTimeout(
-                dataView, () => {
-                        const links: HTMLElement[] = [...visualBuilder.linkElements];
+            await updateRender(dataView, 2);
+            const links: HTMLElement[] = [...visualBuilder.linkElements];
 
-                        links[0].dispatchEvent(enterEvent);
-                        expect(links[0].getAttribute("aria-selected")).toBe("true");
+            links[0].dispatchEvent(enterEvent);
+            expect(links[0].getAttribute("aria-selected")).toBe("true");
 
-                        const otherLinks: HTMLElement[] = links.slice(1);
-                        otherLinks.forEach((link: HTMLElement) => {
-                            expect(link.getAttribute("aria-selected")).toBe("false");
-                        })
+            const otherLinks: HTMLElement[] = links.slice(1);
+            otherLinks.forEach((link: HTMLElement) => {
+                expect(link.getAttribute("aria-selected")).toBe("false");
+            })
 
-                        links[1].dispatchEvent(enterEvent);
-                        expect(links[1].getAttribute("aria-selected")).toBe("true");
+            links[1].dispatchEvent(enterEvent);
+            expect(links[1].getAttribute("aria-selected")).toBe("true");
 
-                        links.splice(1,1);
-                        links.forEach((link: HTMLElement) => {
-                            expect(link.getAttribute("aria-selected")).toBe("false");
-                        });
-                        done();
-                    },
-                2,
-            );
+            links.splice(1,1);
+            links.forEach((link: HTMLElement) => {
+                expect(link.getAttribute("aria-selected")).toBe("false");
+            });
         });
         
-        it("space toggles the correct slice", (done: DoneFn) => {
+        it("space toggles the correct slice", async () => {
             const spaceEvent = new KeyboardEvent("keydown", { code: "Space", bubbles: true });
-            visualBuilder.updateRenderTimeout(
-                dataView,
-                    () => {
-                        const links: HTMLElement[] = [...visualBuilder.linkElements];
+            await updateRender(dataView, 2);
+            const links: HTMLElement[] = [...visualBuilder.linkElements];
 
-                        links[0].dispatchEvent(spaceEvent);
-                        expect(links[0].getAttribute("aria-selected")).toBe("true");
+            links[0].dispatchEvent(spaceEvent);
+            expect(links[0].getAttribute("aria-selected")).toBe("true");
                         
-                        const otherLinks: HTMLElement[] = links.slice(1);
-                        otherLinks.forEach((link: HTMLElement) => {
-                            expect(link.getAttribute("aria-selected")).toBe("false");
-                        });
+            const otherLinks: HTMLElement[] = links.slice(1);
+            otherLinks.forEach((link: HTMLElement) => {
+                expect(link.getAttribute("aria-selected")).toBe("false");
+            });
 
-                        links[1].dispatchEvent(spaceEvent);
-                        expect(links[1].getAttribute("aria-selected")).toBe("true");
+            links[1].dispatchEvent(spaceEvent);
+            expect(links[1].getAttribute("aria-selected")).toBe("true");
 
-                        links.splice(1, 1);
-                        links.forEach((element: HTMLElement) => {
-                            expect(element.getAttribute("aria-selected")).toBe("false");
-                        });
-                        done();
-                    },
-                2,
-            );
+            links.splice(1, 1);
+            links.forEach((element: HTMLElement) => {
+                expect(element.getAttribute("aria-selected")).toBe("false");
+            });
         });
         
-        it("tab between slices works", (done: DoneFn) => {
+        it("tab between slices works", async () => {
             const tabEvent = new KeyboardEvent("keydown", { code: "Tab", bubbles: true });
             const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
-            visualBuilder.updateRenderTimeout(
-                dataView,
-                    () => {
-                        const links: HTMLElement[] = [...visualBuilder.linkElements];
+            await updateRender(dataView, 2);
+            const links: HTMLElement[] = [...visualBuilder.linkElements];
 
-                        links[0].dispatchEvent(enterEvent);
-                        expect(links[0].getAttribute("aria-selected")).toBe("true");
+            links[0].dispatchEvent(enterEvent);
+            expect(links[0].getAttribute("aria-selected")).toBe("true");
 
-                        const otherLinks: HTMLElement[] = links.slice(1);
-                        otherLinks.forEach((link: HTMLElement) => {
-                            expect(link.getAttribute("aria-selected")).toBe("false");
-                        });
+            const otherLinks: HTMLElement[] = links.slice(1);
+            otherLinks.forEach((link: HTMLElement) => {
+                expect(link.getAttribute("aria-selected")).toBe("false");
+            });
 
-                        visualBuilder.element.dispatchEvent(tabEvent);
+            visualBuilder.element.dispatchEvent(tabEvent);
 
-                        links[1].dispatchEvent(enterEvent);
-                        expect(links[1].getAttribute("aria-selected")).toBe("true");
+            links[1].dispatchEvent(enterEvent);
+            expect(links[1].getAttribute("aria-selected")).toBe("true");
 
-                        links.splice(1, 1);
-                        links.forEach((link: HTMLElement) => {
-                            expect(link.getAttribute("aria-selected")).toBe("false");
-                        });
-                        done();
-                    },
-                2,
-            );
+            links.splice(1, 1);
+            links.forEach((link: HTMLElement) => {
+                expect(link.getAttribute("aria-selected")).toBe("false");
+            });
         });
     });
 
     describe("Focus elements tests:", () => {
-        it("focused links should have :focus-visible style", (done: DoneFn) => {
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                const links: HTMLElement[] = [...visualBuilder.linkElements];
+        it("focused links should have :focus-visible style", async () => {
+            await updateRender(dataView);
+            const links: HTMLElement[] = [...visualBuilder.linkElements];
 
-                links[0].focus();
-                expect(links[0].matches(':focus-visible')).toBeTrue();
+            links[0].focus();
+            expect(links[0].matches(':focus-visible')).toBe(true);
 
-                const otherLinks: HTMLElement[] = links.slice(1);
-                otherLinks.forEach((link: HTMLElement) => {
-                    expect(link.matches(':focus-visible')).toBeFalse();
-                });
-                done();
+            const otherLinks: HTMLElement[] = links.slice(1);
+            otherLinks.forEach((link: HTMLElement) => {
+                expect(link.matches(':focus-visible')).toBe(false);
             });
         });
 
-        it("focused links should have styled stroke and outline", (done: DoneFn) => {
-            visualBuilder.updateRenderTimeout(dataView, () => {
+        it("focused links should have styled stroke and outline", async () => {
+            await updateRender(dataView);
                 // defaults
                 const focusedStrokeWidth: string = "3px";
                 const focusedStrokeOpacity: string = "1";
@@ -1027,29 +1036,25 @@ describe("SankeyDiagram", () => {
                     expect(linkStrokeWidth).toBe(strokeWidth);
                     expect(linkStrokeOpacity).toBe(strokeOpacity);
                     expect(linkOutline).toBe(outline);
-                    expect(linkStrokeWidth < focusedStrokeWidth).toBeTrue();
+                    expect(linkStrokeWidth < focusedStrokeWidth).toBe(true);
                 });
-                done();
+        });
+
+        it("nodes should have :focus-visible style", async () => {
+            await updateRender(dataView);
+            const nodeRects: HTMLElement[] = [...visualBuilder.nodeRectElements];
+
+            nodeRects[0].focus();
+            expect(nodeRects[0].matches(':focus-visible')).toBe(true);
+
+            const otherNodeRects: HTMLElement[] = nodeRects.slice(1);
+            otherNodeRects.forEach((nodeRect: HTMLElement) => {
+                expect(nodeRect.matches(':focus-visible')).toBe(false);
             });
         });
 
-        it("nodes should have :focus-visible style", (done: DoneFn) => {
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                const nodeRects: HTMLElement[] = [...visualBuilder.nodeRectElements];
-
-                nodeRects[0].focus();
-                expect(nodeRects[0].matches(':focus-visible')).toBeTrue();
-
-                const otherNodeRects: HTMLElement[] = nodeRects.slice(1);
-                otherNodeRects.forEach((nodeRect: HTMLElement) => {
-                    expect(nodeRect.matches(':focus-visible')).toBeFalse();
-                });
-                done();
-            });
-        });
-
-        it("focused nodes should have styled stroke and outline", (done: DoneFn) => {
-            visualBuilder.updateRenderTimeout(dataView, () => {
+        it("focused nodes should have styled stroke and outline", async () => {
+            await updateRender(dataView);
                 // defaults
                 const focusedStrokeWidth: string = "4px";
                 const focusedOutline: string = "rgb(0, 0, 0) none 0px";
@@ -1073,10 +1078,8 @@ describe("SankeyDiagram", () => {
                     nodeOutline = nodeComputedStyle.getPropertyValue("outline");
                     expect(nodeStrokeWidth).toBe(strokeWidth);
                     expect(nodeOutline).toBe(outline);
-                    expect(nodeStrokeWidth < focusedStrokeWidth).toBeTrue();
+                    expect(nodeStrokeWidth < focusedStrokeWidth).toBe(true);
                 });
-                done();
-            });
         });
     });
 
@@ -1093,36 +1096,30 @@ describe("SankeyDiagram", () => {
 
         });
 
-        it("should not use fill style", (done) => {
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                // element.style.fill return "" when not initialized
-                const nullColor = "";
-                expect(isColorAppliedToElements([...visualBuilder.nodeElements], nullColor, "fill"));
-                expect(isColorAppliedToElements([...visualBuilder.linkElements], nullColor, "fill"));
-                done();
-            });
+        it("should not use fill style", async () => {
+            await updateRender(dataView);
+            // element.style.fill return "" when not initialized
+            const nullColor = "";
+            expect(isColorAppliedToElements([...visualBuilder.nodeElements], nullColor, "fill"));
+            expect(isColorAppliedToElements([...visualBuilder.linkElements], nullColor, "fill"));
         });
 
-        it("should use stroke style", (done) => {
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(isColorAppliedToElements([...visualBuilder.nodeElements], foregroundColor, "stroke"));
-                expect(isColorAppliedToElements([...visualBuilder.linkElements], foregroundColor, "stroke"));
-                done();
-            });
+        it("should use stroke style", async () => {
+            await updateRender(dataView);
+            expect(isColorAppliedToElements([...visualBuilder.nodeElements], foregroundColor, "stroke"));
+            expect(isColorAppliedToElements([...visualBuilder.linkElements], foregroundColor, "stroke"));
         });
 
-        it("should disable color slices in the formatting model", (done) => {
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                visualBuilder.instance.getFormattingModel();
-                const settings: SankeyDiagramSettings = visualBuilder.instance.sankeyDiagramSettings;
+        it("should disable color slices in the formatting model", async () => {
+            await updateRender(dataView);
+            visualBuilder.instance.getFormattingModel();
+            const settings: SankeyDiagramSettings = visualBuilder.instance.sankeyDiagramSettings;
 
-                expect(settings.labels.fill.disabled).toBeTrue();
-                expect(settings.linkLabels.fill.disabled).toBeTrue();
-                expect(settings.links.defaultContainerItem.color.disabled).toBeTrue();
-                expect(settings.links.defaultContainerItem.border.color.disabled).toBeTrue();
-                expect(settings.nodes.defaultContainerItem.color.disabled).toBeTrue();
-                done();
-            });
+            expect(settings.labels.fill.disabled).toBe(true);
+            expect(settings.linkLabels.fill.disabled).toBe(true);
+            expect(settings.links.defaultContainerItem.color.disabled).toBe(true);
+            expect(settings.links.defaultContainerItem.border.color.disabled).toBe(true);
+            expect(settings.nodes.defaultContainerItem.color.disabled).toBe(true);
         });
     });
 
@@ -1156,14 +1153,14 @@ describe("SankeyDiagram", () => {
             linkColor.handleHighContrastMode(colorHelper);
             nodes.handleHighContrastMode(colorHelper);
 
-            expect(labels.fill.disabled).toBeTrue();
+            expect(labels.fill.disabled).toBe(true);
             expect(labels.fill.disabledReasonKey).toBe(colorDisabledReasonKey);
-            expect(linkLabels.fill.disabled).toBeTrue();
-            expect(linkOutline.color.disabled).toBeTrue();
+            expect(linkLabels.fill.disabled).toBe(true);
+            expect(linkOutline.color.disabled).toBe(true);
             expect(linkOutline.color.disabledReasonKey).toBe(colorDisabledReasonKey);
-            expect(linkColor.color.disabled).toBeTrue();
-            expect(linkColor.border.color.disabled).toBeTrue();
-            expect(nodes.defaultContainerItem.color.disabled).toBeTrue();
+            expect(linkColor.color.disabled).toBe(true);
+            expect(linkColor.border.color.disabled).toBe(true);
+            expect(nodes.defaultContainerItem.color.disabled).toBe(true);
         });
 
         it("should not disable color slices when high contrast mode is off", () => {
@@ -1209,27 +1206,25 @@ describe("SankeyDiagram", () => {
             linkColor.handleHighContrastMode(colorHelper);
             nodes.handleHighContrastMode(colorHelper);
 
-            expect(labels.fill.disabled).toBeTrue();
-            expect(linkOutline.color.disabled).toBeTrue();
-            expect(linkColor.color.disabled).toBeTrue();
-            expect(linkColor.border.color.disabled).toBeTrue();
-            expect(nodes.defaultContainerItem.color.disabled).toBeTrue();
+            expect(labels.fill.disabled).toBe(true);
+            expect(linkOutline.color.disabled).toBe(true);
+            expect(linkColor.color.disabled).toBe(true);
+            expect(linkColor.border.color.disabled).toBe(true);
+            expect(nodes.defaultContainerItem.color.disabled).toBe(true);
         });
 
-        it("should not disable color slices in the formatting model when high contrast mode is off", (done) => {
+        it("should not disable color slices in the formatting model when high contrast mode is off", async () => {
             createColorHelper(false);
 
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                visualBuilder.instance.getFormattingModel();
-                const settings: SankeyDiagramSettings = visualBuilder.instance.sankeyDiagramSettings;
+            await updateRender(dataView);
+            visualBuilder.instance.getFormattingModel();
+            const settings: SankeyDiagramSettings = visualBuilder.instance.sankeyDiagramSettings;
 
-                expect(settings.labels.fill.disabled).toBeFalsy();
-                expect(settings.linkLabels.fill.disabled).toBeFalsy();
-                expect(settings.links.defaultContainerItem.color.disabled).toBeFalsy();
-                expect(settings.links.defaultContainerItem.border.color.disabled).toBeFalsy();
-                expect(settings.nodes.defaultContainerItem.color.disabled).toBeFalsy();
-                done();
-            });
+            expect(settings.labels.fill.disabled).toBeFalsy();
+            expect(settings.linkLabels.fill.disabled).toBeFalsy();
+            expect(settings.links.defaultContainerItem.color.disabled).toBeFalsy();
+            expect(settings.links.defaultContainerItem.border.color.disabled).toBeFalsy();
+            expect(settings.nodes.defaultContainerItem.color.disabled).toBeFalsy();
         });
     });
 
