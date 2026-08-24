@@ -135,6 +135,7 @@ export class SankeyDiagram implements IVisual {
     private static LinkSelector: ClassAndSelector = createClassAndSelector("link");
     private static BackwardLinkSelector: ClassAndSelector = createClassAndSelector("linkBackward");
     private static SelftLinkSelector: ClassAndSelector = createClassAndSelector("linkSelf");
+    private static LinkGradientSelector: ClassAndSelector = createClassAndSelector("linkGradient");
     private static LinkLabelPathsSelector: ClassAndSelector = createClassAndSelector("linkLabelPaths");
     private static LinkLabelTextsSelector: ClassAndSelector = createClassAndSelector("linkLabelTexts");
     private static resetButton: ClassAndSelector = createClassAndSelector("resetButton");
@@ -158,6 +159,9 @@ export class SankeyDiagram implements IVisual {
     };
 
     private static MinWidthOfLabel: number = 21;
+    private static NodeLabelPaddingX: number = 8;
+    private static NodeLabelPaddingY: number = 6;
+    private static NodeLabelLineMultiplier: number = 1.15;
 
     private static NodeBottomMargin: number = 5; // 5%
 
@@ -667,6 +671,14 @@ export class SankeyDiagram implements IVisual {
             });
         }
 
+        this.updateNodeMetadata(nodes, valuesFormatterForWeight, valueFieldName);
+
+        this.checkNodePositionSettings(nodes, settings);
+        this.restoreNodePositions(nodes, settings);
+        return sankeyDiagramDataView;
+    }
+
+    private updateNodeMetadata(nodes: SankeyDiagramNode[], valuesFormatterForWeight: IValueFormatter, valueFieldName: string): void {
         nodes.forEach((node: SankeyDiagramNode) => {
             node.tooltipInfo = SankeyDiagram.getTooltipForNode(
                 valuesFormatterForWeight,
@@ -676,11 +688,15 @@ export class SankeyDiagram implements IVisual {
                 this.localizationManager,
                 valueFieldName
             );
-        });
 
-        this.checkNodePositionSettings(nodes, settings);
-        this.restoreNodePositions(nodes, settings);
-        return sankeyDiagramDataView;
+            if (valueFieldName && valuesFormatterForWeight) {
+                const totalWeight = Math.max(
+                    node.inputWeight + node.selfLinkWeight,
+                    node.outputWeight + node.selfLinkWeight
+                );
+                node.formattedWeight = valuesFormatterForWeight.format(totalWeight);
+            }
+        });
     }
 
     private static createLabel(settings: BaseFontSettingsCard, text: string): SankeyDiagramLabel {
@@ -947,6 +963,10 @@ export class SankeyDiagram implements IVisual {
         destination: SankeyDiagramNode): string {
 
         const color: string = this.getColor(properties, defaultColor, objects);
+        if (this.hasLinkColorOverride(objects)) {
+            return color;
+        }
+
         if (settings.links.matchNodeColors.value) {
             switch (settings.links.matchSourceOrDestination.value.value) {
                 case LinkMatchType.Source:
@@ -956,6 +976,12 @@ export class SankeyDiagram implements IVisual {
             }
         }
         return color;
+    }
+
+    private hasLinkColorOverride(objects: DataViewObjects): boolean {
+        const linkObject = objects && (objects as any).links;
+
+        return !!(linkObject && linkObject.fill);
     }
 
     private getLinkBorderColor(properties: DataViewObjectPropertyIdentifier, linkColor: string, objects: DataViewObjects, settings: SankeyDiagramSettings): string{
@@ -1322,24 +1348,16 @@ export class SankeyDiagram implements IVisual {
         const nodeLabelTextProperties = SankeyDiagram.getTextProperties(settings.labels);
 
         sankeyDiagramDataView.nodes.forEach((node: SankeyDiagramNode) => {
-            const textHeight: number = textMeasurementService.estimateSvgTextHeight({
-                text: node.label.formattedName,
-                fontFamily: nodeLabelTextProperties.fontFamily,
-                fontSize: nodeLabelTextProperties.fontSize
-            });
+            const textHeight: number = this.getRequiredNodeLabelHeight(node, nodeLabelTextProperties);
 
-            node.left = node.x + this.getLabelPositionByAxisX(node);
+            node.left = node.x + this.getLabelPositionByAxisX();
 
-            node.right = node.left
-                + (settings._scale.x - node.width)
-                - SankeyDiagram.NodeMargin;
+            node.right = node.x + node.width - SankeyDiagram.NodeLabelPaddingX;
 
-            node.top = node.y + node.height / SankeyDiagram.MiddleFactor;
+            node.top = node.y + SankeyDiagram.NodeLabelPaddingY;
             node.bottom = node.top + textHeight;
 
-            node.label.maxWidth = settings._scale.x
-                - node.width
-                - SankeyDiagram.NodeMargin * SankeyDiagram.NodeMarginFactor;
+            node.label.maxWidth = this.getNodeLabelMaxWidth(node);
         });
     }
 
@@ -1702,6 +1720,7 @@ export class SankeyDiagram implements IVisual {
 
 
     private render(sankeyDiagramDataView: SankeyDiagramDataView, settings: SankeyDiagramSettings): void {
+        this.renderLinkGradients(sankeyDiagramDataView, settings);
         const linksSelection: Selection<SankeyDiagramLink> = this.renderLinks(sankeyDiagramDataView, settings);
         this.renderLinkLabels(sankeyDiagramDataView, settings);
 
@@ -1746,7 +1765,9 @@ export class SankeyDiagram implements IVisual {
             .attr("tabindex", () => ++nodeTabIndex)
             .attr("role", "option")
             .attr("aria-selected", "false")
-            .attr('aria-label', (node: SankeyDiagramNode) => `${node.label.name}`)
+            .attr("aria-label", (node: SankeyDiagramNode) => node.formattedWeight
+                ? `${node.label.name}, ${node.formattedWeight}`
+                : `${node.label.name}`)
             .attr("x", SankeyDiagram.DefaultPosition)
             .attr("y", SankeyDiagram.DefaultPosition)
             .attr("height", (node: SankeyDiagramNode) => node.height < SankeyDiagram.MinHeightOfNode ? SankeyDiagram.MinHeightOfNode : node.height)
@@ -1760,22 +1781,21 @@ export class SankeyDiagram implements IVisual {
             .data(data => [data])
             .join("text")
             .classed(SankeyDiagram.NodeLabelSelector.className, true)
-            .attr("x", (node: SankeyDiagramNode) => node.left - node.x)
-            .attr("y", (node: SankeyDiagramNode) => node.top - node.y)
-            .attr("dy", SankeyDiagram.DefaultDy)
+            .attr("x", SankeyDiagram.NodeLabelPaddingX)
+            .attr("y", SankeyDiagram.NodeLabelPaddingY)
+            .attr("dominant-baseline", "hanging")
             .style("fill", (node: SankeyDiagramNode) => this.colorHelper.getHighContrastColor("foreground", node.label.color))
             .style("font-family", nodeLabelTextProperties.fontFamily)
             .style("font-size", nodeLabelTextProperties.fontSize)
             .style("font-weight", nodeLabelTextProperties.fontWeight)
             .style("text-decoration", nodeLabelTextProperties.textDecoration)
             .style("font-style", nodeLabelTextProperties.fontStyle)
+            .style("pointer-events", "none")
             .style("display", (node: SankeyDiagramNode) => {
-                const labelPositionByAxisX: number = this.getCurrentPositionOfLabelByAxisX(node);
-
                 const isNotVisibleLabel: boolean =
-                    (labelPositionByAxisX >= this.viewport.width ||
-                        labelPositionByAxisX <= SankeyDiagram.MinSize ||
-                        (node.height + SankeyDiagram.NodeMargin) < node.label.height) && !settings.labels.forceDisplay.value;
+                    (this.getNodeLabelMaxWidth(node) < SankeyDiagram.MinWidthOfLabel ||
+                        node.height < this.getRequiredNodeLabelHeight(node, nodeLabelTextProperties))
+                    && !settings.labels.forceDisplay.value;
 
                 if (isNotVisibleLabel || !settings.labels.show.value
                     || node.label.maxWidth < SankeyDiagram.MinWidthOfLabel) {
@@ -1784,23 +1804,30 @@ export class SankeyDiagram implements IVisual {
 
                 return null;
             })
-            .style("text-anchor", (node: SankeyDiagramNode) => {
-                if (this.isLabelLargerThanWidth(node)) {
-                    return SankeyDiagram.TextAnchorEnd;
-                }
+            .style("text-anchor", "start")
+            .each(function (node: SankeyDiagramNode) {
+                const textElement = d3Select(this);
+                textElement.selectAll("tspan").remove();
+                textElement.text(null);
 
-                return null;
-            })
-            .text((node: SankeyDiagramNode) => {
-                if (node.label.width > node.label.maxWidth) {
-                    return textMeasurementService.getTailoredTextOrDefault({
-                        text: node.label.formattedName,
-                        fontFamily: nodeLabelTextProperties.fontFamily,
-                        fontSize: nodeLabelTextProperties.fontSize
-                    }, node.label.maxWidth);
-                }
+                const maxWidth: number = Math.max(node.label.maxWidth, SankeyDiagram.MinSize);
+                const nameText: string = SankeyDiagram.getTailoredText(node.label.formattedName, nodeLabelTextProperties, maxWidth);
+                const valueText: string = node.formattedWeight
+                    ? SankeyDiagram.getTailoredText(node.formattedWeight, nodeLabelTextProperties, maxWidth)
+                    : null;
 
-                return node.label.formattedName;
+                textElement.append("tspan")
+                    .attr("x", SankeyDiagram.NodeLabelPaddingX)
+                    .attr("dy", "0")
+                    .text(nameText);
+
+                if (valueText) {
+                    textElement.append("tspan")
+                        .attr("x", SankeyDiagram.NodeLabelPaddingX)
+                        .attr("dy", `${SankeyDiagram.NodeLabelLineMultiplier}em`)
+                        .style("fill-opacity", 0.82)
+                        .text(valueText);
+                }
             });
 
         function dragstarted(event: D3DragEvent<Element, SankeyDiagramNode, SankeyDiagramNode>) {
@@ -1866,6 +1893,14 @@ export class SankeyDiagram implements IVisual {
                     }
                 );
 
+            self.updateLinkGradientCoordinates(
+                self.defs
+                    .selectAll(SankeyDiagram.LinkGradientSelector.selectorName)
+                    .filter(function (currentLink: SankeyDiagramLink) {
+                        return currentLink.source === node || currentLink.destination === node;
+                    }) as Selection<SankeyDiagramLink>
+            );
+
             // Translate the object on the actual moved point
             d3Select(this).attr("transform", translate(node.x, node.y));
         }
@@ -1929,28 +1964,35 @@ export class SankeyDiagram implements IVisual {
         });
     }
 
-    private getLabelPositionByAxisX(node: SankeyDiagramNode): number {
-        if (this.isLabelLargerThanWidth(node)) {
-            return -(SankeyDiagram.LabelMargin);
-        }
-
-        return node.width + SankeyDiagram.LabelMargin;
+    private getLabelPositionByAxisX(): number {
+        return SankeyDiagram.NodeLabelPaddingX;
     }
 
     private isLabelLargerThanWidth(node: SankeyDiagramNode): boolean {
-        const shiftByAxisX: number = node.x + node.width + SankeyDiagram.LabelMargin;
-
-        return shiftByAxisX + node.label.width > this.viewport.width;
+        return this.getNodeLabelMaxWidth(node) < node.label.width;
     }
 
     private getCurrentPositionOfLabelByAxisX(node: SankeyDiagramNode): number {
-        let labelPositionByAxisX: number = this.getLabelPositionByAxisX(node);
+        return node.x + this.getLabelPositionByAxisX();
+    }
 
-        labelPositionByAxisX = labelPositionByAxisX > SankeyDiagram.DefaultPosition
-            ? labelPositionByAxisX + node.x + node.label.width + node.width
-            : node.x - labelPositionByAxisX - node.label.width - node.width;
+    private getNodeLabelMaxWidth(node: SankeyDiagramNode): number {
+        return Math.max(node.width - SankeyDiagram.NodeLabelPaddingX * SankeyDiagram.NodeMarginFactor, SankeyDiagram.MinSize);
+    }
 
-        return labelPositionByAxisX;
+    private getRequiredNodeLabelHeight(node: SankeyDiagramNode, textProperties: TextPropertiesExtended): number {
+        const lineHeight: number = textMeasurementService.estimateSvgTextHeight({
+            text: node.label.formattedName,
+            fontFamily: textProperties.fontFamily,
+            fontSize: textProperties.fontSize
+        });
+
+        const lineCount: number = node.formattedWeight ? 2 : 1;
+        const textHeight: number = lineCount === 1
+            ? lineHeight
+            : lineHeight * (1 + SankeyDiagram.NodeLabelLineMultiplier);
+
+        return SankeyDiagram.NodeLabelPaddingY * SankeyDiagram.NodeMarginFactor + textHeight;
     }
 
     private renderLinks(sankeyDiagramDataView: SankeyDiagramDataView, settings: SankeyDiagramSettings): Selection<SankeyDiagramLink> {
@@ -2007,7 +2049,7 @@ export class SankeyDiagram implements IVisual {
             .attr('aria-label', (link: SankeyDiagramLink) => `${link.source.label.name} to ${link.destination.label.name} weighted at ${link.weight}`)
             .style("stroke", (link: SankeyDiagramLink) => link.strokeColor)
             .style("stroke-width", this.sankeyDiagramSettings.links.defaultContainerItem.border.show.value ? this.sankeyDiagramSettings.links.defaultContainerItem.border.width.value + "px" : "0px")
-            .style("fill", (link: SankeyDiagramLink) => link.fillColor)
+            .style("fill", (link: SankeyDiagramLink) => this.colorHelper.isHighContrast ? null : this.getLinkFill(link, settings))
             .classed(SankeyDiagram.StrokeVisibleClass.className, !this.sankeyDiagramSettings.links.defaultContainerItem.border.show.value && this.colorHelper.isHighContrast);
 
         return linksElements;
@@ -2015,6 +2057,76 @@ export class SankeyDiagram implements IVisual {
 
     public static createLinkId(link: SankeyDiagramLink, addLinkLabelPath: boolean = false): string {
         return (addLinkLabelPath ? `linkLabelPaths` : ``) + `${('_' + link.source.label.name || "")}-${link.direction}-${('_' + link.destination.label.name || "")}`;
+    }
+
+    private static createLinkGradientId(link: SankeyDiagramLink): string {
+        const sanitize = (value: string) => (value || "").replace(/[^A-Za-z0-9_-]/g, "_");
+
+        return `linkGradient-${sanitize(link.source.label.name)}-${link.direction}-${sanitize(link.destination.label.name)}`;
+    }
+
+    private static getTailoredText(text: string, textProperties: TextPropertiesExtended, maxWidth: number): string {
+        return textMeasurementService.getTailoredTextOrDefault({
+            text: text || "",
+            fontFamily: textProperties.fontFamily,
+            fontSize: textProperties.fontSize
+        }, maxWidth);
+    }
+
+    private shouldUseLinkGradient(settings: SankeyDiagramSettings): boolean {
+        return settings.links.matchNodeColors.value && !this.colorHelper.isHighContrast;
+    }
+
+    private getLinkFill(link: SankeyDiagramLink, settings: SankeyDiagramSettings): string {
+        if (this.shouldUseLinkGradient(settings)) {
+            return `url(#${SankeyDiagram.createLinkGradientId(link)})`;
+        }
+
+        return link.fillColor;
+    }
+
+    private updateLinkGradientCoordinates(linkGradients: Selection<SankeyDiagramLink>): void {
+        linkGradients
+            .attr("x1", (link: SankeyDiagramLink) => `${link.source.x + link.source.width / SankeyDiagram.MiddleFactor}`)
+            .attr("y1", (link: SankeyDiagramLink) => `${link.source.y + link.shiftByAxisYSource + link.height / SankeyDiagram.MiddleFactor}`)
+            .attr("x2", (link: SankeyDiagramLink) => `${link.destination.x + link.destination.width / SankeyDiagram.MiddleFactor}`)
+            .attr("y2", (link: SankeyDiagramLink) => `${link.destination.y + (link.shiftByAxisYDestination || SankeyDiagram.DefaultPosition) + link.height / SankeyDiagram.MiddleFactor}`);
+    }
+
+    private renderLinkGradients(sankeyDiagramDataView: SankeyDiagramDataView, settings: SankeyDiagramSettings): void {
+        const linkGradients: Selection<SankeyDiagramLink> = this.defs
+            .selectAll(SankeyDiagram.LinkGradientSelector.selectorName)
+            .data(
+                sankeyDiagramDataView.links.filter((link: SankeyDiagramLink) => {
+                    return link.height > SankeyDiagram.MinSize && this.shouldUseLinkGradient(settings);
+                })
+            )
+            .join("linearGradient")
+            .classed(SankeyDiagram.LinkGradientSelector.className, true)
+            .attr("id", (link: SankeyDiagramLink) => SankeyDiagram.createLinkGradientId(link))
+            .attr("gradientUnits", "userSpaceOnUse");
+
+        this.updateLinkGradientCoordinates(linkGradients);
+
+        linkGradients.each((link: SankeyDiagramLink, index: number, elements: SVGLinearGradientElement[]) => {
+            const gradient = d3Select(elements[index]);
+            const shouldMatchSource: boolean = settings.links.matchSourceOrDestination.value.value === LinkMatchType.Source;
+            const gradientColor: string = shouldMatchSource ? link.source.fillColor : link.destination.fillColor;
+            const startOpacity: number = shouldMatchSource ? 0.95 : 0.18;
+            const endOpacity: number = shouldMatchSource ? 0.18 : 0.95;
+
+            gradient
+                .selectAll("stop")
+                .data([
+                    { offset: "0%", color: gradientColor, opacity: startOpacity },
+                    { offset: "72%", color: gradientColor, opacity: 0.52 },
+                    { offset: "100%", color: gradientColor, opacity: endOpacity }
+                ])
+                .join("stop")
+                .attr("offset", stop => stop.offset)
+                .attr("stop-color", stop => stop.color)
+                .attr("stop-opacity", stop => stop.opacity);
+        });
     }
 
     private renderLinkLabels(sankeyDiagramDataView: SankeyDiagramDataView, settings: SankeyDiagramSettings): void {

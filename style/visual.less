@@ -59,8 +59,7 @@
 
             .nodeRect {
                 stroke-width: 1px;
-                fill-opacity: 0.9;
-                shape-rendering: crispEdges;
+                fill-opacity: 0.94;
 
                 &:focus {
                     outline: none;
@@ -75,6 +74,7 @@
 
             .nodeLabel {
                 font-size: @sankeyDiagramFontSize;
+                letter-spacing: 0.01em;
             }
         }
 
@@ -88,7 +88,7 @@
             cursor: pointer;
             fill: none;
             stroke-opacity: 0.6;
-            fill-opacity: 0.2;
+            fill-opacity: 0.4;
             
             &:focus {
                 outline: none;
@@ -108,7 +108,7 @@
         .link:hover,
         .link.selected {
             stroke-opacity: 1;
-            fill-opacity: 0.7;
+            fill-opacity: 0.65;
             stroke-width: 2;
         }
     }
